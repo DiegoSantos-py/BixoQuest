@@ -1,10 +1,10 @@
 package model;
 
 public class Area {
-    private int maxX;
-    private int minX;
-    private int maxY;
-    private int minY;
+    private final int maxX;
+    private final int minX;
+    private final int maxY;
+    private final int minY;
 
     public Area(int maxX, int minX, int maxY, int minY){
         this.maxX = maxX;

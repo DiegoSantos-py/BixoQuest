@@ -2,13 +2,13 @@ package model;
 import java.util.*;
 
 public class Mapa {
-    private List<Local> locais;
+    private Map<String, Local> locais;
 
     public Mapa(){
-        locais = new ArrayList<Local>();
+        locais = new HashMap<String, Local>();
     }
 
-    public void adicionarLocal(Local outro){
-        this.locais.add(outro);
+    public void adicionarLocal(String nome, Local outro){
+        this.locais.put(nome, outro);
     }
 }

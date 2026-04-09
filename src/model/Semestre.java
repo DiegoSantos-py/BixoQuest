@@ -3,15 +3,12 @@ package model;
 import java.util.ArrayList;
 
 public class Semestre {
-    private static final int MAX_DIAS = 28;
+    private static final int MAX_DIAS = 20;
     private ArrayList<Dia> dias;
     private ArrayList<Disciplina> disciplinasObrigatorias;
 
     public Semestre(){
         this.dias = new ArrayList<Dia>();
-        for (int i = 0; i < MAX_DIAS; i++){
-            this.dias.add(new Dia());
-        }
     }
 
     public ArrayList<Disciplina> getDisciplinasObrigatorias() {
@@ -30,13 +27,13 @@ public class Semestre {
         return dias;
     }
 
+    public int getQuantidadeDias() {return this.dias.size();}
 
-    public boolean estaConcluido() {
-        for (Dia dia : dias) {
-            if (!dia.isStatus()) {
-                return false;
-            }
-        }
-        return true;
+    public boolean terminou() {
+        return dias.size() >= MAX_DIAS;
     }
+
+    public void adicionarDia(Dia dia){
+        dias.add(dia);}
+
 }

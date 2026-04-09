@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Colega extends Npc{
 
-    public Colega(String nome, int cX, int cY, Evento evento, ArrayList<String> falas){
-        super(nome, cX, cY, evento, falas);
+    public Colega(String nome, int cX, int cY, ArrayList<String> falas){
+        super(nome, cX, cY, falas);
     }
 }

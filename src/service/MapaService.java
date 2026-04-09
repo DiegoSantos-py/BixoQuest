@@ -72,15 +72,15 @@ public class MapaService {
                                  Local[] salas,
                                  Local[] extras) {
 
-        for (Local p : pontos) mapa.adicionarLocal(p);
+        for (Local p : pontos) mapa.adicionarLocal(p.getNome(), p);
 
         for (int i = 0; i < 7; i++) {
-            mapa.adicionarLocal(entradas[i]);
-            mapa.adicionarLocal(cantinas[i]);
-            mapa.adicionarLocal(salas[i]);
+            mapa.adicionarLocal(entradas[i].getNome(), entradas[i]);
+            mapa.adicionarLocal(cantinas[i].getNome(), cantinas[i]);
+            mapa.adicionarLocal(salas[i].getNome(), salas[i]);
         }
 
-        for (Local e : extras) mapa.adicionarLocal(e);
+        for (Local e : extras) mapa.adicionarLocal(e.getNome(), e);
     }
 
     private Area criarAreaPadrao(){

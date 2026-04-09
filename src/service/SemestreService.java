@@ -1,17 +1,36 @@
 package service;
+
+import model.Dia;
 import model.Semestre;
 
 public class SemestreService {
 
-    public Semestre criarSemestre(){
+    public Semestre criarSemestre() {
         return new Semestre();
     }
 
-    public boolean verificarConclusaoSemestre(Semestre semestre){
-        if (!semestre.estaConcluido()){
-            return false;
+    public Dia avancarDia(Semestre semestre) {
+
+        if (semestre.terminou()) {
+            return null;
         }
-        return semestre.getDisciplinasObrigatorias().isEmpty();
+
+        Dia novoDia = new Dia();
+        semestre.adicionarDia(novoDia);
+
+        return novoDia;
     }
 
+    public boolean terminouSemestre(Semestre semestre) {
+        return semestre.terminou();
+    }
+
+    public void encerrarSemestre(Semestre semestre) {
+        // lógica de encerramento
+
+
+        // - calcular desempenho do jogador
+        // - salvar progresso
+        // - liberar próximo semestre
+    }
 }

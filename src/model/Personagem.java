@@ -12,7 +12,15 @@ public class Personagem {
     private double sanidade;
     private double saude;
     private double dinheiro;
-    private Map<String, Disciplina> disciplinas;
+
+    private double conhecimentoMat;
+    private double conhecimentoHar;
+    private double conhecimentoSof;
+    private double conhecimentoCom;
+    private double conhecimentoHum;
+    private double conhecimentoNat;
+    private double conhecimentoTfc;
+
 
     private String spriteDir;
 
@@ -104,14 +112,6 @@ public class Personagem {
         this.sanidade = sanidade;
     }
 
-    public Disciplina getDisciplina(String nome){
-        return this.disciplinas.get(nome);
-    }
-
-    public void setDisciplinas(Map<String, Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
     public String getSpriteDir() {
         return spriteDir;
     }
@@ -122,6 +122,62 @@ public class Personagem {
 
     public void setSemestreAtual(int semestreAtual) {
         SemestreAtual = semestreAtual;
+    }
+
+    public double getConhecimentoMat() {
+        return conhecimentoMat;
+    }
+
+    public void setConhecimentoMat(double conhecimentoMat) {
+        this.conhecimentoMat = conhecimentoMat;
+    }
+
+    public double getConhecimentoHar() {
+        return conhecimentoHar;
+    }
+
+    public void setConhecimentoHar(double conhecimentoHar) {
+        this.conhecimentoHar = conhecimentoHar;
+    }
+
+    public double getConhecimentoSof() {
+        return conhecimentoSof;
+    }
+
+    public double getConhecimentoCom() {
+        return conhecimentoCom;
+    }
+
+    public void setConhecimentoCom(double conhecimentoCom) {
+        this.conhecimentoCom = conhecimentoCom;
+    }
+
+    public void setConhecimentoSof(double conhecimentoSof) {
+        this.conhecimentoSof = conhecimentoSof;
+    }
+
+    public double getConhecimentoHum() {
+        return conhecimentoHum;
+    }
+
+    public void setConhecimentoHum(double conhecimentoHum) {
+        this.conhecimentoHum = conhecimentoHum;
+    }
+
+    public double getConhecimentoNat() {
+        return conhecimentoNat;
+    }
+
+    public void setConhecimentoNat(double conhecimentoNat) {
+        this.conhecimentoNat = conhecimentoNat;
+    }
+
+    public double getConhecimentoTfc() {
+        return conhecimentoTfc;
+    }
+
+    public void setConhecimentoTfc(double conhecimentoTfc) {
+        this.conhecimentoTfc = conhecimentoTfc;
     }
 
     @Override
@@ -146,7 +202,6 @@ public class Personagem {
                 ", saude=" + saude +
                 ", dinheiro=" + dinheiro +
                 ", spriteDir='" + spriteDir + '\'' +
-                ", disciplinas=" + disciplinas +
                 ", cX=" + cX +
                 ", cY=" + cY;
     }

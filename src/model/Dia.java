@@ -1,31 +1,32 @@
 package model;
 import java.time.Duration;
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Dia {
     private static final int MAX_DURACAO = 22;
     private Duration duracao;
+    private Instant inicio;
+    private boolean eventoExecutando;
     private Map<String, String> eventosObrigatorios;
     private Map<String, String> eventosAleatorios;
-    private boolean status;
 
     public Dia(){
-        duracao = Duration.ofMinutes(MAX_DURACAO);
-        eventosObrigatorios = new HashMap<>();
-        eventosAleatorios = new HashMap<>();
+        this.duracao = Duration.ofMinutes(MAX_DURACAO);
+        this.inicio = Instant.now();
+        this.eventosObrigatorios = new HashMap<>();
+        this.eventosAleatorios = new HashMap<>();
     }
 
     public Map<String, String> getEventosObrigatorios() {
         return eventosObrigatorios;
     }
 
-    public void setEventosObrigatorios(Map<String, String> eventosObrigatorios) {
+    public void addEventosObrigatorios(Map<String, String> eventos) {
         for (String chave: eventosObrigatorios.keySet()) {
-            if (!this.eventosObrigatorios.keySet().contains(chave)) {
-                this.eventosObrigatorios.put(chave, eventosObrigatorios.get(chave));
+            if (!this.eventosObrigatorios.containsKey(chave)) {
+                this.eventosObrigatorios.put(chave, eventos.get(chave));
             }
         }
     }
@@ -34,10 +35,10 @@ public class Dia {
         return eventosAleatorios;
     }
 
-    public void setEventosAleatorios(Map<String, String> eventosAleatorios) {
-        for (String chave: eventosAleatorios.keySet()) {
-            if (!this.eventosAleatorios.keySet().contains(chave)) {
-                this.eventosAleatorios.put(chave, eventosAleatorios.get(chave));
+    public void addEventosAleatorios(Map<String, String> eventos) {
+        for (String chave: eventos.keySet()) {
+            if (!this.eventosAleatorios.containsKey(chave)) {
+                this.eventosAleatorios.put(chave, eventos.get(chave));
             }
         }
     }
@@ -50,11 +51,19 @@ public class Dia {
         this.duracao = duracao;
     }
 
-    public boolean isStatus() {
-        return status;
+    public Instant getInicio() {
+        return inicio;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setInicio(Instant inicio) {
+        this.inicio = inicio;
+    }
+
+    public boolean isEventoExecutando() {
+        return eventoExecutando;
+    }
+
+    public void setEventoExecutando(boolean eventoExecutando) {
+        this.eventoExecutando = eventoExecutando;
     }
 }

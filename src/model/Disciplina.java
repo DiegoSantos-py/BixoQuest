@@ -3,16 +3,7 @@ package model;
 public class Disciplina {
     private String nome;
     private int vezesFeita;
-    private int conhecimento;
     private ProvaBatalha prova;
-
-    public int getConhecimento() {
-        return conhecimento;
-    }
-
-    public void setConhecimento(int conhecimento) {
-        this.conhecimento = conhecimento;
-    }
 
     public int getVezesFeita() {
         return vezesFeita;
