@@ -1,4 +1,4 @@
 package model;
 
-public class ProvaBatalha extends Batalha{
+public class ProvaBatalha {
 }
