@@ -3,8 +3,16 @@ import model.Area;
 import model.Mapa;
 import model.Local;
 import model.ZonaInterativa;
+import repository.LocalRepository;
+
+import java.util.Map;
 
 public class MapaService {
+    private LocalRepository localRepo = new LocalRepository();
+
+    public Map<String, Local> carregarLocais() {
+        return localRepo.carregarLocal();
+    }
 
     public Mapa criarMapa(){
         Mapa mapa = new Mapa();
@@ -16,7 +24,7 @@ public class MapaService {
         Local[] extras = criarExtras("Laboratório", "Colegiado");
 
         conectarMapa(pontos, entradas, cantinas, salas, extras);
-        adicionarAoMapa(mapa, pontos, entradas, cantinas, salas, extras);
+        mapa.setLocais(adicionarAoRepositorio(pontos,entradas,cantinas,salas,extras));
 
         return mapa;
     }
@@ -65,22 +73,25 @@ public class MapaService {
         salas[4].conectar(extras[1]);
     }
 
-    private void adicionarAoMapa(Mapa mapa,
-                                 Local[] pontos,
+    private Map<String, Local> adicionarAoRepositorio(Local[] pontos,
                                  Local[] entradas,
                                  Local[] cantinas,
                                  Local[] salas,
                                  Local[] extras) {
 
-        for (Local p : pontos) mapa.adicionarLocal(p.getNome(), p);
+        if (localRepo.carregarLocal().size() != 0){ return localRepo.carregarLocal();}
+
+        for (Local p : pontos) localRepo.adicionarLocal( p);
 
         for (int i = 0; i < 7; i++) {
-            mapa.adicionarLocal(entradas[i].getNome(), entradas[i]);
-            mapa.adicionarLocal(cantinas[i].getNome(), cantinas[i]);
-            mapa.adicionarLocal(salas[i].getNome(), salas[i]);
+            localRepo.adicionarLocal( entradas[i]);
+            localRepo.adicionarLocal( cantinas[i]);
+            localRepo.adicionarLocal( salas[i]);
         }
 
-        for (Local e : extras) mapa.adicionarLocal(e.getNome(), e);
+        for (Local e : extras) localRepo.adicionarLocal(e);
+
+        return localRepo.carregarLocal();
     }
 
     private Area criarAreaPadrao(){

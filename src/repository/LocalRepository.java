@@ -3,22 +3,25 @@ package repository;
 import model.Local;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LocalRepository {
-    private List<Local> locais;
+    private Map<String, Local> locais;
 
     public LocalRepository(){
-        this.locais = new ArrayList<>();
+        this.locais = new HashMap<>();
     }
 
     public void adicionarLocal(Local local){
-        if (!this.locais.contains(local)){
-            this.locais.add(local);
-        }
+            if (this.locais.containsKey(local.getNome())){
+                this.locais.put(local.getNome(), local);
+            }
+
     }
 
-    public List<Local> carregarLocal(){
+    public Map<String, Local> carregarLocal(){
         return this.locais;
     }
 }

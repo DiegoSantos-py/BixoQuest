@@ -3,14 +3,13 @@ import model.Local;
 import model.ZonaInterativa;
 import repository.LocalRepository;
 
-import java.util.List;
+import java.util.Map;
+
 
 public class LocalService {
     private LocalRepository localRepo = new LocalRepository();
 
-    public List<Local> carregarZonas() {
-        return localRepo.carregarLocal();
-    }
+
 
     public void adicionarZona(ZonaInterativa zona, Local local) {
 
