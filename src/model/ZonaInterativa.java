@@ -13,4 +13,11 @@ public class ZonaInterativa {
         return area.contem(x, y);
     }
 
+    public Area getArea() {
+        return area;
+    }
+
+    public String getNome() {
+        return nome;
+    }
 }

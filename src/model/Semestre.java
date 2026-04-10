@@ -15,8 +15,8 @@ public class Semestre {
         return disciplinasObrigatorias;
     }
 
-    public void setDisciplinasObrigatorias(ArrayList<Disciplina> disciplinasObrigatorias) {
-        this.disciplinasObrigatorias = disciplinasObrigatorias;
+    public void adicionarDisciplinasObrigatorias(Disciplina d) {
+        this.disciplinasObrigatorias.add(d);
     }
 
     public static int getMaxDias() {
@@ -35,5 +35,6 @@ public class Semestre {
 
     public void adicionarDia(Dia dia){
         dias.add(dia);}
+
 
 }

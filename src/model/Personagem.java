@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class Personagem {

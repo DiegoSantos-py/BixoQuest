@@ -1,9 +1,12 @@
 package service;
 
 import model.Dia;
+import model.Disciplina;
 import model.Semestre;
+import repository.SemestreRepository;
 
 public class SemestreService {
+    private SemestreRepository semestreRepo;
 
     public Semestre criarSemestre() {
         return new Semestre();
@@ -21,16 +24,21 @@ public class SemestreService {
         return novoDia;
     }
 
-    public boolean terminouSemestre(Semestre semestre) {
-        return semestre.terminou();
+
+    public void adicionarDisciplina(Semestre semestre, Disciplina disciplina){
+        if (semestre.getDisciplinasObrigatorias().contains(disciplina)){
+            throw new IllegalArgumentException("Não é possível adicionar a mesma disciplina ao semestre duas vezes.");
+        }
     }
 
     public void encerrarSemestre(Semestre semestre) {
-        // lógica de encerramento
+        if (semestre.terminou()){
+            semestreRepo.adicionarSemestre(semestre);
+        }
 
+        //Implementar lógica de passagem de disciplina
 
         // - calcular desempenho do jogador
-        // - salvar progresso
         // - liberar próximo semestre
     }
 }

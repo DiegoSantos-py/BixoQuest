@@ -20,6 +20,7 @@ public class Local {
         this.nome = nome;
         this.zonas = zonas;
         this.vizinhos = new ArrayList<>();
+        this.zonas = new ArrayList<>();
     }
 
     public Local(String nome, List<ZonaInterativa> zonas, String spriteDir){
@@ -47,12 +48,6 @@ public class Local {
 
     public List<ZonaInterativa> getZonaInterativasDisponiveis(){
         return this.zonas;
-    }
-
-    public void adicionarZona(ZonaInterativa zona){
-        if (zonas.contains(zona))
-            throw new IllegalArgumentException("Não é possível adicionar duas zonas iguais a um mesmo local");
-        zonas.add(zona);
     }
 
     public void conectar(Local outro) {
