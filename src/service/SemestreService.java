@@ -31,6 +31,8 @@ public class SemestreService {
         }
     }
 
+    public boolean terminouSemestre(Semestre semestre){ return semestre.terminou();}
+
     public void encerrarSemestre(Semestre semestre) {
         if (semestre.terminou()){
             semestreRepo.adicionarSemestre(semestre);
