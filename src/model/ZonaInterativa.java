@@ -9,8 +9,8 @@ public class ZonaInterativa {
         this.nome = nome;
     }
 
-    public boolean contem(int x, int y){
-        return area.contem(x, y);
+    public boolean contemCoordenada(int x, int y){
+        return area.contemCoordenada(x, y);
     }
 
     public Area getArea() {

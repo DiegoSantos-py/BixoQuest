@@ -1,10 +1,15 @@
 package service;
 import model.Local;
 import model.ZonaInterativa;
+import repository.LocalRepository;
+
+import java.util.List;
 
 public class LocalService {
+    private LocalRepository localRepo = new LocalRepository();
 
-    public void carregarZonas() {
+    public List<Local> carregarZonas() {
+        return localRepo.carregarLocal();
     }
 
     public void adicionarZona(ZonaInterativa zona, Local local) {

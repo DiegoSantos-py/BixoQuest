@@ -6,7 +6,7 @@ import model.Semestre;
 import repository.SemestreRepository;
 
 public class SemestreService {
-    private SemestreRepository semestreRepo;
+    private SemestreRepository semestreRepo = new SemestreRepository();
 
     public Semestre criarSemestre() {
         return new Semestre();
