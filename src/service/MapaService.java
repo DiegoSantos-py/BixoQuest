@@ -55,6 +55,12 @@ public class MapaService {
                               Local[] cantinas, Local[] salas,
                               Local[] extras) {
 
+        verificarLocalValido(pontos);
+        verificarLocalValido(entradas);
+        verificarLocalValido(cantinas);
+        verificarLocalValido(salas);
+        verificarLocalValido(extras);
+
         pontos[0].conectar(entradas[1]);
         pontos[1].conectar(entradas[3]);
         pontos[2].conectar(entradas[5]);
@@ -78,6 +84,12 @@ public class MapaService {
                                  Local[] cantinas,
                                  Local[] salas,
                                  Local[] extras) {
+
+        verificarLocalValido(pontos);
+        verificarLocalValido(entradas);
+        verificarLocalValido(cantinas);
+        verificarLocalValido(salas);
+        verificarLocalValido(extras);
 
         if (localRepo.carregarLocal().size() != 0){ return localRepo.carregarLocal();}
 
@@ -115,4 +127,10 @@ public class MapaService {
         return new ZonaInterativa(criarAreaCustomizada(tamanho), nome);
     }
 
+    private void verificarLocalValido(Local[] locais){
+        for (Local l: locais){
+            if (l == null)
+                throw new IllegalArgumentException("Objeto passado como parâmetro é inválido");
+        }
+    }
 }

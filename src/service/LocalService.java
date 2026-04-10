@@ -3,7 +3,6 @@ import model.Local;
 import model.ZonaInterativa;
 import repository.LocalRepository;
 
-import java.util.Map;
 
 
 public class LocalService {

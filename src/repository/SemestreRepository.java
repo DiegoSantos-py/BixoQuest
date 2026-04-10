@@ -17,6 +17,7 @@ public class SemestreRepository {
     }
 
     public void adicionarSemestre(Semestre semestre){
+        if (semestre == null) return;
         semestres.add(semestre);
     }
 }

@@ -1,29 +1,36 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Semestre {
     private static final int MAX_DIAS = 20;
-    private ArrayList<Dia> dias;
-    private ArrayList<Disciplina> disciplinasObrigatorias;
+    private List<Dia> dias;
+    private List<Disciplina> disciplinas;
+    private Map<Disciplina, Boolean> resultados;
 
     public Semestre(){
         this.dias = new ArrayList<Dia>();
     }
 
-    public ArrayList<Disciplina> getDisciplinasObrigatorias() {
-        return disciplinasObrigatorias;
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
     }
 
-    public void adicionarDisciplinasObrigatorias(Disciplina d) {
-        this.disciplinasObrigatorias.add(d);
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
+
+    public void adicionarDisciplinas(Disciplina d) {
+        this.disciplinas.add(d);
     }
 
     public static int getMaxDias() {
         return MAX_DIAS;
     }
 
-    public ArrayList<Dia> getDias() {
+    public List<Dia> getDias() {
         return dias;
     }
 
@@ -35,6 +42,10 @@ public class Semestre {
 
     public void adicionarDia(Dia dia){
         dias.add(dia);}
+
+    public boolean foiAprovado(Disciplina d) {
+        return resultados.getOrDefault(d, false);
+    }
 
 
 }
