@@ -1,6 +1,8 @@
 package model.Evento;
 
-import model.Personagem;
+import model.Disciplina.AreaConhecimento;
+
+import java.util.Map;
 
 public class EventoObrigatorio extends Evento {
 
@@ -8,18 +10,11 @@ public class EventoObrigatorio extends Evento {
         super(nome, descricao);
     }
 
-    public EventoObrigatorio(double efeitoEnergia, double efeitoConhecimento,
+    public EventoObrigatorio(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento,
                              double efeitoMotivacao, double efeitoSaude,
                              double efeitoDinheiro, int efeitoTempo,
                              int tempoRequisito, Evento eventoRequisito, double energiaMinima) {
         super(efeitoEnergia, efeitoConhecimento, efeitoMotivacao, efeitoSaude, efeitoDinheiro, efeitoTempo, tempoRequisito, eventoRequisito, energiaMinima);
     }
 
-    @Override
-    public void tentarExecutar(Personagem personagem) {
-        executar(personagem);
-    }
-
-    @Override
-    public void executar(Personagem personagem){}
 }

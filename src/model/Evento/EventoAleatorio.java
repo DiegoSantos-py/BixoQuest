@@ -1,5 +1,9 @@
 package model.Evento;
 
+import model.Disciplina.AreaConhecimento;
+
+import java.util.Map;
+
 public class EventoAleatorio extends Evento {
     private double chanceAtivacao;
 
@@ -7,7 +11,7 @@ public class EventoAleatorio extends Evento {
         super(nome, descricao);
     }
 
-    public EventoAleatorio(double efeitoEnergia, double efeitoConhecimento,
+    public EventoAleatorio(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento,
                            double efeitoMotivacao, double efeitoSaude,
                            double efeitoDinheiro, int efeitoTempo,
                            int tempoRequisito, Evento eventoRequisito,
@@ -16,7 +20,7 @@ public class EventoAleatorio extends Evento {
         this.chanceAtivacao = Math.random();
     }
 
-    public EventoAleatorio(double efeitoEnergia, double efeitoConhecimento,
+    public EventoAleatorio(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento,
                            double efeitoMotivacao, double efeitoSaude,
                            double efeitoDinheiro, int efeitoTempo,
                            int tempoRequisito, Evento eventoRequisito,
