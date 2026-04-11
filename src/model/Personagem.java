@@ -1,5 +1,10 @@
 package model;
 
+import model.Disciplina.AreaConhecimento;
+import model.Disciplina.Disciplina;
+
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Personagem {
@@ -8,18 +13,11 @@ public class Personagem {
     private int personagemId;
     private String nome;
     private double energia;
-    private double sanidade;
+    private double motivacao;
     private double saude;
     private double dinheiro;
 
-    private double conhecimentoMat;
-    private double conhecimentoHar;
-    private double conhecimentoSof;
-    private double conhecimentoCom;
-    private double conhecimentoHum;
-    private double conhecimentoNat;
-    private double conhecimentoTfc;
-
+    private Map<AreaConhecimento, Double> conhecimentos;
 
     private String spriteDir;
 
@@ -33,14 +31,20 @@ public class Personagem {
         nome = "default";
         saude = 10.0;
         energia = 10.0;
-        sanidade = 10.0;
+        motivacao = 10.0;
         dinheiro = 10.0;
+
+        conhecimentos = new EnumMap<>(AreaConhecimento.class);
+
+        for (AreaConhecimento area : AreaConhecimento.values()) {
+            conhecimentos.put(area, 10.0);
+        }
     }
 
-    public Personagem(String nome, double energia, double sanidade, double saude, double dinheiro, String spriteDir){
+    public Personagem(String nome, double energia, double motivacao, double saude, double dinheiro, String spriteDir){
         this.nome = nome;
         this.saude = saude;
-        this.sanidade = sanidade;
+        this.motivacao = motivacao;
         this.dinheiro = dinheiro;
         this.energia = energia;
         this.spriteDir = spriteDir;
@@ -103,12 +107,12 @@ public class Personagem {
         this.saude = saude;
     }
 
-    public double getSanidade() {
-        return sanidade;
+    public double getMotivacao() {
+        return motivacao;
     }
 
-    public void setSanidade(double sanidade) {
-        this.sanidade = sanidade;
+    public void setMotivacao(double motivacao) {
+        this.motivacao = motivacao;
     }
 
     public String getSpriteDir() {
@@ -123,60 +127,16 @@ public class Personagem {
         SemestreAtual = semestreAtual;
     }
 
-    public double getConhecimentoMat() {
-        return conhecimentoMat;
+    public double getConhecimentoPorDisciplina(Disciplina disciplina) {
+        return conhecimentos.get(disciplina.getArea());
     }
 
-    public void setConhecimentoMat(double conhecimentoMat) {
-        this.conhecimentoMat = conhecimentoMat;
+    public double getConhecimento(AreaConhecimento area) {
+        return conhecimentos.get(area);
     }
 
-    public double getConhecimentoHar() {
-        return conhecimentoHar;
-    }
-
-    public void setConhecimentoHar(double conhecimentoHar) {
-        this.conhecimentoHar = conhecimentoHar;
-    }
-
-    public double getConhecimentoSof() {
-        return conhecimentoSof;
-    }
-
-    public double getConhecimentoCom() {
-        return conhecimentoCom;
-    }
-
-    public void setConhecimentoCom(double conhecimentoCom) {
-        this.conhecimentoCom = conhecimentoCom;
-    }
-
-    public void setConhecimentoSof(double conhecimentoSof) {
-        this.conhecimentoSof = conhecimentoSof;
-    }
-
-    public double getConhecimentoHum() {
-        return conhecimentoHum;
-    }
-
-    public void setConhecimentoHum(double conhecimentoHum) {
-        this.conhecimentoHum = conhecimentoHum;
-    }
-
-    public double getConhecimentoNat() {
-        return conhecimentoNat;
-    }
-
-    public void setConhecimentoNat(double conhecimentoNat) {
-        this.conhecimentoNat = conhecimentoNat;
-    }
-
-    public double getConhecimentoTfc() {
-        return conhecimentoTfc;
-    }
-
-    public void setConhecimentoTfc(double conhecimentoTfc) {
-        this.conhecimentoTfc = conhecimentoTfc;
+    public void adicionarConhecimento(AreaConhecimento area, double valor) {
+        conhecimentos.put(area, getConhecimento(area) + valor);
     }
 
     @Override
@@ -197,7 +157,7 @@ public class Personagem {
                 "personagemId=" + personagemId +
                 ", nome='" + nome + '\'' +
                 ", energia=" + energia +
-                ", sanidade=" + sanidade +
+                ", motivacao=" + motivacao +
                 ", saude=" + saude +
                 ", dinheiro=" + dinheiro +
                 ", spriteDir='" + spriteDir + '\'' +

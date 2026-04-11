@@ -1,4 +1,5 @@
-package model;
+package model.Local;
+
 import java.util.*;
 
 public class Mapa {

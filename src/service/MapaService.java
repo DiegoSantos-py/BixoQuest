@@ -1,8 +1,8 @@
 package service;
-import model.Area;
-import model.Mapa;
-import model.Local;
-import model.ZonaInterativa;
+import model.Local.Area;
+import model.Local.Mapa;
+import model.Local.Local;
+import model.Local.ZonaInterativa;
 import repository.LocalRepository;
 
 import java.util.Map;

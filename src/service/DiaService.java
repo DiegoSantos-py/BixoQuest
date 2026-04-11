@@ -1,6 +1,6 @@
 package service;
 
-import model.Dia;
+import model.Tempo.Dia;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -51,6 +51,10 @@ public class DiaService {
         pararTempo();
         avancarTempo(dia, minutos);
         iniciarDia(dia);
+    }
+
+    public void consumirTempoEvento(Dia dia, int minutos) {
+        pularTempo(dia, minutos);
     }
 
     public void pararTempo() {

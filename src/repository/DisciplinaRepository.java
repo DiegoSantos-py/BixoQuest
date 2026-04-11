@@ -1,6 +1,7 @@
 package repository;
 
-import model.Disciplina;
+import model.Disciplina.AreaConhecimento;
+import model.Disciplina.Disciplina;
 
 import java.util.*;
 
@@ -38,6 +39,20 @@ public class DisciplinaRepository {
         }
 
         return lista;
+    }
+
+    public List<Disciplina> buscarPorArea(AreaConhecimento area) {
+        List<Disciplina> resultado = new ArrayList<>();
+
+        for (List<Disciplina> lista : disciplinas.values()) {
+            for (Disciplina d : lista) {
+                if (d.getArea() == area) {
+                    resultado.add(d);
+                }
+            }
+        }
+
+        return resultado;
     }
 
     public Disciplina buscar(String nome, float codigo) {
@@ -83,5 +98,20 @@ public class DisciplinaRepository {
         }
 
         return null;
+    }
+
+    public List<Disciplina> buscarDisciplinasIniciais() {
+
+        List<Disciplina> iniciais = new ArrayList<>();
+
+        for (List<Disciplina> lista : disciplinas.values()) {
+            for (Disciplina d : lista) {
+                if (d.getCodigo() == 1) {
+                    iniciais.add(d);
+                }
+            }
+        }
+
+        return iniciais;
     }
 }

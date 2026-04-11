@@ -1,4 +1,4 @@
-package model;
+package model.Evento;
 
 public class ProvaBatalha {
 }

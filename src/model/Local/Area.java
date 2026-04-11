@@ -1,4 +1,4 @@
-package model;
+package model.Local;
 
 public class Area {
     private final int maxX;

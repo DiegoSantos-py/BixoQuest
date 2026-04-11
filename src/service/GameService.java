@@ -1,7 +1,7 @@
 package service;
 
-import model.Dia;
-import model.Semestre;
+import model.Tempo.Dia;
+import model.Tempo.Semestre;
 
 class GameService {
 

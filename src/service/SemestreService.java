@@ -1,8 +1,8 @@
 package service;
 
-import model.Dia;
-import model.Disciplina;
-import model.Semestre;
+import model.Tempo.Dia;
+import model.Disciplina.Disciplina;
+import model.Tempo.Semestre;
 import repository.DisciplinaRepository;
 import repository.SemestreRepository;
 
@@ -21,6 +21,20 @@ public class SemestreService {
 
     public Semestre criarSemestre() {
         return new Semestre();
+    }
+
+    public Semestre iniciarPrimeiroSemestre() {
+
+        Semestre semestre = criarSemestre();
+
+        List<Disciplina> disciplinasIniciais =
+                disciplinaRepo.buscarDisciplinasIniciais();
+
+        semestre.setDisciplinas(disciplinasIniciais);
+
+        this.semestreRepo.adicionarSemestre(semestre);
+
+        return semestre;
     }
 
     public Dia avancarDia(Semestre semestre) {
@@ -43,14 +57,14 @@ public class SemestreService {
 
     public boolean terminouSemestre(Semestre semestre){ return semestre.terminou();}
 
-    public void encerrarSemestre(Semestre semestre) {
+    public Semestre encerrarSemestre(Semestre semestre) {
 
         if (semestre == null) {
             throw new IllegalArgumentException("Semestre inválido");
         }
 
         if (!semestre.terminou()) {
-            return;
+            return semestre;
         }
 
         // salva histórico
@@ -75,7 +89,7 @@ public class SemestreService {
                 }
 
             } else {
-                // 🔹 reprovou → repete a mesma
+                // reprovou → repete a mesma
                 novasDisciplinas.add(atual);
             }
         }
@@ -84,6 +98,8 @@ public class SemestreService {
 
         // salva novo semestre
         this.semestreRepo.adicionarSemestre(novoSemestre);
+
+        return novoSemestre;
     }
 
 }

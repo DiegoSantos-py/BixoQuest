@@ -1,6 +1,6 @@
 package repository;
 
-import model.Local;
+import model.Local.Local;
 
 import java.util.HashMap;
 import java.util.Map;

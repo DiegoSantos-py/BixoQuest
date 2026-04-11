@@ -1,4 +1,4 @@
-package model;
+package model.Npc;
 
 import java.util.ArrayList;
 

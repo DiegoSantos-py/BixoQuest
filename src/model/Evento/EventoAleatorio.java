@@ -1,6 +1,6 @@
-package model;
+package model.Evento;
 
-public class EventoAleatorio extends Evento{
+public class EventoAleatorio extends Evento {
     private double chanceAtivacao;
 
     public EventoAleatorio(String nome, String descricao){
@@ -33,13 +33,4 @@ public class EventoAleatorio extends Evento{
         this.chanceAtivacao = chanceAtivacao;
     }
 
-    @Override
-    public void tentarExecutar(Personagem personagem) {
-        if (Math.random() < chanceAtivacao) {
-            executar(personagem);
-        }
-    }
-
-    @Override
-    public void executar(Personagem personagem){}
 }

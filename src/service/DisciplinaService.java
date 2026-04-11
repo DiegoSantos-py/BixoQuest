@@ -1,6 +1,7 @@
 package service;
 
-import model.Disciplina;
+import model.Disciplina.AreaConhecimento;
+import model.Disciplina.Disciplina;
 import repository.DisciplinaRepository;
 
 import java.util.List;
@@ -13,9 +14,9 @@ public class DisciplinaService {
         this.disciplinaRepo = disciplinaRepo;
     }
 
-    public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis) {
+    public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis, AreaConhecimento area) {
 
-        if (nome == null || quantidadeNiveis <= 0) {
+        if (nome == null || quantidadeNiveis <= 0 || area == null) {
             throw new IllegalArgumentException("Parâmetros inválidos");
         }
 
@@ -24,6 +25,7 @@ public class DisciplinaService {
             Disciplina d = new Disciplina();
             d.setNome(nome);
             d.setCodigo(i);
+            d.setArea(area);
 
             if (!disciplinaRepo.existe(d)) {
                 disciplinaRepo.adicionar(d);

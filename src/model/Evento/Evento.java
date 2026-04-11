@@ -1,12 +1,16 @@
-package model;
+package model.Evento;
 
-public abstract class Evento {
+import model.Disciplina.AreaConhecimento;
+
+import java.util.Map;
+
+public class Evento {
     private boolean status;
     private String nome;
     private String descricao;
 
     private double efeitoEnergia;
-    private double efeitoConhecimento;
+    private Map<AreaConhecimento, Double> efeitoConhecimento;
     private double efeitoMotivacao;
     private double efeitoSaude;
     private double efeitoDinheiro;
@@ -24,7 +28,7 @@ public abstract class Evento {
         this.nome = nome;
         this.descricao = descricao;
     }
-    public Evento(double efeitoEnergia, double efeitoConhecimento, double efeitoMotivacao,
+    public Evento(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento, double efeitoMotivacao,
                   double efeitoSaude, double efeitoDinheiro, int efeitoTempo,
                   int tempoRequisito, Evento eventoRequisito, double energiaMinima){
         this.efeitoEnergia = efeitoEnergia;
@@ -50,7 +54,7 @@ public abstract class Evento {
         return efeitoEnergia;
     }
 
-    public double getEfeitoConhecimento() {
+    public Map<AreaConhecimento, Double> getEfeitosConhecimento() {
         return efeitoConhecimento;
     }
 
@@ -113,10 +117,6 @@ public abstract class Evento {
     public String getDescricao() {
         return descricao;
     }
-
-    public abstract void tentarExecutar(Personagem personagem);
-
-    public abstract void executar(Personagem personagem);
 
     @Override
     public String toString(){

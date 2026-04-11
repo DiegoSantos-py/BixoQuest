@@ -1,4 +1,4 @@
-package model;
+package model.Local;
 
 public class ZonaInterativa {
     protected Area area;

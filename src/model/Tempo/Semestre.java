@@ -1,4 +1,6 @@
-package model;
+package model.Tempo;
+
+import model.Disciplina.Disciplina;
 
 import java.util.ArrayList;
 import java.util.List;

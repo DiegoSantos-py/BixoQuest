@@ -1,4 +1,4 @@
-package model;
+package model.Tempo;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;

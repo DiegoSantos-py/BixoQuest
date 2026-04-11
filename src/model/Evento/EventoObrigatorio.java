@@ -1,6 +1,8 @@
-package model;
+package model.Evento;
 
-public class EventoObrigatorio extends Evento{
+import model.Personagem;
+
+public class EventoObrigatorio extends Evento {
 
     public EventoObrigatorio(String nome, String descricao){
         super(nome, descricao);

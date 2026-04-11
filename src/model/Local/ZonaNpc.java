@@ -1,6 +1,8 @@
-package model;
+package model.Local;
 
-public class ZonaNpc extends ZonaInterativa{
+import model.Npc.Npc;
+
+public class ZonaNpc extends ZonaInterativa {
     private Npc npc;
 
     public ZonaNpc(Area area, String nome){

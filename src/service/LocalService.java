@@ -1,14 +1,12 @@
 package service;
-import model.Local;
-import model.ZonaInterativa;
+import model.Local.Local;
+import model.Local.ZonaInterativa;
 import repository.LocalRepository;
 
 
 
 public class LocalService {
     private LocalRepository localRepo = new LocalRepository();
-
-
 
     public void adicionarZona(ZonaInterativa zona, Local local) {
 

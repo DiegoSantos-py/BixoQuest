@@ -1,6 +1,6 @@
 package repository;
 
-import model.Semestre;
+import model.Tempo.Semestre;
 
 import java.util.ArrayList;
 import java.util.List;
