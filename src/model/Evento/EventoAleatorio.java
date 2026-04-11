@@ -3,29 +3,33 @@ package model.Evento;
 import model.Disciplina.AreaConhecimento;
 
 import java.util.Map;
+import java.util.Random;
 
 public class EventoAleatorio extends Evento {
-    private double chanceAtivacao;
 
-    public EventoAleatorio(String nome, String descricao){
+    private double chanceAtivacao; // ex: 0.3 = 30%
+    private static final Random random = new Random();
+
+    public EventoAleatorio(String nome, String descricao, double chanceAtivacao) {
         super(nome, descricao);
+        this.chanceAtivacao = chanceAtivacao;
     }
 
-    public EventoAleatorio(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento,
-                           double efeitoMotivacao, double efeitoSaude,
-                           double efeitoDinheiro, int efeitoTempo,
-                           int tempoRequisito, Evento eventoRequisito,
-                           double energiaMinima) {
-        super(efeitoEnergia, efeitoConhecimento, efeitoMotivacao, efeitoSaude, efeitoDinheiro, efeitoTempo, tempoRequisito, eventoRequisito, energiaMinima);
-        this.chanceAtivacao = Math.random();
-    }
+    public EventoAleatorio(double efeitoEnergia,
+                           Map<AreaConhecimento, Double> efeitoConhecimento,
+                           double efeitoMotivacao,
+                           double efeitoSaude,
+                           double efeitoDinheiro,
+                           int efeitoTempo,
+                           int tempoRequisito,
+                           Evento eventoRequisito,
+                           double energiaMinima,
+                           double chanceAtivacao) {
 
-    public EventoAleatorio(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento,
-                           double efeitoMotivacao, double efeitoSaude,
-                           double efeitoDinheiro, int efeitoTempo,
-                           int tempoRequisito, Evento eventoRequisito,
-                           double energiaMinima, double chanceAtivacao) {
-        super(efeitoEnergia, efeitoConhecimento, efeitoMotivacao, efeitoSaude, efeitoDinheiro, efeitoTempo, tempoRequisito, eventoRequisito, energiaMinima);
+        super(efeitoEnergia, efeitoConhecimento, efeitoMotivacao,
+                efeitoSaude, efeitoDinheiro, efeitoTempo,
+                tempoRequisito, eventoRequisito, energiaMinima);
+
         this.chanceAtivacao = chanceAtivacao;
     }
 
@@ -37,4 +41,8 @@ public class EventoAleatorio extends Evento {
         this.chanceAtivacao = chanceAtivacao;
     }
 
+    // método chave
+    public boolean deveAtivar() {
+        return random.nextDouble() <= chanceAtivacao;
+    }
 }

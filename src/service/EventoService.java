@@ -1,6 +1,7 @@
 package service;
 
 import model.Evento.Evento;
+import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
 
@@ -41,9 +42,34 @@ public class EventoService {
 
     public void executarEvento(Evento evento,
                                Personagem personagem,
+                               ZonaInterativa zona,
                                Dia diaAtual,
                                DiaService diaService) {
 
+        String nomeZona = zona.getNome();
+
+        Evento eventoDoDia = null;
+
+        // prioridade: eventos obrigatórios
+        if (diaAtual.getEventosObrigatorios().containsKey(nomeZona)) {
+            eventoDoDia = diaAtual.getEventosObrigatorios().get(nomeZona);
+        }
+        // senão, eventos aleatórios
+        else if (diaAtual.getEventosAleatorios().containsKey(nomeZona)) {
+            eventoDoDia = diaAtual.getEventosAleatorios().get(nomeZona);
+        }
+
+        //  não existe evento nessa zona
+        if (eventoDoDia == null) {
+            throw new IllegalStateException("Nenhum evento disponível para esta zona");
+        }
+
+        //  evento não corresponde ao da zona
+        if (!eventoDoDia.equals(evento)) {
+            throw new IllegalStateException("Evento não corresponde à zona atual");
+        }
+
+        // valida regras do evento
         if (!podeExecutar(evento, personagem, diaAtual, diaService)) {
             throw new IllegalStateException("Evento não pode ser executado");
         }
@@ -51,7 +77,6 @@ public class EventoService {
         aplicarEfeitos(evento, personagem, diaAtual, diaService);
 
         evento.setStatus(true);
-
     }
 
     private void aplicarEfeitos(Evento evento,

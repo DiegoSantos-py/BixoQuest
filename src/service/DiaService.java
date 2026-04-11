@@ -1,9 +1,12 @@
 package service;
 
+import model.Evento.Evento;
+import model.Evento.EventoAleatorio;
 import model.Tempo.Dia;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -82,4 +85,30 @@ public class DiaService {
     public long getTempoRestante(Dia dia) {
         return getTempoRestanteSegundos(dia);
     }
+
+    public void gerarEventosDoDia(Dia dia,
+                                  List<Evento> obrigatoriosBase,
+                                  List<EventoAleatorio> eventosAleatoriosBase) {
+
+        adicionarEventosObrigatorios(dia, obrigatoriosBase);
+        adicionarEventosAleatorios(dia, eventosAleatoriosBase);
+    }
+
+    private void adicionarEventosObrigatorios(Dia dia, List<Evento> eventos) {
+
+        for (Evento e : eventos) {
+            dia.getEventosObrigatorios().put(e.getNome(), e);
+        }
+    }
+
+    private void adicionarEventosAleatorios(Dia dia, List<EventoAleatorio> eventos) {
+
+        for (EventoAleatorio ea : eventos) {
+
+            if (ea.deveAtivar()) { // baseado na chance
+                dia.getEventosAleatorios().put(ea.getNome(), ea);
+            }
+        }
+    }
+
 }

@@ -1,4 +1,6 @@
 package model.Tempo;
+import model.Evento.Evento;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -9,8 +11,8 @@ public class Dia {
     private Duration duracao;
     private Instant inicio;
     private boolean eventoExecutando;
-    private Map<String, String> eventosObrigatorios;
-    private Map<String, String> eventosAleatorios;
+    private Map<String, Evento> eventosObrigatorios;
+    private Map<String, Evento> eventosAleatorios;
 
     public Dia(){
         this.duracao = Duration.ofMinutes(MAX_DURACAO);
@@ -19,11 +21,11 @@ public class Dia {
         this.eventosAleatorios = new HashMap<>();
     }
 
-    public Map<String, String> getEventosObrigatorios() {
+    public Map<String, Evento> getEventosObrigatorios() {
         return eventosObrigatorios;
     }
 
-    public void addEventosObrigatorios(Map<String, String> eventos) {
+    public void addEventosObrigatorios(Map<String, Evento> eventos) {
         for (String chave: eventosObrigatorios.keySet()) {
             if (!this.eventosObrigatorios.containsKey(chave)) {
                 this.eventosObrigatorios.put(chave, eventos.get(chave));
@@ -31,11 +33,11 @@ public class Dia {
         }
     }
 
-    public Map<String, String> getEventosAleatorios() {
+    public Map<String, Evento> getEventosAleatorios() {
         return eventosAleatorios;
     }
 
-    public void addEventosAleatorios(Map<String, String> eventos) {
+    public void addEventosAleatorios(Map<String, Evento> eventos) {
         for (String chave: eventos.keySet()) {
             if (!this.eventosAleatorios.containsKey(chave)) {
                 this.eventosAleatorios.put(chave, eventos.get(chave));
