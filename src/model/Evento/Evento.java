@@ -1,6 +1,7 @@
 package model.Evento;
 
 import model.Disciplina.AreaConhecimento;
+import model.Local.ZonaInterativa;
 
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class Evento {
     private double custaDinheiro;
 
     private boolean repetivel;
-    private int cooldown;
+    private ZonaInterativa zona;
 
     public Evento(String nome, String evento){
         this.nome = nome;
@@ -74,10 +75,6 @@ public class Evento {
         return efeitoTempo;
     }
 
-    public int getTempoRequisito() {
-        return tempoRequisito;
-    }
-
     public Evento getEventoRequisito() {
         return eventoRequisito;
     }
@@ -102,20 +99,20 @@ public class Evento {
         this.repetivel = repetivel;
     }
 
-    public int getCooldown() {
-        return cooldown;
-    }
-
-    public void setCooldown(int cooldown) {
-        this.cooldown = cooldown;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public void setZona(ZonaInterativa zona) {
+        this.zona = zona;
+    }
+
+    public String getZona() {
+        return zona.getNome();
     }
 
     @Override

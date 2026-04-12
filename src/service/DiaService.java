@@ -2,6 +2,8 @@ package service;
 
 import model.Evento.Evento;
 import model.Evento.EventoAleatorio;
+import model.Local.TipoLocal;
+import model.Personagem;
 import model.Tempo.Dia;
 
 import java.time.Duration;
@@ -19,6 +21,8 @@ public class DiaService {
     public void iniciarDia(Dia dia) {
 
         diaEncerrado = false;
+        dia.setSaiuDoPonto(false);
+
 
         if (scheduler != null && !scheduler.isShutdown()) {
             return;
@@ -35,7 +39,25 @@ public class DiaService {
 
         if (getTempoRestanteSegundos(dia) <= 0) {
             diaEncerrado = true;
-            pararTempo(); // apenas para o tempo
+            pararTempo();
+        }
+    }
+
+    public void verificarRetornoAoPonto(Dia dia, Personagem personagem) {
+
+        if (diaEncerrado) return;
+
+        boolean estaNoPonto =
+                personagem.getLocalAtual().getTipo() == TipoLocal.PONTO_ONIBUS;
+
+        // saiu do ponto
+        if (!estaNoPonto) {
+            dia.setSaiuDoPonto(true);
+        }
+
+        // saiu e voltou
+        if (dia.isSaiuDoPonto() && estaNoPonto) {
+            encerrarDia(dia);
         }
     }
 
@@ -51,9 +73,8 @@ public class DiaService {
             throw new IllegalArgumentException("Tempo insuficiente no dia");
         }
 
-        pararTempo();
+        // NÃO reinicia o dia!
         avancarTempo(dia, minutos);
-        iniciarDia(dia);
     }
 
     public void consumirTempoEvento(Dia dia, int minutos) {
@@ -71,6 +92,7 @@ public class DiaService {
     }
 
     public void encerrarDia(Dia dia) {
+        diaEncerrado = true;
         pararTempo();
     }
 
@@ -97,7 +119,14 @@ public class DiaService {
     private void adicionarEventosObrigatorios(Dia dia, List<Evento> eventos) {
 
         for (Evento e : eventos) {
-            dia.getEventosObrigatorios().put(e.getNome(), e);
+
+            String zona = e.getZona(); // <-- ideal existir no Evento
+
+            if (zona == null) {
+                throw new IllegalArgumentException("Evento sem zona definida: " + e.getNome());
+            }
+
+            dia.getEventosObrigatorios().put(zona, e);
         }
     }
 
@@ -105,10 +134,17 @@ public class DiaService {
 
         for (EventoAleatorio ea : eventos) {
 
-            if (ea.deveAtivar()) { // baseado na chance
-                dia.getEventosAleatorios().put(ea.getNome(), ea);
+            if (!ea.deveAtivar()) {
+                continue;
             }
+
+            String zona = ea.getZona(); // mesmo conceito
+
+            if (zona == null) {
+                continue;
+            }
+
+            dia.getEventosAleatorios().put(zona, ea);
         }
     }
-
 }

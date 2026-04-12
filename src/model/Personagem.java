@@ -2,10 +2,10 @@ package model;
 
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
+import model.Local.Local;
+import model.Tempo.Semestre;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Personagem {
     private static int qntdPersonagem = 0;
@@ -16,28 +16,30 @@ public class Personagem {
     private double motivacao;
     private double saude;
     private double dinheiro;
+    private Local localAtual;
 
     private Map<AreaConhecimento, Double> conhecimentos;
 
     private String spriteDir;
 
-    private int SemestreAtual;
+    private List<Semestre> semestres;
     private double desempenhoAcademico;
 
     private int cX = 0;
     private int cY = 0;
 
     public Personagem(){
-        nome = "default";
-        saude = 10.0;
-        energia = 10.0;
-        motivacao = 10.0;
-        dinheiro = 10.0;
+        this.nome = "Um estudante aleatório";
+        this.saude = 40.0;
+        this.energia = 40.0;
+        this.motivacao = 40.0;
+        this.dinheiro = 40.0;
 
-        conhecimentos = new EnumMap<>(AreaConhecimento.class);
+        this.conhecimentos = new EnumMap<>(AreaConhecimento.class);
+        this.semestres = new ArrayList<>();
 
         for (AreaConhecimento area : AreaConhecimento.values()) {
-            conhecimentos.put(area, 10.0);
+            this.conhecimentos.put(area, 10.0);
         }
     }
 
@@ -48,7 +50,14 @@ public class Personagem {
         this.dinheiro = dinheiro;
         this.energia = energia;
         this.spriteDir = spriteDir;
-        personagemId = qntdPersonagem++;
+        this.personagemId = qntdPersonagem++;
+        this.semestres = new ArrayList<>();
+
+        this.conhecimentos = new EnumMap<>(AreaConhecimento.class);
+
+        for (AreaConhecimento area : AreaConhecimento.values()) {
+            this.conhecimentos.put(area, 10.0);
+        }
     }
 
     public int getPersonagemId() {
@@ -119,12 +128,12 @@ public class Personagem {
         return spriteDir;
     }
 
-    public int getSemestreAtual() {
-        return SemestreAtual;
+    public Local getLocalAtual() {
+        return localAtual;
     }
 
-    public void setSemestreAtual(int semestreAtual) {
-        SemestreAtual = semestreAtual;
+    public void setLocalAtual(Local localAtual) {
+        this.localAtual = localAtual;
     }
 
     public double getConhecimentoPorDisciplina(Disciplina disciplina) {
@@ -137,6 +146,18 @@ public class Personagem {
 
     public void adicionarConhecimento(AreaConhecimento area, double valor) {
         conhecimentos.put(area, getConhecimento(area) + valor);
+    }
+
+    public List<Semestre> getSemestres() {
+        return semestres;
+    }
+
+    public void adicionarSemestre(Semestre semestre) {
+        this.semestres.add(semestre);
+    }
+
+    public double getDesempenhoAcademico() {
+        return desempenhoAcademico;
     }
 
     @Override
@@ -164,4 +185,6 @@ public class Personagem {
                 ", cX=" + cX +
                 ", cY=" + cY;
     }
+
+
 }

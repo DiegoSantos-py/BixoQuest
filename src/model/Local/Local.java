@@ -1,36 +1,45 @@
 package model.Local;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Local {
     private String nome;
-    private List<Local> vizinhos;
+    private Map<Direcao, Local> vizinhos;
     private List<ZonaInterativa> zonas;
     private String spriteDir;
     private Area area;
+    private TipoLocal tipo;
 
     public Local(String nome, Area area){
         this.nome = nome;
         this.area = area;
-        this.vizinhos = new ArrayList<>();
+        this.vizinhos = new HashMap<>();
+    }
+
+    public Local(String nome, Area area, TipoLocal tipo) {
+        this.nome = nome;
+        this.area = area;
+        this.tipo = tipo;
+        this.vizinhos = new HashMap<>();
     }
 
     public Local(String nome, List<ZonaInterativa> zonas){
         this.nome = nome;
         this.zonas = zonas;
-        this.vizinhos = new ArrayList<>();
-        this.zonas = new ArrayList<>();
+        this.vizinhos = new HashMap<>();
     }
 
     public Local(String nome, List<ZonaInterativa> zonas, String spriteDir){
         this.nome = nome;
         this.zonas = zonas;
-        this.vizinhos = new ArrayList<>();
+        this.vizinhos = new HashMap<>();
         this.spriteDir = spriteDir;
     }
 
-    public List<Local> getVizinhos() {
+    public Map<Direcao, Local> getVizinhos() {
         return vizinhos;
     }
 
@@ -50,20 +59,15 @@ public class Local {
         return this.zonas;
     }
 
-    public void conectar(Local outro) {
+    public Local getVizinho(Direcao direcao) {
+        return vizinhos.get(direcao);
+    }
 
-        if (this == outro) {
-            throw new IllegalArgumentException("Um local não pode se conectar a si mesmo.");
-        }
+    public void adicionarVizinho(Direcao direcao, Local local) {
+        this.vizinhos.put(direcao, local);
+    }
 
-        if (this.vizinhos.contains(outro)) {
-            return; // já conectado, não faz nada
-        }
-
-        this.vizinhos.add(outro);
-
-        if (!outro.vizinhos.contains(this)) {
-            outro.vizinhos.add(this);
-        }
+    public TipoLocal getTipo() {
+        return tipo;
     }
 }

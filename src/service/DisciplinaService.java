@@ -5,6 +5,7 @@ import model.Disciplina.Disciplina;
 import repository.DisciplinaRepository;
 
 import java.util.List;
+import java.util.Map;
 
 public class DisciplinaService {
 
@@ -40,6 +41,8 @@ public class DisciplinaService {
     public Disciplina buscar(String nome, float codigo) {
         return disciplinaRepo.buscar(nome, codigo);
     }
+
+    public Map<String, List<Disciplina>>  carregarDisciplinas() {return disciplinaRepo.carregarDisciplinas();}
 
 
 

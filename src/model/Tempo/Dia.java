@@ -10,9 +10,9 @@ public class Dia {
     private static final int MAX_DURACAO = 22;
     private Duration duracao;
     private Instant inicio;
-    private boolean eventoExecutando;
     private Map<String, Evento> eventosObrigatorios;
     private Map<String, Evento> eventosAleatorios;
+    private boolean saiuDoPonto;
 
     public Dia(){
         this.duracao = Duration.ofMinutes(MAX_DURACAO);
@@ -61,11 +61,11 @@ public class Dia {
         this.inicio = inicio;
     }
 
-    public boolean isEventoExecutando() {
-        return eventoExecutando;
+    public boolean isSaiuDoPonto() {
+        return saiuDoPonto;
     }
 
-    public void setEventoExecutando(boolean eventoExecutando) {
-        this.eventoExecutando = eventoExecutando;
+    public void setSaiuDoPonto(boolean saiuDoPonto) {
+        this.saiuDoPonto = saiuDoPonto;
     }
 }

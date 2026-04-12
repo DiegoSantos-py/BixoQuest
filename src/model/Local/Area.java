@@ -13,6 +13,22 @@ public class Area {
         this.minY = minY;
     }
 
+    public int getMinX() {
+        return minX;
+    }
+
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMinY() {
+        return minY;
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
+
     public boolean contemCoordenada(int x, int y){
         return (this.minX <= x) && (x <= this.maxX) &&
                 (this.minY <= y) && (y <= this.maxY);

@@ -1,5 +1,6 @@
 package service;
 
+import model.Personagem;
 import model.Tempo.Dia;
 import model.Disciplina.Disciplina;
 import model.Tempo.Semestre;
@@ -23,7 +24,7 @@ public class SemestreService {
         return new Semestre();
     }
 
-    public Semestre iniciarPrimeiroSemestre() {
+    public Semestre iniciarPrimeiroSemestre(int jogadorId) {
 
         Semestre semestre = criarSemestre();
 
@@ -31,8 +32,6 @@ public class SemestreService {
                 disciplinaRepo.buscarDisciplinasIniciais();
 
         semestre.setDisciplinas(disciplinasIniciais);
-
-        this.semestreRepo.adicionarSemestre(semestre);
 
         return semestre;
     }
@@ -51,13 +50,19 @@ public class SemestreService {
 
     public void adicionarDisciplina(Semestre semestre, Disciplina disciplina){
         if (semestre.getDisciplinas().contains(disciplina)){
-            throw new IllegalArgumentException("Não é possível adicionar a mesma disciplina ao semestre duas vezes.");
+            throw new IllegalArgumentException(
+                    "Não é possível adicionar a mesma disciplina ao semestre duas vezes."
+            );
         }
+
+        semestre.adicionarDisciplinas(disciplina);
     }
 
-    public boolean terminouSemestre(Semestre semestre){ return semestre.terminou();}
+    public boolean terminouSemestre(Semestre semestre){
+        return semestre.terminou();
+    }
 
-    public Semestre encerrarSemestre(Semestre semestre) {
+    public Semestre encerrarSemestre(Personagem personagem, Semestre semestre) {
 
         if (semestre == null) {
             throw new IllegalArgumentException("Semestre inválido");
@@ -68,7 +73,8 @@ public class SemestreService {
         }
 
         // salva histórico
-        this.semestreRepo.adicionarSemestre(semestre);
+        personagem.adicionarSemestre(semestre);
+        this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
 
         // cria novo semestre
         Semestre novoSemestre = new Semestre();
@@ -89,7 +95,6 @@ public class SemestreService {
                 }
 
             } else {
-                // reprovou → repete a mesma
                 novasDisciplinas.add(atual);
             }
         }
@@ -97,9 +102,8 @@ public class SemestreService {
         novoSemestre.setDisciplinas(novasDisciplinas);
 
         // salva novo semestre
-        this.semestreRepo.adicionarSemestre(novoSemestre);
+        this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), novoSemestre);
 
         return novoSemestre;
     }
-
 }

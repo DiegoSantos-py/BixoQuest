@@ -1,11 +1,53 @@
 package service;
 
+import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
 import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
 
+import java.util.Map;
+
 public class EventoService {
+    public Evento criarEvento(String nome,
+                              String descricao,
+                              double efeitoEnergia,
+                              Map<AreaConhecimento, Double> efeitoConhecimento,
+                              double efeitoMotivacao,
+                              double efeitoSaude,
+                              double efeitoDinheiro,
+                              int efeitoTempo,
+                              int tempoRequisito,
+                              Evento eventoRequisito,
+                              double energiaMinima,
+                              double custoDinheiro,
+                              boolean repetivel,
+                              ZonaInterativa zona) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome inválido");
+        }
+
+        Evento evento = new Evento(
+                efeitoEnergia,
+                efeitoConhecimento,
+                efeitoMotivacao,
+                efeitoSaude,
+                efeitoDinheiro,
+                efeitoTempo,
+                tempoRequisito,
+                eventoRequisito,
+                energiaMinima
+        );
+
+        // atributos que não estão no construtor
+        evento.setCustaDinheiro(custoDinheiro);
+        evento.setRepetivel(repetivel);
+        evento.setZona(zona);
+        evento.setStatus(false);
+
+        return evento;
+    }
 
     public boolean podeExecutar(Evento evento, Personagem personagem, Dia diaAtual, DiaService diaService) {
 
@@ -42,11 +84,10 @@ public class EventoService {
 
     public void executarEvento(Evento evento,
                                Personagem personagem,
-                               ZonaInterativa zona,
                                Dia diaAtual,
                                DiaService diaService) {
 
-        String nomeZona = zona.getNome();
+        String nomeZona = evento.getZona();
 
         Evento eventoDoDia = null;
 

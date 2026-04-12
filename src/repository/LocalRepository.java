@@ -1,6 +1,7 @@
 package repository;
 
 import model.Local.Local;
+import model.Local.TipoLocal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,15 @@ public class LocalRepository {
 
     public Map<String, Local> carregarLocal(){
         return this.locais;
+    }
+
+    public Local buscarPorTipo(TipoLocal tipo){
+        for (String l: this.locais.keySet()){
+                if (locais.get(l).getTipo() == tipo){
+                    return locais.get(l);
+                }
+        }
+        return null;
     }
 }
 

@@ -114,4 +114,6 @@ public class DisciplinaRepository {
 
         return iniciais;
     }
+
+    public Map<String, List<Disciplina>> carregarDisciplinas (){ return this.disciplinas;}
 }
