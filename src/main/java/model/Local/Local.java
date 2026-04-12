@@ -13,6 +13,10 @@ public class Local {
     private Area area;
     private TipoLocal tipo;
 
+    public Local() {
+
+    }
+
     public Local(String nome, Area area){
         this.nome = nome;
         this.area = area;
@@ -70,4 +74,9 @@ public class Local {
     public TipoLocal getTipo() {
         return tipo;
     }
+
+    public void setTipo(TipoLocal tipoLocal) {
+        this.tipo = tipoLocal;
+    }
+
 }

@@ -4,10 +4,14 @@ public class ZonaInterativa {
     protected Area area;
     private String nome;
 
+    public ZonaInterativa() {
+    }
+
     public ZonaInterativa(Area area, String nome){
         this.area = area;
         this.nome = nome;
     }
+
 
     public boolean contemCoordenada(int x, int y){
         return area.contemCoordenada(x, y);
@@ -19,5 +23,9 @@ public class ZonaInterativa {
 
     public String getNome() {
         return nome;
+    }
+
+    public void setNome(String s) {
+        this.nome = s;
     }
 }

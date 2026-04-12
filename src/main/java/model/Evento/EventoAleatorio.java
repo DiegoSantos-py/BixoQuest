@@ -10,6 +10,8 @@ public class EventoAleatorio extends Evento {
     private double chanceAtivacao; // ex: 0.3 = 30%
     private static final Random random = new Random();
 
+    public EventoAleatorio() {}
+
     public EventoAleatorio(String nome, String descricao, double chanceAtivacao) {
         super(nome, descricao);
         this.chanceAtivacao = chanceAtivacao;
@@ -41,8 +43,9 @@ public class EventoAleatorio extends Evento {
         this.chanceAtivacao = chanceAtivacao;
     }
 
-    // método chave
     public boolean deveAtivar() {
         return random.nextDouble() <= chanceAtivacao;
     }
+
+
 }

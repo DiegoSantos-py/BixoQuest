@@ -1,5 +1,6 @@
 package model.Tempo;
 import model.Evento.Evento;
+import model.Evento.EventoAleatorio;
 
 import java.time.Duration;
 import java.time.Instant;

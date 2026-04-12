@@ -3,6 +3,7 @@ package model.Tempo;
 import model.Disciplina.Disciplina;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ public class Semestre {
 
     public Semestre(){
         this.dias = new ArrayList<Dia>();
+        this.disciplinas = new ArrayList<>();
+        this.resultados = new HashMap<>();
     }
 
     public List<Disciplina> getDisciplinas() {

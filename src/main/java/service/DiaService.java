@@ -3,6 +3,7 @@ package service;
 import model.Evento.Evento;
 import model.Evento.EventoAleatorio;
 import model.Local.TipoLocal;
+import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
 
@@ -120,13 +121,13 @@ public class DiaService {
 
         for (Evento e : eventos) {
 
-            String zona = e.getZona(); // <-- ideal existir no Evento
+            ZonaInterativa zona = e.getZona();
 
             if (zona == null) {
                 throw new IllegalArgumentException("Evento sem zona definida: " + e.getNome());
             }
 
-            dia.getEventosObrigatorios().put(zona, e);
+            dia.getEventosObrigatorios().put(zona.getNome(), e);
         }
     }
 
@@ -138,13 +139,14 @@ public class DiaService {
                 continue;
             }
 
-            String zona = ea.getZona(); // mesmo conceito
+            ZonaInterativa zona = ea.getZona();
 
             if (zona == null) {
-                continue;
+                throw new IllegalArgumentException("Evento sem zona definida: " + ea.getNome());
             }
 
-            dia.getEventosAleatorios().put(zona, ea);
+
+            dia.getEventosAleatorios().put(zona.getNome(), ea);
         }
     }
 }

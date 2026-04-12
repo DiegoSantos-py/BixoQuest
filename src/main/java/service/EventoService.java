@@ -87,7 +87,8 @@ public class EventoService {
                                Dia diaAtual,
                                DiaService diaService) {
 
-        String nomeZona = evento.getZona();
+        ZonaInterativa zona = evento.getZona();
+        String nomeZona = zona.getNome();
 
         Evento eventoDoDia = null;
 

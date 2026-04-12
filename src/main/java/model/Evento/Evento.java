@@ -25,6 +25,8 @@ public class Evento {
     private boolean repetivel;
     private ZonaInterativa zona;
 
+    public Evento() {}
+
     public Evento(String nome, String evento){
         this.nome = nome;
         this.descricao = descricao;
@@ -103,6 +105,14 @@ public class Evento {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     public String getDescricao() {
         return descricao;
     }
@@ -111,8 +121,8 @@ public class Evento {
         this.zona = zona;
     }
 
-    public String getZona() {
-        return zona.getNome();
+    public ZonaInterativa getZona() {
+        return zona;
     }
 
     @Override
