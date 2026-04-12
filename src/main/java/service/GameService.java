@@ -10,7 +10,7 @@ import repository.LocalRepository;
 
 import java.util.List;
 
-class GameService {
+public class GameService {
 
     private DiaService diaService;
     private SemestreService semestreService;

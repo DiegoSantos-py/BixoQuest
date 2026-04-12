@@ -7,5 +7,6 @@ public enum AreaConhecimento {
     COM,
     HUM,
     NAT,
-    TFC
+    TFC,
+    ANI
 }

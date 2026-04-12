@@ -21,6 +21,7 @@ public class Local {
         this.nome = nome;
         this.area = area;
         this.vizinhos = new HashMap<>();
+        this.zonas = new ArrayList<>();
     }
 
     public Local(String nome, Area area, TipoLocal tipo) {
@@ -28,12 +29,14 @@ public class Local {
         this.area = area;
         this.tipo = tipo;
         this.vizinhos = new HashMap<>();
+        this.zonas = new ArrayList<>();
     }
 
     public Local(String nome, List<ZonaInterativa> zonas){
         this.nome = nome;
         this.zonas = zonas;
         this.vizinhos = new HashMap<>();
+        this.zonas = new ArrayList<>();
     }
 
     public Local(String nome, List<ZonaInterativa> zonas, String spriteDir){
@@ -41,6 +44,7 @@ public class Local {
         this.zonas = zonas;
         this.vizinhos = new HashMap<>();
         this.spriteDir = spriteDir;
+        this.zonas = new ArrayList<>();
     }
 
     public Map<Direcao, Local> getVizinhos() {

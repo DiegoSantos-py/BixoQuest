@@ -106,4 +106,12 @@ public class SemestreService {
 
         return novoSemestre;
     }
+
+    public void definirResultadoDisciplina(Semestre semestre, Disciplina disciplina, boolean aprovado) {
+        if (semestre == null || disciplina == null) {
+            throw new IllegalArgumentException("Parâmetros inválidos");
+        }
+
+        semestre.registrarResultado(disciplina, aprovado);
+    }
 }

@@ -52,5 +52,17 @@ public class Semestre {
         return resultados.getOrDefault(d, false);
     }
 
+    public void registrarResultado(Disciplina d, boolean aprovado) {
+        if (d == null) {
+            throw new IllegalArgumentException("Disciplina inválida");
+        }
+
+        if (!disciplinas.contains(d)) {
+            throw new IllegalArgumentException("Disciplina não pertence ao semestre");
+        }
+
+        resultados.put(d, aprovado);
+    }
+
 
 }

@@ -195,4 +195,6 @@ public class MapaService {
         //Adicionar zona
         local.getZonaInterativasDisponiveis().add(zona);
     }
+
+    //TODO criar meio para adicionar zonas aos locais dinamicamente
 }

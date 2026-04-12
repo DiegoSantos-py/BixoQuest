@@ -129,5 +129,38 @@ public class Evento {
     public String toString(){
         return this.nome + this.descricao;
     }
+
+    public void setEnergiaMinima(int i) { this.energiaMinima = i;
+    }
+
+    public void setEfeitoTempo(int i) { this.efeitoTempo = i;
+    }
+
+    public void setEfeitosConhecimento(Map<AreaConhecimento, Double> efeitosConhecimento) {
+        this.efeitoConhecimento = efeitosConhecimento;
+    }
+
+    public void setEfeitoEnergia(double efeitoEnergia) {
+        this.efeitoEnergia = efeitoEnergia;
+    }
+
+    public void setEfeitoMotivacao(double efeitoMotivacao) {
+        this.efeitoMotivacao = efeitoMotivacao;
+    }
+
+    public void setEfeitoConhecimento(Map<AreaConhecimento, Double> efeitoConhecimento) {
+        this.efeitoConhecimento = efeitoConhecimento;
+    }
+
+    public void setEfeitoSaude(double efeitoSaude) {
+        this.efeitoSaude = efeitoSaude;
+    }
+
+    public void setEfeitoDinheiro(double efeitoDinheiro) {
+        this.efeitoDinheiro = efeitoDinheiro;
+    }
+
+    public void setEventoRequisito(Evento requisito) {this.eventoRequisito = requisito;
+    }
 }
 
