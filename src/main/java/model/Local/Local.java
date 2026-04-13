@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Local {
     private String nome;
-    private Map<Direcao, Local> vizinhos;
-    private List<ZonaInterativa> zonas;
+    private Map<Direcao, Local> vizinhos; // locais que fazem fronteira com o local atual
+    private List<ZonaInterativa> zonas; // zonas de interação desse local
     private String spriteDir;
     private Area area;
     private TipoLocal tipo;

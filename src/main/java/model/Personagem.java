@@ -20,7 +20,7 @@ public class Personagem {
 
     private Map<AreaConhecimento, Double> conhecimentos;
 
-    private String spriteDir;
+    private String spriteDir; // preparação para próxima fase
 
     private List<Semestre> semestres;
     private double desempenhoAcademico;
@@ -160,11 +160,12 @@ public class Personagem {
         return desempenhoAcademico;
     }
 
+    // é igual se nome e id são iguais
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Personagem that = (Personagem) o;
-        return Objects.equals(nome, that.nome);
+        return personagemId == that.personagemId && Objects.equals(nome, that.nome);
     }
 
     @Override

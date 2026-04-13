@@ -57,6 +57,7 @@ public class Semestre {
             throw new IllegalArgumentException("Disciplina inválida");
         }
 
+        // verifica se a disciplina passada como parâmetro é do semestre
         if (!disciplinas.contains(d)) {
             throw new IllegalArgumentException("Disciplina não pertence ao semestre");
         }

@@ -18,10 +18,12 @@ public class LocalRepository {
             return;
         }
 
+        //verifica se local ja existe no repositório
         if (this.locais.containsKey(local.getNome())){
             return;
         }
 
+        // adiciona local
         this.locais.put(local.getNome(), local);
     }
 

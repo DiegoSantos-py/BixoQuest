@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SemestreService {
+
+    // Repositório responsável por salvar e recuperar semestres
     private SemestreRepository semestreRepo;
+
     private DisciplinaRepository disciplinaRepo;
 
     public SemestreService(SemestreRepository semestreRepo,
@@ -28,6 +31,7 @@ public class SemestreService {
 
         Semestre semestre = criarSemestre();
 
+        // Busca as disciplinas iniciais do jogo
         List<Disciplina> disciplinasIniciais =
                 disciplinaRepo.buscarDisciplinasIniciais();
 
@@ -38,17 +42,21 @@ public class SemestreService {
 
     public Dia avancarDia(Semestre semestre) {
 
+        // Se o semestre já terminou, não cria novos dias
         if (semestre.terminou()) {
             return null;
         }
 
         Dia novoDia = new Dia();
+
         semestre.adicionarDia(novoDia);
 
         return novoDia;
     }
 
     public void adicionarDisciplina(Semestre semestre, Disciplina disciplina){
+
+        // Não permite adicionar a mesma disciplina duas vezes
         if (semestre.getDisciplinas().contains(disciplina)){
             throw new IllegalArgumentException(
                     "Não é possível adicionar a mesma disciplina ao semestre duas vezes."
@@ -68,21 +76,25 @@ public class SemestreService {
             throw new IllegalArgumentException("Semestre inválido");
         }
 
+        // Se ainda não terminou, retorna o mesmo semestre
         if (!semestre.terminou()) {
             return semestre;
         }
 
-        // salva histórico
+        // Salva o semestre no histórico do personagem
         personagem.adicionarSemestre(semestre);
+
+        // Salva no repositório
         this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
 
-        // cria novo semestre
         Semestre novoSemestre = new Semestre();
 
         List<Disciplina> novasDisciplinas = new ArrayList<>();
 
+        // Percorre todas as disciplinas do semestre atual
         for (Disciplina atual : semestre.getDisciplinas()) {
 
+            // Se o aluno foi aprovado
             if (semestre.foiAprovado(atual)) {
 
                 Disciplina proxima = disciplinaRepo.proximaDisciplina(
@@ -90,28 +102,31 @@ public class SemestreService {
                         atual.getCodigo()
                 );
 
+                // Se existir próxima disciplina, adiciona
                 if (proxima != null) {
                     novasDisciplinas.add(proxima);
                 }
 
             } else {
+                // Se foi reprovado, repete a mesma disciplina
                 novasDisciplinas.add(atual);
             }
         }
 
         novoSemestre.setDisciplinas(novasDisciplinas);
 
-        // salva novo semestre
         this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), novoSemestre);
 
         return novoSemestre;
     }
 
     public void definirResultadoDisciplina(Semestre semestre, Disciplina disciplina, boolean aprovado) {
+
         if (semestre == null || disciplina == null) {
             throw new IllegalArgumentException("Parâmetros inválidos");
         }
 
+        // Registra se o aluno foi aprovado ou não na disciplina
         semestre.registrarResultado(disciplina, aprovado);
     }
 }

@@ -19,6 +19,7 @@ public class PersonagemService {
     public PersonagemService(EventoService eventoService){
         this.eventoService = eventoService;
     }
+
     public Personagem criarPersonagem(String nome,
                                       double energia,
                                       double motivacao,

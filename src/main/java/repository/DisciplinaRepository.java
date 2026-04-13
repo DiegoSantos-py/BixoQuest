@@ -86,6 +86,7 @@ public class DisciplinaRepository {
         });
     }
 
+    // busca no repositorio a disciplina com o próximo codigo e a retorna
     public Disciplina proximaDisciplina(String nome, float codigoAtual) {
         List<Disciplina> lista = disciplinas.get(nome);
 

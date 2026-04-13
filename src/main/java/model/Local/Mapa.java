@@ -9,6 +9,7 @@ public class Mapa {
         locais = new HashMap<String, Local>();
     }
 
+    // adiciona local ao map tendo nome como chave
     public void adicionarLocal(String nome, Local outro){
         this.locais.put(nome, outro);
     }

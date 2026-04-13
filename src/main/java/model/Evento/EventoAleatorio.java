@@ -7,6 +7,7 @@ import java.util.Random;
 
 public class EventoAleatorio extends Evento {
 
+    // Variáveis para implementar aleatoriedade
     private double chanceAtivacao; // ex: 0.3 = 30%
     private static final Random random = new Random();
 

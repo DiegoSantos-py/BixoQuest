@@ -12,6 +12,7 @@ public class SemestreRepository {
         this.semestresPorJogador = new HashMap<>();
     }
 
+    // retorna todos semestres asociados a um jogador
     public List<Semestre> getSemestresPorJogador(int jogadorId) {
 
         List<Semestre> lista = semestresPorJogador.get(jogadorId);

@@ -41,6 +41,7 @@ public class Area {
                 this.maxY >= outra.maxY;
     }
 
+    // verifica se as áreas colidem
     public boolean intersecta(Area outra) {
         return this.minX < outra.maxX &&
                 this.maxX > outra.minX &&

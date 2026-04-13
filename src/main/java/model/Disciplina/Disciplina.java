@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Disciplina {
     private String nome;
     private float codigo;
-    private ProvaBatalha prova;
+    private ProvaBatalha prova; //Classe relacionada ao evento de batalha
     private AreaConhecimento area;
 
     public AreaConhecimento getArea() {
@@ -42,6 +42,7 @@ public class Disciplina {
         this.prova = prova;
     }
 
+    // Duas disciplina são iguais se tem mesmo nome e código
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

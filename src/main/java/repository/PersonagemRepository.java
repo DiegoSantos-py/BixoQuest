@@ -8,6 +8,7 @@ import java.util.Map;
 public class PersonagemRepository {
     private Map<Integer, Personagem> personagens = new HashMap<>();
 
+    // guarda todos personagens existentes
     public void adicionarPersonagem(Personagem personagem){
         if (this.personagens.containsKey(personagem.getPersonagemId()) || personagem == null){
             return;

@@ -16,7 +16,7 @@ public class Dia {
     private boolean saiuDoPonto;
 
     public Dia(){
-        this.duracao = Duration.ofMinutes(MAX_DURACAO);
+        this.duracao = Duration.ofMinutes(MAX_DURACAO); // Define duração máxima do dia
         this.inicio = Instant.now();
         this.eventosObrigatorios = new HashMap<>();
         this.eventosAleatorios = new HashMap<>();

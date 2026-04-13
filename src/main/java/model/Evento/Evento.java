@@ -10,6 +10,7 @@ public class Evento {
     private String nome;
     private String descricao;
 
+    //Efeitos no jogador
     private double efeitoEnergia;
     private Map<AreaConhecimento, Double> efeitoConhecimento;
     private double efeitoMotivacao;
@@ -17,13 +18,14 @@ public class Evento {
     private double efeitoDinheiro;
     private int efeitoTempo;
 
+    //Requisitos para ativação
     private int tempoRequisito;
     private Evento eventoRequisito;
     private double energiaMinima;
     private double custaDinheiro;
 
     private boolean repetivel;
-    private ZonaInterativa zona;
+    private ZonaInterativa zona; //Zona ao qual está relacionado
 
     public Evento() {}
 
