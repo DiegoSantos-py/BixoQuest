@@ -1,5 +1,6 @@
 package model.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import model.util.Hitbox;
 import model.util.Vector2D;
@@ -25,29 +26,43 @@ public class PlayerProva extends EntidadeBatalha {
     private List<AcaoBatalha> acoesDisponiveis;
 
 
-    private static PlayerProva instancia;
 
-    public PlayerProva(Hitbox hitbox, Vector2D velocidade) {
+
+    public PlayerProva(Hitbox hitbox, Vector2D velocidade, float conhecimentoArea) {
         super(hitbox, velocidade);
-        this.shieldMaximo = (int) Math.round(0.22f * conhecimentoArea - 1.8f); // funcao pra conhecimento 10 shield 0, 20 shield 3, 30 shield 5...
+        this.conhecimentoArea = conhecimentoArea; 
+        
+        this.shieldMaximo = (int) Math.round(0.22f * this.conhecimentoArea - 1.8f); 
+        if (this.shieldMaximo < 0) this.shieldMaximo = 0;
+        
         this.shieldAtual = shieldMaximo;
-        this.danoAtaque = 20.0f; 
-        this.conhecimentoArea = 0.0f; 
+        this.danoAtaque = this.conhecimentoArea / 2f + 5f; 
+        this.acoesDisponiveis = new ArrayList<AcaoBatalha>();
         this.turnosUsados = 0;
         this.acertosPerfeitosConsecutivos = 0;
         this.hitsRecebidos = 0;
         this.perdeuNota = false;
         this.levouAlgumDano = false;
-        PlayerProva.instancia = this; 
     }
 
-    public static PlayerProva getInstancia() {
-        return instancia;
+    public void aplicarBonusAcao(int bonusDano, int bonusShield, int bonusConhecimento) {
+        this.danoAtaque += bonusDano;
+        this.conhecimentoArea += bonusConhecimento;
+
+        int novoShieldMax = (int) Math.round(0.22f * this.conhecimentoArea - 1.8f);
+        if (novoShieldMax > this.shieldMaximo) {
+            this.shieldMaximo = novoShieldMax;
+        }
+
+        this.shieldAtual += bonusShield;
+        if (this.shieldAtual > this.shieldMaximo) {
+            this.shieldAtual = this.shieldMaximo;
+        }
     }
 
     public void ReceberDano(float danoShield, float danoNota) {
         if (tempoImunidadeRestante > 0) {
-            return; // Não recebe danoShield negativo ou zero
+            return; 
         }
 
         this.levouAlgumDano = true;
@@ -78,5 +93,17 @@ public class PlayerProva extends EntidadeBatalha {
                 this.tempoImunidadeRestante = 0;
             }
         }
+    }
+
+    public int getShieldAtual() {
+        return shieldAtual;
+    }
+
+    public boolean isPerdeuNota() {
+        return perdeuNota;
+    }
+
+    public float getDanoAtaque() {
+        return danoAtaque;
     }
 }

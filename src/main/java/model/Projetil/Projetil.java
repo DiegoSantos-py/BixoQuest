@@ -8,22 +8,54 @@ public abstract class Projetil extends EntidadeBatalha {
 
     protected int danoShield; // protected para os filhos acessarem se precisarem
     protected float danoNota;
-    protected int tempoDeVida = 0; // contador de frames vivos
-    protected int duracaoMaxima;// em frames
-    protected boolean ativo = true; // isso aq é pra fazer a pre-alocacao do projetil, pra n atiçar o garbage collector
+    protected float tempoDeVida = 0; //contador de tempo vivo em ms
+    protected float duracaoMaxima; //duracao maxima em ms
+    // ATENÇÃO: NÃO re-declarar campo 'ativo' aqui! Ele pertence ao pai EntidadeBatalha.
+    // Re-declarar causaria field shadowing: isAtivo() leria o campo do pai (true) ignorando este.
+    
+    protected EntidadeBatalha owner;
+    protected PlayerProva target;
+    protected ProjetilFactory factory;
 
-
-    public Projetil(Hitbox hitbox, Vector2D velocidade, int danoShield, float danoNota, int duracaoMaxima) {
+    public Projetil(Hitbox hitbox, Vector2D velocidade, int danoShield, float danoNota, float duracaoMaxima) {
         super(hitbox, velocidade);
         this.danoShield = danoShield;
         this.danoNota = danoNota;
-        this.duracaoMaxima =  duracaoMaxima;
+        this.duracaoMaxima = duracaoMaxima;
+        desativar(); // garante que projéteis pré-alocados começam inativos na Object Pool
+    }
+
+    public void setFactory(ProjetilFactory factory) {
+        this.factory = factory;
+    }
+
+    public void setOwner(EntidadeBatalha owner) {
+        this.owner = owner;
+    }
+    
+    public void setTarget(PlayerProva target) {
+        this.target = target;
+    }
+
+    public void reviver(float posX, float posY, float sizeX, float sizeY, float velX, float velY, float anguloHitbox, int danoShield, float danoNota, float duracaoMaxima) {
+        this.hitbox.setCentro(posX, posY);
+        this.hitbox.setTamanho(sizeX, sizeY);
+        this.hitbox.setAnguloRad(anguloHitbox);
+        this.velocidade.set(velX, velY);
+        
+        this.danoShield = danoShield;
+        this.danoNota = danoNota;
+        this.duracaoMaxima = duracaoMaxima;
+        this.tempoDeVida = 0;
+        this.ativo = true;
     }
 
     public abstract void executarAI(float deltaTime);
 
     public void aoColidirComPlayer() {
-        PlayerProva.getInstancia().ReceberDano(this.danoShield, this.danoNota);
+        if (this.target != null) {
+            this.target.ReceberDano(this.danoShield, this.danoNota);
+        }
     }
 
     public void aoDespawnar() {
@@ -31,8 +63,8 @@ public abstract class Projetil extends EntidadeBatalha {
     }
 
     public final void atualizar(float deltaTime) {
+
         if (!isAtivo()) return;
-        
         if (tempoDeVida >= duracaoMaxima) {
             this.ativo = false; 
             aoDespawnar();  
@@ -43,7 +75,7 @@ public abstract class Projetil extends EntidadeBatalha {
         this.tempoDeVida += deltaTime;
         executarAI(deltaTime);          
         this.atualizarPosicao(deltaTime); 
-        if(this.hitbox.checarColisao(PlayerProva.getInstancia().getHitbox())) {
+        if(this.target != null && this.hitbox.checarColisao(this.target.getHitbox())) {
             aoColidirComPlayer();
         }
     }

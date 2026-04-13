@@ -1,9 +1,5 @@
 package model.Player;
 
-import java.util.List;
-import model.util.Hitbox;
-import model.util.Vector2D;
-import model.EntidadeBatalha;
 public class AcaoBatalha {
 
     private String Nome;
@@ -20,5 +16,15 @@ public class AcaoBatalha {
         this.BonusShield = bonusShield;
         this.BonusConhecimento = bonusConhecimento;
     }
-    // tem q ver isso ai
+    
+    public String getNome() { return Nome; }
+    public float getChanceAcerto() { return ChanceAcerto; }
+    public int getBonusDano() { return BonusDano; }
+    public int getBonusShield() { return BonusShield; }
+    public int getBonusConhecimento() { return BonusConhecimento; }
+    public void setNome(String nome) { this.Nome = nome; }
+    public void setChanceAcerto(float chanceAcerto) { this.ChanceAcerto = chanceAcerto; }
+    public void setBonusDano(int bonusDano) { this.BonusDano = bonusDano; }
+    public void setBonusShield(int bonusShield) { this.BonusShield = bonusShield; }
+    public void setBonusConhecimento(int bonusConhecimento) { this.BonusConhecimento = bonusConhecimento; }
 }

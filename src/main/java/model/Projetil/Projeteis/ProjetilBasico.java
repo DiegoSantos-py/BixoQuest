@@ -5,7 +5,7 @@ import model.Projetil.Projetil;
 
 public class ProjetilBasico extends Projetil {
 
-    public ProjetilBasico(Hitbox hitbox,Vector2D velocidade, int danoShield, float danoNota, int duracaoMaxima) { 
+    public ProjetilBasico(Hitbox hitbox,Vector2D velocidade, int danoShield, float danoNota, float duracaoMaxima) { 
         super(hitbox, velocidade, danoShield, danoNota, duracaoMaxima); 
     }
 

@@ -36,6 +36,10 @@ public class Hitbox {
     public Vector2D getCentro() { return centro; }
     public Vector2D getTamanho() { return tamanho; }
 
+    public void setCentro(float x, float y) { this.centro.set(x, y); }
+    public void setTamanho(float w, float h) { this.tamanho.set(w, h); }
+    public void setAnguloRad(float anguloRad) { this.anguloRad = anguloRad; }
+
 
 
 

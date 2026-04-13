@@ -1,42 +1,120 @@
 package model.Projetil;
 
-import model.Projetil.Projeteis.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.EntidadeBatalha;
+import model.Player.PlayerProva;
+import model.Projetil.Projeteis.ProjetilBasico;
+import model.Projetil.Projeteis.ProjetilExplosivo;
+import model.Projetil.Projeteis.ProjetilQueSegue;
 import model.util.Hitbox;
 import model.util.Vector2D;
 
 public class ProjetilFactory {
 
-    public static Projetil novoProjetil(Hitbox h, Vector2D vel, ProjetilID id, int danoShield, float danoNota, int duracaoMaxima) {
-        switch (id) {
-            case BASICO:
-                return new ProjetilBasico(h, vel, danoShield, danoNota, duracaoMaxima);
-            case HOMING:
-                return new ProjetilQueSegue(h, vel, danoShield, danoNota, duracaoMaxima);
-            case EXPLOSIVE:
-                return new ProjetilExplosivo(h, vel, danoShield, danoNota, duracaoMaxima);
-            default:
-                return new ProjetilBasico(h, vel, danoShield, danoNota, duracaoMaxima);
+    private ProjetilBasico[] poolBasico;
+    private ProjetilQueSegue[] poolHoming;
+    private ProjetilExplosivo[] poolExplosivo;
+
+    private int indexBasico = 0;
+    private int indexHoming = 0;
+    private int indexExplosivo = 0;
+
+    public ProjetilFactory(PlayerProva target, EntidadeBatalha owner, int maxBasico, int maxHoming, int maxExplosivo) {
+
+        poolBasico = new ProjetilBasico[maxBasico];
+        poolHoming = new ProjetilQueSegue[maxHoming];
+        poolExplosivo = new ProjetilExplosivo[maxExplosivo];
+
+        for (int i = 0; i < maxBasico; i++) {
+            poolBasico[i] = new ProjetilBasico(new Hitbox(new Vector2D(0, 0), new Vector2D(0, 0), 0), new Vector2D(0, 0), 0, 0, 0);
+            poolBasico[i].setFactory(this);
+            poolBasico[i].setOwner(owner);
+            poolBasico[i].setTarget(target);
+        }
+
+        for (int i = 0; i < maxHoming; i++) {
+            poolHoming[i] = new ProjetilQueSegue(new Hitbox(new Vector2D(0, 0), new Vector2D(0, 0), 0), new Vector2D(0, 0), 0, 0, 0);
+            poolHoming[i].setFactory(this);
+            poolHoming[i].setOwner(owner);
+            poolHoming[i].setTarget(target);
+        }
+
+        for (int i = 0; i < maxExplosivo; i++) {
+            poolExplosivo[i] = new ProjetilExplosivo(new Hitbox(new Vector2D(0, 0), new Vector2D(0, 0), 0), new Vector2D(0, 0), 0, 0, 0);
+            poolExplosivo[i].setFactory(this);
+            poolExplosivo[i].setOwner(owner);
+            poolExplosivo[i].setTarget(target);
         }
     }
+
+    public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, float anguloSpawn, float anguloHitbox, ProjetilID id, int danoShield, float danoNota, float duracaoMaxima) {
+        float velX = (float) (velocidade * Math.cos(anguloSpawn));
+        float velY = (float) (velocidade * Math.sin(anguloSpawn));
+
+        Projetil p = null;
+
+        switch (id) {
+            case BASICO:
+                if (poolBasico.length > 0) {
+                    p = poolBasico[indexBasico];
+                    indexBasico = (indexBasico + 1) % poolBasico.length;
+                }
+                break;
+            case HOMING:
+                if (poolHoming.length > 0) {
+                    p = poolHoming[indexHoming];
+                    indexHoming = (indexHoming + 1) % poolHoming.length;
+                }
+                break;
+            case EXPLOSIVE:
+                if (poolExplosivo.length > 0) {
+                    p = poolExplosivo[indexExplosivo];
+                    indexExplosivo = (indexExplosivo + 1) % poolExplosivo.length;
+                }
+                break;
+        }
+
+        if (p != null) {
+            p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima);
+        }
+        return p;
+    }
+
+    public void atualizar(float dt) {
+        for (ProjetilBasico p : poolBasico) {
+            if (p.isAtivo()){
+                p.atualizar(dt);
+            }
+        }
+        for (ProjetilQueSegue p : poolHoming) {
+            if (p.isAtivo()){
+                p.atualizar(dt);
+            }
+        }
+        for (ProjetilExplosivo p : poolExplosivo) {
+            if (p.isAtivo()){
+                p.atualizar(dt);
+            }
+        }
+    }
+
+    public List<Projetil> getAtivos() {
+        List<Projetil> ativos = new ArrayList<>();
+        for (ProjetilBasico p : poolBasico) {
+            if (p.isAtivo()) {
+                ativos.add(p);
+            }
+        }
+        for (ProjetilQueSegue p : poolHoming) {
+            if (p.isAtivo()) {
+                ativos.add(p);
+            }
+        }
+        for (ProjetilExplosivo p : poolExplosivo) {
+            if (p.isAtivo()) ativos.add(p);
+        }
+        return ativos;
+    }
 }
-
-// === EXEMPLO DE USO  ===
-
-// 1. definir a posição de spawn (ex: pegando do centro da prova)
-// Vector2D spawnPos = prova.getInstance().getHitbox().getCentro(); 
-
-// 2. chamar a Factory para criar o objeto completo em uma linha
-// Parâmetros: Hitbox(pos, tam, ang(da hitbox)), vel, ID, danoShield, danoNota, duracao
-/*
-    Projetil p = ProjetilFactory.spawn(
-        new Hitbox(new Vector2D(500, 100), new Vector2D(15, 15), 0), 
-        new Vector2D(0, 5), 
-        ProjetilID.BASICO, 
-        1, 
-        0.1f, 
-        300 (5s a 60fps)
-    );
-*/
-
-// 3. adicionaar na lista do manager
-// listaProjeteis.add(p); (ainda n existe)
