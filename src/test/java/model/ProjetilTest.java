@@ -25,7 +25,8 @@ class ProjetilTest {
             new Vector2D(0, 10),
             5, 0f, 1000f
         );
-        missil.reviver(0, 0, 5, 5, 0, 10, 0, 5, 0f, 1000f);
+        missil.reviver(0, 0, 5, 5, 0, 10, 0, 5, 0f, 1000f); //reespawna o missl em 0,0 , velocidade 10 em y , sem rotacao na hitbox e dando 5 de dano
+                                                            // shield, 0 dano nota e durando 1 segundo
         missil.setTarget(alvo);
 
         // Roda 1 frame de IA (60fps)

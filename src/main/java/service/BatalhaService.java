@@ -79,7 +79,6 @@ public class BatalhaService {
             float hpBase = animal.getIndole() > 0 ? animal.getIndole() * 20.0f : 50.0f; 
 
             Oponente animalOponente = new Oponente(new Hitbox(new Vector2D(0, 0), new Vector2D(50, 50), 0.0f), new Vector2D(0, 0), animal.getNome(), hpBase) {
-                private Random random = new Random();
                 @Override
                 public Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
                     return new AtaqueMordida(alvo, owner); 
