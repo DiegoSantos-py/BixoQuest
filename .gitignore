@@ -32,3 +32,6 @@ bin/
 
 #tests
 target
+
+
+*.md
