@@ -11,10 +11,12 @@ import model.Projetil.ProjetilID;
 public abstract class Ataque {
     protected float tempoDecorrido = 0;
     protected boolean finalizado = false;
-
+    protected float dificuldade;
     protected ProjetilFactory factory;
     protected EntidadeBatalha owner;
     protected PlayerProva target;
+
+
 
     public Ataque(PlayerProva target, EntidadeBatalha owner, int maxBasico, int maxHoming, int maxExplosivo) {
         this.target = target;

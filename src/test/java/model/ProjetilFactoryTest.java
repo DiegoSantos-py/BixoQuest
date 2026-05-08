@@ -34,7 +34,7 @@ class ProjetilFactoryTest {
         ) {
             @Override
             public model.Ataque.Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
-                return null;
+                return new model.Ataque.Ataques.AtaqueMordida(alvo, owner);
             }
         };
     }

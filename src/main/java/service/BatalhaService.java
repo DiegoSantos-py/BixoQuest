@@ -9,6 +9,7 @@ import model.Npc.Animal;
 import model.Evento.ProvaBatalha;
 import model.Ataque.Ataque;
 import model.Ataque.Ataques.AtaqueMordida;
+import model.Disciplina.AreaConhecimento;
 import model.EntidadeBatalha;
 import model.util.Hitbox;
 import model.util.Vector2D;
@@ -19,17 +20,12 @@ import java.util.Random;
 
 public class BatalhaService {
 
-    public EstadoBatalha iniciarBatalha(Personagem personagem, Batalhavel origem) {
+    public EstadoBatalha iniciarBatalha(Personagem personagem, Oponente origem) {
         Queue<Oponente> fila = processarFactoryOponentes(origem);
-        boolean isAnimal = origem instanceof Animal;
-        
-        // Pega o Conhecimento da Área (se for matéria). 
-        // Passaremos um valor temporário seguro que extrairemos futuramente de Batalhavel se for o caso!
-        float conhecimentoArea = 10.0f; // placeholder base
-        
+        final boolean isAnimal = origem.isAnimal();
         return new EstadoBatalha(personagem, conhecimentoArea, fila, isAnimal);
     }
-
+    //todo : isso
     public void atualizar(EstadoBatalha estado, float dt) {
         if (estado.isFinalizado()) {
             return;
@@ -70,39 +66,56 @@ public class BatalhaService {
             oponenteAtual.receberDano(danoCausado);
         }
     }
-
-    private Queue<Oponente> processarFactoryOponentes(Batalhavel origem) {
+    private Queue<Oponente> processarFactoryOponentes(Oponente origem) {
         Queue<Oponente> fila = new LinkedList<>();
 
-        if (origem instanceof Animal) {
-            Animal animal = (Animal) origem;
-            float hpBase = animal.getIndole() > 0 ? animal.getIndole() * 20.0f : 50.0f; 
+        if (origem.getAreaConhecimento() == AreaConhecimento.ANI) {
 
-            Oponente animalOponente = new Oponente(new Hitbox(new Vector2D(0, 0), new Vector2D(50, 50), 0.0f), new Vector2D(0, 0), animal.getNome(), hpBase) {
+
+
+            Oponente animalOponente = new Oponente(
+                    new Hitbox(new Vector2D(0, 0), new Vector2D(50, 50), 0.0f),
+                    new Vector2D(0, 0),
+                    animal.getNome(),
+                    hpBase
+            ) {
                 @Override
                 public Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
-                    return new AtaqueMordida(alvo, owner); 
+                    return new AtaqueMordida(alvo, owner);
                 }
             };
+     
             fila.add(animalOponente);
+        }
 
-        } else if (origem instanceof ProvaBatalha) {
+        if (origem instanceof ProvaBatalha) {
+
             ProvaBatalha prova = (ProvaBatalha) origem;
+
             int numQuestoes = prova.getQuantidadeQuestoes();
-            float hpBaseQuestao = prova.getNivelDisciplina() * 15.0f; 
+            float hpBaseQuestao = prova.getNivelDisciplina() * 15.0f;
 
             for (int i = 1; i <= numQuestoes; i++) {
+
                 String nomeQuestao = "Questão " + i + " de " + prova.getNome();
-                Oponente questao = new Oponente(new Hitbox(new Vector2D(0, 0), new Vector2D(50, 50), 0.0f), new Vector2D(0, 0), nomeQuestao, hpBaseQuestao) {
+
+                Oponente questao = new Oponente(
+                        new Hitbox(new Vector2D(0, 0), new Vector2D(50, 50), 0.0f),
+                        new Vector2D(0, 0),
+                        nomeQuestao,
+                        hpBaseQuestao
+                ) {
                     @Override
                     public Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
-                        return new AtaqueMordida(alvo, owner); 
+                        return new AtaqueMordida(alvo, owner);
                     }
                 };
+
                 fila.add(questao);
             }
         }
 
         return fila;
     }
+
 }

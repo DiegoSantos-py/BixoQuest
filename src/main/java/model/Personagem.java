@@ -95,7 +95,10 @@ public class Personagem {
     public double getEnergia() {
         return energia;
     }
-
+    public double addEnergia(int valor) {
+        this.energia += valor;
+        return this.energia;
+    }
     public void setEnergia(double energia) {
         this.energia = energia;
     }
@@ -122,6 +125,10 @@ public class Personagem {
 
     public void setMotivacao(double motivacao) {
         this.motivacao = motivacao;
+    }
+
+    public void addMotivacao(int valor) {
+        this.motivacao += valor;
     }
 
     public String getSpriteDir() {
