@@ -40,7 +40,12 @@ public abstract class EntidadeBatalha {
     public Hitbox getHitbox() {
         return hitbox;
     }
-
+    public float getX(){
+        return this.hitbox.getCentro().getX();
+    }
+    public float getY(){
+        return this.hitbox.getCentro().getY();
+    }
     public Vector2D getCentro() {
         return hitbox.getCentro();
     }

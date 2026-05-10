@@ -47,5 +47,6 @@ public class Npc {
         this.nome = nome;
     }
 
+    //TODO melhorar npcs
 
 }

@@ -26,6 +26,7 @@ public class ProjetilFactory {
         poolBasico = new ProjetilBasico[maxBasico];
         poolHoming = new ProjetilQueSegue[maxHoming];
         poolExplosivo = new ProjetilExplosivo[maxExplosivo];
+        // cria os projeteis todos vazios sem nada pra preencher eles conforme necessidade
 
         for (int i = 0; i < maxBasico; i++) {
             poolBasico[i] = new ProjetilBasico(new Hitbox(new Vector2D(0, 0), new Vector2D(0, 0), 0), new Vector2D(0, 0), 0, 0, 0);
@@ -50,10 +51,14 @@ public class ProjetilFactory {
     }
 
     public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, float anguloSpawn, float anguloHitbox, ProjetilID id, int danoShield, float danoNota, float duracaoMaxima) {
+        
+    
         float velX = (float) (velocidade * Math.cos(anguloSpawn));
         float velY = (float) (velocidade * Math.sin(anguloSpawn));
 
         Projetil p = null;
+        //calcula a velocidade x e y c base na matriz de rotacao la de geom. analitica
+        // agradecimento especial a prof victor por me ensinar isso
 
         switch (id) {
             case BASICO:

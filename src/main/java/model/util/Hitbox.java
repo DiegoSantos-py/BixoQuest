@@ -16,7 +16,6 @@ public class Hitbox {
         new Vector2D(0,0), new Vector2D(0,0)
     };
 
-    //o gemini mando botar fora do construtor por N razoes ent deixa ai ne
     public Hitbox(Vector2D centro, Vector2D tamanho, float anguloRad) {
 
     this.centro = centro;
