@@ -1,5 +1,6 @@
 package model.Tempo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.Disciplina.Disciplina;
 
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ public class Semestre {
     private static final int MAX_DIAS = 20;
     private List<Dia> dias;
     private List<Disciplina> disciplinas;
+    @JsonIgnore
     private Map<Disciplina, Boolean> resultados;
+
+    private Map<String, Boolean> resultadosNomes = new HashMap<>();
 
     public Semestre(){
         this.dias = new ArrayList<Dia>();
@@ -48,9 +52,16 @@ public class Semestre {
     public void adicionarDia(Dia dia){
         dias.add(dia);}
 
+    public Map<Disciplina, Boolean> getResultados() {
+        return resultados;
+    }
+
     public boolean foiAprovado(Disciplina d) {
         return resultados.getOrDefault(d, false);
     }
+
+    public Map<String, Boolean> getResultadosNomes() { return resultadosNomes; }
+    public void setResultadosNomes(Map<String, Boolean> r) { this.resultadosNomes = r; }
 
     public void registrarResultado(Disciplina d, boolean aprovado) {
         if (d == null) {
@@ -63,6 +74,7 @@ public class Semestre {
         }
 
         resultados.put(d, aprovado);
+        resultadosNomes.put(d.getNome() + ":" + d.getCodigo(), aprovado);
     }
 
 

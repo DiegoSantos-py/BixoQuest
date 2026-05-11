@@ -69,4 +69,12 @@ public class Dia {
     public void setSaiuDoPonto(boolean saiuDoPonto) {
         this.saiuDoPonto = saiuDoPonto;
     }
+
+    public void setEventosObrigatorios(Map<String, Evento> eventosObrigatorios) {
+        this.eventosObrigatorios = eventosObrigatorios;
+    }
+
+    public void setEventosAleatorios(Map<String, Evento> eventosAleatorios) {
+        this.eventosAleatorios = eventosAleatorios;
+    }
 }

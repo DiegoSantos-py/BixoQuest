@@ -1,3 +1,5 @@
+package service;
+
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
 import model.Local.Area;
@@ -10,9 +12,6 @@ import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.DiaService;
-import service.EventoService;
-import service.PersonagemService;
 
 import java.time.Duration;
 import java.time.Instant;

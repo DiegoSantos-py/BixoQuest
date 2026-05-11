@@ -17,7 +17,14 @@ public class Oponente extends EntidadeBatalha {
     protected float hpAtual;
    
     protected List<Ataque> ataquesDisponiveis = new ArrayList<>();
-    
+
+
+    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo) {
+        super(hitbox, velocidade);
+        this.nome = nome;
+        this.hpMaximo = hpMaximo;
+        this.hpAtual = hpMaximo;
+    }
 
     public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo, AreaConhecimento areaConhecimento) {
         super(hitbox, velocidade);

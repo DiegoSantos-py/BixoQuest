@@ -12,7 +12,6 @@ public class ZonaInterativa {
         this.nome = nome;
     }
 
-
     public boolean contemCoordenada(int x, int y){
         return area.contemCoordenada(x, y);
     }
@@ -20,6 +19,8 @@ public class ZonaInterativa {
     public Area getArea() {
         return area;
     }
+
+    public void setArea(Area area) {this.area = area;}
 
     public String getNome() {
         return nome;

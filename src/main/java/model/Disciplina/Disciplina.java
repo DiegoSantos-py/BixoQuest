@@ -1,5 +1,6 @@
 package model.Disciplina;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.Evento.ProvaBatalha;
 
 import java.util.Objects;
@@ -34,6 +35,7 @@ public class Disciplina {
         this.codigo = codigo;
     }
 
+    @JsonIgnore
     public ProvaBatalha getProva() {
         return prova;
     }

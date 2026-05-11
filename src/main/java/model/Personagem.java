@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Local.Local;
@@ -16,12 +17,16 @@ public class Personagem {
     private double motivacao;
     private double saude;
     private double dinheiro;
+    @JsonIgnore
     private Local localAtual;
+
+    private String localAtualNome;
 
     private Map<AreaConhecimento, Double> conhecimentos;
 
     private String spriteDir; // preparação para próxima fase
 
+    @JsonIgnore
     private List<Semestre> semestres;
     private double desempenhoAcademico;
 
@@ -35,7 +40,7 @@ public class Personagem {
         this.motivacao = 40.0;
         this.dinheiro = 40.0;
 
-        this.conhecimentos = new EnumMap<>(AreaConhecimento.class);
+        this.conhecimentos = new HashMap<>();
         this.semestres = new ArrayList<>();
 
         for (AreaConhecimento area : AreaConhecimento.values()) {
@@ -53,7 +58,7 @@ public class Personagem {
         this.personagemId = qntdPersonagem++;
         this.semestres = new ArrayList<>();
 
-        this.conhecimentos = new EnumMap<>(AreaConhecimento.class);
+        this.conhecimentos = new HashMap<>();
 
         for (AreaConhecimento area : AreaConhecimento.values()) {
             this.conhecimentos.put(area, 10.0);
@@ -139,8 +144,9 @@ public class Personagem {
         return localAtual;
     }
 
-    public void setLocalAtual(Local localAtual) {
-        this.localAtual = localAtual;
+    public void setLocalAtual(Local local) {
+        this.localAtual = local;
+        this.localAtualNome = local != null ? local.getNome() : null;
     }
 
     public double getConhecimentoPorDisciplina(Disciplina disciplina) {
@@ -166,6 +172,9 @@ public class Personagem {
     public double getDesempenhoAcademico() {
         return desempenhoAcademico;
     }
+
+    public String getLocalAtualNome() { return localAtualNome; }
+    public void setLocalAtualNome(String nome) { this.localAtualNome = nome; }
 
     // é igual se nome e id são iguais
     @Override

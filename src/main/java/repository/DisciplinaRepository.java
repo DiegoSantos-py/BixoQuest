@@ -1,16 +1,46 @@
 package repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 
+import java.io.File;
 import java.util.*;
 
 public class DisciplinaRepository {
 
     private Map<String, List<Disciplina>> disciplinas;
 
+    private static final ObjectMapper mapper = criarMapper();
+    private static final File ARQUIVO = new File("disciplinas.json");
+
     public DisciplinaRepository() {
         this.disciplinas = new HashMap<>();
+    }
+
+    private static ObjectMapper criarMapper() {
+        ObjectMapper m = new ObjectMapper();
+        m.registerModule(new JavaTimeModule());
+        m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return m;
+    }
+
+    public void salvar() throws Exception {
+        mapper.writerWithDefaultPrettyPrinter()
+                .writeValue(ARQUIVO, disciplinas);
+    }
+
+    public void carregar() throws Exception {
+        if (!ARQUIVO.exists()) return;
+
+        this.disciplinas = mapper.readValue(ARQUIVO,
+                mapper.getTypeFactory().constructMapType(
+                        HashMap.class,
+                        mapper.getTypeFactory().constructType(String.class),
+                        mapper.getTypeFactory().constructCollectionType(List.class, Disciplina.class)
+                ));
     }
 
     public void adicionar(Disciplina d) {

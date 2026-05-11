@@ -1,3 +1,5 @@
+package service;
+
 import model.Evento.Evento;
 import model.Evento.EventoAleatorio;
 import model.Local.Local;
@@ -7,13 +9,11 @@ import model.Personagem;
 import model.Tempo.Dia;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.DiaService;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 

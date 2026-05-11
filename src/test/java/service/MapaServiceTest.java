@@ -1,3 +1,5 @@
+package service;
+
 import model.Local.Area;
 import model.Local.Direcao;
 import model.Local.Local;
@@ -6,7 +8,6 @@ import model.Local.TipoLocal;
 import model.Local.ZonaInterativa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.MapaService;
 
 import java.util.Map;
 

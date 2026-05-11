@@ -11,7 +11,8 @@ public class Colega extends Npc {
 
     }
 
-    public String aoInteragir(Personagem player) {
+    //TODO: CONSERTAR ISSO AQUI
+    /*public String aoInteragir(Personagem player) {
         if(!getInteragido()) {
             return this.getFalaAleatoria();
         }
@@ -22,5 +23,5 @@ public class Colega extends Npc {
         //cada colega tem uma area de disciplina(spawna aleatoriamente pelo mapa
         //vc interage, perde tipo 0.5 e ganha 1
         //genial eu sei
-    }
+    }*/
 }

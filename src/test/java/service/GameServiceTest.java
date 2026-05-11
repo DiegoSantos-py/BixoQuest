@@ -1,3 +1,5 @@
+package service;
+
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Local.Area;
@@ -10,10 +12,6 @@ import org.junit.jupiter.api.Test;
 import repository.DisciplinaRepository;
 import repository.LocalRepository;
 import repository.SemestreRepository;
-import service.DiaService;
-import service.DisciplinaService;
-import service.GameService;
-import service.SemestreService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

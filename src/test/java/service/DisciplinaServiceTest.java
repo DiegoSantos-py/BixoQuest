@@ -1,11 +1,10 @@
-
+package service;
 
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.DisciplinaRepository;
-import service.DisciplinaService;
 
 import java.util.List;
 import java.util.Map;

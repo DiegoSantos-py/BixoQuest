@@ -1,7 +1,7 @@
 package service;
 
 import model.EstadoBatalha;
-import model.Batalhavel;
+import model.Npc.Batalhavel;
 import model.Oponente;
 import model.Personagem;
 import model.Player.PlayerProva;
@@ -19,7 +19,8 @@ import java.util.Queue;
 import java.util.Random;
 
 public class BatalhaService {
-
+    //TODO: MUITOS METODOS AQUI N EXISTEM. EX: isDerrotado, isAnimal
+    /*
     public EstadoBatalha iniciarBatalha(Personagem personagem, Oponente origem) {
         Queue<Oponente> fila = processarFactoryOponentes(origem);
         final boolean isAnimal = origem.isAnimal();
@@ -116,6 +117,6 @@ public class BatalhaService {
         }
 
         return fila;
-    }
+    }*/
 
 }

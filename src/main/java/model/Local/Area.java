@@ -1,4 +1,6 @@
 package model.Local;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Area {
     private final int maxX;
@@ -6,7 +8,12 @@ public class Area {
     private final int maxY;
     private final int minY;
 
-    public Area(int maxX, int minX, int maxY, int minY){
+    @JsonCreator
+    public Area(
+            @JsonProperty("maxX") int maxX,
+            @JsonProperty("minX") int minX,
+            @JsonProperty("maxY") int maxY,
+            @JsonProperty("minY") int minY) {
         this.maxX = maxX;
         this.minX = minX;
         this.maxY = maxY;

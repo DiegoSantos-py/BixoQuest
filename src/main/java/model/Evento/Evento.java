@@ -1,9 +1,19 @@
 package model.Evento;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import model.Disciplina.AreaConhecimento;
 import model.Local.ZonaInterativa;
 
 import java.util.Map;
+
+//Isso faz o JSON incluir um campo "tipo" para o Jackson saber qual classe instanciar ao carregar
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tipo")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = EventoAleatorio.class, name = "aleatorio"),
+        @JsonSubTypes.Type(value = Evento.class, name = "evento")
+})
 
 public class Evento {
     private boolean status;
@@ -20,7 +30,10 @@ public class Evento {
 
     //Requisitos para ativação
     private int tempoRequisito;
+    @JsonIgnore
     private Evento eventoRequisito;
+
+    private String eventoRequisitoNome;
     private double energiaMinima;
     private double custaDinheiro;
 
@@ -162,7 +175,13 @@ public class Evento {
         this.efeitoDinheiro = efeitoDinheiro;
     }
 
-    public void setEventoRequisito(Evento requisito) {this.eventoRequisito = requisito;
+    public void setEventoRequisito(Evento requisito) {
+        this.eventoRequisito = requisito;
+        this.eventoRequisitoNome = requisito != null ? requisito.getNome() : null;
     }
+
+    public String getEventoRequisitoNome() { return eventoRequisitoNome; }
+    public void setEventoRequisitoNome(String nome) { this.eventoRequisitoNome = nome; }
+
 }
 

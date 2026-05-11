@@ -1,3 +1,5 @@
+package service;
+
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Personagem;
@@ -7,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.DisciplinaRepository;
 import repository.SemestreRepository;
-import service.SemestreService;
 
 import java.util.ArrayList;
 import java.util.List;

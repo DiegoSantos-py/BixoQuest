@@ -1,11 +1,13 @@
 package model.Evento;
 
-import model.Batalhavel;
+import model.Npc.Batalhavel;
+import model.Oponente;
 
 public class ProvaBatalha extends Evento implements Batalhavel {
     
     private int nivelDisciplina;
     private int quantidadeQuestoes;
+    private Oponente oponente;
 
     public ProvaBatalha(String nome, String descricao, int nivelDisciplina, int quantidadeQuestoes) {
         super();
@@ -15,7 +17,8 @@ public class ProvaBatalha extends Evento implements Batalhavel {
         this.quantidadeQuestoes = quantidadeQuestoes;
     }
 
-    @Override
+    //TODO: @OVERRIDE AQUI N FUNCIONA
+    //@Override
     public String getNomeBatalha() {
         return getNome();
     }
@@ -34,5 +37,9 @@ public class ProvaBatalha extends Evento implements Batalhavel {
 
     public void setQuantidadeQuestoes(int quantidadeQuestoes) {
         this.quantidadeQuestoes = quantidadeQuestoes;
+    }
+    //TODO: IMPLEMENTAR GET OPONENTE DIREITO
+    public Oponente getOponente(){
+        return this.oponente;
     }
 }

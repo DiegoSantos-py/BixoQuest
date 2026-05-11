@@ -12,21 +12,25 @@ import model.Disciplina.AreaConhecimento;
 import model.util.Hitbox;
 import model.util.Vector2D;
 
-public class Animal extends Npc implements Batalhavel{
+//TODO: ANIMAL NAO IMPLEMENTA GET OPONENTE
+//public class Animal extends Npc implements Batalhavel{
+public class Animal{
     private int indole;
     private boolean domado;
     private Especie especie;
     private Oponente oponente;
     public Animal(String nome, int cX, int cY, ArrayList<String> falas,Especie especie, int indole){
-        super(nome, cX, cY, falas);
+        //super(nome, cX, cY, falas);
         this.indole = indole;
         this.especie = especie;
     }
 
 
 
-
-    @Override 
+    //TODO: OVERRIDE N FUNCIONA NESSE CASO java: method does not override or implement a method from a supertype
+    // posXspritebatalha, posYspritebatalha n foram declarados em nenhum lugar
+    //@Override
+    /*
     public String aoInteragir(Personagem player) {
         if (domado) {
             player.addMotivacao(indole / 5);
@@ -64,5 +68,5 @@ public class Animal extends Npc implements Batalhavel{
     }
     public int getIndole() {
         return indole;
-    }
+    }*/
 }
