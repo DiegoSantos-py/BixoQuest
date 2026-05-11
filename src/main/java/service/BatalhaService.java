@@ -1,23 +1,5 @@
 package service;
 
-import model.EstadoBatalha;
-import model.Npc.Batalhavel;
-import model.Oponente;
-import model.Personagem;
-import model.Player.PlayerProva;
-import model.Npc.Animal;
-import model.Evento.ProvaBatalha;
-import model.Ataque.Ataque;
-import model.Ataque.Ataques.AtaqueMordida;
-import model.Disciplina.AreaConhecimento;
-import model.EntidadeBatalha;
-import model.util.Hitbox;
-import model.util.Vector2D;
-
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
-
 public class BatalhaService {
     //TODO: MUITOS METODOS AQUI N EXISTEM. EX: isDerrotado, isAnimal
     /*

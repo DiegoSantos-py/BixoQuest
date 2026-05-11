@@ -12,17 +12,15 @@ public class Professor extends Npc {
     public Professor(String nome, int cX, int cY, ArrayList<String> falas) {
         super(nome, cX, cY, falas);
     }
-    //TODO: Consertar isso aqui
-    /*
-    @Override
+
     public String aoInteragir(Personagem player) {
-        if(!getInteragido()) {
-            player.adicionarConhecimento(areaConhecimento, Math.random()); //da entre 0 e 1 de conhecimento so por falar
+        if(isInteragido()) {
+            player.atualizarConhecimento(areaConhecimento, Math.random()); //da entre 0 e 1 de conhecimento so por falar
             this.setInteragido(true);
             return this.getFalaAleatoria();
         }
-        return "nao sei";
-    }*/
+        return "";
+    }
 
 
 }

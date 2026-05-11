@@ -1,6 +1,5 @@
 package model.Evento;
 
-import model.Npc.Batalhavel;
 import model.Oponente;
 
 public class ProvaBatalha extends Evento implements Batalhavel {

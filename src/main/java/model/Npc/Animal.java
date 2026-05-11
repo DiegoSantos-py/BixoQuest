@@ -12,13 +12,12 @@ import model.Disciplina.AreaConhecimento;
 import model.util.Hitbox;
 import model.util.Vector2D;
 
-//TODO: ANIMAL NAO IMPLEMENTA GET OPONENTE
-//public class Animal extends Npc implements Batalhavel{
 public class Animal{
     private int indole;
     private boolean domado;
     private Especie especie;
     private Oponente oponente;
+
     public Animal(String nome, int cX, int cY, ArrayList<String> falas,Especie especie, int indole){
         //super(nome, cX, cY, falas);
         this.indole = indole;

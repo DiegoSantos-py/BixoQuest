@@ -1,6 +1,7 @@
 package model.Npc;
 
 import model.Disciplina.AreaConhecimento;
+import model.Local.Area;
 import model.Personagem;
 
 import java.util.ArrayList;
@@ -11,13 +12,17 @@ public class Colega extends Npc {
 
     public Colega(String nome, int cX, int cY, ArrayList<String> falas){
         super(nome, cX, cY, falas);
+    }
 
+    public Colega(String nome, int cX, int cY, ArrayList<String> falas, AreaConhecimento area, double conhecimentoNpc){
+        super(nome, cX, cY, falas);
+        this.area = area;
+        this.conhecimentoNpc = conhecimentoNpc;
     }
 
     public String aoInteragir(Personagem player) {
-        player.atualizarConhecimento(area, conhecimentoNpc);
-
         if(isInteragido()) {
+            player.atualizarConhecimento(area, conhecimentoNpc);
             return this.getFalaAleatoria();
         }
         return "";
