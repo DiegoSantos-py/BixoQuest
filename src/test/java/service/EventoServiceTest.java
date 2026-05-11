@@ -331,7 +331,7 @@ class EventoServiceTest {
 
         dia.getEventosObrigatorios().put(zona.getNome(), evento);
 
-        personagem.adicionarConhecimento(AreaConhecimento.MAT, 0.0);
+        personagem.atualizarConhecimento(AreaConhecimento.MAT, 0.0);
         double conhecimentoAntes = personagem.getConhecimento(AreaConhecimento.MAT);
 
         eventoService.executarEvento(evento, personagem, dia, diaService);

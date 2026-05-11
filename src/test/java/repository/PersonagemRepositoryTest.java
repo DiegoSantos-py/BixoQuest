@@ -130,7 +130,7 @@ class PersonagemRepositoryTest {
     @DisplayName("Deve salvar e carregar conhecimentos do personagem")
     void deveSalvarECarregarConhecimentos() throws Exception {
         Personagem p = criarPersonagem("Ana");
-        p.adicionarConhecimento(AreaConhecimento.MAT, 25.0);
+        p.atualizarConhecimento(AreaConhecimento.MAT, 25.0);
         repository.adicionarPersonagem(p);
         repository.salvar();
 
@@ -194,7 +194,7 @@ class PersonagemRepositoryTest {
     @DisplayName("Deve gerar JSON com estrutura esperada")
     void deveGerarJsonComEstruturaEsperada() throws Exception {
         Personagem p = new Personagem("Ana", 80.0, 70.0, 90.0, 50.0, "sprites/ana.png");
-        p.adicionarConhecimento(AreaConhecimento.MAT, 25.0);
+        p.atualizarConhecimento(AreaConhecimento.MAT, 25.0);
         p.setcX(15);
         p.setcY(30);
 

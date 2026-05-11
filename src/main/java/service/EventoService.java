@@ -134,7 +134,7 @@ public class EventoService {
         // Atualiza conhecimento em cada área, se houver
         if (evento.getEfeitosConhecimento() != null) {
             for (var entry : evento.getEfeitosConhecimento().entrySet()) {
-                personagem.adicionarConhecimento(
+                personagem.atualizarConhecimento(
                         entry.getKey(),
                         entry.getValue()
                 );

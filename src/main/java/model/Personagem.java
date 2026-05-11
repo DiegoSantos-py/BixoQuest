@@ -87,9 +87,10 @@ public class Personagem {
         return conhecimentos.get(area);
     }
 
-    public void adicionarConhecimento(AreaConhecimento area, double valor) {
-        conhecimentos.put(area, getConhecimento(area) + valor);
-        conhecimentosNomes.put(area.name(), conhecimentos.get(area)); // sincroniza
+    public void atualizarConhecimento(AreaConhecimento area, double valor) {
+        double novoValor = getConhecimento(area) + valor;
+        conhecimentos.put(area, novoValor < 0 ? 0 : novoValor);
+        conhecimentosNomes.put(area.name(), conhecimentos.get(area));// sincroniza
     }
 
     public double getConhecimentoPorDisciplina(Disciplina disciplina) {
