@@ -29,7 +29,12 @@ public class EventoRepository {
     }
 
     public void salvar() throws IOException {
-        mapper.writerWithDefaultPrettyPrinter()
+        // instrui o Jackson a serializar como Map<String, Evento> com polimorfismo
+        var type = mapper.getTypeFactory()
+                .constructMapType(HashMap.class, String.class, Evento.class);
+
+        mapper.writerFor(type)
+                .withDefaultPrettyPrinter()
                 .writeValue(ARQUIVO, eventos);
     }
 

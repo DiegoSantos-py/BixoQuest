@@ -43,6 +43,11 @@ public class Semestre {
         return dias;
     }
 
+    public void setDias(List<Dia> dias) {
+        this.dias = dias;
+    }
+
+    @JsonIgnore
     public int getQuantidadeDias() {return this.dias.size();}
 
     public boolean terminou() {

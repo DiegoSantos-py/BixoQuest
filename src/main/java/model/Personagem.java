@@ -17,14 +17,16 @@ public class Personagem {
     private double motivacao;
     private double saude;
     private double dinheiro;
+
     @JsonIgnore
     private Local localAtual;
-
     private String localAtualNome;
 
+    @JsonIgnore
     private Map<AreaConhecimento, Double> conhecimentos;
+    private Map<String, Double> conhecimentosNomes = new HashMap<>();
 
-    private String spriteDir; // preparação para próxima fase
+    private String spriteDir;
 
     @JsonIgnore
     private List<Semestre> semestres;
@@ -45,6 +47,7 @@ public class Personagem {
 
         for (AreaConhecimento area : AreaConhecimento.values()) {
             this.conhecimentos.put(area, 10.0);
+            this.conhecimentosNomes.put(area.name(), 10.0);
         }
     }
 
@@ -59,98 +62,25 @@ public class Personagem {
         this.semestres = new ArrayList<>();
 
         this.conhecimentos = new HashMap<>();
+        this.conhecimentosNomes = new HashMap<>();
 
         for (AreaConhecimento area : AreaConhecimento.values()) {
             this.conhecimentos.put(area, 10.0);
+            this.conhecimentosNomes.put(area.name(), 10.0);
         }
     }
 
-    public int getPersonagemId() {
-        return personagemId;
+    public Map<String, Double> getConhecimentosNomes() {
+        return conhecimentosNomes;
     }
 
-    public void setPersonagemId(int personagemId) {
-        this.personagemId = personagemId;
-    }
-
-    public int getcY() {
-        return cY;
-    }
-
-    public void setcY(int cY) {
-        this.cY = cY;
-    }
-
-    public int getcX() {
-        return cX;
-    }
-
-    public void setcX(int cX) {
-        this.cX = cX;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public double getEnergia() {
-        return energia;
-    }
-    public double addEnergia(int valor) {
-        this.energia += valor;
-        return this.energia;
-    }
-    public void setEnergia(double energia) {
-        this.energia = energia;
-    }
-
-    public double getDinheiro() {
-        return dinheiro;
-    }
-
-    public void setDinheiro(double dinheiro) {
-        this.dinheiro = dinheiro;
-    }
-
-    public double getSaude() {
-        return saude;
-    }
-
-    public void setSaude(double saude) {
-        this.saude = saude;
-    }
-
-    public double getMotivacao() {
-        return motivacao;
-    }
-
-    public void setMotivacao(double motivacao) {
-        this.motivacao = motivacao;
-    }
-
-    public void addMotivacao(int valor) {
-        this.motivacao += valor;
-    }
-
-    public String getSpriteDir() {
-        return spriteDir;
-    }
-
-    public Local getLocalAtual() {
-        return localAtual;
-    }
-
-    public void setLocalAtual(Local local) {
-        this.localAtual = local;
-        this.localAtualNome = local != null ? local.getNome() : null;
-    }
-
-    public double getConhecimentoPorDisciplina(Disciplina disciplina) {
-        return conhecimentos.get(disciplina.getArea());
+    public void setConhecimentosNomes(Map<String, Double> conhecimentosNomes) {
+        this.conhecimentosNomes = conhecimentosNomes;
+        // reconstrói o mapa original ao carregar
+        this.conhecimentos = new HashMap<>();
+        for (Map.Entry<String, Double> entry : conhecimentosNomes.entrySet()) {
+            this.conhecimentos.put(AreaConhecimento.valueOf(entry.getKey()), entry.getValue());
+        }
     }
 
     public double getConhecimento(AreaConhecimento area) {
@@ -159,24 +89,44 @@ public class Personagem {
 
     public void adicionarConhecimento(AreaConhecimento area, double valor) {
         conhecimentos.put(area, getConhecimento(area) + valor);
+        conhecimentosNomes.put(area.name(), conhecimentos.get(area)); // sincroniza
     }
 
-    public List<Semestre> getSemestres() {
-        return semestres;
+    public double getConhecimentoPorDisciplina(Disciplina disciplina) {
+        return conhecimentos.get(disciplina.getArea());
     }
 
-    public void adicionarSemestre(Semestre semestre) {
-        this.semestres.add(semestre);
+    // restante inalterado
+    public int getPersonagemId() { return personagemId; }
+    public void setPersonagemId(int personagemId) { this.personagemId = personagemId; }
+    public int getcY() { return cY; }
+    public void setcY(int cY) { this.cY = cY; }
+    public int getcX() { return cX; }
+    public void setcX(int cX) { this.cX = cX; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public double getEnergia() { return energia; }
+    public double addEnergia(int valor) { this.energia += valor; return this.energia; }
+    public void setEnergia(double energia) { this.energia = energia; }
+    public double getDinheiro() { return dinheiro; }
+    public void setDinheiro(double dinheiro) { this.dinheiro = dinheiro; }
+    public double getSaude() { return saude; }
+    public void setSaude(double saude) { this.saude = saude; }
+    public double getMotivacao() { return motivacao; }
+    public void setMotivacao(double motivacao) { this.motivacao = motivacao; }
+    public void addMotivacao(int valor) { this.motivacao += valor; }
+    public String getSpriteDir() { return spriteDir; }
+    public Local getLocalAtual() { return localAtual; }
+    public void setLocalAtual(Local local) {
+        this.localAtual = local;
+        this.localAtualNome = local != null ? local.getNome() : null;
     }
-
-    public double getDesempenhoAcademico() {
-        return desempenhoAcademico;
-    }
-
+    public List<Semestre> getSemestres() { return semestres; }
+    public void adicionarSemestre(Semestre semestre) { this.semestres.add(semestre); }
+    public double getDesempenhoAcademico() { return desempenhoAcademico; }
     public String getLocalAtualNome() { return localAtualNome; }
     public void setLocalAtualNome(String nome) { this.localAtualNome = nome; }
 
-    // é igual se nome e id são iguais
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -185,9 +135,7 @@ public class Personagem {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(nome);
-    }
+    public int hashCode() { return Objects.hashCode(nome); }
 
     @Override
     public String toString() {
@@ -202,6 +150,4 @@ public class Personagem {
                 ", cX=" + cX +
                 ", cY=" + cY;
     }
-
-
 }

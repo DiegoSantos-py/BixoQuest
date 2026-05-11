@@ -188,4 +188,37 @@ class PersonagemRepositoryTest {
         assertDoesNotThrow(() -> repository.carregar());
         assertTrue(repository.carregarPersonagens().isEmpty());
     }
+
+    @Test
+    @Order(12)
+    @DisplayName("Deve gerar JSON com estrutura esperada")
+    void deveGerarJsonComEstruturaEsperada() throws Exception {
+        Personagem p = new Personagem("Ana", 80.0, 70.0, 90.0, 50.0, "sprites/ana.png");
+        p.adicionarConhecimento(AreaConhecimento.MAT, 25.0);
+        p.setcX(15);
+        p.setcY(30);
+
+        repository.adicionarPersonagem(p);
+        repository.salvar();
+
+        String json = new String(java.nio.file.Files.readAllBytes(ARQUIVO.toPath()));
+
+        // Verifica campos presentes
+        assertTrue(json.contains("\"nome\" : \"Ana\""));
+        assertTrue(json.contains("\"energia\" : 80.0"));
+        assertTrue(json.contains("\"motivacao\" : 70.0"));
+        assertTrue(json.contains("\"saude\" : 90.0"));
+        assertTrue(json.contains("\"dinheiro\" : 50.0"));
+        assertTrue(json.contains("\"cX\" : 15"));
+        assertTrue(json.contains("\"cY\" : 30"));
+        assertTrue(json.contains("\"MAT\" : 35.0"));
+        assertTrue(json.contains("\"spriteDir\" : \"sprites/ana.png\""));
+        assertTrue(json.contains("\"localAtualNome\" :"));
+        assertTrue(json.contains("\"conhecimentosNomes\" :"));
+
+        // Verifica campos ignorados não aparecem
+        assertFalse(json.contains("\"localAtual\" :"));
+        assertFalse(json.contains("\"semestres\" :"));
+        assertFalse(json.contains("\"conhecimentos\" :"));
+    }
 }

@@ -192,9 +192,10 @@ class LocalRepositoryTest {
         assertTrue(repository.carregarLocal().isEmpty());
     }
 
-    /*
+
     @Test
-    @DisplayName("Gerar arquivo para inspeção")
+    @Order(11)
+    @DisplayName("Gerar arquivo para inspeção manual")
     void gerarArquivoParaInspecao() throws Exception {
         Local sala = criarLocal("Sala", TipoLocal.SALA);
         Local cantina  = criarLocal("cantina",  TipoLocal.CANTINA);
@@ -204,7 +205,9 @@ class LocalRepositoryTest {
         repository.adicionarLocal(cantina);
         repository.salvar();
 
+        String json = new String(java.nio.file.Files.readAllBytes(ARQUIVO.toPath()));
+        System.out.println(json);
         // sem assert — só para gerar o arquivo
         assertTrue(ARQUIVO.exists());
-    }*/
+    }
 }

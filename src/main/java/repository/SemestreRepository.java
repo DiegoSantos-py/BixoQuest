@@ -29,7 +29,14 @@ public class SemestreRepository {
     }
 
     public void salvar() throws IOException {
-        mapper.writerWithDefaultPrettyPrinter()
+        // instrui o Jackson a serializar Map<String, Evento> com polimorfismo
+        mapper.findAndRegisterModules();
+
+        var type = mapper.getTypeFactory()
+                .constructMapType(HashMap.class, Integer.class, List.class);
+
+        mapper.writerFor(type)
+                .withDefaultPrettyPrinter()
                 .writeValue(ARQUIVO, semestresPorJogador);
     }
 
