@@ -2,7 +2,7 @@ package model.Evento;
 
 import model.Oponente;
 
-public class ProvaBatalha extends Evento implements Batalhavel {
+public class ProvaBatalha extends Evento {
     
     private int nivelDisciplina;
     private int quantidadeQuestoes;
