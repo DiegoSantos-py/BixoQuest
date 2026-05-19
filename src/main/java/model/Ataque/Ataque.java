@@ -18,9 +18,10 @@ public abstract class Ataque {
 
 
 
-    public Ataque(PlayerProva target, EntidadeBatalha owner, int maxBasico, int maxHoming, int maxExplosivo) {
+    public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxBasico, int maxHoming, int maxExplosivo) {
         this.target = target;
         this.owner = owner;
+        this.dificuldade = dificuldade;
         this.factory = new ProjetilFactory(target, owner, maxBasico, maxHoming, maxExplosivo);
     }
 
@@ -28,7 +29,7 @@ public abstract class Ataque {
         if (finalizado) return;
         
         tempoDecorrido += dt;
-        logicaAtaque(dt); 
+        logicaAtaque(dt);
         factory.atualizar(dt);  
     }
 
@@ -48,6 +49,20 @@ public abstract class Ataque {
 
     public boolean isFinalizado() {
         return finalizado;
+    }
+
+    public void setTarget(PlayerProva target) {
+        this.target = target;
+        this.factory.setTarget(target);
+    }
+
+    public void reiniciarAtaque() {
+        this.finalizado = false;
+        this.tempoDecorrido = 0;
+        //restarta o ataque e desliga todos os projeteis da pool de projeteis(pra eles n ficarem no ar parados)
+        for (Projetil p : factory.getAtivos()) {
+            p.desativar();
+        }
     }
 
     public List<Projetil> getProjeteis() { 

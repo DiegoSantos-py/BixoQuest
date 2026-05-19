@@ -1,96 +1,87 @@
-/*package service;
+package service;
+
+import model.Disciplina.AreaConhecimento;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 import model.EstadoBatalha;
-import model.Oponente;
 import model.Personagem;
-import model.Evento.ProvaBatalha;
-import model.Evento.ResultadoProva;
-import repository.ResultadoProvaRepository;
+import model.Turno;
+import model.Npc.Animal;
+import model.Npc.Especie;
+import model.Oponente;
+import model.Player.PlayerProva;
+import model.Projetil.Projetil;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class BatalhaIntegracaoTest {
-
-    private BatalhaService batalhaService;
-    private ResultadoProvaRepository resultadoRepo;
-    private Personagem estudante;
-    private ProvaBatalha matrizFinal;
-
-    @BeforeEach
-    void setUp() {
-        batalhaService = new BatalhaService();
-        resultadoRepo = new ResultadoProvaRepository();
-
-        // Estudante experiente com bons atributos
-        estudante = new Personagem("Veterano de Computação", 100, 100, 100, 100, "sprite.png");
-        estudante.adicionarConhecimento(model.Disciplina.AreaConhecimento.MAT, 80.0);
-
-        // Prova com 3 questões e dificuldade 3
-        matrizFinal = new ProvaBatalha("Matemática-3: Integrais e Integrais", "bla bla", 3, 3);
-    }
+public class BatalhaIntegracaoTest {
 
     @Test
-    void testSimulacaoCompletaUndertaleLoop() {
+    public void testBatalhaAnimalCompleta() {
+        //cria o service de batalha o personagem e o animal etc bla bla(adicioan 5 de conhecimento pro player ter algum shield(importante)
+        BatalhaService service = new BatalhaService();
 
-        // --- INÍCIO DA BATALHA ---
-        EstadoBatalha cena = batalhaService.iniciarBatalha(estudante, matrizFinal);
+        Personagem personagem = new Personagem("Veterano", 100, 100, 100, 100, "sprite.png");
+        personagem.atualizarConhecimento(AreaConhecimento.ANI, 5);
 
-        assertNotNull(cena.getPlayer(),
-            "O boneco do player (coração) não foi criado ao iniciar a batalha. Verifique o BatalhaService.");
-        assertEquals(3, cena.getFilaOponentes().size() + (cena.getOponenteAtual() != null ? 1 : 0),
-            "Eram esperadas 3 questões na fila de oponentes, mas a quantidade está errada.");
-        assertFalse(cena.isBatalhaAnimal(),
-            "Uma prova foi reconhecida como batalha de animal. Verifique o instanceof no BatalhaService.");
-        System.out.println("Batalha iniciada! Estudante entrou na luta contra " + matrizFinal.getNome() + " com " + (cena.getFilaOponentes().size() + 1) + " questões na fila.");
+        java.util.ArrayList<String> falas = new java.util.ArrayList<>();
+        falas.add("Au au");
+        Animal cachorro = new Animal("Cachorro", "spr/espirro.png", 40, 40, falas, Especie.CACHORRO, 40);
 
-        // --- ABATENDO A PRIMEIRA QUESTÃO ---
-        Oponente primeiraQuestao = cena.getOponenteAtual();
-        while (!primeiraQuestao.isDerrotado() && !cena.isFinalizado()) {
-            batalhaService.atacarOponenteAtual(cena, 1.0f); // acerto perfeito no slider
-            batalhaService.atualizar(cena, 0.16f);
+        EstadoBatalha estado = service.iniciarBatalha(personagem, cachorro);
+
+        // A BATALHA OCORRE ATÉ O PLAYER OU INIMIGO MORRER
+        while (!estado.isFinalizado()) {
+
+            if (estado.getTurnoAtual() == Turno.TURNO_PLAYER) {
+                System.out.println("\n[ >>> TURNO DO JOGADOR - ATACANDO! <<< ]");
+                service.atacarOponenteAtual(estado, 1.0f);
+            }
+            else {
+                int frameCounter = 0;
+                while (estado.getTurnoAtual() != Turno.TURNO_PLAYER && !estado.isFinalizado()) {
+                    service.atualizar(estado, 0.0166f); // 60 fps (1/60)s por update
+                    frameCounter++;
+
+                    // DADOS DO PLAYER E OPONENTE
+                    PlayerProva p = estado.getPlayerProva();
+                    Oponente o = estado.getOponenteAtual();
+                    System.out.println("\n--- INIMIGO ATACANDO!!! ---");
+
+                    System.out.println("\n--- FRAME: " + frameCounter + "---");
+                    System.out.println("[PLAYER] Shield: " + p.getShieldAtual() + " | Dano Base: " + p.getDanoAtaque() +
+                            " | PosX: " + p.getHitbox().getCentro().getX() + " | PosY: " + p.getHitbox().getCentro().getY());
+                    if (o != null) {
+                        System.out.println("[INIMIGO] " + o.getNome() + " | HP: " + o.getHpAtual() + " / " + o.getHpMaximo());
+                    }
+
+                    //DADOS DE ATAQUE E PROJETIS
+                    if (estado.getAtaqueAtual() != null) {
+                        System.out.println("Fase: " + estado.getTurnoAtual() +
+
+                                " | Ataques: " + estado.getOponenteAtual().getAtaquesDisponiveis() +
+                                " | Ataque: " + estado.getAtaqueAtual().getClass().getSimpleName() +
+                                " | Projéteis na tela: " + estado.getAtaqueAtual().getProjeteis().size());
+
+                        // Imprime o status de cada projétil ativo
+                        List<Projetil> projeteis = estado.getAtaqueAtual().getProjeteis();
+                        for (int i = 0; i < projeteis.size(); i++) {
+                            Projetil proj = projeteis.get(i);
+                            System.out.println("  [" + i + "] " + proj.getClass().getSimpleName() +
+                                    " | Pos: (" + proj.getHitbox().getCentro().getX() + ", " + proj.getHitbox().getCentro().getY() + ")" +
+                                    " | Dano: " + proj.getDanoShield());
+                        }
+                    }
+                }
+            }
         }
 
-        assertNotEquals(primeiraQuestao, cena.getOponenteAtual(),
-            "A primeira questão foi derrotada mas a fila não avançou para a próxima.");
-        System.out.println("Primeira questão eliminada! A fila avançou para o próximo oponente.");
+        System.out.println("\n===========================");
+        System.out.println("BATALHA FINALIZADA!");
+        System.out.println("player ganhou: " + estado.isVitoria());
+        System.out.println("===========================\n");
 
-        // --- LEVANDO DANO (tiro não desviado) ---
-        int shieldAntes = cena.getPlayer().getShieldAtual();
-        cena.getPlayer().ReceberDano(3, 1.0f);
-
-        assertTrue(cena.getPlayer().getShieldAtual() < shieldAntes || cena.getPlayer().isPerdeuNota(),
-            "O player tomou dano mas nem o shield reduziu nem a nota foi afetada. O sistema de dano está ignorando o impacto.");
-        System.out.println("Player levou um tiro! Shield ou nota foram afetados conforme esperado.");
-
-        // --- FINALIZANDO A BATALHA ---
-        while (!cena.isFinalizado()) {
-            batalhaService.atacarOponenteAtual(cena, 1.0f);
-            batalhaService.atualizar(cena, 0.16f);
-        }
-
-        assertTrue(cena.isVitoria(),
-            "Todas as questões foram eliminadas mas a batalha não registrou vitória.");
-        System.out.println("Todas as questões foram derrotadas! Vitória registrada.");
-
-        // --- SALVANDO O BOLETIM ---
-        ResultadoProva boletim = new ResultadoProva(
-            cena.getPersonagemOriginal(),
-            matrizFinal,
-            7.5f,
-            3, 3,
-            cena.getPlayer().isPerdeuNota() ? 10 : 1,
-            true,
-            cena.getPlayer().isPerdeuNota()
-        );
-        resultadoRepo.salvar(boletim);
-
-        assertEquals(1, resultadoRepo.buscarTodos().size(),
-            "O boletim não foi salvo no repositório após o fim da batalha.");
-        assertEquals("Veterano de Computação", resultadoRepo.buscarTodos().get(0).getPersonagem().getNome(),
-            "O nome do estudante no boletim salvo está diferente do esperado. Os dados foram corrompidos.");
-        System.out.println("Boletim salvo com sucesso! Estudante: " + resultadoRepo.buscarTodos().get(0).getPersonagem().getNome() + " — Nota: 7.5");
-        }
-}*/
+        //verifica se a batlaha finilzou no geral
+        assertTrue(estado.isFinalizado());
+    }
+}

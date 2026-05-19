@@ -1,6 +1,6 @@
 package repository;
 
-import model.Evento.ResultadoProva;
+import model.Evento.Prova.ResultadoProva;
 
 
 import java.util.ArrayList;

@@ -10,12 +10,10 @@ public class Colega extends Npc {
     private AreaConhecimento area;
     private double conhecimentoNpc;
 
-    public Colega(String nome, int cX, int cY, ArrayList<String> falas){
-        super(nome, cX, cY, falas);
-    }
 
-    public Colega(String nome, int cX, int cY, ArrayList<String> falas, AreaConhecimento area, double conhecimentoNpc){
-        super(nome, cX, cY, falas);
+
+    public Colega(String nome,String spriteDir ,int cX, int cY, ArrayList<String> falas, AreaConhecimento area, double conhecimentoNpc){
+        super(nome,spriteDir, cX, cY, falas);
         this.area = area;
         this.conhecimentoNpc = conhecimentoNpc;
     }

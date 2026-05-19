@@ -18,7 +18,7 @@ public class ProjetilExplosivo extends Projetil {
 
     @Override
     public void aoColidirComPlayer() {
-         this.ativo = false; 
+        this.desativar();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ProjetilExplosivo extends Projetil {
 
         for(int i = 0; i < 8; i++) {
             float angle = (float)(i * (Math.PI * 2) / 8); 
-            this.factory.spawn(cx, cy, 15, 15, 200f, angle, angle, ProjetilID.BASICO, 1, 0.1f, 3000f);
+            this.factory.spawn(cx, cy, 15, 15, 2f, angle, angle, ProjetilID.BASICO, 1, 0.1f, 10f);
         }
     }
 }

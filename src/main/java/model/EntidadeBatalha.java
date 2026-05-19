@@ -70,7 +70,12 @@ public abstract class EntidadeBatalha {
         return ativo;
     }
 
+    public void ativar(){
+        this.ativo = true;
+        this.hitbox.ativar();
+    }
     public void desativar() {
         this.ativo = false;
+        this.hitbox.desativar();
     }
 }

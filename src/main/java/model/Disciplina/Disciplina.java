@@ -1,7 +1,7 @@
 package model.Disciplina;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import model.Evento.ProvaBatalha;
+import model.Evento.Prova.ProvaBatalha;
 
 import java.util.Objects;
 

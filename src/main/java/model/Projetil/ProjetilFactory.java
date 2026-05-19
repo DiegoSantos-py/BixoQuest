@@ -49,6 +49,17 @@ public class ProjetilFactory {
             poolExplosivo[i].setTarget(target);
         }
     }
+    public void setTarget(PlayerProva target) {
+        for (ProjetilBasico basico : poolBasico) {
+            basico.setTarget(target);
+        }
+        for (ProjetilQueSegue homing : poolHoming) {
+            homing.setTarget(target);
+        }
+        for (ProjetilExplosivo explosivo : poolExplosivo) {
+            explosivo.setTarget(target);
+        }
+    }
 
     public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, float anguloSpawn, float anguloHitbox, ProjetilID id, int danoShield, float danoNota, float duracaoMaxima) {
         
@@ -122,4 +133,5 @@ public class ProjetilFactory {
         }
         return ativos;
     }
+
 }

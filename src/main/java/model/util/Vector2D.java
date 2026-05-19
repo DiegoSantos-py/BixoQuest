@@ -1,6 +1,6 @@
 package model.util;
 
-public class Vector2D {
+public final class Vector2D {
     private float x;
     private float y;
 
@@ -47,6 +47,7 @@ public class Vector2D {
     }   
     
     public float magnitude() {
+
         return (float) Math.sqrt(x * x + y * y);
     }
 

@@ -1,8 +1,10 @@
 package model.Npc;
+import model.Personagem;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Npc {
+public abstract class Npc {
     private String nome;
     private int cX;
     private int cY;
@@ -10,7 +12,7 @@ public class Npc {
     private String spriteDir ;
     private boolean isInteragido;
 
-    public Npc(String nome, int cX, int cY, ArrayList<String> falas) {
+    public Npc(String nome,String spriteDir ,int cX, int cY, ArrayList<String> falas) {
         this.nome = nome;
         this.cX = cX;
         this.cY = cY;
@@ -19,6 +21,7 @@ public class Npc {
 
     public Npc(String nome, int cX, int cY, ArrayList<String> falas, String spriteDir) {
         this.nome = nome;
+        this.spriteDir = spriteDir;
         this.cX = cX;
         this.cY = cY;
         this.falas = falas;
@@ -57,6 +60,8 @@ public class Npc {
         this.nome = nome;
     }
 
+
+
     public boolean isInteragido() {
         return isInteragido;
     }
@@ -70,4 +75,6 @@ public class Npc {
         Random random = new Random();
         return falas.get(random.nextInt(falas.size()));
     }
+
+    public abstract String aoInteragir(Personagem player);
 }

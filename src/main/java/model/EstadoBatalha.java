@@ -1,44 +1,67 @@
 package model;
 
 import java.util.Queue;
+
+import model.Ataque.Ataque;
+import model.Evento.Prova.ProvaBatalha;
+import model.Npc.Animal;
 import model.Player.PlayerProva;
-import model.util.Hitbox;
-import model.util.Vector2D;
 
 public class EstadoBatalha {
-    private Personagem personagemOriginal; // Crucial guardarmos isso no Estado para salvar a prova dps!
-    private PlayerProva player; 
+    private Personagem personagem;
+    private PlayerProva playerProva;
     private Queue<Oponente> filaOponentes;
     private Oponente oponenteAtual;
+    private Turno turnoAtual;
     private boolean finalizado;
     private boolean vitoria;
-    private boolean isBatalhaAnimal; 
+    private final boolean isBatalhaAnimal;
+    private boolean inimigoAtacando;
+    private Ataque ataqueAtual;
+    private ProvaBatalha provaBatalha;
+    private Animal animal;
 
-    public EstadoBatalha(Personagem personagemBase, float conhecimentoDaMateria, Queue<Oponente> filaOponentes, boolean isBatalhaAnimal) {
-        
-        Hitbox caixaPlayer = new Hitbox(new Vector2D(0, 0), new Vector2D(20, 20), 0.0f);
-        Vector2D velocidadeParada = new Vector2D(0, 0);
-
-        this.player = new PlayerProva(caixaPlayer, velocidadeParada, conhecimentoDaMateria);
-        this.personagemOriginal = personagemBase;
-        
+    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal) {
+        this.personagem = personagem;
+        this.playerProva = playerProva;
         this.filaOponentes = filaOponentes;
-        this.isBatalhaAnimal = isBatalhaAnimal;
+        this.isBatalhaAnimal = true;
+        this.animal = animal;
+        this.turnoAtual = Turno.TURNO_PLAYER;
+        this.inimigoAtacando = false;
         this.finalizado = false;
         this.vitoria = false;
         this.oponenteAtual = filaOponentes.poll();
     }
 
-    public Personagem getPersonagemOriginal() {
-        return personagemOriginal;
+    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, ProvaBatalha provaBatalha) {
+        this.personagem = personagem;
+        this.playerProva = playerProva;
+        this.filaOponentes = filaOponentes;
+        this.isBatalhaAnimal = false;
+        this.provaBatalha = provaBatalha;
+        this.turnoAtual = Turno.TURNO_PLAYER;
+        this.inimigoAtacando = false;
+        this.finalizado = false;
+        this.vitoria = false;
+        this.oponenteAtual = filaOponentes.poll();
+    }
+ 
+
+    public PlayerProva getPlayerProva() {
+        return playerProva;
     }
 
-    public PlayerProva getPlayer() {
-        return player;
+    public void setPlayerProva(PlayerProva playerProva) {
+        this.playerProva = playerProva;
     }
 
-    public void setPlayer(PlayerProva player) {
-        this.player = player;
+    public ProvaBatalha getProvaBatalha(){
+        return provaBatalha;
+    }
+
+    public Animal getAnimal() {
+        return animal;
     }
 
     public Queue<Oponente> getFilaOponentes() {
@@ -49,6 +72,9 @@ public class EstadoBatalha {
         this.filaOponentes = filaOponentes;
     }
 
+    public Personagem getPersonagem() {
+        return personagem;
+    }
     public Oponente getOponenteAtual() {
         return oponenteAtual;
     }
@@ -61,10 +87,10 @@ public class EstadoBatalha {
         return finalizado;
     }
 
+
     public void setFinalizado(boolean finalizado) {
         this.finalizado = finalizado;
     }
-
     public boolean isVitoria() {
         return vitoria;
     }
@@ -77,7 +103,24 @@ public class EstadoBatalha {
         return isBatalhaAnimal;
     }
 
-    public void setBatalhaAnimal(boolean batalhaAnimal) {
-        this.isBatalhaAnimal = batalhaAnimal;
+    public Turno getTurnoAtual() {
+        return turnoAtual;
+    }
+    public void setTurnoAtual(Turno proxTurno) {
+        this.turnoAtual = proxTurno;
+    }
+
+    public boolean getInimigoAtacando(){
+        return this.inimigoAtacando;
+    }
+
+    public void setInimigoAtacando(boolean inimigoAtacando) {
+        this.inimigoAtacando = inimigoAtacando;
+    }
+    public Ataque getAtaqueAtual(){
+        return this.ataqueAtual;
+    }
+    public void setAtaqueAtual(Ataque ataqueAtual){
+        this.ataqueAtual = ataqueAtual;
     }
 }

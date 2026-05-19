@@ -9,13 +9,9 @@ public class ProjetilBasico extends Projetil {
         super(hitbox, velocidade, danoShield, danoNota, duracaoMaxima); 
     }
 
-    @Override 
-    public void executarAI(float dt) { 
-
-    }
-
     @Override
-    public void aoColidirComPlayer() {
-         this.ativo = false; // Comportamento: sumir
+    public void executarAI(float dt) { 
     }
+    //Naada acontece...
+
 }

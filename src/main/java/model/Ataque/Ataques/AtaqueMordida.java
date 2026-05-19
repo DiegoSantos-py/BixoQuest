@@ -14,7 +14,7 @@ public class AtaqueMordida extends Ataque {
     private Random random;
 
     public AtaqueMordida(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
-        super(target, owner, 80, 0, 10); 
+        super(target, owner, dificuldade,80, 0, 10);
         this.random = new Random();
     }
 
@@ -22,12 +22,10 @@ public class AtaqueMordida extends Ataque {
     protected void logicaAtaque(float dt) {
 
         timer += dt;
-    
-        float interval = 1.5f / (dificuldade / 10f);
 
-        //mais projéteis conforme a dificuldade 
-        //7f =  tempo do ataque(importante)
-        int maxProjeteis = (int)(8f / interval);
+        float attackDuration = 15f;
+        float interval = 1.5f / (dificuldade / 10f);
+        int maxProjeteis = (int)(attackDuration / interval);
 
         if (timer >= interval && projeteisSpawnados < maxProjeteis) {
 
@@ -48,7 +46,7 @@ public class AtaqueMordida extends Ataque {
                 ProjetilID.EXPLOSIVE,
                 0,
                 0f,
-                7.5f
+                1.5f
             );
 
             projeteisSpawnados++;
@@ -58,8 +56,17 @@ public class AtaqueMordida extends Ataque {
         // mínimo necessário para encerrar o ataque
         int min = 8 + (int)(dificuldade / 5f);
 
-        if (projeteisSpawnados >= min && factory.getAtivos().isEmpty()) {
-            this.encerrarAtaque();
+        if (projeteisSpawnados >= min) {
+            if(timer>= 2f) { //2s dps da ultima explosao
+                this.encerrarAtaque();
+            }
         }
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Ataque Mordida";
     }
 }

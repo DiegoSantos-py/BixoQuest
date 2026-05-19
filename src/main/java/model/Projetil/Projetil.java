@@ -47,7 +47,7 @@ public abstract class Projetil extends EntidadeBatalha {
         this.danoNota = danoNota;
         this.duracaoMaxima = duracaoMaxima;
         this.tempoDeVida = 0;
-        this.ativo = true;
+        this.ativar();
     }
 
     public abstract void executarAI(float deltaTime);
@@ -66,7 +66,7 @@ public abstract class Projetil extends EntidadeBatalha {
 
         if (!isAtivo()) return;
         if (tempoDeVida >= duracaoMaxima) {
-            this.ativo = false; 
+            this.desativar();
             aoDespawnar();  
             return;
         }

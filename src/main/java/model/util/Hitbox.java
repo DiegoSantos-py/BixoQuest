@@ -1,8 +1,9 @@
 package model.util;
 
-public class Hitbox {
+public final class Hitbox {
     private Vector2D centro;
     private Vector2D tamanho;
+    private boolean ativa;
     private float anguloRad;
 
     // esses arrays e vetores são criados UMA VEZ por hitbox, pra n atiçar o garbage collector 
@@ -18,14 +19,15 @@ public class Hitbox {
 
     public Hitbox(Vector2D centro, Vector2D tamanho, float anguloRad) {
 
-    this.centro = centro;
-    this.tamanho = tamanho;
-    this.anguloRad = anguloRad;
+        this.centro = centro;
+        this.tamanho = tamanho;
+        this.anguloRad = anguloRad;
+        this.ativa = true;
 
     }
 
     public void atualizarPos(Vector2D deslocamento) {
-        this.centro.add(deslocamento); 
+        this.centro.set(this.centro.getX() + deslocamento.getX(), this.centro.getY() + deslocamento.getY()); 
     }
 
     public void rotacionar(float deltaAngulo) {
@@ -38,7 +40,8 @@ public class Hitbox {
     public void setCentro(float x, float y) { this.centro.set(x, y); }
     public void setTamanho(float w, float h) { this.tamanho.set(w, h); }
     public void setAnguloRad(float anguloRad) { this.anguloRad = anguloRad; }
-
+    public void ativar() { this.ativa = true; }
+    public void desativar() { this.ativa = false; }
 
 
 
@@ -88,10 +91,13 @@ public class Hitbox {
 
     public boolean checarColisao(Hitbox outra) {
 
+        if(!this.ativa || !outra.ativa ) {
+            return false;
+        }
+
         this.atualizarCache();
         outra.atualizarCache();
 
-    
         for (Vector2D eixo : this.eixosCache) {
             if (!temSobreposicao(eixo, this.vertices, outra.vertices)) return false;
         }
