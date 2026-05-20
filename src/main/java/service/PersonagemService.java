@@ -1,5 +1,9 @@
 package service;
 
+import exception.Personagem.PersonagemDuplicadoException;
+import exception.Personagem.PersonagemInvalidoException;
+import exception.Personagem.PersonagemNaoEncontradoException;
+import exception.PersistenciaException;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
 import model.Local.Area;
@@ -7,18 +11,74 @@ import model.Local.Direcao;
 import model.Local.Local;
 import model.Local.ZonaInterativa;
 import model.Personagem;
-import model.Tempo.Semestre;
 import model.Tempo.Dia;
+import model.Tempo.Semestre;
+import repository.PersonagemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PersonagemService {
+
+    private final PersonagemRepository personagemRepo;
     private EventoService eventoService;
 
-    public PersonagemService(EventoService eventoService){
+    public PersonagemService(PersonagemRepository personagemRepo, EventoService eventoService) {
+        this.personagemRepo = personagemRepo;
         this.eventoService = eventoService;
     }
+
+    // Inicialização
+    /** @throws PersistenciaException se ocorrer falha ao carregar o arquivo */
+    public void carregar() throws PersistenciaException {
+        personagemRepo.carregar();
+    }
+
+    /** @throws PersistenciaException se ocorrer falha ao salvar o arquivo */
+    public void salvar() throws PersistenciaException {
+        personagemRepo.salvar();
+    }
+
+    // Escrita
+    /**
+     * @throws PersonagemInvalidoException   se nome for nulo/vazio ou atributos negativos
+     * @throws PersonagemDuplicadoException  se já existir personagem com o mesmo id
+     * @throws PersistenciaException         se ocorrer falha ao salvar após criação
+     */
+    public Personagem criarESalvarPersonagem(String nome,
+                                             double energia,
+                                             double motivacao,
+                                             double saude,
+                                             double dinheiro,
+                                             String spriteDir,
+                                             Local localInicial,
+                                             int posX,
+                                             int posY) throws PersistenciaException {
+
+        Personagem personagem = criarPersonagem(nome, energia, motivacao, saude, dinheiro,
+                spriteDir, localInicial, posX, posY);
+        personagemRepo.adicionarPersonagem(personagem);
+        personagemRepo.salvar();
+
+        return personagem;
+    }
+
+    // Leitura
+    /** @throws PersonagemNaoEncontradoException se não existir personagem com o id informado */
+    public Personagem buscarPorId(int id) {
+        return personagemRepo.buscarPorId(id);
+    }
+
+    public boolean existe(Personagem personagem) {
+        return personagemRepo.existePersonagem(personagem);
+    }
+
+    public Map<Integer, Personagem> carregarPersonagens() {
+        return personagemRepo.carregarPersonagens();
+    }
+
+    // ---- Código original inalterado a partir daqui ----
 
     public Personagem criarPersonagem(String nome,
                                       double energia,
@@ -31,11 +91,20 @@ public class PersonagemService {
                                       int posY) {
 
         if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Nome inválido");
+            throw new PersonagemInvalidoException("nome", "não pode ser nulo ou vazio"); // ATUALIZADO
         }
 
-        if (energia < 0 || motivacao < 0 || saude < 0 || dinheiro < 0) {
-            throw new IllegalArgumentException("Atributos não podem ser negativos");
+        if (energia < 0) {
+            throw new PersonagemInvalidoException("energia", "não pode ser negativa"); // ATUALIZADO
+        }
+        if (motivacao < 0) {
+            throw new PersonagemInvalidoException("motivacao", "não pode ser negativa"); // ATUALIZADO
+        }
+        if (saude < 0) {
+            throw new PersonagemInvalidoException("saude", "não pode ser negativa"); // ATUALIZADO
+        }
+        if (dinheiro < 0) {
+            throw new PersonagemInvalidoException("dinheiro", "não pode ser negativo"); // ATUALIZADO
         }
 
         Personagem personagem = new Personagem(
@@ -70,7 +139,7 @@ public class PersonagemService {
             for(Evento e: diaAtual.getEventosObrigatorios().values())
                 if (z.contemCoordenada(p.getcX(), p.getcY())){
                     eventoService.executarEvento(e ,p, diaAtual, diaService);
-            }
+                }
             for(Evento e: diaAtual.getEventosAleatorios().values())
                 if (z.contemCoordenada(p.getcX(), p.getcY())){
                     eventoService.executarEvento(e ,p, diaAtual, diaService);
@@ -112,20 +181,20 @@ public class PersonagemService {
 
     private void ajustarPosicaoAoEntrar(Personagem p, Local novoLocal, Direcao direcao) {
 
-        Area area = novoLocal.getArea();
+        model.Local.Area area = novoLocal.getArea();
 
         switch (direcao) {
             case CIMA:
-                p.setcY(area.getMinY()); // entra por baixo
+                p.setcY(area.getMinY());
                 break;
             case BAIXO:
-                p.setcY(area.getMaxY()); // entra por cima
+                p.setcY(area.getMaxY());
                 break;
             case ESQUERDA:
-                p.setcX(area.getMaxX()); // entra pela direita
+                p.setcX(area.getMaxX());
                 break;
             case DIREITA:
-                p.setcX(area.getMinX()); // entra pela esquerda
+                p.setcX(area.getMinX());
                 break;
         }
     }

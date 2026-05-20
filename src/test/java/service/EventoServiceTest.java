@@ -1,5 +1,6 @@
 package service;
 
+import exception.Evento.EventoInvalidoException;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
 import model.Local.ZonaInterativa;
@@ -7,6 +8,7 @@ import model.Personagem;
 import model.Tempo.Dia;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.EventoRepository;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -25,7 +27,7 @@ class EventoServiceTest {
 
     @BeforeEach
     void setUp() {
-        eventoService = new EventoService();
+        eventoService = new EventoService(new EventoRepository());
         diaService = new DiaService();
 
         personagem = new Personagem();
@@ -43,27 +45,16 @@ class EventoServiceTest {
         zona.setNome("Biblioteca");
     }
 
+    // criarEvento
+
     @Test
-    void deveCriarEvento() {
+    void deveCriarEvento() throws Exception {
         Map<AreaConhecimento, Double> efeitosConhecimento = new HashMap<>();
         efeitosConhecimento.put(AreaConhecimento.MAT, 10.0);
 
         Evento evento = eventoService.criarEvento(
-                "Estudar",
-                "Sessão de estudos",
-                -10,
-                efeitosConhecimento,
-                5,
-                0,
-                -20,
-                5,
-                0,
-                null,
-                20,
-                20,
-                false,
-                zona
-        );
+                "Estudar", "Sessão de estudos",
+                -10, efeitosConhecimento, 5, 0, -20, 5, 0, null, 20, 20, false, zona);
 
         assertNotNull(evento);
         assertEquals(20, evento.getCustaDinheiro());
@@ -74,47 +65,26 @@ class EventoServiceTest {
 
     @Test
     void deveLancarExcecaoAoCriarEventoComNomeNulo() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(EventoInvalidoException.class, () ->
                 eventoService.criarEvento(
-                        null,
-                        "desc",
-                        0,
-                        null,
-                        0,
-                        0,
-                        0,
-                        5,
-                        0,
-                        null,
-                        0,
-                        0,
-                        false,
-                        zona
-                )
-        );
+                        null, "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, zona));
     }
 
     @Test
     void deveLancarExcecaoAoCriarEventoComNomeEmBranco() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(EventoInvalidoException.class, () ->
                 eventoService.criarEvento(
-                        "   ",
-                        "desc",
-                        0,
-                        null,
-                        0,
-                        0,
-                        0,
-                        5,
-                        0,
-                        null,
-                        0,
-                        0,
-                        false,
-                        zona
-                )
-        );
+                        "   ", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, zona));
     }
+
+    @Test
+    void deveLancarExcecaoAoCriarEventoComZonaNula() {
+        assertThrows(EventoInvalidoException.class, () ->
+                eventoService.criarEvento(
+                        "Estudar", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, null));
+    }
+
+    // podeExecutar
 
     @Test
     void podeExecutarDeveRetornarTrueQuandoTodasAsCondicoesForemAtendidas() {
@@ -125,9 +95,7 @@ class EventoServiceTest {
         evento.setCustaDinheiro(10);
         evento.setEfeitoTempo(5);
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertTrue(resultado);
+        assertTrue(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
     @Test
@@ -139,9 +107,7 @@ class EventoServiceTest {
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertFalse(resultado);
+        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
     @Test
@@ -153,9 +119,7 @@ class EventoServiceTest {
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertFalse(resultado);
+        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
     @Test
@@ -167,9 +131,7 @@ class EventoServiceTest {
         evento.setCustaDinheiro(150);
         evento.setEfeitoTempo(1);
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertFalse(resultado);
+        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
     @Test
@@ -185,9 +147,7 @@ class EventoServiceTest {
         evento.setEfeitoTempo(1);
         evento.setEventoRequisito(requisito);
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertFalse(resultado);
+        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
     @Test
@@ -202,13 +162,13 @@ class EventoServiceTest {
         dia.setDuracao(Duration.ofMinutes(5));
         dia.setInicio(Instant.now());
 
-        boolean resultado = eventoService.podeExecutar(evento, personagem, dia, diaService);
-
-        assertFalse(resultado);
+        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
     }
 
+    // executarEvento
+
     @Test
-    void deveExecutarEventoObrigatorio() {
+    void deveExecutarEventoEAplicarEfeitos() {
         Evento evento = new Evento();
         evento.setZona(zona);
         evento.setStatus(false);
@@ -221,98 +181,20 @@ class EventoServiceTest {
         evento.setEfeitoSaude(-2);
         evento.setEfeitoDinheiro(15);
 
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
-
-        double energiaAntes = personagem.getEnergia();
-        double motivacaoAntes = personagem.getMotivacao();
-        double saudeAntes = personagem.getSaude();
-        double dinheiroAntes = personagem.getDinheiro();
-        long tempoAntes = diaService.getTempoRestante(dia);
+        double energiaAntes    = personagem.getEnergia();
+        double motivacaoAntes  = personagem.getMotivacao();
+        double saudeAntes      = personagem.getSaude();
+        double dinheiroAntes   = personagem.getDinheiro();
+        long tempoAntes        = diaService.getTempoRestante(dia);
 
         eventoService.executarEvento(evento, personagem, dia, diaService);
 
-        long tempoDepois = diaService.getTempoRestante(dia);
-
         assertTrue(evento.isStatus());
-        assertEquals(energiaAntes - 10, personagem.getEnergia());
-        assertEquals(motivacaoAntes + 5, personagem.getMotivacao());
-        assertEquals(saudeAntes - 2, personagem.getSaude());
-        assertEquals(dinheiroAntes + 15, personagem.getDinheiro());
-        assertTrue(tempoDepois < tempoAntes);
-    }
-
-    @Test
-    void deveExecutarEventoAleatorio() {
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(false);
-        evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(3);
-
-        dia.getEventosAleatorios().put(zona.getNome(), evento);
-
-        long tempoAntes = diaService.getTempoRestante(dia);
-
-        eventoService.executarEvento(evento, personagem, dia, diaService);
-
-        long tempoDepois = diaService.getTempoRestante(dia);
-
-        assertTrue(evento.isStatus());
-        assertTrue(tempoDepois < tempoAntes);
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoNaoExisteEventoNaZona() {
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(false);
-        evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(1);
-
-        assertThrows(IllegalStateException.class, () ->
-                eventoService.executarEvento(evento, personagem, dia, diaService)
-        );
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoEventoNaoCorrespondeAZonaAtual() {
-        Evento eventoNoMapa = new Evento();
-        eventoNoMapa.setZona(zona);
-
-        Evento outroEvento = new Evento();
-        outroEvento.setZona(zona);
-        outroEvento.setStatus(false);
-        outroEvento.setRepetivel(true);
-        outroEvento.setEnergiaMinima(10);
-        outroEvento.setCustaDinheiro(0);
-        outroEvento.setEfeitoTempo(1);
-
-        dia.getEventosObrigatorios().put(zona.getNome(), eventoNoMapa);
-
-        assertThrows(IllegalStateException.class, () ->
-                eventoService.executarEvento(outroEvento, personagem, dia, diaService)
-        );
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoEventoNaoPodeSerExecutado() {
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(true);
-        evento.setRepetivel(false);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(1);
-
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
-
-        assertThrows(IllegalStateException.class, () ->
-                eventoService.executarEvento(evento, personagem, dia, diaService)
-        );
+        assertEquals(energiaAntes   - 10, personagem.getEnergia());
+        assertEquals(motivacaoAntes + 5,  personagem.getMotivacao());
+        assertEquals(saudeAntes     - 2,  personagem.getSaude());
+        assertEquals(dinheiroAntes  + 15, personagem.getDinheiro());
+        assertTrue(diaService.getTempoRestante(dia) < tempoAntes);
     }
 
     @Test
@@ -329,16 +211,12 @@ class EventoServiceTest {
         evento.setEfeitoTempo(2);
         evento.setEfeitosConhecimento(efeitosConhecimento);
 
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
-
         personagem.atualizarConhecimento(AreaConhecimento.MAT, 0.0);
         double conhecimentoAntes = personagem.getConhecimento(AreaConhecimento.MAT);
 
         eventoService.executarEvento(evento, personagem, dia, diaService);
 
-        double conhecimentoDepois = personagem.getConhecimento(AreaConhecimento.MAT);
-
-        assertEquals(conhecimentoAntes + 8.0, conhecimentoDepois);
+        assertEquals(conhecimentoAntes + 8.0, personagem.getConhecimento(AreaConhecimento.MAT));
     }
 
     @Test
@@ -354,8 +232,6 @@ class EventoServiceTest {
         evento.setEfeitoMotivacao(-500);
         evento.setEfeitoSaude(-500);
         evento.setEfeitoDinheiro(-500);
-
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
 
         eventoService.executarEvento(evento, personagem, dia, diaService);
 

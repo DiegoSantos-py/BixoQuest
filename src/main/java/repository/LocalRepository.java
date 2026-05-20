@@ -3,17 +3,22 @@ package repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import exception.Local.LocalDuplicadoException;
+import exception.Local.LocalInvalidoException;
+import exception.Local.LocalNaoEncontradoException;
+import exception.OperacaoPersistencia;
+import exception.PersistenciaException;
 import model.Local.Direcao;
 import model.Local.Local;
 import model.Local.TipoLocal;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class LocalRepository {
+
     private Map<String, Local> locais;
 
     private static final ObjectMapper mapper = criarMapper();
@@ -30,58 +35,81 @@ public class LocalRepository {
         return m;
     }
 
-    public void salvar() throws Exception {
-        mapper.writerWithDefaultPrettyPrinter()
-                .writeValue(ARQUIVO, locais);
+    // Persistência
+    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        try {
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(ARQUIVO, locais);
+        } catch (Exception e) {
+            throw new PersistenciaException(OperacaoPersistencia.SALVAR, e);
+        }
     }
 
-    public void carregar() throws Exception {
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
         if (!ARQUIVO.exists()) return;
 
-        // 1. Carrega todos os locais sem vizinhos
-        Map<String, Local> carregados = mapper.readValue(ARQUIVO,
-                mapper.getTypeFactory()
-                        .constructMapType(HashMap.class, String.class, Local.class));
+        try {
+            this.locais = mapper.readValue(ARQUIVO,
+                    mapper.getTypeFactory()
+                            .constructMapType(HashMap.class, String.class, Local.class));
 
-        this.locais = carregados;
-
-        // 2. Reconstrói as referências de vizinhos pelos nomes
-        for (Local local : locais.values()) {
-            for (Map.Entry<String, String> entry : local.getVizinhosNomes().entrySet()) {
-                Direcao direcao = Direcao.valueOf(entry.getKey());
-                Local vizinho = locais.get(entry.getValue());
-                if (vizinho != null) {
-                    local.getVizinhos().put(direcao, vizinho);
+            for (Local local : locais.values()) {
+                for (Map.Entry<String, String> entry : local.getVizinhosNomes().entrySet()) {
+                    Direcao direcao = Direcao.valueOf(entry.getKey());
+                    Local vizinho = locais.get(entry.getValue());
+                    if (vizinho != null) {
+                        local.getVizinhos().put(direcao, vizinho);
+                    }
                 }
             }
+        } catch (Exception e) {
+            throw new PersistenciaException(OperacaoPersistencia.CARREGAR, e);
         }
     }
 
-    public void adicionarLocal(Local local){
-        if (local == null || local.getNome() == null) {
-            return;
+    // Escrita
+    /**@throws LocalInvalidoException  se o local ou seu nome forem nulos/vazios
+     @throws LocalDuplicadoException se já existir local com o mesmo nome*/
+    public void adicionarLocal(Local local) {
+        if (local == null) {
+            throw new LocalInvalidoException("local", "não pode ser nulo");
+        }
+        if (local.getNome() == null || local.getNome().isBlank()) {
+            throw new LocalInvalidoException("nome", "não pode ser nulo ou vazio");
+        }
+        if (locais.containsKey(local.getNome())) {
+            throw new LocalDuplicadoException(local.getNome());
         }
 
-        //verifica se local ja existe no repositório
-        if (this.locais.containsKey(local.getNome())){
-            return;
-        }
-
-        // adiciona local
-        this.locais.put(local.getNome(), local);
+        locais.put(local.getNome(), local);
     }
 
-    public Map<String, Local> carregarLocal(){
-        return this.locais;
+    // Leitura
+    /**@throws LocalNaoEncontradoException se não existir local com o nome informado*/
+    public Local buscarPorNome(String nome) {
+        Local local = locais.get(nome);
+
+        if (local == null) {
+            throw new LocalNaoEncontradoException(nome);
+        }
+
+        return local;
     }
 
-    public Local buscarPorTipo(TipoLocal tipo){
-        for (String l: this.locais.keySet()){
-                if (locais.get(l).getTipo() == tipo){
-                    return locais.get(l);
-                }
+    /**@throws LocalNaoEncontradoException se não existir local com o tipo informado*/
+    public Local buscarPorTipo(TipoLocal tipo) {
+        for (Local local : locais.values()) {
+            if (local.getTipo() == tipo) {
+                return local;
+            }
         }
-        return null;
+
+        throw new LocalNaoEncontradoException(tipo.name());
+    }
+
+    public Map<String, Local> carregarLocais() {
+        return Collections.unmodifiableMap(locais);
     }
 }
-

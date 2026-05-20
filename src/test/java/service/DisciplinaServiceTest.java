@@ -1,11 +1,16 @@
 package service;
 
+import exception.Disciplina.DisciplinaDuplicadaException;
+import exception.Disciplina.DisciplinaInvalidaException;
+import exception.Disciplina.DisciplinaNaoEncontradaException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.DisciplinaRepository;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +27,13 @@ class DisciplinaServiceTest {
         service = new DisciplinaService(repo);
     }
 
+    @AfterEach
+    void limpar() {
+        new File("disciplinas.json").delete();
+    }
+
     @Test
-    void deveCriarDisciplinasPorNivel() {
+    void deveCriarDisciplinasPorNivel() throws Exception {
         service.criarDisciplinasPorNivel("Matematica", 3, AreaConhecimento.MAT);
 
         List<Disciplina> disciplinas = service.buscarPorNome("Matematica");
@@ -35,38 +45,33 @@ class DisciplinaServiceTest {
     }
 
     @Test
-    void naoDeveDuplicarDisciplinasExistentes() {
-        service.criarDisciplinasPorNivel("Matematica", 2, AreaConhecimento.MAT);
+    void deveLancarExcecaoAoCriarDisciplinasDuplicadas() throws Exception {
         service.criarDisciplinasPorNivel("Matematica", 2, AreaConhecimento.MAT);
 
-        List<Disciplina> disciplinas = service.buscarPorNome("Matematica");
-
-        assertEquals(2, disciplinas.size());
+        assertThrows(DisciplinaDuplicadaException.class, () ->
+                service.criarDisciplinasPorNivel("Matematica", 2, AreaConhecimento.MAT));
     }
 
     @Test
     void deveLancarExcecaoQuandoNomeForNulo() {
-        assertThrows(IllegalArgumentException.class, () ->
-                service.criarDisciplinasPorNivel(null, 2, AreaConhecimento.MAT)
-        );
+        assertThrows(DisciplinaInvalidaException.class, () ->
+                service.criarDisciplinasPorNivel(null, 2, AreaConhecimento.MAT));
     }
 
     @Test
     void deveLancarExcecaoQuandoQuantidadeNiveisForInvalida() {
-        assertThrows(IllegalArgumentException.class, () ->
-                service.criarDisciplinasPorNivel("Matematica", 0, AreaConhecimento.MAT)
-        );
+        assertThrows(DisciplinaInvalidaException.class, () ->
+                service.criarDisciplinasPorNivel("Matematica", 0, AreaConhecimento.MAT));
     }
 
     @Test
     void deveLancarExcecaoQuandoAreaForNula() {
-        assertThrows(IllegalArgumentException.class, () ->
-                service.criarDisciplinasPorNivel("Matematica", 2, null)
-        );
+        assertThrows(DisciplinaInvalidaException.class, () ->
+                service.criarDisciplinasPorNivel("Matematica", 2, null));
     }
 
     @Test
-    void deveBuscarPorNome() {
+    void deveBuscarPorNome() throws Exception {
         service.criarDisciplinasPorNivel("Software", 2, AreaConhecimento.MAT);
 
         List<Disciplina> resultado = service.buscarPorNome("Software");
@@ -75,7 +80,7 @@ class DisciplinaServiceTest {
     }
 
     @Test
-    void deveBuscarDisciplinaPorNomeECodigo() {
+    void deveBuscarDisciplinaPorNomeECodigo() throws Exception {
         service.criarDisciplinasPorNivel("Quimica", 3, AreaConhecimento.MAT);
 
         Disciplina disciplina = service.buscar("Quimica", 2);
@@ -86,14 +91,13 @@ class DisciplinaServiceTest {
     }
 
     @Test
-    void deveRetornarNullAoBuscarDisciplinaInexistente() {
-        Disciplina disciplina = service.buscar("Hardware", 1);
-
-        assertNull(disciplina);
+    void deveLancarExcecaoAoBuscarDisciplinaInexistente() {
+        assertThrows(DisciplinaNaoEncontradaException.class, () ->
+                service.buscar("Hardware", 1));
     }
 
     @Test
-    void deveCarregarDisciplinas() {
+    void deveCarregarDisciplinas() throws Exception {
         service.criarDisciplinasPorNivel("Quimica", 2, AreaConhecimento.NAT);
 
         Map<String, List<Disciplina>> mapa = service.carregarDisciplinas();

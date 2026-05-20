@@ -1,5 +1,8 @@
 package repository;
 
+import exception.Local.LocalDuplicadoException;
+import exception.Local.LocalInvalidoException;
+import exception.Local.LocalNaoEncontradoException;
 import model.Local.Area;
 import model.Local.Direcao;
 import model.Local.Local;
@@ -18,17 +21,15 @@ class LocalRepositoryTest {
     private static final File ARQUIVO = new File("locais.json");
     private LocalRepository repository;
 
-    // Dados reutilizáveis nos testes
     private Local criarLocal(String nome, TipoLocal tipo) {
         Area area = new Area(100, 0, 100, 0);
-        Local local = new Local(nome, area, tipo);
-        return local;
+        return new Local(nome, area, tipo);
     }
 
     @BeforeEach
     void setUp() {
         repository = new LocalRepository();
-        if (ARQUIVO.exists()) ARQUIVO.delete(); // garante ambiente limpo
+        if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
     @AfterAll
@@ -36,9 +37,7 @@ class LocalRepositoryTest {
         if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
-    // -------------------------------------------------------------------------
     // adicionarLocal
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(1)
@@ -48,29 +47,23 @@ class LocalRepositoryTest {
 
         repository.adicionarLocal(colegiado);
 
-        Map<String, Local> locais = repository.carregarLocal();
-        assertTrue(locais.containsKey("Colegiado"));
+        assertTrue(repository.carregarLocais().containsKey("Colegiado"));
     }
 
     @Test
     @Order(2)
     @DisplayName("Não deve adicionar local nulo")
     void naoDeveAdicionarLocalNulo() {
-        repository.adicionarLocal(null);
-
-        assertTrue(repository.carregarLocal().isEmpty());
+        assertThrows(LocalInvalidoException.class, () -> repository.adicionarLocal(null));
     }
 
     @Test
     @Order(3)
     @DisplayName("Não deve adicionar local com nome nulo")
     void naoDeveAdicionarLocalComNomeNulo() {
-        Area area = new Area(100, 0, 100, 0);
-        Local local = new Local(null, area);
+        Local local = new Local(null, new Area(100, 0, 100, 0));
 
-        repository.adicionarLocal(local);
-
-        assertTrue(repository.carregarLocal().isEmpty());
+        assertThrows(LocalInvalidoException.class, () -> repository.adicionarLocal(local));
     }
 
     @Test
@@ -81,15 +74,11 @@ class LocalRepositoryTest {
         Local colegiado2 = criarLocal("Colegiado", TipoLocal.COLEGIADO);
 
         repository.adicionarLocal(colegiado1);
-        repository.adicionarLocal(colegiado2);
 
-        assertEquals(1, repository.carregarLocal().size());
-        assertEquals(TipoLocal.COLEGIADO, repository.carregarLocal().get("Colegiado").getTipo());
+        assertThrows(LocalDuplicadoException.class, () -> repository.adicionarLocal(colegiado2));
     }
 
-    // -------------------------------------------------------------------------
     // buscarPorTipo
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(5)
@@ -106,18 +95,15 @@ class LocalRepositoryTest {
 
     @Test
     @Order(6)
-    @DisplayName("Deve retornar null quando tipo não existe")
-    void deveRetornarNullQuandoTipoNaoExiste() {
+    @DisplayName("Deve lançar exceção quando tipo não existe")
+    void deveLancarExcecaoQuandoTipoNaoExiste() {
         repository.adicionarLocal(criarLocal("Cantina", TipoLocal.CANTINA));
 
-        Local encontrado = repository.buscarPorTipo(TipoLocal.COLEGIADO);
-
-        assertNull(encontrado);
+        assertThrows(LocalNaoEncontradoException.class,
+                () -> repository.buscarPorTipo(TipoLocal.COLEGIADO));
     }
 
-    // -------------------------------------------------------------------------
     // salvar e carregar
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(7)
@@ -125,13 +111,12 @@ class LocalRepositoryTest {
     void deveSalvarECarregarLocais() throws Exception {
         repository.adicionarLocal(criarLocal("Sala", TipoLocal.SALA));
         repository.adicionarLocal(criarLocal("Colegiado", TipoLocal.COLEGIADO));
-
         repository.salvar();
 
         LocalRepository novoRepository = new LocalRepository();
         novoRepository.carregar();
 
-        Map<String, Local> locais = novoRepository.carregarLocal();
+        Map<String, Local> locais = novoRepository.carregarLocais();
         assertEquals(2, locais.size());
         assertTrue(locais.containsKey("Sala"));
         assertTrue(locais.containsKey("Colegiado"));
@@ -142,12 +127,9 @@ class LocalRepositoryTest {
     @Order(8)
     @DisplayName("Deve salvar e carregar local com ZonaInterativa")
     void deveSalvarLocalComZonaInterativa() throws Exception {
-        Area areaLocal = new Area(200, 0, 200, 0);
-        Local cantina = new Local("Cantina", areaLocal, TipoLocal.CANTINA);
-
-        Area areaZona = new Area(50, 10, 50, 10);
-        ZonaInterativa zona = new ZonaInterativa(areaZona, "Mercado");
-        cantina.getZonaInterativasDisponiveis().add(zona);
+        Local cantina = new Local("Cantina", new Area(200, 0, 200, 0), TipoLocal.CANTINA);
+        cantina.getZonaInterativasDisponiveis().add(
+                new ZonaInterativa(new Area(50, 10, 50, 10), "Mercado"));
 
         repository.adicionarLocal(cantina);
         repository.salvar();
@@ -155,7 +137,7 @@ class LocalRepositoryTest {
         LocalRepository novoRepository = new LocalRepository();
         novoRepository.carregar();
 
-        Local carregado = novoRepository.carregarLocal().get("Cantina");
+        Local carregado = novoRepository.carregarLocais().get("Cantina");
         assertNotNull(carregado);
         assertEquals(1, carregado.getZonaInterativasDisponiveis().size());
         assertEquals("Mercado", carregado.getZonaInterativasDisponiveis().get(0).getNome());
@@ -166,8 +148,7 @@ class LocalRepositoryTest {
     @DisplayName("Deve reconstruir vizinhos após carregar")
     void deveReconstruirVizinhosAposCarregar() throws Exception {
         Local colegiado = criarLocal("Colegiado", TipoLocal.COLEGIADO);
-        Local sala  = criarLocal("Sala",  TipoLocal.SALA);
-
+        Local sala      = criarLocal("Sala",      TipoLocal.SALA);
         colegiado.adicionarVizinho(Direcao.CIMA, sala);
 
         repository.adicionarLocal(colegiado);
@@ -177,8 +158,8 @@ class LocalRepositoryTest {
         LocalRepository novoRepository = new LocalRepository();
         novoRepository.carregar();
 
-        Local colegiadoCar = novoRepository.carregarLocal().get("Colegiado");
-        Local vizinho = colegiadoCar.getVizinho(Direcao.CIMA);
+        Local colegiadoCar = novoRepository.carregarLocais().get("Colegiado");
+        Local vizinho      = colegiadoCar.getVizinho(Direcao.CIMA);
 
         assertNotNull(vizinho);
         assertEquals("Sala", vizinho.getNome());
@@ -189,16 +170,15 @@ class LocalRepositoryTest {
     @DisplayName("Carregar sem arquivo não deve lançar exceção")
     void carregarSemArquivoNaoDeveLancarExcecao() {
         assertDoesNotThrow(() -> repository.carregar());
-        assertTrue(repository.carregarLocal().isEmpty());
+        assertTrue(repository.carregarLocais().isEmpty());
     }
-
 
     @Test
     @Order(11)
     @DisplayName("Gerar arquivo para inspeção manual")
     void gerarArquivoParaInspecao() throws Exception {
-        Local sala = criarLocal("Sala", TipoLocal.SALA);
-        Local cantina  = criarLocal("cantina",  TipoLocal.CANTINA);
+        Local sala    = criarLocal("Sala",    TipoLocal.SALA);
+        Local cantina = criarLocal("cantina", TipoLocal.CANTINA);
         sala.adicionarVizinho(Direcao.CIMA, cantina);
 
         repository.adicionarLocal(sala);
@@ -207,7 +187,7 @@ class LocalRepositoryTest {
 
         String json = new String(java.nio.file.Files.readAllBytes(ARQUIVO.toPath()));
         System.out.println(json);
-        // sem assert — só para gerar o arquivo
+
         assertTrue(ARQUIVO.exists());
     }
 }

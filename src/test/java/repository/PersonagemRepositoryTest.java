@@ -1,10 +1,12 @@
 package repository;
 
-import model.Personagem;
+import exception.Personagem.PersonagemDuplicadoException;
+import exception.Personagem.PersonagemInvalidoException;
+import model.Disciplina.AreaConhecimento;
 import model.Local.Area;
 import model.Local.Local;
 import model.Local.TipoLocal;
-import model.Disciplina.AreaConhecimento;
+import model.Personagem;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -33,9 +35,7 @@ class PersonagemRepositoryTest {
         if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
-    // -------------------------------------------------------------------------
     // adicionarPersonagem
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(1)
@@ -52,9 +52,8 @@ class PersonagemRepositoryTest {
     @Order(2)
     @DisplayName("Não deve adicionar personagem nulo")
     void naoDeveAdicionarPersonagemNulo() {
-        repository.adicionarPersonagem(null);
-
-        assertTrue(repository.carregarPersonagens().isEmpty());
+        assertThrows(PersonagemInvalidoException.class,
+                () -> repository.adicionarPersonagem(null));
     }
 
     @Test
@@ -64,14 +63,12 @@ class PersonagemRepositoryTest {
         Personagem p = criarPersonagem("Ana");
 
         repository.adicionarPersonagem(p);
-        repository.adicionarPersonagem(p);
 
-        assertEquals(1, repository.carregarPersonagens().size());
+        assertThrows(PersonagemDuplicadoException.class,
+                () -> repository.adicionarPersonagem(p));
     }
 
-    // -------------------------------------------------------------------------
     // existePersonagem
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(4)
@@ -99,9 +96,7 @@ class PersonagemRepositoryTest {
         assertFalse(repository.existePersonagem(null));
     }
 
-    // -------------------------------------------------------------------------
     // salvar e carregar
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(7)
@@ -138,7 +133,7 @@ class PersonagemRepositoryTest {
         novoRepository.carregar();
 
         Personagem carregado = novoRepository.carregarPersonagens().get(p.getPersonagemId());
-        assertEquals(35.0, carregado.getConhecimento(AreaConhecimento.MAT)); // 10.0 inicial + 25.0
+        assertEquals(35.0, carregado.getConhecimento(AreaConhecimento.MAT));
     }
 
     @Test
@@ -146,10 +141,7 @@ class PersonagemRepositoryTest {
     @DisplayName("Deve salvar e carregar localAtualNome do personagem")
     void deveSalvarECarregarLocalAtualNome() throws Exception {
         Personagem p = criarPersonagem("Ana");
-
-        Area area = new Area(100, 0, 100, 0);
-        Local local = new Local("Vila", area, TipoLocal.CANTINA);
-        p.setLocalAtual(local);
+        p.setLocalAtual(new Local("Vila", new Area(100, 0, 100, 0), TipoLocal.CANTINA));
 
         repository.adicionarPersonagem(p);
         repository.salvar();
@@ -159,7 +151,6 @@ class PersonagemRepositoryTest {
 
         Personagem carregado = novoRepository.carregarPersonagens().get(p.getPersonagemId());
         assertEquals("Vila", carregado.getLocalAtualNome());
-        // localAtual em si é reconstruído no service — aqui só verificamos o nome
         assertNull(carregado.getLocalAtual());
     }
 
@@ -203,7 +194,6 @@ class PersonagemRepositoryTest {
 
         String json = new String(java.nio.file.Files.readAllBytes(ARQUIVO.toPath()));
 
-        // Verifica campos presentes
         assertTrue(json.contains("\"nome\" : \"Ana\""));
         assertTrue(json.contains("\"energia\" : 80.0"));
         assertTrue(json.contains("\"motivacao\" : 70.0"));
@@ -216,7 +206,6 @@ class PersonagemRepositoryTest {
         assertTrue(json.contains("\"localAtualNome\" :"));
         assertTrue(json.contains("\"conhecimentosNomes\" :"));
 
-        // Verifica campos ignorados não aparecem
         assertFalse(json.contains("\"localAtual\" :"));
         assertFalse(json.contains("\"semestres\" :"));
         assertFalse(json.contains("\"conhecimentos\" :"));

@@ -1,5 +1,8 @@
 package repository;
 
+import exception.Evento.EventoDuplicadoException;
+import exception.Evento.EventoInvalidoException;
+import exception.Evento.EventoNaoEncontradoException;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
 import model.Evento.EventoAleatorio;
@@ -28,9 +31,7 @@ class EventoRepositoryTest {
         if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
-    // -------------------------------------------------------------------------
     // adicionarEvento
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(1)
@@ -47,9 +48,7 @@ class EventoRepositoryTest {
     @Order(2)
     @DisplayName("Não deve adicionar evento nulo")
     void naoDeveAdicionarEventoNulo() {
-        repository.adicionarEvento(null);
-
-        assertTrue(repository.carregarEventos().isEmpty());
+        assertThrows(EventoInvalidoException.class, () -> repository.adicionarEvento(null));
     }
 
     @Test
@@ -58,9 +57,7 @@ class EventoRepositoryTest {
     void naoDeveAdicionarEventoComNomeNulo() {
         Evento e = new Evento();
 
-        repository.adicionarEvento(e);
-
-        assertTrue(repository.carregarEventos().isEmpty());
+        assertThrows(EventoInvalidoException.class, () -> repository.adicionarEvento(e));
     }
 
     @Test
@@ -71,15 +68,11 @@ class EventoRepositoryTest {
         Evento e2 = new Evento("Prova de Cálculo", "Descrição diferente");
 
         repository.adicionarEvento(e1);
-        repository.adicionarEvento(e2);
 
-        assertEquals(1, repository.carregarEventos().size());
-        assertEquals("Uma prova difícil", repository.carregarEventos().get("Prova de Cálculo").getDescricao());
+        assertThrows(EventoDuplicadoException.class, () -> repository.adicionarEvento(e2));
     }
 
-    // -------------------------------------------------------------------------
     // buscarPorNome
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(5)
@@ -95,16 +88,13 @@ class EventoRepositoryTest {
 
     @Test
     @Order(6)
-    @DisplayName("Deve retornar null para evento inexistente")
-    void deveRetornarNullParaEventoInexistente() {
-        Evento encontrado = repository.buscarPorNome("Evento Inexistente");
-
-        assertNull(encontrado);
+    @DisplayName("Deve lançar exceção para evento inexistente")
+    void deveLancarExcecaoParaEventoInexistente() {
+        assertThrows(EventoNaoEncontradoException.class,
+                () -> repository.buscarPorNome("Evento Inexistente"));
     }
 
-    // -------------------------------------------------------------------------
     // salvar e carregar
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(7)

@@ -1,36 +1,114 @@
 package service;
+
+import exception.Local.LocalDuplicadoException;
+import exception.Local.LocalInvalidoException;
+import exception.Local.LocalNaoEncontradoException;
+import exception.PersistenciaException;
 import model.Local.*;
 import repository.LocalRepository;
 
 import java.util.Map;
 
 public class MapaService {
-    private LocalRepository localRepo = new LocalRepository();
 
-    public Map<String, Local> carregarLocais() {
-        return localRepo.carregarLocal();
+    private final LocalRepository localRepo;
+
+    public MapaService(LocalRepository localRepo) {
+        this.localRepo = localRepo;
     }
 
-    public Mapa criarMapa(){
+    // Inicialização
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
+        localRepo.carregar();
+    }
+
+    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        localRepo.salvar();
+    }
+
+    // Leitura
+
+    public Map<String, Local> carregarLocais() {
+        return localRepo.carregarLocais();
+    }
+
+    /**@throws LocalNaoEncontradoException se não existir local com o tipo informado*/
+    public Local buscarPorTipo(TipoLocal tipo) {
+        return localRepo.buscarPorTipo(tipo);
+    }
+
+    /**@throws LocalNaoEncontradoException se não existir local com o nome informado*/
+    public Local buscarPorNome(String nome) {
+        return localRepo.buscarPorNome(nome);
+    }
+
+    // Criação do mapa
+    /**@throws PersistenciaException se ocorrer falha ao salvar após criação*/
+    public Mapa criarMapa() throws PersistenciaException {
         Mapa mapa = new Mapa();
 
-        Local[] pontos = criarPontosDeOnibus();
+        Local[] pontos   = criarPontosDeOnibus();
         Local[] entradas = criarEstruturaModulo("Entrada módulo ", TipoLocal.ENTRADA);
         Local[] cantinas = criarEstruturaModulo("Cantina módulo ", TipoLocal.CANTINA);
-        Local[] salas = criarEstruturaModulo("Sala módulo ", TipoLocal.SALA);
-        Local[] extras = criarExtras("Laboratório", "Colegiado");
+        Local[] salas    = criarEstruturaModulo("Sala módulo ", TipoLocal.SALA);
+        Local[] extras   = criarExtras("Laboratório", "Colegiado");
 
         conectarMapa(pontos, entradas, cantinas, salas, extras);
 
-        mapa.setLocais(
-                adicionarAoRepositorio(pontos, entradas, cantinas, salas, extras)
-        );
+        mapa.setLocais(adicionarAoRepositorio(pontos, entradas, cantinas, salas, extras));
 
         return mapa;
     }
 
+    // Lógica de negócio
+    /**@throws LocalInvalidoException se origem, destino ou direção forem nulos, ou origem == destino
+     @throws LocalDuplicadoException se já existir vizinho na direção informada*/
+    public void conectarLocais(Local origem, Local destino, Direcao direcao) {
+        if (origem == null || destino == null) {
+            throw new LocalInvalidoException("local", "origem e destino não podem ser nulos");
+        }
+        if (direcao == null) {
+            throw new LocalInvalidoException("direcao", "não pode ser nula");
+        }
+        if (origem == destino) {
+            throw new LocalInvalidoException("local", "um local não pode se conectar a si mesmo");
+        }
+        if (origem.getVizinho(direcao) != null) {
+            throw new LocalDuplicadoException(origem.getNome() + " -> " + direcao.name());
+        }
+
+        origem.adicionarVizinho(direcao, destino);
+        destino.adicionarVizinho(oposta(direcao), origem);
+    }
+
+    /**@throws LocalInvalidoException se a zona, sua área ou o local forem inválidos, ou a zona não couber no local*/
+    public void adicionarZona(ZonaInterativa zona, Local local) {
+        if (zona == null) {
+            throw new LocalInvalidoException("zona", "não pode ser nula");
+        }
+        if (zona.getArea() == null) {
+            throw new LocalInvalidoException("zona.area", "não pode ser nula");
+        }
+        if (!local.getArea().contemArea(zona.getArea())) {
+            throw new LocalInvalidoException("zona", "deve estar contida dentro da área do local");
+        }
+        if (local.getZonaInterativasDisponiveis().contains(zona)) {
+            throw new LocalInvalidoException("zona", "já existe no local");
+        }
+        for (ZonaInterativa z : local.getZonaInterativasDisponiveis()) {
+            if (z.getArea().intersecta(zona.getArea())) {
+                throw new LocalInvalidoException("zona", "sobrepõe uma zona já existente");
+            }
+        }
+
+        local.getZonaInterativasDisponiveis().add(zona);
+    }
+
+    // Helpers privados
     private Local[] criarPontosDeOnibus() {
-        return new Local[] {
+        return new Local[]{
                 new Local("Ponto de ônibus 1", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS),
                 new Local("Ponto de ônibus 2", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS),
                 new Local("Ponto de ônibus 3", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS)
@@ -39,66 +117,57 @@ public class MapaService {
 
     private Local[] criarEstruturaModulo(String nomeBase, TipoLocal tipo) {
         Local[] locais = new Local[7];
-
         for (int i = 0; i < 7; i++) {
             locais[i] = new Local(nomeBase + (i + 1), criarAreaPadrao(), tipo);
         }
-
         return locais;
     }
 
-    private Local[] criarExtras(String n1 , String n2){
-        Local[] extras = new Local[2];
-
-        extras[0] = new Local(n1, criarAreaPadrao(), TipoLocal.LABORATORIO);
-        extras[1] = new Local(n2, criarAreaPadrao(), TipoLocal.COLEGIADO);
-
-        return extras;
+    private Local[] criarExtras(String n1, String n2) {
+        return new Local[]{
+                new Local(n1, criarAreaPadrao(), TipoLocal.LABORATORIO),
+                new Local(n2, criarAreaPadrao(), TipoLocal.COLEGIADO)
+        };
     }
 
     private void conectarMapa(Local[] pontos, Local[] entradas,
-                              Local[] cantinas, Local[] salas,
-                              Local[] extras) {
+                              Local[] cantinas, Local[] salas, Local[] extras) {
+        verificarLocaisValidos(pontos);
+        verificarLocaisValidos(entradas);
+        verificarLocaisValidos(cantinas);
+        verificarLocaisValidos(salas);
+        verificarLocaisValidos(extras);
 
-        verificarLocalValido(pontos);
-        verificarLocalValido(entradas);
-        verificarLocalValido(cantinas);
-        verificarLocalValido(salas);
-        verificarLocalValido(extras);
-
-        conectarLocais(pontos[0], entradas[1], Direcao.CIMA); // conecta à entrada do módulo 2
-        conectarLocais(pontos[1], entradas[3], Direcao.CIMA); // conecta à entrada do módulo 4
-        conectarLocais(pontos[2], entradas[5], Direcao.CIMA); // conecta à entrada do módulo 6
+        conectarLocais(pontos[0], entradas[1], Direcao.CIMA);
+        conectarLocais(pontos[1], entradas[3], Direcao.CIMA);
+        conectarLocais(pontos[2], entradas[5], Direcao.CIMA);
 
         for (int i = 0; i < 7; i++) {
             conectarLocais(entradas[i], cantinas[i], Direcao.CIMA);
-            conectarLocais(cantinas[i], salas[i], Direcao.CIMA);
+            conectarLocais(cantinas[i], salas[i],    Direcao.CIMA);
 
-            if (i!=6){
-                conectarLocais(entradas[i], entradas[i+1], Direcao.ESQUERDA);
-                conectarLocais(cantinas[i], cantinas[i+1], Direcao.ESQUERDA);
+            if (i != 6) {
+                conectarLocais(entradas[i], entradas[i + 1], Direcao.ESQUERDA);
+                conectarLocais(cantinas[i], cantinas[i + 1], Direcao.ESQUERDA);
             }
         }
 
-        conectarLocais(salas[2], extras[0], Direcao.CIMA); // conecta sala do módulo 3 ao laboratório
-        conectarLocais(salas[4], extras[1], Direcao.CIMA); // conecta sala do módulo 5 ao colegiado
+        conectarLocais(salas[2], extras[0], Direcao.CIMA);
+        conectarLocais(salas[4], extras[1], Direcao.CIMA);
     }
 
-    private Map<String, Local> adicionarAoRepositorio(Local[] pontos,
-                                 Local[] entradas,
-                                 Local[] cantinas,
-                                 Local[] salas,
-                                 Local[] extras) {
+    private Map<String, Local> adicionarAoRepositorio(Local[] pontos, Local[] entradas,
+                                                      Local[] cantinas, Local[] salas,
+                                                      Local[] extras) throws PersistenciaException {
+        verificarLocaisValidos(pontos);
+        verificarLocaisValidos(entradas);
+        verificarLocaisValidos(cantinas);
+        verificarLocaisValidos(salas);
+        verificarLocaisValidos(extras);
 
-        verificarLocalValido(pontos);
-        verificarLocalValido(entradas);
-        verificarLocalValido(cantinas);
-        verificarLocalValido(salas);
-        verificarLocalValido(extras);
+        if (!localRepo.carregarLocais().isEmpty()) return localRepo.carregarLocais();
 
-        if (localRepo.carregarLocal().size() != 0){ return localRepo.carregarLocal();}
-
-        for (Local p : pontos) localRepo.adicionarLocal( p);
+        for (Local p : pontos) localRepo.adicionarLocal(p);
 
         for (int i = 0; i < 7; i++) {
             localRepo.adicionarLocal(entradas[i]);
@@ -108,92 +177,41 @@ public class MapaService {
 
         for (Local e : extras) localRepo.adicionarLocal(e);
 
-        return localRepo.carregarLocal();
+        localRepo.salvar();
+
+        return localRepo.carregarLocais();
     }
 
-    private Area criarAreaPadrao(){
-        Area area = new Area(500, -500, 500, -500);
-        return area;
+    private Area criarAreaPadrao() {
+        return new Area(500, -500, 500, -500);
     }
 
-    private Area criarAreaCustomizada(int tamanho){
-        if (tamanho < 0){
-            throw new IllegalArgumentException("Não é possível criar uma área com tamanho negativo.");
+    /**@throws LocalInvalidoException se o tamanho for menor ou igual a zero*/
+    private Area criarAreaCustomizada(int tamanho) {
+        if (tamanho <= 0) {
+            throw new LocalInvalidoException("tamanho", "deve ser maior que zero");
         }
-
-        if (tamanho == 0){
-            throw new IllegalArgumentException("Não é possível criar uma área com tamanho igual a zero");
-        }
-
         return new Area(tamanho, -tamanho, tamanho, -tamanho);
     }
 
-    private ZonaInterativa criarZonaInterativa(String nome, int tamanho){
+    private ZonaInterativa criarZonaInterativa(String nome, int tamanho) {
         return new ZonaInterativa(criarAreaCustomizada(tamanho), nome);
     }
 
-    private void verificarLocalValido(Local[] locais){
-        for (Local l: locais){
-            if (l == null)
-                throw new IllegalArgumentException("Objeto passado como parâmetro é inválido");
+    private void verificarLocaisValidos(Local[] locais) {
+        for (Local l : locais) {
+            if (l == null) {
+                throw new LocalInvalidoException("local", "nenhum local do array pode ser nulo");
+            }
         }
-    }
-
-    public void conectarLocais(Local origem, Local destino, Direcao direcao) {
-
-        if (origem == null || destino == null || direcao == null) {
-            throw new IllegalArgumentException("Parâmetros inválidos");
-        }
-
-        if (origem == destino) {
-            throw new IllegalArgumentException("Um local não pode se conectar a si mesmo.");
-        }
-
-        if (origem.getVizinho(direcao) != null) {
-            throw new IllegalStateException("Já existe um vizinho nessa direção");
-        }
-        // conexão ida
-        origem.adicionarVizinho(direcao, destino);
-
-        // conexão volta
-        destino.adicionarVizinho(oposta(direcao), origem);
     }
 
     private Direcao oposta(Direcao direcao) {
-        switch (direcao) {
-            case CIMA: return Direcao.BAIXO;
-            case BAIXO: return Direcao.CIMA;
-            case ESQUERDA: return Direcao.DIREITA;
-            case DIREITA: return Direcao.ESQUERDA;
-            default: throw new IllegalArgumentException("Direção inválida");
-        }
+        return switch (direcao) {
+            case CIMA     -> Direcao.BAIXO;
+            case BAIXO    -> Direcao.CIMA;
+            case ESQUERDA -> Direcao.DIREITA;
+            case DIREITA  -> Direcao.ESQUERDA;
+        };
     }
-
-    public void adicionarZona(ZonaInterativa zona, Local local) {
-
-        if (zona.getArea() == null) {
-            throw new IllegalArgumentException("Não é possível adicionar uma zona sem área definida.");
-        }
-
-        //Verificar se a zona está dentro do local
-        if (!local.getArea().contemArea(zona.getArea())) {
-            throw new IllegalArgumentException("A zona deve estar contida dentro da área do local.");
-        }
-
-        //Verificar duplicidade
-        if (local.getZonaInterativasDisponiveis().contains(zona)) {
-            throw new IllegalArgumentException("Não é possível adicionar duas zonas iguais ao mesmo local.");
-        }
-
-        //Verificar sobreposição com outras zonas
-        for (ZonaInterativa z : local.getZonaInterativasDisponiveis()) {
-            if (z.getArea().intersecta(zona.getArea())) {
-                throw new IllegalArgumentException("A zona sobrepõe uma zona já existente.");
-            }
-        }
-
-        //Adicionar zona
-        local.getZonaInterativasDisponiveis().add(zona);
-    }
-
 }

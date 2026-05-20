@@ -1,5 +1,9 @@
 package service;
 
+import exception.Disciplina.DisciplinaDuplicadaException;
+import exception.Disciplina.DisciplinaInvalidaException;
+import exception.Disciplina.DisciplinaNaoEncontradaException;
+import exception.PersistenciaException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import repository.DisciplinaRepository;
@@ -9,43 +13,79 @@ import java.util.Map;
 
 public class DisciplinaService {
 
-    // Repositório responsável por armazenar e recuperar disciplinas
-    private DisciplinaRepository disciplinaRepo;
+    private final DisciplinaRepository disciplinaRepo;
 
     public DisciplinaService(DisciplinaRepository disciplinaRepo) {
         this.disciplinaRepo = disciplinaRepo;
     }
 
-    public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis, AreaConhecimento area) {
-
-        if (nome == null || quantidadeNiveis <= 0 || area == null) {
-            throw new IllegalArgumentException("Parâmetros inválidos");
-        }
-
-        // Cria várias disciplinas com níveis diferentes
-        for (int i = 1; i <= quantidadeNiveis; i++) {
-
-            Disciplina d = new Disciplina();
-
-            d.setNome(nome);
-
-            d.setCodigo(i);
-
-            d.setArea(area);
-
-            // Só adiciona se ainda não existir no repositório
-            if (!disciplinaRepo.existe(d)) {
-                disciplinaRepo.adicionar(d);
-            }
-        }
+    // Inicialização
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
+        disciplinaRepo.carregar();
     }
 
+
+        /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        disciplinaRepo.salvar();
+    }
+
+    // Escrita
+    /**@throws DisciplinaInvalidaException  se nome, quantidade ou área forem inválidos
+        @throws DisciplinaDuplicadaException se algum nível já existir no repositório
+        @throws PersistenciaException        se ocorrer falha ao salvar após criação*/
+    public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis, AreaConhecimento area)
+            throws PersistenciaException {
+        if (nome == null || nome.isBlank()) {
+            throw new DisciplinaInvalidaException("nome", "não pode ser nulo ou vazio");
+        }
+        if (quantidadeNiveis <= 0) {
+            throw new DisciplinaInvalidaException("quantidadeNiveis", "deve ser maior que zero");
+        }
+        if (area == null) {
+            throw new DisciplinaInvalidaException("area", "não pode ser nula");
+        }
+
+        for (int i = 1; i <= quantidadeNiveis; i++) {
+            Disciplina d = new Disciplina();
+            d.setNome(nome);
+            d.setCodigo(i);
+            d.setArea(area);
+            disciplinaRepo.adicionar(d);
+        }
+
+        disciplinaRepo.salvar();
+    }
+
+    // Leitura
+    /**@throws DisciplinaNaoEncontradaException se não houver disciplinas com o nome */
     public List<Disciplina> buscarPorNome(String nome) {
         return disciplinaRepo.buscarPorNome(nome);
     }
 
+    public List<Disciplina> buscarPorArea(AreaConhecimento area) {
+        return disciplinaRepo.buscarPorArea(area);
+    }
+
+    /*
+        @throws DisciplinaNaoEncontradaException se não encontrar a combinação nome + código
+    */
     public Disciplina buscar(String nome, float codigo) {
         return disciplinaRepo.buscar(nome, codigo);
+    }
+
+    public boolean existe(Disciplina d) {
+        return disciplinaRepo.existe(d);
+    }
+
+    /** @throws DisciplinaNaoEncontradaException se não existir disciplina com código + 1*/
+    public Disciplina proximaDisciplina(String nome, float codigoAtual) {
+        return disciplinaRepo.proximaDisciplina(nome, codigoAtual);
+    }
+
+    public List<Disciplina> buscarDisciplinasIniciais() {
+        return disciplinaRepo.buscarDisciplinasIniciais();
     }
 
     public Map<String, List<Disciplina>> carregarDisciplinas() {

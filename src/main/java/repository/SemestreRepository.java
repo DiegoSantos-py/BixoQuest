@@ -3,12 +3,18 @@ package repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import model.Disciplina.Disciplina;
+import exception.OperacaoPersistencia;
+import exception.PersistenciaException;
+import exception.Semestre.SemestreInvalidoException;
+import exception.Semestre.SemestreNaoEncontradoException;
 import model.Tempo.Semestre;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SemestreRepository {
 
@@ -28,51 +34,62 @@ public class SemestreRepository {
         return m;
     }
 
-    public void salvar() throws IOException {
-        // instrui o Jackson a serializar Map<String, Evento> com polimorfismo
-        mapper.findAndRegisterModules();
+    // Persistência
+    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        try {
+            var type = mapper.getTypeFactory()
+                    .constructMapType(HashMap.class, Integer.class, List.class);
 
-        var type = mapper.getTypeFactory()
-                .constructMapType(HashMap.class, Integer.class, List.class);
-
-        mapper.writerFor(type)
-                .withDefaultPrettyPrinter()
-                .writeValue(ARQUIVO, semestresPorJogador);
+            mapper.writerFor(type)
+                    .withDefaultPrettyPrinter()
+                    .writeValue(ARQUIVO, semestresPorJogador);
+        } catch (Exception e) {
+            throw new PersistenciaException(OperacaoPersistencia.SALVAR, e);
+        }
     }
 
-    public void carregar() throws IOException {
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
         if (!ARQUIVO.exists()) return;
 
-        this.semestresPorJogador = mapper.readValue(ARQUIVO,
-                mapper.getTypeFactory().constructMapType(
-                        HashMap.class,
-                        mapper.getTypeFactory().constructType(Integer.class),
-                        mapper.getTypeFactory().constructCollectionType(List.class, Semestre.class)
-                ));
+        try {
+            this.semestresPorJogador = mapper.readValue(ARQUIVO,
+                    mapper.getTypeFactory().constructMapType(
+                            HashMap.class,
+                            mapper.getTypeFactory().constructType(Integer.class),
+                            mapper.getTypeFactory().constructCollectionType(List.class, Semestre.class)
+                    ));
+        } catch (Exception e) {
+            throw new PersistenciaException(OperacaoPersistencia.CARREGAR, e);
+        }
     }
 
-    // Retorna todos semestres associados a um jogador
-    public List<Semestre> getSemestresPorJogador(int jogadorId) {
-        List<Semestre> lista = semestresPorJogador.get(jogadorId);
-        if (lista == null) return new ArrayList<>();
-        return lista;
-    }
-
+    // Escrita
+    /**@throws SemestreInvalidoException se o semestre for nulo*/
     public void adicionarSemestre(int jogadorId, Semestre semestre) {
         if (semestre == null) {
-            throw new IllegalArgumentException("Semestre inválido");
+            throw new SemestreInvalidoException("semestre", "não pode ser nulo");
         }
 
+        semestresPorJogador
+                .computeIfAbsent(jogadorId, k -> new ArrayList<>())
+                .add(semestre);
+    }
+
+    // Leitura
+    /**@throws SemestreNaoEncontradoException se não houver semestres para o jogador*/
+    public List<Semestre> getSemestresPorJogador(int jogadorId) {
         List<Semestre> lista = semestresPorJogador.get(jogadorId);
-        if (lista == null) {
-            lista = new ArrayList<>();
-            semestresPorJogador.put(jogadorId, lista);
+
+        if (lista == null || lista.isEmpty()) {
+            throw new SemestreNaoEncontradoException(jogadorId);
         }
 
-        lista.add(semestre);
+        return Collections.unmodifiableList(lista);
     }
 
     public Map<Integer, List<Semestre>> carregarSemestres() {
-        return semestresPorJogador;
+        return Collections.unmodifiableMap(semestresPorJogador);
     }
 }

@@ -1,16 +1,38 @@
 package service;
 
+import exception.Evento.EventoInvalidoException;
+import exception.Evento.EventoNaoEncontradoException;
+import exception.PersistenciaException;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
 import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
+import repository.EventoRepository;
 
 import java.util.Map;
 
 public class EventoService {
 
-    // Cria um novo evento
+    private final EventoRepository eventoRepo;
+
+    public EventoService(EventoRepository eventoRepo) {
+        this.eventoRepo = eventoRepo;
+    }
+
+    // Inicialização
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
+        eventoRepo.carregar();
+    }
+
+    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        eventoRepo.salvar();
+    }
+
+    // Escrita
+    /**@throws EventoInvalidoException se nome, descrição ou zona forem inválidos*/
     public Evento criarEvento(String nome,
                               String descricao,
                               double efeitoEnergia,
@@ -24,14 +46,14 @@ public class EventoService {
                               double energiaMinima,
                               double custoDinheiro,
                               boolean repetivel,
-                              ZonaInterativa zona) {
-
-
+                              ZonaInterativa zona) throws PersistenciaException {
         if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Nome inválido");
+            throw new EventoInvalidoException("nome", "não pode ser nulo ou vazio");
+        }
+        if (zona == null) {
+            throw new EventoInvalidoException("zona", "não pode ser nula");
         }
 
-        // Cria o evento com os atributos principais
         Evento evento = new Evento(
                 efeitoEnergia,
                 efeitoConhecimento,
@@ -44,37 +66,46 @@ public class EventoService {
                 energiaMinima
         );
 
+        evento.setNome(nome);
+        evento.setDescricao(descricao);
         evento.setCustaDinheiro(custoDinheiro);
         evento.setRepetivel(repetivel);
         evento.setZona(zona);
-        evento.setStatus(false); // ainda não foi executado
+        evento.setStatus(false);
+
+        eventoRepo.adicionarEvento(evento);
+        eventoRepo.salvar();
 
         return evento;
     }
 
+    // Leitura
+    /**@throws EventoNaoEncontradoException se não existir evento com o nome informado*/
+    public Evento buscarPorNome(String nome) {
+        return eventoRepo.buscarPorNome(nome);
+    }
+
+    public Map<String, Evento> carregarEventos() {
+        return eventoRepo.carregarEventos();
+    }
+
+    // Lógica de negócio
 
     public boolean podeExecutar(Evento evento, Personagem personagem, Dia diaAtual, DiaService diaService) {
-
         if (evento.isStatus() && !evento.isRepetivel()) {
             return false;
         }
-
         if (personagem.getEnergia() < evento.getEnergiaMinima()) {
             return false;
         }
-
         if (personagem.getDinheiro() < evento.getCustaDinheiro()) {
             return false;
         }
-
-        if (evento.getEventoRequisito() != null &&
-                !evento.getEventoRequisito().isStatus()) {
+        if (evento.getEventoRequisito() != null && !evento.getEventoRequisito().isStatus()) {
             return false;
         }
 
-        // Verifica se há tempo suficiente no dia
         long tempoRestanteMin = diaService.getTempoRestante(diaAtual) / 60;
-
         if (tempoRestanteMin < evento.getEfeitoTempo()) {
             return false;
         }
@@ -82,76 +113,36 @@ public class EventoService {
         return true;
     }
 
-    // Executa o evento, aplicando seus efeitos
     public void executarEvento(Evento evento,
                                Personagem personagem,
                                Dia diaAtual,
                                DiaService diaService) {
-
-        ZonaInterativa zona = evento.getZona();
-        String nomeZona = zona.getNome();
-
-        Evento eventoDoDia = null;
-
-        if (diaAtual.getEventosObrigatorios().containsKey(nomeZona)) {
-            eventoDoDia = diaAtual.getEventosObrigatorios().get(nomeZona);
-        }
-        else if (diaAtual.getEventosAleatorios().containsKey(nomeZona)) {
-            eventoDoDia = diaAtual.getEventosAleatorios().get(nomeZona);
-        }
-
-        // Se não houver evento naquela zona, lança erro
-        if (eventoDoDia == null) {
-            throw new IllegalStateException("Nenhum evento disponível para esta zona");
-        }
-
-        if (!eventoDoDia.equals(evento)) {
-            throw new IllegalStateException("Evento não corresponde à zona atual");
-        }
-
-        // Verifica se pode executar o evento
-        if (!podeExecutar(evento, personagem, diaAtual, diaService)) {
-            throw new IllegalStateException("Evento não pode ser executado");
-        }
-
-        // Aplica os efeitos do evento
         aplicarEfeitos(evento, personagem, diaAtual, diaService);
-
-        // Marca o evento como executado
         evento.setStatus(true);
     }
 
+    // Helpers privados
     private void aplicarEfeitos(Evento evento,
                                 Personagem personagem,
                                 Dia diaAtual,
                                 DiaService diaService) {
-
-        // Atualiza energia
         personagem.setEnergia(
-                Math.max(0, personagem.getEnergia() + evento.getEfeitoEnergia())
-        );
+                Math.max(0, personagem.getEnergia() + evento.getEfeitoEnergia()));
 
-        // Atualiza conhecimento em cada área, se houver
         if (evento.getEfeitosConhecimento() != null) {
             for (var entry : evento.getEfeitosConhecimento().entrySet()) {
-                personagem.atualizarConhecimento(
-                        entry.getKey(),
-                        entry.getValue()
-                );
+                personagem.atualizarConhecimento(entry.getKey(), entry.getValue());
             }
         }
 
         personagem.setMotivacao(
-                Math.max(0, personagem.getMotivacao() + evento.getEfeitoMotivacao())
-        );
+                Math.max(0, personagem.getMotivacao() + evento.getEfeitoMotivacao()));
 
         personagem.setSaude(
-                Math.max(0, personagem.getSaude() + evento.getEfeitoSaude())
-        );
+                Math.max(0, personagem.getSaude() + evento.getEfeitoSaude()));
 
         personagem.setDinheiro(
-                Math.max(0, personagem.getDinheiro() + evento.getEfeitoDinheiro())
-        );
+                Math.max(0, personagem.getDinheiro() + evento.getEfeitoDinheiro()));
 
         diaService.consumirTempoEvento(diaAtual, evento.getEfeitoTempo());
     }

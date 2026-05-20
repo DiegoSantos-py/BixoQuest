@@ -1,5 +1,6 @@
 package service;
 
+import exception.Semestre.SemestreInvalidoException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Personagem;
@@ -28,12 +29,16 @@ class SemestreServiceTest {
         service = new SemestreService(semestreRepo, disciplinaRepo);
     }
 
+    // criarSemestre
+
     @Test
     void deveCriarSemestre() {
         Semestre semestre = service.criarSemestre();
 
         assertNotNull(semestre);
     }
+
+    // iniciarPrimeiroSemestre
 
     @Test
     void deveIniciarPrimeiroSemestreComDisciplinasIniciais() {
@@ -58,6 +63,8 @@ class SemestreServiceTest {
         assertTrue(semestre.getDisciplinas().contains(d2));
     }
 
+    // avancarDia
+
     @Test
     void deveAvancarDiaQuandoSemestreNaoTerminou() {
         Semestre semestre = new Semestre();
@@ -69,7 +76,7 @@ class SemestreServiceTest {
     }
 
     @Test
-    void deveRetornarNullAoAvancarDiaQuandoSemestreTerminou() {
+    void deveLancarExcecaoAoAvancarDiaQuandoSemestreTerminou() {
         Semestre semestre = new Semestre() {
             @Override
             public boolean terminou() {
@@ -77,10 +84,10 @@ class SemestreServiceTest {
             }
         };
 
-        Dia dia = service.avancarDia(semestre);
-
-        assertNull(dia);
+        assertThrows(SemestreInvalidoException.class, () -> service.avancarDia(semestre));
     }
+
+    // adicionarDisciplina
 
     @Test
     void deveAdicionarDisciplinaAoSemestre() {
@@ -108,10 +115,11 @@ class SemestreServiceTest {
 
         semestre.adicionarDisciplinas(disciplina);
 
-        assertThrows(IllegalArgumentException.class, () ->
-                service.adicionarDisciplina(semestre, disciplina)
-        );
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.adicionarDisciplina(semestre, disciplina));
     }
+
+    // terminouSemestre
 
     @Test
     void deveInformarQuandoSemestreTerminou() {
@@ -125,17 +133,18 @@ class SemestreServiceTest {
         assertTrue(service.terminouSemestre(semestre));
     }
 
+    // encerrarSemestre
+
     @Test
     void deveLancarExcecaoAoEncerrarSemestreNulo() {
         Personagem personagem = new Personagem();
 
-        assertThrows(IllegalArgumentException.class, () ->
-                service.encerrarSemestre(personagem, null)
-        );
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.encerrarSemestre(personagem, null));
     }
 
     @Test
-    void deveRetornarMesmoSemestreSeAindaNaoTerminou() {
+    void deveRetornarMesmoSemestreSeAindaNaoTerminou() throws Exception {
         Personagem personagem = new Personagem();
 
         Semestre semestre = new Semestre() {
@@ -151,7 +160,7 @@ class SemestreServiceTest {
     }
 
     @Test
-    void deveEncerrarSemestreEAprovarParaProximaDisciplina() {
+    void deveEncerrarSemestreEAprovarParaProximaDisciplina() throws Exception {
         Disciplina matematica1 = new Disciplina();
         matematica1.setNome("Matematica");
         matematica1.setCodigo(1);
@@ -167,14 +176,10 @@ class SemestreServiceTest {
 
         Semestre semestre = new Semestre() {
             @Override
-            public boolean terminou() {
-                return true;
-            }
+            public boolean terminou() { return true; }
 
             @Override
-            public boolean foiAprovado(Disciplina d) {
-                return true;
-            }
+            public boolean foiAprovado(Disciplina d) { return true; }
         };
         semestre.setDisciplinas(new ArrayList<>(List.of(matematica1)));
 
@@ -187,13 +192,14 @@ class SemestreServiceTest {
         assertEquals(1, novoSemestre.getDisciplinas().size());
         assertEquals(matematica2, novoSemestre.getDisciplinas().get(0));
 
-        assertEquals(2, semestreRepo.getSemestresPorJogador(10).size());
-        assertTrue(semestreRepo.getSemestresPorJogador(10).contains(semestre));
-        assertTrue(semestreRepo.getSemestresPorJogador(10).contains(novoSemestre));
+        List<Semestre> semestres = semestreRepo.getSemestresPorJogador(10);
+        assertEquals(2, semestres.size());
+        assertTrue(semestres.contains(semestre));
+        assertTrue(semestres.contains(novoSemestre));
     }
 
     @Test
-    void deveManterDisciplinaQuandoReprovado() {
+    void deveManterDisciplinaQuandoReprovado() throws Exception {
         Disciplina fisica1 = new Disciplina();
         fisica1.setNome("Fisica");
         fisica1.setCodigo(1);
@@ -203,14 +209,10 @@ class SemestreServiceTest {
 
         Semestre semestre = new Semestre() {
             @Override
-            public boolean terminou() {
-                return true;
-            }
+            public boolean terminou() { return true; }
 
             @Override
-            public boolean foiAprovado(Disciplina d) {
-                return false;
-            }
+            public boolean foiAprovado(Disciplina d) { return false; }
         };
         semestre.setDisciplinas(new ArrayList<>(List.of(fisica1)));
 
@@ -222,12 +224,11 @@ class SemestreServiceTest {
         assertNotNull(novoSemestre);
         assertEquals(1, novoSemestre.getDisciplinas().size());
         assertEquals(fisica1, novoSemestre.getDisciplinas().get(0));
-
         assertEquals(2, semestreRepo.getSemestresPorJogador(20).size());
     }
 
     @Test
-    void naoDeveAdicionarProximaDisciplinaQuandoElaNaoExiste() {
+    void naoDeveAdicionarProximaDisciplinaQuandoElaNaoExiste() throws Exception {
         Disciplina historia1 = new Disciplina();
         historia1.setNome("Historia");
         historia1.setCodigo(1);
@@ -237,14 +238,10 @@ class SemestreServiceTest {
 
         Semestre semestre = new Semestre() {
             @Override
-            public boolean terminou() {
-                return true;
-            }
+            public boolean terminou() { return true; }
 
             @Override
-            public boolean foiAprovado(Disciplina d) {
-                return true;
-            }
+            public boolean foiAprovado(Disciplina d) { return true; }
         };
         semestre.setDisciplinas(new ArrayList<>(List.of(historia1)));
 
@@ -255,7 +252,6 @@ class SemestreServiceTest {
 
         assertNotNull(novoSemestre);
         assertTrue(novoSemestre.getDisciplinas().isEmpty());
-
         assertEquals(2, semestreRepo.getSemestresPorJogador(30).size());
     }
 }

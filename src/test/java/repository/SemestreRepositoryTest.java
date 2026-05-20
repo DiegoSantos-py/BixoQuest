@@ -1,5 +1,7 @@
 package repository;
 
+import exception.Semestre.SemestreInvalidoException;
+import exception.Semestre.SemestreNaoEncontradoException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
@@ -38,17 +40,13 @@ class SemestreRepositoryTest {
         if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
-    // -------------------------------------------------------------------------
     // adicionarSemestre
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(1)
     @DisplayName("Deve adicionar semestre válido")
     void deveAdicionarSemestreValido() {
-        Semestre s = new Semestre();
-
-        repository.adicionarSemestre(1, s);
+        repository.adicionarSemestre(1, new Semestre());
 
         assertEquals(1, repository.getSemestresPorJogador(1).size());
     }
@@ -57,7 +55,7 @@ class SemestreRepositoryTest {
     @Order(2)
     @DisplayName("Não deve adicionar semestre nulo")
     void naoDeveAdicionarSemestreNulo() {
-        assertThrows(IllegalArgumentException.class, () -> repository.adicionarSemestre(1, null));
+        assertThrows(SemestreInvalidoException.class, () -> repository.adicionarSemestre(1, null));
     }
 
     @Test
@@ -83,33 +81,24 @@ class SemestreRepositoryTest {
         assertEquals(1, repository.getSemestresPorJogador(2).size());
     }
 
-    // -------------------------------------------------------------------------
     // getSemestresPorJogador
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(5)
-    @DisplayName("Deve retornar lista vazia para jogador inexistente")
-    void deveRetornarListaVaziaParaJogadorInexistente() {
-        List<Semestre> lista = repository.getSemestresPorJogador(99);
-
-        assertNotNull(lista);
-        assertTrue(lista.isEmpty());
+    @DisplayName("Deve lançar exceção para jogador inexistente")
+    void deveLancarExcecaoParaJogadorInexistente() {
+        assertThrows(SemestreNaoEncontradoException.class,
+                () -> repository.getSemestresPorJogador(99));
     }
 
-    // -------------------------------------------------------------------------
     // salvar e carregar
-    // -------------------------------------------------------------------------
 
     @Test
     @Order(6)
     @DisplayName("Deve salvar e carregar semestres corretamente")
     void deveSalvarECarregarSemestres() throws Exception {
-        Semestre s1 = new Semestre();
-        Semestre s2 = new Semestre();
-
-        repository.adicionarSemestre(1, s1);
-        repository.adicionarSemestre(1, s2);
+        repository.adicionarSemestre(1, new Semestre());
+        repository.adicionarSemestre(1, new Semestre());
         repository.adicionarSemestre(2, new Semestre());
         repository.salvar();
 
@@ -200,7 +189,6 @@ class SemestreRepositoryTest {
         Dia carregado = novoRepository.getSemestresPorJogador(1).get(0).getDias().get(0);
         assertTrue(carregado.getEventosObrigatoriosNomes().contains("Prova de Cálculo"));
         assertTrue(carregado.getEventosAleatoriosNomes().contains("Chuva Surpresa"));
-        // objetos Evento são reconstruídos no service — aqui só verificamos os nomes
         assertTrue(carregado.getEventosObrigatorios().isEmpty());
         assertTrue(carregado.getEventosAleatorios().isEmpty());
     }

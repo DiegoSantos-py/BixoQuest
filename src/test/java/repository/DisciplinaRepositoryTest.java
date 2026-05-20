@@ -1,5 +1,8 @@
 package repository;
 
+import exception.Disciplina.DisciplinaDuplicadaException;
+import exception.Disciplina.DisciplinaInvalidaException;
+import exception.Disciplina.DisciplinaNaoEncontradaException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import org.junit.jupiter.api.*;
@@ -34,10 +37,7 @@ class DisciplinaRepositoryTest {
         if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
-    // -------------------------------------------------------------------------
     // adicionar
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(1)
     @DisplayName("Deve adicionar disciplina válida")
@@ -53,7 +53,7 @@ class DisciplinaRepositoryTest {
     @Order(2)
     @DisplayName("Não deve adicionar disciplina nula")
     void naoDeveAdicionarDisciplinaNula() {
-        assertThrows(IllegalArgumentException.class, () -> repository.adicionar(null));
+        assertThrows(DisciplinaInvalidaException.class, () -> repository.adicionar(null));
     }
 
     @Test
@@ -63,7 +63,7 @@ class DisciplinaRepositoryTest {
         Disciplina d = new Disciplina();
         d.setCodigo(1.0f);
 
-        assertThrows(IllegalArgumentException.class, () -> repository.adicionar(d));
+        assertThrows(DisciplinaInvalidaException.class, () -> repository.adicionar(d));
     }
 
     @Test
@@ -73,9 +73,8 @@ class DisciplinaRepositoryTest {
         Disciplina d = criarDisciplina("Cálculo", 1.0f, AreaConhecimento.MAT);
 
         repository.adicionar(d);
-        repository.adicionar(d);
 
-        assertEquals(1, repository.buscarPorNome("Cálculo").size());
+        assertThrows(DisciplinaDuplicadaException.class, () -> repository.adicionar(d));
     }
 
     @Test
@@ -103,24 +102,16 @@ class DisciplinaRepositoryTest {
         assertEquals(3.0f, lista.get(2).getCodigo());
     }
 
-    // -------------------------------------------------------------------------
     // buscarPorNome
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(7)
-    @DisplayName("Deve retornar lista vazia para nome inexistente")
-    void deveRetornarListaVaziaParaNomeInexistente() {
-        List<Disciplina> lista = repository.buscarPorNome("Inexistente");
-
-        assertNotNull(lista);
-        assertTrue(lista.isEmpty());
+    @DisplayName("Deve lançar exceção para nome inexistente")
+    void deveLancarExcecaoParaNomeInexistente() {
+        assertThrows(DisciplinaNaoEncontradaException.class,
+                () -> repository.buscarPorNome("Inexistente"));
     }
 
-    // -------------------------------------------------------------------------
     // buscarPorArea
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(8)
     @DisplayName("Deve buscar disciplinas por área")
@@ -136,8 +127,8 @@ class DisciplinaRepositoryTest {
 
     @Test
     @Order(9)
-    @DisplayName("Deve retornar lista vazia para área inexistente")
-    void deveRetornarListaVaziaParaAreaInexistente() {
+    @DisplayName("Deve retornar lista vazia para área sem disciplinas")
+    void deveRetornarListaVaziaParaAreaSemDisciplinas() {
         repository.adicionar(criarDisciplina("Cálculo", 1.0f, AreaConhecimento.MAT));
 
         List<Disciplina> resultado = repository.buscarPorArea(AreaConhecimento.SOF);
@@ -145,10 +136,7 @@ class DisciplinaRepositoryTest {
         assertTrue(resultado.isEmpty());
     }
 
-    // -------------------------------------------------------------------------
     // buscar
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(10)
     @DisplayName("Deve buscar disciplina por nome e código")
@@ -164,15 +152,13 @@ class DisciplinaRepositoryTest {
 
     @Test
     @Order(11)
-    @DisplayName("Deve retornar null para disciplina inexistente")
-    void deveRetornarNullParaDisciplinaInexistente() {
-        assertNull(repository.buscar("Inexistente", 1.0f));
+    @DisplayName("Deve lançar exceção para disciplina inexistente")
+    void deveLancarExcecaoParaDisciplinaInexistente() {
+        assertThrows(DisciplinaNaoEncontradaException.class,
+                () -> repository.buscar("Inexistente", 1.0f));
     }
 
-    // -------------------------------------------------------------------------
     // proximaDisciplina
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(12)
     @DisplayName("Deve retornar próxima disciplina pelo código")
@@ -188,17 +174,15 @@ class DisciplinaRepositoryTest {
 
     @Test
     @Order(13)
-    @DisplayName("Deve retornar null quando não há próxima disciplina")
-    void deveRetornarNullQuandoNaoHaProximaDisciplina() {
+    @DisplayName("Deve lançar exceção quando não há próxima disciplina")
+    void deveLancarExcecaoQuandoNaoHaProximaDisciplina() {
         repository.adicionar(criarDisciplina("Cálculo", 1.0f, AreaConhecimento.MAT));
 
-        assertNull(repository.proximaDisciplina("Cálculo", 1.0f));
+        assertThrows(DisciplinaNaoEncontradaException.class,
+                () -> repository.proximaDisciplina("Cálculo", 1.0f));
     }
 
-    // -------------------------------------------------------------------------
     // buscarDisciplinasIniciais
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(14)
     @DisplayName("Deve retornar disciplinas com código 1")
@@ -212,10 +196,7 @@ class DisciplinaRepositoryTest {
         assertEquals(2, iniciais.size());
     }
 
-    // -------------------------------------------------------------------------
     // salvar e carregar
-    // -------------------------------------------------------------------------
-
     @Test
     @Order(15)
     @DisplayName("Deve salvar e carregar disciplinas corretamente")

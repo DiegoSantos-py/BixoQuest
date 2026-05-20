@@ -1,8 +1,12 @@
 package service;
 
+import exception.Disciplina.DisciplinaNaoEncontradaException;
+import exception.PersistenciaException;
+import exception.Semestre.SemestreInvalidoException;
+import exception.Semestre.SemestreNaoEncontradoException;
 import model.Personagem;
-import model.Tempo.Dia;
 import model.Disciplina.Disciplina;
+import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.DisciplinaRepository;
 import repository.SemestreRepository;
@@ -12,10 +16,8 @@ import java.util.List;
 
 public class SemestreService {
 
-    // Repositório responsável por salvar e recuperar semestres
-    private SemestreRepository semestreRepo;
-
-    private DisciplinaRepository disciplinaRepo;
+    private final SemestreRepository semestreRepo;
+    private final DisciplinaRepository disciplinaRepo;
 
     public SemestreService(SemestreRepository semestreRepo,
                            DisciplinaRepository disciplinaRepo) {
@@ -23,110 +25,109 @@ public class SemestreService {
         this.disciplinaRepo = disciplinaRepo;
     }
 
+    // Inicialização
+    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    public void carregar() throws PersistenciaException {
+        semestreRepo.carregar();
+    }
+
+    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    public void salvar() throws PersistenciaException {
+        semestreRepo.salvar();
+    }
+
+    // Leitura
+    /**@throws SemestreNaoEncontradoException se não houver semestres para o jogador*/
+    public List<Semestre> getSemestresPorJogador(int jogadorId) {
+        return semestreRepo.getSemestresPorJogador(jogadorId);
+    }
+
+    // Lógica de negócio
+
     public Semestre criarSemestre() {
         return new Semestre();
     }
 
     public Semestre iniciarPrimeiroSemestre(int jogadorId) {
-
         Semestre semestre = criarSemestre();
-
-        // Busca as disciplinas iniciais do jogo
-        List<Disciplina> disciplinasIniciais =
-                disciplinaRepo.buscarDisciplinasIniciais();
-
-        semestre.setDisciplinas(disciplinasIniciais);
-
+        semestre.setDisciplinas(disciplinaRepo.buscarDisciplinasIniciais());
         return semestre;
     }
 
+    /**@throws SemestreInvalidoException se o semestre já tiver terminado*/
     public Dia avancarDia(Semestre semestre) {
-
-        // Se o semestre já terminou, não cria novos dias
         if (semestre.terminou()) {
-            return null;
+            throw new SemestreInvalidoException("semestre", "já atingiu o número máximo de dias");
         }
 
         Dia novoDia = new Dia();
-
         semestre.adicionarDia(novoDia);
-
         return novoDia;
     }
 
-    public void adicionarDisciplina(Semestre semestre, Disciplina disciplina){
-
-        // Não permite adicionar a mesma disciplina duas vezes
-        if (semestre.getDisciplinas().contains(disciplina)){
-            throw new IllegalArgumentException(
-                    "Não é possível adicionar a mesma disciplina ao semestre duas vezes."
-            );
+    /**@throws SemestreInvalidoException se a disciplina já pertencer ao semestre*/
+    public void adicionarDisciplina(Semestre semestre, Disciplina disciplina) {
+        if (semestre.getDisciplinas().contains(disciplina)) {
+            throw new SemestreInvalidoException("disciplina",
+                    "já pertence ao semestre");
         }
 
         semestre.adicionarDisciplinas(disciplina);
     }
 
-    public boolean terminouSemestre(Semestre semestre){
+    public boolean terminouSemestre(Semestre semestre) {
         return semestre.terminou();
     }
 
-    public Semestre encerrarSemestre(Personagem personagem, Semestre semestre) {
-
+    /**@throws SemestreInvalidoException  se o semestre for nulo
+     @throws PersistenciaException       se ocorrer falha ao salvar após encerramento*/
+    public Semestre encerrarSemestre(Personagem personagem, Semestre semestre)
+            throws PersistenciaException {
         if (semestre == null) {
-            throw new IllegalArgumentException("Semestre inválido");
+            throw new SemestreInvalidoException("semestre", "não pode ser nulo");
         }
 
-        // Se ainda não terminou, retorna o mesmo semestre
         if (!semestre.terminou()) {
             return semestre;
         }
 
-        // Salva o semestre no histórico do personagem
         personagem.adicionarSemestre(semestre);
-
-        // Salva no repositório
-        this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
+        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
 
         Semestre novoSemestre = new Semestre();
-
         List<Disciplina> novasDisciplinas = new ArrayList<>();
 
-        // Percorre todas as disciplinas do semestre atual
         for (Disciplina atual : semestre.getDisciplinas()) {
-
-            // Se o aluno foi aprovado
             if (semestre.foiAprovado(atual)) {
-
-                Disciplina proxima = disciplinaRepo.proximaDisciplina(
-                        atual.getNome(),
-                        atual.getCodigo()
-                );
-
-                // Se existir próxima disciplina, adiciona
-                if (proxima != null) {
+                try {
+                    Disciplina proxima = disciplinaRepo.proximaDisciplina(
+                            atual.getNome(), atual.getCodigo());
                     novasDisciplinas.add(proxima);
+                } catch (DisciplinaNaoEncontradaException e) {
+                    // disciplina não tem próximo nível — não adiciona ao novo semestre
                 }
-
             } else {
-                // Se foi reprovado, repete a mesma disciplina
                 novasDisciplinas.add(atual);
             }
         }
 
         novoSemestre.setDisciplinas(novasDisciplinas);
-
-        this.semestreRepo.adicionarSemestre(personagem.getPersonagemId(), novoSemestre);
+        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), novoSemestre);
+        semestreRepo.salvar();
 
         return novoSemestre;
     }
 
-    public void definirResultadoDisciplina(Semestre semestre, Disciplina disciplina, boolean aprovado) {
-
-        if (semestre == null || disciplina == null) {
-            throw new IllegalArgumentException("Parâmetros inválidos");
+    /**@throws SemestreInvalidoException se semestre ou disciplina forem nulos*/
+    public void definirResultadoDisciplina(Semestre semestre, Disciplina disciplina,
+                                           boolean aprovado) {
+        if (semestre == null) {
+            throw new SemestreInvalidoException("semestre", "não pode ser nulo");
+        }
+        if (disciplina == null) {
+            throw new SemestreInvalidoException("disciplina", "não pode ser nula");
         }
 
-        // Registra se o aluno foi aprovado ou não na disciplina
         semestre.registrarResultado(disciplina, aprovado);
     }
 }

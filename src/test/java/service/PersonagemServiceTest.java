@@ -1,5 +1,6 @@
 package service;
 
+import exception.Personagem.PersonagemInvalidoException;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
 import model.Local.Area;
@@ -10,9 +11,13 @@ import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
 import model.Tempo.Semestre;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.EventoRepository;
+import repository.PersonagemRepository;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -29,8 +34,8 @@ class PersonagemServiceTest {
 
     @BeforeEach
     void setUp() {
-        eventoService = new EventoService();
-        personagemService = new PersonagemService(eventoService);
+        eventoService = new EventoService(new EventoRepository()); // ATUALIZADO
+        personagemService = new PersonagemService(new PersonagemRepository(), eventoService); // ATUALIZADO
         diaService = new DiaService();
 
         localInicial = new Local(
@@ -43,6 +48,12 @@ class PersonagemServiceTest {
         dia.setInicio(Instant.now());
         dia.setDuracao(Duration.ofMinutes(22));
         dia.setSaiuDoPonto(false);
+    }
+
+    @AfterEach
+    void limpar() {
+        new File("personagens.json").delete();
+        new File("eventos.json").delete();
     }
 
     @Test
@@ -73,7 +84,7 @@ class PersonagemServiceTest {
 
     @Test
     void deveLancarExcecaoAoCriarPersonagemComNomeNulo() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         null, 100, 80, 90, 50,
                         "sprite.png", localInicial, 0, 0
@@ -83,7 +94,7 @@ class PersonagemServiceTest {
 
     @Test
     void deveLancarExcecaoAoCriarPersonagemComNomeEmBranco() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "   ", 100, 80, 90, 50,
                         "sprite.png", localInicial, 0, 0
@@ -93,34 +104,36 @@ class PersonagemServiceTest {
 
     @Test
     void deveLancarExcecaoAoCriarPersonagemComAtributosNegativos() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", -1, 80, 90, 50,
                         "sprite.png", localInicial, 0, 0
                 )
         );
 
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, -1, 90, 50,
                         "sprite.png", localInicial, 0, 0
                 )
         );
 
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, 80, -1, 50,
                         "sprite.png", localInicial, 0, 0
                 )
         );
 
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, 80, 90, -1,
                         "sprite.png", localInicial, 0, 0
                 )
         );
     }
+
+    // ---- Testes originais inalterados a partir daqui ----
 
     @Test
     void deveMoverDentroDoMesmoLocalParaDireita() {

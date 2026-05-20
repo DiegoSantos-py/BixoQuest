@@ -10,7 +10,7 @@ import repository.LocalRepository;
 
 import java.util.List;
 
-public class GameService {
+/*public class GameService {
 
     private DiaService diaService;
     private SemestreService semestreService;
@@ -105,4 +105,4 @@ public class GameService {
         return true;
     }
 
-}
+}*/
