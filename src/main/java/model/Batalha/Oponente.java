@@ -1,11 +1,10 @@
-package model;
+package model.Batalha;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Ataque.Ataque;
 import model.Disciplina.AreaConhecimento;
-import model.Player.PlayerProva;
 import model.util.Hitbox;
 import model.util.MathUtils;
 import model.util.Vector2D;

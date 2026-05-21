@@ -1,3 +1,4 @@
+
 package model.Ataque.Ataques;
 
 import model.Batalha.EntidadeBatalha;
@@ -5,14 +6,14 @@ import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.ProjetilID;
 
-public class AtaqueLatido extends Ataque {
+public class AtaqueProjetilHoming extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
 
-    public AtaqueLatido(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
+    public AtaqueProjetilHoming(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
-        super(target, owner,dificuldade, 60,0,0);
+        super(target, owner,dificuldade, 0,60,0);
     }
 
     @Override
@@ -24,13 +25,13 @@ public class AtaqueLatido extends Ataque {
 
         int limiteProjeteis = 5 + (int)(dificuldade/10);
         if (timer >= (10 / dificuldade) && !this.isFinalizado() && projeteisSpawnados < limiteProjeteis) {
-        
+
             int framesNoFuturo = (int) (3 + (dificuldade/10) * 2);
             float anguloParaPlayer = (float) Math.atan2(
-                (target.getY() + target.getVelocidade().getY() * dt *framesNoFuturo ) - owner.getY(),
-                (target.getX() + target.getVelocidade().getX() * dt * framesNoFuturo )- owner.getX()
+                    (target.getY() + target.getVelocidade().getY() * dt *framesNoFuturo ) - owner.getY(),
+                    (target.getX() + target.getVelocidade().getX() * dt * framesNoFuturo )- owner.getX()
             );
-            spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer, anguloParaPlayer, ProjetilID.BASICO, 1, 0f, 7.5f);
+            spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer, anguloParaPlayer, ProjetilID.HOMING, 1, 0f, 7.5f);
 
             projeteisSpawnados++;
             timer = 0;
@@ -48,6 +49,6 @@ public class AtaqueLatido extends Ataque {
 
     @Override
     public String toString() {
-        return "Ataque Latido";
+        return "Ataque Homing";
     }
 }

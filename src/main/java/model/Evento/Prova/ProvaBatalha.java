@@ -2,6 +2,7 @@ package model.Evento.Prova;
 
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
+import model.Evento.Prova.Questao.Questao;
 import model.Player.AcaoBatalha;
 
 import java.util.ArrayList;

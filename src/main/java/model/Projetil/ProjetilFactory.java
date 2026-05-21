@@ -3,7 +3,7 @@ package model.Projetil;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.EntidadeBatalha;
+import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
 import model.Projetil.Projeteis.ProjetilBasico;
 import model.Projetil.Projeteis.ProjetilExplosivo;
@@ -22,6 +22,15 @@ public class ProjetilFactory {
     private int indexExplosivo = 0;
 
     public ProjetilFactory(PlayerProva target, EntidadeBatalha owner, int maxBasico, int maxHoming, int maxExplosivo) {
+        if (target == null) {
+            throw new exception.Projetil.NullTargetFactoryException();
+        }
+        if (owner == null) {
+            throw new exception.Projetil.FactoryInvalidaException("owner", "não pode ser nulo");
+        }
+        if (maxBasico < 0 || maxHoming < 0 || maxExplosivo < 0) {
+            throw new exception.Projetil.FactoryInvalidaException("capacidade", "não pode ser negativa");
+        }
 
         poolBasico = new ProjetilBasico[maxBasico];
         poolHoming = new ProjetilQueSegue[maxHoming];
@@ -50,6 +59,9 @@ public class ProjetilFactory {
         }
     }
     public void setTarget(PlayerProva target) {
+        if (target == null) {
+            throw new exception.Projetil.NullTargetFactoryException();
+        }
         for (ProjetilBasico basico : poolBasico) {
             basico.setTarget(target);
         }

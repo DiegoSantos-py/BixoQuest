@@ -9,7 +9,7 @@ import model.Tempo.Semestre;
 import java.util.*;
 
 public class Personagem {
-    private static int qntdPersonagem = 0;
+    private static int  qntdPersonagem = 0;
 
     private int personagemId;
     private String nome;

@@ -1,4 +1,4 @@
-package model;
+package model.Batalha;
 
 public enum Turno
 {

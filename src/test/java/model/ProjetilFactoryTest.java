@@ -1,6 +1,7 @@
 package model;
 
-import model.EntidadeBatalha;
+import model.Batalha.EntidadeBatalha;
+import model.Batalha.Oponente;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
 import model.Projetil.ProjetilFactory;

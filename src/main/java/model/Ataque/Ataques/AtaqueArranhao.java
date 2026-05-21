@@ -1,12 +1,8 @@
 package model.Ataque.Ataques;
 
-import java.util.Random;
-
-import model.EntidadeBatalha;
+import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
-import model.Projetil.ProjetilID;
-import model.util.Vector2D;
 
 public class AtaqueArranhao extends Ataque {
     

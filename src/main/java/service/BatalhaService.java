@@ -4,15 +4,15 @@ import model.Ataque.Ataque;
 import model.Ataque.Ataques.AtaqueArranhao;
 import model.Ataque.Ataques.AtaqueLatido;
 import model.Ataque.Ataques.AtaqueMordida;
-import model.EstadoBatalha;
+import model.Batalha.EstadoBatalha;
 import model.Evento.Prova.ProvaBatalha;
-import model.Evento.Prova.Questao;
+import model.Evento.Prova.Questao.Questao;
 import model.Evento.Prova.ResultadoProva;
 import model.Npc.Animal;
-import model.Oponente;
+import model.Batalha.Oponente;
 import model.Personagem;
 import model.Player.AcaoBatalha;
-import model.Turno;
+import model.Batalha.Turno;
 import model.Player.PlayerProva;
 import model.Disciplina.AreaConhecimento;
 import model.util.Hitbox;
@@ -107,6 +107,43 @@ public class BatalhaService {
         if(estado.getTurnoAtual() == Turno.EXECUTANDO_ATAQUE_INIMIGO) {
             estado.getAtaqueAtual().atualizar(dt);
             estado.getPlayerProva().atualizarPosicao(dt);
+
+            if (player.getCentro().getX() > estado.getAtaqueAtual().getMaxX()) {
+
+                player.getCentro().setX(
+                        estado.getAtaqueAtual().getMaxX()
+                );
+
+                player.setMovendoDireita(false);
+            }
+
+            if (player.getCentro().getX() < estado.getAtaqueAtual().getMinX()) {
+
+                player.getCentro().setX(
+                        estado.getAtaqueAtual().getMinX()
+                );
+
+                player.setMovendoEsquerda(false);
+            }
+
+
+            if (player.getCentro().getY() < estado.getAtaqueAtual().getMinY()) {
+
+                player.getCentro().setY(
+                        estado.getAtaqueAtual().getMinY()
+                );
+
+                player.setMovendoBaixo(false);
+            }
+
+            if (player.getCentro().getY() > estado.getAtaqueAtual().getMaxY()) {
+
+                player.getCentro().setY(
+                        estado.getAtaqueAtual().getMaxY()
+                );
+
+                player.setMovendoCima(false);
+            }
             if(estado.getAtaqueAtual().isFinalizado()){
                 estado.getAtaqueAtual().reiniciarAtaque(); //reinica o ataque pra reutiçizar ele na prox rodada
                 estado.setTurnoAtual(Turno.TURNO_PLAYER);
@@ -154,7 +191,7 @@ public class BatalhaService {
 
         float conhecimento = (float) personagem.getConhecimento(areaDaBatalha);
         // Spawna o player na parte inferior da tela (assumindo 1920x1080)
-        Hitbox hitboxPlayerProva = new Hitbox(new Vector2D(960, 800), new Vector2D(20, 20), 0.0f);
+        Hitbox hitboxPlayerProva = new Hitbox(new Vector2D(960, 800), new Vector2D(5, 5), 0.0f);
 
         Vector2D velocidadeInicial = new Vector2D(0, 0);
 
@@ -206,7 +243,7 @@ public class BatalhaService {
         float notaFinal = calcularNotaFinal(desempenho, playerProva);
         ResultadoProva resultadoProva =  new ResultadoProva(
                 estado.getPersonagem(),
-                provaBatalha,
+                provaBatalha.getNome(),
                 notaFinal,
                 playerProva.getTurnosUsados(),
                 playerProva.getTodosAcertosPerfeitos(),

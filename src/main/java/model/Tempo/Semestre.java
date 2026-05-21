@@ -14,13 +14,15 @@ public class Semestre {
     private List<Disciplina> disciplinas;
     @JsonIgnore
     private Map<Disciplina, Boolean> resultados;
-
+    private static int numeroSemestreGlobal = 0;
+    private int numeroSemestre;
     private Map<String, Boolean> resultadosNomes = new HashMap<>();
 
     public Semestre(){
         this.dias = new ArrayList<Dia>();
         this.disciplinas = new ArrayList<>();
         this.resultados = new HashMap<>();
+        this.numeroSemestre = numeroSemestreGlobal++;
     }
 
     public List<Disciplina> getDisciplinas() {
@@ -33,6 +35,10 @@ public class Semestre {
 
     public void adicionarDisciplinas(Disciplina d) {
         this.disciplinas.add(d);
+    }
+
+    public int getNumeroSemestre() {
+        return this.numeroSemestre;
     }
 
     public static int getMaxDias() {
@@ -55,7 +61,8 @@ public class Semestre {
     }
 
     public void adicionarDia(Dia dia){
-        dias.add(dia);}
+        dias.add(dia);
+    }
 
     public Map<Disciplina, Boolean> getResultados() {
         return resultados;

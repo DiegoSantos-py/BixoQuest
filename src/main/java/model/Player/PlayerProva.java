@@ -1,13 +1,10 @@
 package model.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import model.Oponente;
 import model.util.Hitbox;
 import model.util.Vector2D;
-import model.EntidadeBatalha;
+import model.Batalha.EntidadeBatalha;
 
 public class PlayerProva extends EntidadeBatalha {
 
@@ -20,7 +17,7 @@ public class PlayerProva extends EntidadeBatalha {
     private float danoAtaque;
     private float conhecimentoArea;
     private float TEMPO_IMUNIDADE = 0.5f; // 0.5 segundos de invulnerabilidade após receber dano
-    private float VELOCIDADE = 2f; // 2 unidades/s em todas as direcoes
+    private float VELOCIDADE = 80f; // 80 unidades/s em todas as direcoes
     private float tempoImunidadeRestante;
     private ArrayList<AcaoBatalha> acoesDisponiveis;
     // --- Estatística de desempenho ---

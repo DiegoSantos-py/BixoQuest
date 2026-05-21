@@ -2,7 +2,7 @@ package model.Ataque.Ataques;
 
 import java.util.Random;
 
-import model.EntidadeBatalha;
+import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.ProjetilID;
@@ -28,9 +28,9 @@ public class AtaqueMordida extends Ataque {
         int maxProjeteis = (int)(attackDuration / interval);
 
         if (timer >= interval && projeteisSpawnados < maxProjeteis) {
-
-            float boxCentroX = 0f;
-            float boxCentroY = -200f;
+            //ew Vector2D(960, 800)
+            float boxCentroX = 960f;
+            float boxCentroY = 800f;
 
             // área 400x400 centrada em (0, -200)
             float posX = boxCentroX - 200 + (random.nextFloat() * 400);

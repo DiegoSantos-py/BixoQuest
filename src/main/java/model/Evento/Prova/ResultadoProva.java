@@ -4,18 +4,21 @@ import model.Personagem;
 
 public class ResultadoProva {
     private Personagem personagem;
-    private ProvaBatalha prova;
+    private String provaNome;
     private float notaFinal;
     private int turnosUsados;
     private boolean todosOsAcertosPerfeitos;
     private boolean levouAlgumDano;
     private boolean perdeuNota;
 
-    public ResultadoProva(Personagem personagem, ProvaBatalha prova, float notaFinal, 
+    public ResultadoProva() {
+    }
+
+    public ResultadoProva(Personagem personagem, String provaNome, float notaFinal,
                           int turnosUsados, boolean todosOsAcertosPerfeitos,
                           boolean levouAlgumDano, boolean perdeuNota) {
         this.personagem = personagem;
-        this.prova = prova;
+        this.provaNome = provaNome;
         this.notaFinal = notaFinal;
         this.turnosUsados = turnosUsados;
         this.todosOsAcertosPerfeitos = todosOsAcertosPerfeitos;
@@ -24,7 +27,7 @@ public class ResultadoProva {
     }
 
     public Personagem getPersonagem() { return personagem; }
-    public ProvaBatalha getProva() { return prova; }
+    public String getProvaNome() { return provaNome; }
     public float getNotaFinal() { return notaFinal; }
     public int getTurnosUsados() { return turnosUsados; }
     public boolean isTodosOsAcertosPerfeitos () { return todosOsAcertosPerfeitos; }

@@ -1,4 +1,4 @@
-package model;
+package model.Batalha;
 
 import model.util.Hitbox;
 import model.util.Vector2D;
@@ -49,7 +49,7 @@ public abstract class EntidadeBatalha {
     public Vector2D getCentro() {
         return hitbox.getCentro();
     }
-    
+
     public Vector2D getVelocidade() {
         return velocidade;
     }

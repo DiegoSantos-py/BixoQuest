@@ -13,12 +13,14 @@ public class ProjetilExplosivo extends Projetil {
     @Override 
     public void executarAI(float dt) { 
          //dps eu faço isso
+        //n tem nada pra acontecer aq
+
     }
 
 
     @Override
     public void aoColidirComPlayer() {
-        this.desativar();
+
     }
 
     @Override
@@ -29,8 +31,8 @@ public class ProjetilExplosivo extends Projetil {
         float cy = this.hitbox.getCentro().getY();
 
         for(int i = 0; i < 8; i++) {
-            float angle = (float)(i * (Math.PI * 2) / 8); 
-            this.factory.spawn(cx, cy, 15, 15, 2f, angle, angle, ProjetilID.BASICO, 1, 0.1f, 10f);
+            float angle = (float)(i * (Math.PI * 2) / 8) + this.hitbox.getAnguloRotacao();
+            this.factory.spawn(cx, cy, 15, 15, 70f, angle, angle, ProjetilID.BASICO, 1, 0.1f, 10f);
         }
     }
 }

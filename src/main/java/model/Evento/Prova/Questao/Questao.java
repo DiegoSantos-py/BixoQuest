@@ -1,8 +1,7 @@
-package model.Evento.Prova;
+package model.Evento.Prova.Questao;
 
 import model.Ataque.Ataque;
 import model.Disciplina.AreaConhecimento;
-import model.Disciplina.Disciplina;
 
 public class Questao {
     private String nome;
@@ -15,7 +14,6 @@ public class Questao {
     public Questao(String nome, float hp, String descricao, AreaConhecimento areaConhecimento, float dificuldade, Ataque ataque) {
         this.nome = nome;
         this.hp = hp;
-        this.descricao = descricao;
         this.areaConhecimento = areaConhecimento;
         this.dificuldade = dificuldade;
         this.ataque = ataque;
@@ -35,14 +33,6 @@ public class Questao {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     public AreaConhecimento getAreaConhecimento() {

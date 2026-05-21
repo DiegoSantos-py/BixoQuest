@@ -1,5 +1,7 @@
 package model.util;
 
+import exception.Utils.HitboxInvalidaException;
+
 public final class Hitbox {
     private Vector2D centro;
     private Vector2D tamanho;
@@ -18,8 +20,14 @@ public final class Hitbox {
     };
 
     public Hitbox(Vector2D centro, Vector2D tamanho, float anguloRad) {
+        if(centro == null){
 
+            throw new HitboxInvalidaException("centro","o centro não pode ser nulo.");
+        }
         this.centro = centro;
+        if(tamanho == null || tamanho.getY() < 0 || tamanho.getX() < 0) {
+            throw new HitboxInvalidaException("tamanho","o tamho da hitbox precisa ser positovo tnato em x quanto em y.");
+        }
         this.tamanho = tamanho;
         this.anguloRad = anguloRad;
         this.ativa = true;
@@ -28,6 +36,10 @@ public final class Hitbox {
 
     public void atualizarPos(Vector2D deslocamento) {
         this.centro.set(this.centro.getX() + deslocamento.getX(), this.centro.getY() + deslocamento.getY()); 
+    }
+
+    public float getAnguloRotacao(){
+        return this.anguloRad;
     }
 
     public void rotacionar(float deltaAngulo) {
@@ -42,6 +54,11 @@ public final class Hitbox {
     public void setAnguloRad(float anguloRad) { this.anguloRad = anguloRad; }
     public void ativar() { this.ativa = true; }
     public void desativar() { this.ativa = false; }
+    
+    public Vector2D[] getVertices() {
+        atualizarCache(); 
+        return vertices;
+    }
 
 
 

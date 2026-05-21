@@ -1,7 +1,5 @@
 package service;
 
-import model.EntidadeBatalha;
-import model.Oponente;
 import model.Player.AcaoBatalha;
 import model.Player.PlayerProva;
 
