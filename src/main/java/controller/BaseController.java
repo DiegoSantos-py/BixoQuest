@@ -28,7 +28,6 @@ public abstract class BaseController {
     }
 
     // Exibição — implementado por cada controller concreto
-    // conforme o tipo de View (Swing, JavaFX, CLI)
     protected abstract void exibirErro(String mensagem);
 
     protected abstract void exibirSucesso(String mensagem);

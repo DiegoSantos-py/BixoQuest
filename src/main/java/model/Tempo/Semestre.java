@@ -69,7 +69,12 @@ public class Semestre {
     }
 
     public boolean foiAprovado(Disciplina d) {
-        return resultados.getOrDefault(d, false);
+        if (resultados.containsKey(d)) {
+            return resultados.get(d);
+        }
+        // fallback para resultadosNomes
+        String chave = d.getNome() + ":" + d.getCodigo();
+        return resultadosNomes.getOrDefault(chave, false);
     }
 
     public Map<String, Boolean> getResultadosNomes() { return resultadosNomes; }

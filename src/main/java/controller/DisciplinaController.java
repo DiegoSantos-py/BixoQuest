@@ -22,7 +22,7 @@ public class DisciplinaController extends BaseController {
     }
 
     // Inicialização
-    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    /** Exibe erro se ocorrer falha ao carregar o arquivo */
     public void carregar() {
         try {
             service.carregar();
@@ -32,9 +32,7 @@ public class DisciplinaController extends BaseController {
     }
 
     // Escrita
-    /**@throws DisciplinaInvalidaException  se nome, quantidade ou área forem inválidos
-     @throws DisciplinaDuplicadaException se algum nível já existir no repositório
-     @throws PersistenciaException        se ocorrer falha ao salvar após criação*/
+    /** Exibe erro se nome, quantidade ou área forem inválidos, duplicados ou falhar ao salvar */
     public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis, AreaConhecimento area) {
         try {
             service.criarDisciplinasPorNivel(nome, quantidadeNiveis, area);
@@ -49,7 +47,7 @@ public class DisciplinaController extends BaseController {
     }
 
     // Leitura
-    /**@throws DisciplinaNaoEncontradaException se não houver disciplinas com o nome*/
+    /** Retorna lista vazia se não houver disciplinas com o nome */
     public List<Disciplina> buscarPorNome(String nome) {
         try {
             return service.buscarPorNome(nome);
@@ -63,7 +61,7 @@ public class DisciplinaController extends BaseController {
         return service.buscarPorArea(area);
     }
 
-    /**@throws DisciplinaNaoEncontradaException se não encontrar a combinação nome + código*/
+    /** Retorna Optional vazio se não encontrar a combinação nome + código */
     public Optional<Disciplina> buscar(String nome, float codigo) {
         try {
             return Optional.of(service.buscar(nome, codigo));
@@ -77,7 +75,7 @@ public class DisciplinaController extends BaseController {
         return service.existe(d);
     }
 
-    /**@throws DisciplinaNaoEncontradaException se não existir disciplina com código + 1*/
+    /** Retorna Optional vazio se não existir disciplina com código + 1 */
     public Optional<Disciplina> proximaDisciplina(String nome, float codigoAtual) {
         try {
             return Optional.of(service.proximaDisciplina(nome, codigoAtual));
@@ -104,5 +102,18 @@ public class DisciplinaController extends BaseController {
     @Override
     protected void exibirSucesso(String mensagem) {
         System.out.println("[OK] " + mensagem);
+    }
+
+    // Tratamento local de exceções
+    protected void tratarInvalido(DisciplinaInvalidaException e) {
+        exibirErro("Dado inválido no campo '" + e.getCampoCausador() + "': " + e.getMessage());
+    }
+
+    protected void tratarDuplicado(DisciplinaDuplicadaException e) {
+        exibirErro("Já cadastrado: " + e.getMessage());
+    }
+
+    protected void tratarNaoEncontrado(DisciplinaNaoEncontradaException e) {
+        exibirErro("Não encontrado: " + e.getMessage());
     }
 }
