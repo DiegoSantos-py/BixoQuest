@@ -146,4 +146,7 @@ public class GameService {
     public Semestre getSemestre() { return semestre; }
     public Dia getDiaAtual() { return diaAtual; }
     public Personagem getPersonagem() { return personagem; }
+    public void setPersonagem(Personagem personagem) {
+        this.personagem = personagem;
+    }
 }

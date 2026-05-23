@@ -192,12 +192,13 @@ class GameServiceTest {
         semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre2);
 
         // Injeta o personagem no gameService
-        gameService.getPersonagem();
+        gameService.setPersonagem(personagem);
 
-        for (Semestre s : semestreRepo.getSemestresPorJogador(personagem.getPersonagemId())) {
-            System.out.println("Resultados: " + s.getResultadosNomes());
-            System.out.println("Disciplinas: " + s.getDisciplinas());
-        }
+        Disciplina d = new Disciplina();
+        d.setNome("Matemática");
+        d.setCodigo(1);
+        System.out.println("Chave gerada: " + d.getNome() + ":" + d.getCodigo());
+
         System.out.println("Disciplinas no repo: " + disciplinaRepo.carregarDisciplinas());
         assertTrue(gameService.encerrarJogo());
     }
