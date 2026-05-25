@@ -63,10 +63,10 @@ public abstract class Projetil extends EntidadeBatalha {
             );
         }
 
-        if (duracaoMaxima <= 0) {
+        if (duracaoMaxima < 0) {
             throw new ProjetilInvalidoException(
                     "duracaoMaxima",
-                    "deve ser maior que zero"
+                    "deve ser positiva"
             );
         }
 
@@ -149,10 +149,10 @@ public abstract class Projetil extends EntidadeBatalha {
             );
         }
 
-        if (duracaoMaxima <= 0) {
+        if (duracaoMaxima < 0) {
             throw new ProjetilInvalidoException(
                     "duracaoMaxima",
-                    "deve ser maior que zero"
+                    "deve ser positiva"
             );
         }
 

@@ -5,8 +5,11 @@ import java.util.Queue;
 import model.Ataque.Ataque;
 import model.Evento.Prova.ProvaBatalha;
 import model.Npc.Animal;
+import model.Npc.Npc;
 import model.Personagem;
 import model.Player.PlayerProva;
+import repository.NpcRepository;
+import repository.ResultadoProvaRepository;
 
 public class EstadoBatalha {
     private Personagem personagem;
@@ -16,16 +19,23 @@ public class EstadoBatalha {
     private Turno turnoAtual;
     private boolean finalizado;
     private boolean vitoria;
+    private ResultadoProvaRepository resultadoProvaRepository;
+    private NpcRepository npcRepository;
     private final boolean isBatalhaAnimal;
     private boolean inimigoAtacando;
     private Ataque ataqueAtual;
     private ProvaBatalha provaBatalha;
     private Animal animal;
 
-    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal) {
+    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal, NpcRepository npcRepository) {
         if (playerProva == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("playerProva", "não pode ser nulo");
         }
+
+        if(npcRepository == null) {
+            throw new exception.Batalha.EstadoBatalhaInvalidoException("npcRepository", "não deve ser nulo");
+        }
+
         if (personagem == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("personagem", "não pode ser nulo");
         }
@@ -40,6 +50,7 @@ public class EstadoBatalha {
         this.filaOponentes = filaOponentes;
         this.isBatalhaAnimal = true;
         this.animal = animal;
+        this.npcRepository = npcRepository;
         this.turnoAtual = Turno.TURNO_PLAYER;
         this.inimigoAtacando = false;
         this.finalizado = false;
@@ -47,9 +58,13 @@ public class EstadoBatalha {
         this.oponenteAtual = filaOponentes.poll();
     }
 
-    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, ProvaBatalha provaBatalha) {
+    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes,
+                         ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository) {
         if (playerProva == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("playerProva", "não pode ser nulo");
+        }
+        if(resultadoProvaRepository == null) {
+            throw new exception.Batalha.EstadoBatalhaInvalidoException("resultadoProvaRepository", "nao deve ser nulo");
         }
         if (personagem == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("personagem", "não pode ser nulo");
@@ -65,6 +80,7 @@ public class EstadoBatalha {
         this.filaOponentes = filaOponentes;
         this.isBatalhaAnimal = false;
         this.provaBatalha = provaBatalha;
+        this.resultadoProvaRepository = resultadoProvaRepository;
         this.turnoAtual = Turno.TURNO_PLAYER;
         this.inimigoAtacando = false;
         this.finalizado = false;
@@ -144,6 +160,12 @@ public class EstadoBatalha {
         this.turnoAtual = proxTurno;
     }
 
+    public NpcRepository getNpcRepository(){
+        return this.npcRepository;
+    }
+    public ResultadoProvaRepository getResultadoProvaRepository(){
+        return this.resultadoProvaRepository;
+    }
     public boolean getInimigoAtacando(){
         return this.inimigoAtacando;
     }

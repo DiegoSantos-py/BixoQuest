@@ -41,16 +41,11 @@ public class ResultadoProvaRepository {
         var typeFactory = mapper.getTypeFactory();
 
         JavaType listType =
-                typeFactory.constructCollectionType(
-                        List.class,
-                        ResultadoProva.class
+                typeFactory.constructCollectionType(List.class,ResultadoProva.class
                 );
 
         JavaType innerMapType =
-                typeFactory.constructMapType(
-                        HashMap.class,
-                        typeFactory.constructType(Integer.class),
-                        listType
+                typeFactory.constructMapType(HashMap.class,typeFactory.constructType(Integer.class),listType
                 );
 
         return typeFactory.constructMapType(
@@ -93,17 +88,11 @@ public class ResultadoProvaRepository {
         try {
 
             this.resultadoProvaPorPlayer =
-                    mapper.readValue(
-                            ARQUIVO,
-                            getMapType()
-                    );
+                    mapper.readValue(ARQUIVO,getMapType());
 
         } catch (Exception e) {
 
-            throw new PersistenciaException(
-                    OperacaoPersistencia.CARREGAR,
-                    e
-            );
+            throw new PersistenciaException(OperacaoPersistencia.CARREGAR, e);
         }
     }
 
@@ -118,41 +107,24 @@ public class ResultadoProvaRepository {
             int semestreNumero,
             ResultadoProva resultadoProva
     ) {
-
         if (resultadoProva == null) {
-
-            throw new ResultadoProvaInvalidoException(
-                    "resultadoProva",
-                    "não pode ser nulo"
-            );
+            throw new ResultadoProvaInvalidoException( "resultadoProva", "não pode ser nulo");
         }
 
         if (jogadorId < 0) {
 
-            throw new ResultadoProvaInvalidoException(
-                    "jogadorId",
-                    "não pode ser negativo"
-            );
+            throw new ResultadoProvaInvalidoException("jogadorId", "não pode ser negativo");
         }
 
         if (semestreNumero <= 0) {
-
-            throw new ResultadoProvaInvalidoException(
-                    "semestreNumero",
-                    "deve ser maior que zero"
-            );
+            throw new ResultadoProvaInvalidoException("semestreNumero", "deve ser maior que zero");
         }
 
-        Map<Integer, List<ResultadoProva>> semestreComProvas =
-                resultadoProvaPorPlayer.get(jogadorId);
+        Map<Integer, List<ResultadoProva>> semestreComProvas = resultadoProvaPorPlayer.get(jogadorId);
 
         if (semestreComProvas == null) {
-
             semestreComProvas = new HashMap<>();
-
-            resultadoProvaPorPlayer.put(
-                    jogadorId,
-                    semestreComProvas
+            resultadoProvaPorPlayer.put(jogadorId, semestreComProvas
             );
         }
 
@@ -160,48 +132,33 @@ public class ResultadoProvaRepository {
                 semestreComProvas.get(semestreNumero);
 
         if (provas == null) {
-
             provas = new ArrayList<>();
-
-            semestreComProvas.put(
-                    semestreNumero,
-                    provas
-            );
+            semestreComProvas.put(semestreNumero, provas);
         }
 
         if (provas.contains(resultadoProva)) {
-
             throw new ResultadoProvaDuplicadoException(resultadoProva.getProvaNome());
         }
 
         provas.add(resultadoProva);
     }
 
-    // Leitura
+    // leitura dos semestres
 
-    public Map<Integer, List<ResultadoProva>>
-    getResultadosProvaPorJogador(int jogadorId) {
-
+    public Map<Integer, List<ResultadoProva>> getResultadosProvaPorJogador(int jogadorId) {
         Map<Integer, List<ResultadoProva>> provas = resultadoProvaPorPlayer.get(jogadorId);
-
         if (provas == null) {
-
             return Collections.emptyMap();
         }
-
         return Collections.unmodifiableMap(provas);
     }
 
     // query pra pegar as provas do jogador tal desse semestre especifico
 
-    public List<ResultadoProva>
-    getResultadoPorJogadorESemestre(int jogadorId,int semestreNumero){
-
+    public List<ResultadoProva> getResultadoPorJogadorESemestre(int jogadorId,int semestreNumero){
         Map<Integer, List<ResultadoProva>> mapaInterno =
                 getResultadosProvaPorJogador(jogadorId);
-
-        List<ResultadoProva> lista =
-                mapaInterno.get(semestreNumero);
+        List<ResultadoProva> lista = mapaInterno.get(semestreNumero);
 
         if (lista == null) {
             return Collections.emptyList();
@@ -210,7 +167,6 @@ public class ResultadoProvaRepository {
     }
 
     public Map<Integer, Map<Integer, List<ResultadoProva>>> carregarResultadoProvas() {
-
         return Collections.unmodifiableMap( resultadoProvaPorPlayer);
     }
 }

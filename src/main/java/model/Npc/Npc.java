@@ -36,6 +36,7 @@ public abstract class Npc {
         this.falas = falas;
     }
 
+
     public ArrayList<String> getFalas() { return falas; }
     public void setFalas(ArrayList<String> falas) { this.falas = falas; }
     public int getcY() { return cY; }

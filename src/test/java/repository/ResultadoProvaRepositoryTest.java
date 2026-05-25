@@ -46,14 +46,14 @@ public class ResultadoProvaRepositoryTest {
         // um jogador que nao fez provas não deve conter provas...
         assertTrue(repository.getResultadosProvaPorJogador(jogadorId).isEmpty());
 
-        // Adiciona ao repositório passando o semestre
+        // adiciona ao repositório passando o semestre
         repository.adicionarResultadoProva(jogadorId, semestreNumero, resultado1);
         repository.adicionarResultadoProva(jogadorId, semestreNumero, resultado2);
 
-        // Puxa o mapa de semestres do jogador
+        // puxa os semestres do jogador
         Map<Integer, List<ResultadoProva>> semestres = repository.getResultadosProvaPorJogador(jogadorId);
 
-        // Puxa a lista específica do semestre 1
+        // puxa a lista específica do semestre 1
         List<ResultadoProva> resultadosSemestre1 = semestres.get(semestreNumero);
 
         // Verifica a persistência
@@ -63,12 +63,12 @@ public class ResultadoProvaRepositoryTest {
         assertEquals(9f, resultadosSemestre1.get(1).getNotaFinal());
     }
 
-    // NOVO TESTE: Valida se a estrutura realmente separa por semestres
+    //  Valida se a estrutura realmente separa por semestres
     @Test
     public void testAdicionarEmMultiplosSemestres() {
         Personagem personagem = new Personagem("TesteMultiplo", 100, 100, 100, 100, "sprite.png");
-        ResultadoProva resultadoSem1 = new ResultadoProva(personagem, null, 7.0f, 2, true, false, false);
-        ResultadoProva resultadoSem2 = new ResultadoProva(personagem, null, 9.5f, 1, false, false, true);
+        ResultadoProva resultadoSem1 = new ResultadoProva(personagem, "NAT-02", 7.0f, 2, true, false, false);
+        ResultadoProva resultadoSem2 = new ResultadoProva(personagem, "HUM-01", 9.5f, 1, false, false, true);
 
         int jogadorId = personagem.getPersonagemId();
 
@@ -81,7 +81,7 @@ public class ResultadoProvaRepositoryTest {
         // O jogador deve ter provas registradas em 2 semestres distintos
         assertEquals(2, semestres.size());
 
-        // Verifica se a prova certa foi pra gaveta certa
+        //verica se o semestre esta indo para o local certo com a nota corrreta
         assertEquals(7.0f, semestres.get(1).get(0).getNotaFinal());
         assertEquals(9.5f, semestres.get(2).get(0).getNotaFinal());
     }
@@ -103,7 +103,7 @@ public class ResultadoProvaRepositoryTest {
         Personagem personagem = new Personagem("SalvarTeste", 100, 100, 100, 100, "sprite.png");
         ResultadoProva resultado = new ResultadoProva(personagem, null, 10.0f, 2, true, false, false);
 
-        int jogadorId = 42;
+        int jogadorId = 3;
         int semestreNumero = 3;
 
         repository.adicionarResultadoProva(jogadorId, semestreNumero, resultado);

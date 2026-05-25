@@ -22,9 +22,7 @@ public class ProjetilFactory {
     private int indexExplosivo = 0;
 
     public ProjetilFactory(PlayerProva target, EntidadeBatalha owner, int maxBasico, int maxHoming, int maxExplosivo) {
-        if (target == null) {
-            throw new exception.Projetil.NullTargetFactoryException();
-        }
+
         if (owner == null) {
             throw new exception.Projetil.FactoryInvalidaException("owner", "não pode ser nulo");
         }

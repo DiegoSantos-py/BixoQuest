@@ -286,4 +286,40 @@ class NpcRepositoryTest {
 
         assertTrue(ARQUIVO.exists());
     }
+
+    // atualizarNpc
+
+    @Test
+    @Order(19)
+    @DisplayName("Deve atualizar npc existente")
+    void deveAtualizarNpcExistente() {
+        Animal animal = criarAnimal("Bidu");
+        repository.adicionarNpc(animal);
+
+        // Altera o estado do animal (e.g. domado, indole)
+        animal.setDomado(true);
+        animal.setIndole(15);
+
+        repository.atualizarNpc(animal);
+
+        Animal animalAtualizado = (Animal) repository.buscarPorNome("Bidu");
+        assertTrue(animalAtualizado.isDomado());
+        assertEquals(15, animalAtualizado.getIndole());
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("Não deve atualizar npc inexistente")
+    void naoDeveAtualizarNpcInexistente() {
+        Animal animal = criarAnimal("Desconhecido");
+
+        assertThrows(NpcNaoEncontradoException.class, () -> repository.atualizarNpc(animal));
+    }
+
+    @Test
+    @Order(21)
+    @DisplayName("Não deve atualizar npc nulo")
+    void naoDeveAtualizarNpcNulo() {
+        assertThrows(NpcInvalidoException.class, () -> repository.atualizarNpc(null));
+    }
 }

@@ -15,6 +15,7 @@ import model.Npc.Especie;
 import model.Batalha.Oponente;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
+import repository.NpcRepository;
 
 public class BatalhaIntegracaoTest {
     private float dt = 0.0166f;
@@ -24,66 +25,64 @@ public class BatalhaIntegracaoTest {
         BatalhaService service = new BatalhaService();
 
         Personagem personagem = new Personagem("Veterano", 100, 100, 100, 100, "sprite.png");
-        personagem.atualizarConhecimento(AreaConhecimento.ANI, 5);
+        personagem.atualizarConhecimento(AreaConhecimento.ANI, 25); //faz o player ter mto conhecimento em animal pra aumentar o dano e fazer ele vencer
 
         java.util.ArrayList<String> falas = new java.util.ArrayList<>();
         falas.add("Au au");
         Animal cachorro = new Animal("Cachorro", "spr/espirro.png", 40, 40, falas, Especie.CACHORRO, 40);
 
-        EstadoBatalha estado = service.iniciarBatalha(personagem, cachorro);
+        NpcRepository npcRepository = new NpcRepository();
+        npcRepository.adicionarNpc(cachorro);
+
+        EstadoBatalha estado = service.iniciarBatalha(personagem, cachorro, npcRepository);
         Ataque homing  =  new AtaqueProjetilHoming(estado.getPlayerProva(),estado.getOponenteAtual(),estado.getAnimal().getIndole());
         estado.getOponenteAtual().adicionarAtaque(homing);
 
-        // Abre a janela do visualizador
-        javax.swing.JFrame frame = new javax.swing.JFrame("Visualizador Batalha BixoQuest");
-        frame.setSize(1920, 1080);
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        VisualizadorPanel panel = new VisualizadorPanel(estado);
-        frame.add(panel);
-        frame.setVisible(true);
+        boolean renderizarVisual = false; // Mude para true se quiser ver a janela e rodar a 60 FPS
 
-        // CONTROLES WASD / SETAS
-        frame.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(java.awt.event.KeyEvent e) {
-                if (estado.getPlayerProva() == null) return;
-                switch (e.getKeyCode()) {
-                    case java.awt.event.KeyEvent.VK_W:
-                    case java.awt.event.KeyEvent.VK_UP:
-                        // No Java Graphics, Y negativo é pra cima, mas sua física usa Y positivo pra cima.
-                        // Se os controles ficarem invertidos, basta trocar Cima/Baixo aqui.
-                        estado.getPlayerProva().setMovendoBaixo(true); break;
-                    case java.awt.event.KeyEvent.VK_S:
-                    case java.awt.event.KeyEvent.VK_DOWN:
-                        estado.getPlayerProva().setMovendoCima(true); break;
-                    case java.awt.event.KeyEvent.VK_A:
-                    case java.awt.event.KeyEvent.VK_LEFT:
-                        estado.getPlayerProva().setMovendoEsquerda(true); break;
-                    case java.awt.event.KeyEvent.VK_D:
-                    case java.awt.event.KeyEvent.VK_RIGHT:
-                        estado.getPlayerProva().setMovendoDireita(true); break;
-                }
-            }
+        VisualizadorPanel panel = null;
+        if (renderizarVisual) {
+            // Abre a janela da tela
+            javax.swing.JFrame frame = new javax.swing.JFrame("Teste Batalha BixoQuest");
+            frame.setSize(1920, 1080);
+            frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+            panel = new VisualizadorPanel(estado);
+            frame.add(panel);
+            frame.setVisible(true);
 
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                if (estado.getPlayerProva() == null) return;
-                switch (e.getKeyCode()) {
-                    case java.awt.event.KeyEvent.VK_W:
-                    case java.awt.event.KeyEvent.VK_UP:
-                        estado.getPlayerProva().setMovendoBaixo(false); break;
-                    case java.awt.event.KeyEvent.VK_S:
-                    case java.awt.event.KeyEvent.VK_DOWN:
-                        estado.getPlayerProva().setMovendoCima(false); break;
-                    case java.awt.event.KeyEvent.VK_A:
-                    case java.awt.event.KeyEvent.VK_LEFT:
-                        estado.getPlayerProva().setMovendoEsquerda(false); break;
-                    case java.awt.event.KeyEvent.VK_D:
-                    case java.awt.event.KeyEvent.VK_RIGHT:
-                        estado.getPlayerProva().setMovendoDireita(false); break;
+            // CONTROLES SETAS
+            frame.addKeyListener(new java.awt.event.KeyAdapter() {
+                @Override
+                public void keyPressed(java.awt.event.KeyEvent e) {
+                    if (estado.getPlayerProva() == null) return;
+                    switch (e.getKeyCode()) {
+                        case java.awt.event.KeyEvent.VK_UP:
+                            estado.getPlayerProva().setMovendoBaixo(true); break;
+                        case java.awt.event.KeyEvent.VK_DOWN:
+                            estado.getPlayerProva().setMovendoCima(true); break;
+                        case java.awt.event.KeyEvent.VK_LEFT:
+                            estado.getPlayerProva().setMovendoEsquerda(true); break;
+                        case java.awt.event.KeyEvent.VK_RIGHT:
+                            estado.getPlayerProva().setMovendoDireita(true); break;
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void keyReleased(java.awt.event.KeyEvent e) {
+                    if (estado.getPlayerProva() == null) return;
+                    switch (e.getKeyCode()) {
+                        case java.awt.event.KeyEvent.VK_UP:
+                            estado.getPlayerProva().setMovendoBaixo(false); break;
+                        case java.awt.event.KeyEvent.VK_DOWN:
+                            estado.getPlayerProva().setMovendoCima(false); break;
+                        case java.awt.event.KeyEvent.VK_LEFT:
+                            estado.getPlayerProva().setMovendoEsquerda(false); break;
+                        case java.awt.event.KeyEvent.VK_RIGHT:
+                            estado.getPlayerProva().setMovendoDireita(false); break;
+                    }
+                }
+            });
+        }
 
         // A BATALHA OCORRE ATÉ O PLAYER OU INIMIGO MORRER
         while (!estado.isFinalizado()) {
@@ -96,39 +95,43 @@ public class BatalhaIntegracaoTest {
                 int frameCounter = 0;
                 while (estado.getTurnoAtual() != Turno.TURNO_PLAYER && !estado.isFinalizado()) {
                     service.atualizar(estado, 0.016f); // 60 fps (1/60)s por update
+                    if (estado.isFinalizado()) break;
+                    
                     frameCounter++;
                     
-                    // Atualiza a tela e pausa por 16 milissegundos para simular 60 FPS
-                    panel.repaint();
-                    try { Thread.sleep(16); } catch (Exception e) {}
+                    if (renderizarVisual) {
+                        // Atualiza a tela e pausa por 16 milissegundos para simular 60 FPS
+                        panel.repaint();
+                        try { Thread.sleep(16); } catch (Exception e) {}
 
-                    // DADOS DO PLAYER E OPONENTE
-                    PlayerProva p = estado.getPlayerProva();
-                    Oponente o = estado.getOponenteAtual();
-                    System.out.println("\n--- INIMIGO ATACANDO!!! ---");
+                        // DADOS DO PLAYER E OPONENTE
+                        PlayerProva p = estado.getPlayerProva();
+                        Oponente o = estado.getOponenteAtual();
+                        System.out.println("\n--- INIMIGO ATACANDO!!! ---");
 
-                    System.out.println("\n--- FRAME: " + frameCounter + "---");
-                    System.out.println("[PLAYER] Shield: " + p.getShieldAtual() + " | Dano Base: " + p.getDanoAtaque() +
-                            " | PosX: " + p.getHitbox().getCentro().getX() + " | PosY: " + p.getHitbox().getCentro().getY());
-                    if (o != null) {
-                        System.out.println("[INIMIGO] " + o.getNome() + " | HP: " + o.getHpAtual() + " / " + o.getHpMaximo());
-                    }
+                        System.out.println("\n--- FRAME: " + frameCounter + "---");
+                        System.out.println("[PLAYER] Shield: " + p.getShieldAtual() + " | Dano Base: " + p.getDanoAtaque() +
+                                " | PosX: " + p.getHitbox().getCentro().getX() + " | PosY: " + p.getHitbox().getCentro().getY());
+                        if (o != null) {
+                            System.out.println("[INIMIGO] " + o.getNome() + " | HP: " + o.getHpAtual() + " / " + o.getHpMaximo());
+                        }
 
-                    //DADOS DE ATAQUE E PROJETIS
-                    if (estado.getAtaqueAtual() != null) {
-                        System.out.println("Fase: " + estado.getTurnoAtual() +
+                        //DADOS DE ATAQUE E PROJETIS
+                        if (estado.getAtaqueAtual() != null) {
+                            System.out.println("Fase: " + estado.getTurnoAtual() +
 
-                                " | Ataques: " + estado.getOponenteAtual().getAtaquesDisponiveis() +
-                                " | Ataque: " + estado.getAtaqueAtual().getClass().getSimpleName() +
-                                " | Projéteis na tela: " + estado.getAtaqueAtual().getProjeteis().size());
+                                    " | Ataques: " + estado.getOponenteAtual().getAtaquesDisponiveis() +
+                                    " | Ataque: " + estado.getAtaqueAtual().getClass().getSimpleName() +
+                                    " | Projéteis na tela: " + estado.getAtaqueAtual().getProjeteis().size());
 
-                        // Imprime o status de cada projétil ativo
-                        List<Projetil> projeteis = estado.getAtaqueAtual().getProjeteis();
-                        for (int i = 0; i < projeteis.size(); i++) {
-                            Projetil proj = projeteis.get(i);
-                            System.out.println("  [" + i + "] " + proj.getClass().getSimpleName() +
-                                    " | Pos: (" + proj.getHitbox().getCentro().getX() + ", " + proj.getHitbox().getCentro().getY() + ")" +
-                                    " | Dano: " + proj.getDanoShield());
+                            // Imprime o status de cada projétil ativo
+                            List<Projetil> projeteis = estado.getAtaqueAtual().getProjeteis();
+                            for (int i = 0; i < projeteis.size(); i++) {
+                                Projetil proj = projeteis.get(i);
+                                System.out.println("  [" + i + "] " + proj.getClass().getSimpleName() +
+                                        " | Pos: (" + proj.getHitbox().getCentro().getX() + ", " + proj.getHitbox().getCentro().getY() + ")" +
+                                        " | Dano: " + proj.getDanoShield());
+                            }
                         }
                     }
                 }
@@ -142,10 +145,20 @@ public class BatalhaIntegracaoTest {
 
         //verifica se a batlaha finilzou no geral
         assertTrue(estado.isFinalizado());
+
+        // Finaliza de fato a batalha para salvar os dados
+        if (estado.isVitoria()) {
+            service.finalizarBatalha(estado, cachorro);
+        }
+
+        // Verifica o salvamento dos dados do animal
+        assertTrue(cachorro.isDomado(), "O cachorro deveria estar domado após a vitória");
+        Animal cachorroSalvo = (Animal) npcRepository.buscarPorNome("Cachorro");
+        assertNotNull(cachorroSalvo);
+        assertTrue(cachorroSalvo.isDomado(), "O repositório deveria ter atualizado o status de domado do animal");
     }
 
 
-    //TODO: MEXER NISSO AQUI
     // CLASSE INTERNA PARA DESENHAR O JOGO (Usando Vertices)
     class VisualizadorPanel extends javax.swing.JPanel {
         private EstadoBatalha estado;

@@ -83,6 +83,22 @@ public class NpcRepository {
         npcs.put(npc.getNome(), npc);
     }
 
+    /**@throws NpcInvalidoException se o npc ou seu nome forem nulos/vazios
+     @throws NpcNaoEncontradoException se não existir npc com o mesmo nome para atualizar*/
+    public void atualizarNpc(Npc npc) {
+        if (npc == null) {
+            throw new NpcInvalidoException("npc", "não pode ser nulo");
+        }
+        if (npc.getNome() == null || npc.getNome().isBlank()) {
+            throw new NpcInvalidoException("nome", "não pode ser nulo ou vazio");
+        }
+        if (!npcs.containsKey(npc.getNome())) {
+            throw new NpcNaoEncontradoException(npc.getNome());
+        }
+
+        npcs.put(npc.getNome(), npc);
+    }
+
     // Leitura
     /**@throws NpcNaoEncontradoException se não existir npc com o nome informado*/
     public Npc buscarPorNome(String nome) {

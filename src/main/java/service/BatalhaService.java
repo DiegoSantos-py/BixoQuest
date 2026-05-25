@@ -17,6 +17,8 @@ import model.Player.PlayerProva;
 import model.Disciplina.AreaConhecimento;
 import model.util.Hitbox;
 import model.util.Vector2D;
+import repository.NpcRepository;
+import repository.ResultadoProvaRepository;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,7 +27,7 @@ import java.util.Queue;
 public class BatalhaService {
 
     //inicia a batalha animal
-    public EstadoBatalha iniciarBatalha(Personagem personagem, Animal animal) {
+    public EstadoBatalha iniciarBatalha(Personagem personagem, Animal animal, NpcRepository npcRepository) {
         Oponente oponenteAnimal =  criarOponenteAnimal(animal);
         //seta o target de cada ataque dos animais como o o jogador
         PlayerProva playerProva = gerarPlayerProva(personagem, AreaConhecimento.ANI);
@@ -37,12 +39,12 @@ public class BatalhaService {
         //adiciona todos os oponentes da batalha(No caso 1 unico(o animal em si))
         oponentes.add(oponenteAnimal);
 
-        return new EstadoBatalha(playerProva, personagem ,oponentes, animal );
+        return new EstadoBatalha(playerProva, personagem ,oponentes, animal, npcRepository );
 
     }
 
     //mesmo fluxo pra prova
-    public EstadoBatalha iniciarBatalha(Personagem personagem, ProvaBatalha provaBatalha) {
+    public EstadoBatalha iniciarBatalha(Personagem personagem, ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository) {
         Queue<Oponente> oponentes = new LinkedList<>();
         PlayerProva playerProva = gerarPlayerProva(personagem, provaBatalha.getAreaConhecimento());
         //mas cada questao é 1 oponente difernete com 1 ATAQUE(em média)(pode ter mais)
@@ -56,7 +58,7 @@ public class BatalhaService {
 
             oponentes.add(oponenteQuestao);
         }
-        return new EstadoBatalha(playerProva, personagem ,oponentes, provaBatalha );
+        return new EstadoBatalha(playerProva, personagem ,oponentes, provaBatalha, resultadoProvaRepository );
     }
 
 
@@ -95,7 +97,7 @@ public class BatalhaService {
         }
 
         if(estado.getTurnoAtual() == Turno.TURNO_PLAYER){
-            return; //COISAS DO PLAYER FICAM NA FUNCAO ACAO PLAYER N DA PRA BOTAR AQ
+            return; //n faz nada se for turno do player
         }
         if(estado.getTurnoAtual() == Turno.TURNO_INIMIGO) {
             Ataque ataque = oponenteAtual.getAtaqueAleatorio();
@@ -107,7 +109,6 @@ public class BatalhaService {
         if(estado.getTurnoAtual() == Turno.EXECUTANDO_ATAQUE_INIMIGO) {
             estado.getAtaqueAtual().atualizar(dt);
             estado.getPlayerProva().atualizarPosicao(dt);
-
             if (player.getCentro().getX() > estado.getAtaqueAtual().getMaxX()) {
 
                 player.getCentro().setX(
@@ -144,6 +145,7 @@ public class BatalhaService {
 
                 player.setMovendoCima(false);
             }
+
             if(estado.getAtaqueAtual().isFinalizado()){
                 estado.getAtaqueAtual().reiniciarAtaque(); //reinica o ataque pra reutiçizar ele na prox rodada
                 estado.setTurnoAtual(Turno.TURNO_PLAYER);
@@ -192,7 +194,7 @@ public class BatalhaService {
         float conhecimento = (float) personagem.getConhecimento(areaDaBatalha);
         // Spawna o player na parte inferior da tela (assumindo 1920x1080)
         Hitbox hitboxPlayerProva = new Hitbox(new Vector2D(960, 800), new Vector2D(5, 5), 0.0f);
-
+        //o player inicia de forma estatica
         Vector2D velocidadeInicial = new Vector2D(0, 0);
 
         return new PlayerProva(hitboxPlayerProva, velocidadeInicial, conhecimento);
@@ -202,10 +204,11 @@ public class BatalhaService {
         float hpCalculado = animal.getIndole();
         // Spawna o inimigo na parte superior da tela
         Hitbox hitboxAnimal = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
+        //gera o oponente a partir do animal(npc do mapa)
         Oponente animalOponente = new Oponente(hitboxAnimal, new Vector2D(0, 0), animal.getNome(), hpCalculado, AreaConhecimento.ANI);
-
+        //ataque mordida padrão de todos os animais
         animalOponente.adicionarAtaque(new AtaqueMordida(null, animalOponente, animal.getIndole()));
-
+        //mas arranhao é exclusivo de gato e latido é exclusivo de cachorro
         switch (animal.getEspecie()) {
             case GATO:
                 animalOponente.adicionarAtaque(new AtaqueArranhao(null, animalOponente, animal.getIndole()));
@@ -225,7 +228,7 @@ public class BatalhaService {
         // Spawna a questao na parte superior da tela
         Hitbox hitboxQuestao = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
         Oponente oponenteQuestao = new Oponente(hitboxQuestao, new Vector2D(0, 0), questao.getNome(), hpCalculado, questao.getAreaConhecimento());
-
+        //cada questão tem 1 ataque atribuido a ela, e o oponente recebe esse ataque
         oponenteQuestao.adicionarAtaque(questao.getAtaque());
 
         return oponenteQuestao;
@@ -233,30 +236,44 @@ public class BatalhaService {
 
 
 
+    public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva) {
+        Personagem personagem = estado.getPersonagem();
+        int totalSemestres = personagem.getSemestres().size();
+        int semestreNumero = personagem.getSemestres().get(totalSemestres - 1).getNumeroSemestre();
+        estado.getResultadoProvaRepository().adicionarResultadoProva(personagem.getPersonagemId(), semestreNumero, resultadoProva);
+        //PEGA O PERSONAGEM, O TOTAL DE SEMESTRES Q ELE FEZ, O ULTIMO SEMESTRER Q ELE POSSUI(O ATUAL), E O NUMERO DESSE SEMESTRE, E PASSSA PRO REPOSITORIO ADICONAR A
+        //LISTA DE RESULTADOS
+    }
+
+    public void salvarAnimalNoRepositorio(EstadoBatalha estado, Animal animal) {
+        estado.getNpcRepository().atualizarNpc(animal);
+
+    }
 
 
-
-
-    public ResultadoProva finalizarBatalha(EstadoBatalha estado , ProvaBatalha provaBatalha) {
+    public void finalizarBatalha(EstadoBatalha estado , ProvaBatalha provaBatalha) {
         PlayerProva playerProva = estado.getPlayerProva();
         ArrayList<Float> desempenho = playerProva.getDesempenhoQuestoes();
+        //se for prova, finaliza a batalha gerando o resultado, o qual será salvo posteriormente pelo repositorio)
         float notaFinal = calcularNotaFinal(desempenho, playerProva);
+        //calcula a nota final baseado noq o player conseguiu tipo desempenho individual em cada questão + bonuses
         ResultadoProva resultadoProva =  new ResultadoProva(
-                estado.getPersonagem(),
-                provaBatalha.getNome(),
+                estado.getPersonagem(),                provaBatalha.getNome(),
                 notaFinal,
                 playerProva.getTurnosUsados(),
                 playerProva.getTodosAcertosPerfeitos(),
                 playerProva.getLevouAlgumDano(),
                 playerProva.getPerdeuNota()
         );
-        return resultadoProva;
+        salvarResultadoProvaNoRepositorio(estado, resultadoProva);
+        //retorna o resultado pro controller salvar ele na memoria pra dps salvar de vez no fim do dia
     }
 
 
     public void finalizarBatalha(EstadoBatalha estado , Animal animal) {
-        animal.setDomado(true);;
-        //todo: ver isso aq
+        animal.setDomado(true);
+        salvarAnimalNoRepositorio(estado, animal);
+        //atualmente no fim de batalha animal, ele so fica domado, pra q entao ele possa regerenar motivacao ou energia ou qualquer coisa do player
     }
 
 
@@ -266,15 +283,13 @@ public class BatalhaService {
             notaFinal += nota;
         }
         //se n tiver elemtnos na lista(improvavel mas vai que) divide por 1 se nao pelo tamanho
+        //nota final é a media de todos os desempenhos individuais de cada questão
         notaFinal /= (desempenho.isEmpty()) ? 1 : desempenho.size() ;
         //ganha PONTO SE
-        //TERMINAR A PROVA RAPIDO, SE TERMINAR COM TODOS OS ACERTOS PERFEITOS(no meio do slider)
-        //SEM PERDER NOTA(pode levar dano no shield)
-        //SEM LEVAR DANO NO GERAL(por isso o maximo é 11,q nem numa prova normal questaoe xtra)
-        notaFinal += (playerProva.getTurnosUsados() <= 20) ? 0.25f : 0;
-        notaFinal += (playerProva.getTodosAcertosPerfeitos()) ? 0.25f : 0;
-        notaFinal += (!playerProva.getPerdeuNota()) ? 0.25f : 0; 
-        notaFinal += (!playerProva.getLevouAlgumDano()) ? 0.25f : 0;
+        notaFinal += (playerProva.getTurnosUsados() <= 20) ? 0.25f : 0;//TERMINAR A PROVA RAPIDO,
+        notaFinal += (playerProva.getTodosAcertosPerfeitos()) ? 0.25f : 0;//SE TERMINAR COM TODOS OS ACERTOS PERFEITOS(no meio do slider)
+        notaFinal += (!playerProva.getPerdeuNota()) ? 0.25f : 0; //SEM PERDER NOTA(pode levar dano no shield)
+        notaFinal += (!playerProva.getLevouAlgumDano()) ? 0.25f : 0;  //SEM LEVAR DANO NO GERAL(por isso o maximo é 11,q nem numa prova normal questaoe xtra)
         return notaFinal;
     }
 
