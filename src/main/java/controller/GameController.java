@@ -26,7 +26,7 @@ public class GameController extends BaseController {
     }
 
     // Lógica de negócio
-    /** Exibe erro se ocorrer falha ao salvar após encerramento de semestre */
+    /** Exibe erro se ocorrer falha ao salvar após encerramento de dia ou semestre */
     public void atualizar() {
         try {
             service.atualizar();
@@ -64,4 +64,3 @@ public class GameController extends BaseController {
         System.out.println("[OK] " + mensagem);
     }
 }
-

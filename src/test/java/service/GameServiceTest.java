@@ -37,7 +37,6 @@ class GameServiceTest {
 
     @BeforeEach
     void setUp() throws PersistenciaException {
-        // Repositórios
         localRepo = new LocalRepository();
         disciplinaRepo = new DisciplinaRepository();
         semestreRepo = new SemestreRepository();
@@ -45,7 +44,6 @@ class GameServiceTest {
         eventoRepo = new EventoRepository();
         npcRepo = new NpcRepository();
 
-        // Services
         diaService = new DiaService();
         disciplinaService = new DisciplinaService(disciplinaRepo);
         semestreService = new SemestreService(semestreRepo, disciplinaRepo);
@@ -64,7 +62,10 @@ class GameServiceTest {
                 inicializacaoService,
                 localRepo,
                 semestreRepo,
-                disciplinaRepo
+                disciplinaRepo,
+                eventoRepo,
+                npcRepo,
+                personagemRepo
         );
 
         personagem = new Personagem("Jogador", 40.0, 40.0, 40.0, 40.0, "sprites/jogador.png");
@@ -72,7 +73,6 @@ class GameServiceTest {
 
     @AfterEach
     void limpar() {
-        // Remove arquivos JSON gerados durante os testes
         new File("locais.json").delete();
         new File("disciplinas.json").delete();
         new File("eventos.json").delete();
@@ -130,7 +130,6 @@ class GameServiceTest {
         Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS);
         localRepo.adicionarLocal(ponto);
 
-        // Simula semestre salvo anteriormente
         Semestre semestreAnterior = new Semestre();
         semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestreAnterior);
         semestreRepo.salvar();
@@ -152,7 +151,6 @@ class GameServiceTest {
         disciplinaService.criarDisciplinasPorNivel("Matemática", 1, AreaConhecimento.MAT);
         disciplinaService.criarDisciplinasPorNivel("Física", 1, AreaConhecimento.MAT);
 
-        // Personagem só passou em Matemática
         Disciplina matematica = new Disciplina();
         matematica.setNome("Matemática");
         matematica.setCodigo(1);
@@ -161,6 +159,8 @@ class GameServiceTest {
         semestre.adicionarDisciplinas(matematica);
         semestre.registrarResultado(matematica, true);
         semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
+
+        gameService.setPersonagem(personagem);
 
         assertFalse(gameService.encerrarJogo());
     }
@@ -191,15 +191,8 @@ class GameServiceTest {
         semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre1);
         semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre2);
 
-        // Injeta o personagem no gameService
         gameService.setPersonagem(personagem);
 
-        Disciplina d = new Disciplina();
-        d.setNome("Matemática");
-        d.setCodigo(1);
-        System.out.println("Chave gerada: " + d.getNome() + ":" + d.getCodigo());
-
-        System.out.println("Disciplinas no repo: " + disciplinaRepo.carregarDisciplinas());
         assertTrue(gameService.encerrarJogo());
     }
 
@@ -209,8 +202,8 @@ class GameServiceTest {
     void deveRetornarFalseQuandoPersonagemNaoTemSemestres() throws PersistenciaException {
         disciplinaService.criarDisciplinasPorNivel("Matemática", 1, AreaConhecimento.MAT);
 
+        gameService.setPersonagem(personagem);
+
         assertFalse(gameService.encerrarJogo());
     }
 }
-
-

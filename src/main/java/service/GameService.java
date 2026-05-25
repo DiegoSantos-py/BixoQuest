@@ -10,7 +10,6 @@ import model.Tempo.Semestre;
 import repository.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class GameService {
 
@@ -21,6 +20,9 @@ public class GameService {
     private final LocalRepository localRepo;
     private final SemestreRepository semestreRepo;
     private final DisciplinaRepository disciplinaRepo;
+    private final EventoRepository eventoRepo;
+    private final NpcRepository npcRepo;
+    private final PersonagemRepository personagemRepo;
 
     private Semestre semestre;
     private Dia diaAtual;
@@ -32,7 +34,10 @@ public class GameService {
                        InicializacaoService inicializacaoService,
                        LocalRepository localRepo,
                        SemestreRepository semestreRepo,
-                       DisciplinaRepository disciplinaRepo) {
+                       DisciplinaRepository disciplinaRepo,
+                       EventoRepository eventoRepo,
+                       NpcRepository npcRepo,
+                       PersonagemRepository personagemRepo) {
         this.diaService = diaService;
         this.semestreService = semestreService;
         this.personagemService = personagemService;
@@ -40,6 +45,9 @@ public class GameService {
         this.localRepo = localRepo;
         this.semestreRepo = semestreRepo;
         this.disciplinaRepo = disciplinaRepo;
+        this.eventoRepo = eventoRepo;
+        this.npcRepo = npcRepo;
+        this.personagemRepo = personagemRepo;
     }
 
     /**
@@ -86,13 +94,16 @@ public class GameService {
 
     /**
      * Atualiza o estado do jogo a cada ciclo.
-     * Verifica se o dia encerrou e avança ou encerra o semestre conforme necessário.
-     * @throws PersistenciaException se ocorrer falha ao salvar após encerramento de semestre
+     * Ao fim de cada dia salva todos os repositórios exceto localRepo.
+     * @throws PersistenciaException se ocorrer falha ao salvar
      */
     public void atualizar() throws PersistenciaException {
         if (!diaService.isDiaEncerrado()) return;
 
         diaService.encerrarDia(diaAtual);
+
+        // Salva o estado de todos os repositórios ao fim do dia
+        salvarEstado();
 
         if (!semestreService.terminouSemestre(semestre)) {
             // Avança para o próximo dia
@@ -143,10 +154,21 @@ public class GameService {
         return true;
     }
 
+    /**
+     * Salva o estado de todos os repositórios exceto localRepo.
+     * Chamado ao fim de cada dia.
+     * @throws PersistenciaException se ocorrer falha ao salvar qualquer repositório
+     */
+    private void salvarEstado() throws PersistenciaException {
+        personagemRepo.salvar();
+        semestreRepo.salvar();
+        disciplinaRepo.salvar();
+        eventoRepo.salvar();
+        npcRepo.salvar();
+    }
+
     public Semestre getSemestre() { return semestre; }
     public Dia getDiaAtual() { return diaAtual; }
     public Personagem getPersonagem() { return personagem; }
-    public void setPersonagem(Personagem personagem) {
-        this.personagem = personagem;
-    }
+    public void setPersonagem(Personagem personagem) { this.personagem = personagem; }
 }
