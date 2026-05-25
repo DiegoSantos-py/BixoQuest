@@ -25,35 +25,45 @@ public class DisciplinaRepository {
         this.disciplinas = new HashMap<>();
     }
 
+    // Cria e configura uma instância do ObjectMapper que será usada
+    // para serializar (salvar) e desserializar (carregar) objetos em JSON.
     private static ObjectMapper criarMapper() {
         ObjectMapper m = new ObjectMapper();
-        m.registerModule(new JavaTimeModule());
-        m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return m;
     }
 
 
-    // Persistência
+    // Salva o mapa de disciplinas em arquivo JSON.
     public void salvar() throws PersistenciaException {
         try {
-            mapper.writerWithDefaultPrettyPrinter()
+            // Converte o objeto "disciplinas" para JSON
+            // e salva no arquivo definido em ARQUIVO.
+            mapper.writerWithDefaultPrettyPrinter() //deixa o JSON formatado (indentado) para facilitar leitura.
                     .writeValue(ARQUIVO, disciplinas);
         } catch (Exception e) {
+            // Encapsula qualquer erro de escrita em uma exceção
+            // específica da camada de persistência.
             throw new PersistenciaException(OperacaoPersistencia.SALVAR, e);
         }
     }
 
+    // Carrega os dados do arquivo JSON para memória.
     public void carregar() throws PersistenciaException {
         if (!ARQUIVO.exists()) return;
 
         try {
+            // Como o Java perde informações de generics em tempo de execução
+            // (type erasure), o Jackson precisa que o tipo seja montado manualmente.
             this.disciplinas = mapper.readValue(ARQUIVO,
+
                     mapper.getTypeFactory().constructMapType(
                             HashMap.class,
                             mapper.getTypeFactory().constructType(String.class),
                             mapper.getTypeFactory().constructCollectionType(List.class, Disciplina.class)
                     ));
+
         } catch (Exception e) {
+            // Encapsula erros de leitura em exceção de persistência.
             throw new PersistenciaException(OperacaoPersistencia.CARREGAR, e);
         }
     }
@@ -61,8 +71,8 @@ public class DisciplinaRepository {
 
     // Escrita
     /**
-      @throws DisciplinaInvalidaException  se a disciplina ou seu nome forem nulos/vazios
-      @throws DisciplinaDuplicadaException se já existir disciplina com mesmo nome e código
+      lança DisciplinaInvalidaException  se a disciplina ou seu nome forem nulos/vazios
+      lança DisciplinaDuplicadaException se já existir disciplina com mesmo nome e código
      */
     public void adicionar(Disciplina d) {
         validarDisciplina(d);
@@ -80,7 +90,7 @@ public class DisciplinaRepository {
 
     // Leitura
     /**
-      @throws DisciplinaNaoEncontradaException se não houver disciplinas com o nome
+      lança DisciplinaNaoEncontradaException se não houver disciplinas com o nome
      */
     public List<Disciplina> buscarPorNome(String nome) {
         List<Disciplina> lista = disciplinas.get(nome);
@@ -107,7 +117,7 @@ public class DisciplinaRepository {
     }
 
     /**
-      @throws DisciplinaNaoEncontradaException se não encontrar a combinação nome + código
+      lança DisciplinaNaoEncontradaException se não encontrar a combinação nome + código
      */
     public Disciplina buscar(String nome, float codigo) {
         List<Disciplina> lista = disciplinas.get(nome);
@@ -129,7 +139,7 @@ public class DisciplinaRepository {
     }
 
     /**
-      @throws DisciplinaNaoEncontradaException se não existir disciplina com código + 1
+      lança DisciplinaNaoEncontradaException se não existir disciplina com código + 1
      */
     public Disciplina proximaDisciplina(String nome, float codigoAtual) {
         List<Disciplina> lista = disciplinas.get(nome);

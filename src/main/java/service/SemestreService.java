@@ -26,18 +26,18 @@ public class SemestreService {
     }
 
     // Inicialização
-    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    /**lança PersistenciaException se ocorrer falha ao carregar o arquivo*/
     public void carregar() throws PersistenciaException {
         semestreRepo.carregar();
     }
 
-    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    /**lança PersistenciaException se ocorrer falha ao salvar o arquivo*/
     public void salvar() throws PersistenciaException {
         semestreRepo.salvar();
     }
 
     // Leitura
-    /**@throws SemestreNaoEncontradoException se não houver semestres para o jogador*/
+    /**lança SemestreNaoEncontradoException se não houver semestres para o jogador*/
     public List<Semestre> getSemestresPorJogador(int jogadorId) {
         return semestreRepo.getSemestresPorJogador(jogadorId);
     }
@@ -54,7 +54,7 @@ public class SemestreService {
         return semestre;
     }
 
-    /**@throws SemestreInvalidoException se o semestre já tiver terminado*/
+    /**lança SemestreInvalidoException se o semestre já tiver terminado*/
     public Dia avancarDia(Semestre semestre) {
         if (semestre.terminou()) {
             throw new SemestreInvalidoException("semestre", "já atingiu o número máximo de dias");
@@ -65,7 +65,7 @@ public class SemestreService {
         return novoDia;
     }
 
-    /**@throws SemestreInvalidoException se a disciplina já pertencer ao semestre*/
+    /**lança SemestreInvalidoException se a disciplina já pertencer ao semestre*/
     public void adicionarDisciplina(Semestre semestre, Disciplina disciplina) {
         if (semestre.getDisciplinas().contains(disciplina)) {
             throw new SemestreInvalidoException("disciplina",
@@ -79,8 +79,8 @@ public class SemestreService {
         return semestre.terminou();
     }
 
-    /**@throws SemestreInvalidoException  se o semestre for nulo
-     @throws PersistenciaException       se ocorrer falha ao salvar após encerramento*/
+    /**lança SemestreInvalidoException  se o semestre for nulo
+     lança PersistenciaException       se ocorrer falha ao salvar após encerramento*/
     public Semestre encerrarSemestre(Personagem personagem, Semestre semestre)
             throws PersistenciaException {
         if (semestre == null) {
@@ -118,7 +118,7 @@ public class SemestreService {
         return novoSemestre;
     }
 
-    /**@throws SemestreInvalidoException se semestre ou disciplina forem nulos*/
+    /**lança SemestreInvalidoException se semestre ou disciplina forem nulos*/
     public void definirResultadoDisciplina(Semestre semestre, Disciplina disciplina,
                                            boolean aprovado) {
         if (semestre == null) {

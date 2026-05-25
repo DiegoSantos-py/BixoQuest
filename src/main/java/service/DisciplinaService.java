@@ -20,21 +20,21 @@ public class DisciplinaService {
     }
 
     // Inicialização
-    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    /**lança PersistenciaException se ocorrer falha ao carregar o arquivo*/
     public void carregar() throws PersistenciaException {
         disciplinaRepo.carregar();
     }
 
 
-        /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+        /**lança PersistenciaException se ocorrer falha ao salvar o arquivo*/
     public void salvar() throws PersistenciaException {
         disciplinaRepo.salvar();
     }
 
     // Escrita
-    /**@throws DisciplinaInvalidaException  se nome, quantidade ou área forem inválidos
-        @throws DisciplinaDuplicadaException se algum nível já existir no repositório
-        @throws PersistenciaException        se ocorrer falha ao salvar após criação*/
+    /**lança DisciplinaInvalidaException  se nome, quantidade ou área forem inválidos
+        lança DisciplinaDuplicadaException se algum nível já existir no repositório
+        lança PersistenciaException        se ocorrer falha ao salvar após criação*/
     public void criarDisciplinasPorNivel(String nome, int quantidadeNiveis, AreaConhecimento area)
             throws PersistenciaException {
         if (nome == null || nome.isBlank()) {
@@ -59,7 +59,7 @@ public class DisciplinaService {
     }
 
     // Leitura
-    /**@throws DisciplinaNaoEncontradaException se não houver disciplinas com o nome */
+    /**lança DisciplinaNaoEncontradaException se não houver disciplinas com o nome */
     public List<Disciplina> buscarPorNome(String nome) {
         return disciplinaRepo.buscarPorNome(nome);
     }
@@ -68,8 +68,7 @@ public class DisciplinaService {
         return disciplinaRepo.buscarPorArea(area);
     }
 
-    /*
-        @throws DisciplinaNaoEncontradaException se não encontrar a combinação nome + código
+    /**lança DisciplinaNaoEncontradaException se não encontrar a combinação nome + código
     */
     public Disciplina buscar(String nome, float codigo) {
         return disciplinaRepo.buscar(nome, codigo);
@@ -79,7 +78,7 @@ public class DisciplinaService {
         return disciplinaRepo.existe(d);
     }
 
-    /** @throws DisciplinaNaoEncontradaException se não existir disciplina com código + 1*/
+    /** lança DisciplinaNaoEncontradaException se não existir disciplina com código + 1*/
     public Disciplina proximaDisciplina(String nome, float codigoAtual) {
         return disciplinaRepo.proximaDisciplina(nome, codigoAtual);
     }

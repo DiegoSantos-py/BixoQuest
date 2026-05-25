@@ -31,8 +31,6 @@ public class ResultadoProvaRepository {
 
     private static ObjectMapper criarMapper() {
         ObjectMapper m = new ObjectMapper();
-        m.registerModule(new JavaTimeModule());
-        m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return m;
     }
 
@@ -58,7 +56,7 @@ public class ResultadoProvaRepository {
     // Persistência
 
     /**
-     * @throws PersistenciaException se ocorrer falha ao salvar o arquivo
+     * lançaPersistenciaException se ocorrer falha ao salvar o arquivo
      */
     public void salvar() throws PersistenciaException {
         try {
@@ -77,7 +75,7 @@ public class ResultadoProvaRepository {
     }
 
     /**
-     * @throws PersistenciaException se ocorrer falha ao carregar o arquivo
+     * lançaPersistenciaException se ocorrer falha ao carregar o arquivo
      */
     public void carregar() throws PersistenciaException {
 
@@ -99,8 +97,8 @@ public class ResultadoProvaRepository {
     // Escrita
 
     /**
-     * @throws ResultadoProvaInvalidoException se resultado for inválido
-     * @throws ResultadoProvaDuplicadoException se a prova já existir
+     * lançaResultadoProvaInvalidoException se resultado for inválido
+     * lançaResultadoProvaDuplicadoException se a prova já existir
      */
     public void adicionarResultadoProva(
             int jogadorId,

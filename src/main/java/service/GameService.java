@@ -54,7 +54,7 @@ public class GameService {
      * Inicializa o jogo — carrega todos os repositórios e reconstrói referências.
      * Se o personagem já existir, retoma a sessão anterior.
      * Se não existir, inicia um novo jogo.
-     * @throws PersistenciaException se ocorrer falha ao carregar qualquer arquivo
+     * lança PersistenciaException se ocorrer falha ao carregar qualquer arquivo
      */
     public void iniciarJogo(Personagem personagem) throws PersistenciaException {
         this.personagem = personagem;
@@ -95,7 +95,7 @@ public class GameService {
     /**
      * Atualiza o estado do jogo a cada ciclo.
      * Ao fim de cada dia salva todos os repositórios exceto localRepo.
-     * @throws PersistenciaException se ocorrer falha ao salvar
+     * lança PersistenciaException se ocorrer falha ao salvar
      */
     public void atualizar() throws PersistenciaException {
         if (!diaService.isDiaEncerrado()) return;
@@ -157,7 +157,7 @@ public class GameService {
     /**
      * Salva o estado de todos os repositórios exceto localRepo.
      * Chamado ao fim de cada dia.
-     * @throws PersistenciaException se ocorrer falha ao salvar qualquer repositório
+     * lança PersistenciaException se ocorrer falha ao salvar qualquer repositório
      */
     private void salvarEstado() throws PersistenciaException {
         personagemRepo.salvar();
