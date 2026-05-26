@@ -30,21 +30,21 @@ public class PersonagemService {
     }
 
     // Inicialização
-    /** @throws PersistenciaException se ocorrer falha ao carregar o arquivo */
+    /**lança PersistenciaException se ocorrer falha ao carregar o arquivo */
     public void carregar() throws PersistenciaException {
         personagemRepo.carregar();
     }
 
-    /** @throws PersistenciaException se ocorrer falha ao salvar o arquivo */
+    /**lança PersistenciaException se ocorrer falha ao salvar o arquivo */
     public void salvar() throws PersistenciaException {
         personagemRepo.salvar();
     }
 
     // Escrita
     /**
-     * @throws PersonagemInvalidoException   se nome for nulo/vazio ou atributos negativos
-     * @throws PersonagemDuplicadoException  se já existir personagem com o mesmo id
-     * @throws PersistenciaException         se ocorrer falha ao salvar após criação
+     *lança PersonagemInvalidoException   se nome for nulo/vazio ou atributos negativos
+     *lança PersonagemDuplicadoException  se já existir personagem com o mesmo id
+     *lança PersistenciaException         se ocorrer falha ao salvar após criação
      */
     public Personagem criarESalvarPersonagem(String nome,
                                              double energia,
@@ -67,7 +67,7 @@ public class PersonagemService {
 
 
     // Leitura
-    /** @throws PersonagemNaoEncontradoException se não existir personagem com o id informado */
+    /**lança PersonagemNaoEncontradoException se não existir personagem com o id informado */
     public Personagem buscarPorId(int id) {
         return personagemRepo.buscarPorId(id);
     }
@@ -79,8 +79,6 @@ public class PersonagemService {
     public Map<Integer, Personagem> carregarPersonagens() {
         return personagemRepo.carregarPersonagens();
     }
-
-    // ---- Código original inalterado a partir daqui ----
 
     public Personagem criarPersonagem(String nome,
                                       double energia,

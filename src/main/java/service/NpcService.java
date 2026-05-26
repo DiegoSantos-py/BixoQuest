@@ -23,21 +23,21 @@ public class NpcService {
     }
 
     // Inicialização
-    /** @throws PersistenciaException se ocorrer falha ao carregar o arquivo */
+    /**lança PersistenciaException se ocorrer falha ao carregar o arquivo */
     public void carregar() throws PersistenciaException {
         npcRepo.carregar();
     }
 
-    /** @throws PersistenciaException se ocorrer falha ao salvar o arquivo */
+    /**lança PersistenciaException se ocorrer falha ao salvar o arquivo */
     public void salvar() throws PersistenciaException {
         npcRepo.salvar();
     }
 
     // Escrita
     /**
-     * @throws NpcInvalidoException  se o npc ou seu nome forem nulos/vazios
-     * @throws NpcDuplicadoException se já existir npc com o mesmo nome
-     * @throws PersistenciaException se ocorrer falha ao salvar após adição
+     *lança NpcInvalidoException  se o npc ou seu nome forem nulos/vazios
+     *lança NpcDuplicadoException se já existir npc com o mesmo nome
+     *lança PersistenciaException se ocorrer falha ao salvar após adição
      */
     public void adicionarNpc(Npc npc) throws PersistenciaException {
         npcRepo.adicionarNpc(npc);
@@ -45,7 +45,7 @@ public class NpcService {
     }
 
     // Leitura
-    /** @throws NpcNaoEncontradoException se não existir npc com o nome informado */
+    /**lança NpcNaoEncontradoException se não existir npc com o nome informado */
     public Npc buscarPorNome(String nome) {
         return npcRepo.buscarPorNome(nome);
     }
@@ -68,8 +68,8 @@ public class NpcService {
 
     // Lógica de negócio
     /**
-     * @throws NpcNaoEncontradoException se o npc não existir
-     * @throws NpcInvalidoException      se o personagem for nulo
+     *lança NpcNaoEncontradoException se o npc não existir
+     *lança NpcInvalidoException      se o personagem for nulo
      */
     public String interagir(String nomeNpc, Personagem personagem) {
         if (personagem == null) {

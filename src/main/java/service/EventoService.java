@@ -21,18 +21,18 @@ public class EventoService {
     }
 
     // Inicialização
-    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    /**lança PersistenciaException se ocorrer falha ao carregar o arquivo*/
     public void carregar() throws PersistenciaException {
         eventoRepo.carregar();
     }
 
-    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    /**lança PersistenciaException se ocorrer falha ao salvar o arquivo*/
     public void salvar() throws PersistenciaException {
         eventoRepo.salvar();
     }
 
     // Escrita
-    /**@throws EventoInvalidoException se nome, descrição ou zona forem inválidos*/
+    /**lança EventoInvalidoException se nome, descrição ou zona forem inválidos*/
     public Evento criarEvento(String nome,
                               String descricao,
                               double efeitoEnergia,
@@ -80,7 +80,7 @@ public class EventoService {
     }
 
     // Leitura
-    /**@throws EventoNaoEncontradoException se não existir evento com o nome informado*/
+    /**lança EventoNaoEncontradoException se não existir evento com o nome informado*/
     public Evento buscarPorNome(String nome) {
         return eventoRepo.buscarPorNome(nome);
     }
@@ -126,15 +126,18 @@ public class EventoService {
                                 Personagem personagem,
                                 Dia diaAtual,
                                 DiaService diaService) {
+        // impede que a energia do personagem fique negativa
         personagem.setEnergia(
                 Math.max(0, personagem.getEnergia() + evento.getEfeitoEnergia()));
 
+        // recupera efeitos do evento no conhecimento do personagem
         if (evento.getEfeitosConhecimento() != null) {
             for (var entry : evento.getEfeitosConhecimento().entrySet()) {
                 personagem.atualizarConhecimento(entry.getKey(), entry.getValue());
             }
         }
 
+        //aplica efeitos do evento
         personagem.setMotivacao(
                 Math.max(0, personagem.getMotivacao() + evento.getEfeitoMotivacao()));
 

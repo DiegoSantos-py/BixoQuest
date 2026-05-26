@@ -37,8 +37,8 @@ public class InicializacaoService {
     }
 
     /**
-     * Carrega todos os repositórios e reconstrói as referências entre objetos.
-     * @throws PersistenciaException se ocorrer falha ao carregar qualquer arquivo
+      Carrega todos os repositórios e reconstrói as referências entre objetos.
+      lança PersistenciaException se ocorrer falha ao carregar qualquer arquivo
      */
     public void inicializar() throws PersistenciaException {
 

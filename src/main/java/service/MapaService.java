@@ -18,12 +18,12 @@ public class MapaService {
     }
 
     // Inicialização
-    /**@throws PersistenciaException se ocorrer falha ao carregar o arquivo*/
+    /*lança PersistenciaException se ocorrer falha ao carregar o arquivo*/
     public void carregar() throws PersistenciaException {
         localRepo.carregar();
     }
 
-    /**@throws PersistenciaException se ocorrer falha ao salvar o arquivo*/
+    /*lança PersistenciaException se ocorrer falha ao salvar o arquivo*/
     public void salvar() throws PersistenciaException {
         localRepo.salvar();
     }
@@ -34,18 +34,18 @@ public class MapaService {
         return localRepo.carregarLocais();
     }
 
-    /**@throws LocalNaoEncontradoException se não existir local com o tipo informado*/
+    /*lança LocalNaoEncontradoException se não existir local com o tipo informado*/
     public Local buscarPorTipo(TipoLocal tipo) {
         return localRepo.buscarPorTipo(tipo);
     }
 
-    /**@throws LocalNaoEncontradoException se não existir local com o nome informado*/
+    /*lança LocalNaoEncontradoException se não existir local com o nome informado*/
     public Local buscarPorNome(String nome) {
         return localRepo.buscarPorNome(nome);
     }
 
     // Criação do mapa
-    /**@throws PersistenciaException se ocorrer falha ao salvar após criação*/
+    /*lança PersistenciaException se ocorrer falha ao salvar após criação*/
     public Mapa criarMapa() throws PersistenciaException {
         Mapa mapa = new Mapa();
 
@@ -63,7 +63,7 @@ public class MapaService {
     }
 
     // Lógica de negócio
-    /**@throws LocalInvalidoException se origem, destino ou direção forem nulos, ou origem == destino
+    /*lança LocalInvalidoException se origem, destino ou direção forem nulos, ou origem == destino
      @throws LocalDuplicadoException se já existir vizinho na direção informada*/
     public void conectarLocais(Local origem, Local destino, Direcao direcao) {
         if (origem == null || destino == null) {
@@ -83,7 +83,7 @@ public class MapaService {
         destino.adicionarVizinho(oposta(direcao), origem);
     }
 
-    /**@throws LocalInvalidoException se a zona, sua área ou o local forem inválidos, ou a zona não couber no local*/
+    /*lança LocalInvalidoException se a zona, sua área ou o local forem inválidos, ou a zona não couber no local*/
     public void adicionarZona(ZonaInterativa zona, Local local) {
         if (zona == null) {
             throw new LocalInvalidoException("zona", "não pode ser nula");
@@ -186,7 +186,7 @@ public class MapaService {
         return new Area(500, -500, 500, -500);
     }
 
-    /**@throws LocalInvalidoException se o tamanho for menor ou igual a zero*/
+    /*lança LocalInvalidoException se o tamanho for menor ou igual a zero*/
     private Area criarAreaCustomizada(int tamanho) {
         if (tamanho <= 0) {
             throw new LocalInvalidoException("tamanho", "deve ser maior que zero");
