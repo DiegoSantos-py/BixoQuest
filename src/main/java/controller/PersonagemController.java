@@ -39,10 +39,11 @@ public class PersonagemController extends BaseController {
                                                        String spriteDir,
                                                        Local localInicial,
                                                        int posX,
-                                                       int posY) {
+                                                       int posY,
+                                                       int personagemId) {
         try {
             Personagem p = service.criarESalvarPersonagem(nome, energia, motivacao,
-                    saude, dinheiro, spriteDir, localInicial, posX, posY);
+                    saude, dinheiro, spriteDir, localInicial, posX, posY, personagemId);
             exibirSucesso("Personagem criado com sucesso.");
             return Optional.of(p);
         } catch (PersonagemInvalidoException e) {
@@ -56,6 +57,7 @@ public class PersonagemController extends BaseController {
             return Optional.empty();
         }
     }
+
 
     // Leitura
     /** Retorna Optional vazio se personagem não for encontrado */

@@ -54,15 +54,17 @@ public class PersonagemService {
                                              String spriteDir,
                                              Local localInicial,
                                              int posX,
-                                             int posY) throws PersistenciaException {
+                                             int posY,
+                                             int personagemId) throws PersistenciaException {
 
         Personagem personagem = criarPersonagem(nome, energia, motivacao, saude, dinheiro,
-                spriteDir, localInicial, posX, posY);
+                spriteDir, localInicial, posX, posY, personagemId);
         personagemRepo.adicionarPersonagem(personagem);
         personagemRepo.salvar();
 
         return personagem;
     }
+
 
     // Leitura
     /** @throws PersonagemNaoEncontradoException se não existir personagem com o id informado */
@@ -88,7 +90,8 @@ public class PersonagemService {
                                       String spriteDir,
                                       Local localInicial,
                                       int posX,
-                                      int posY) {
+                                      int posY,
+                                      int personagemId) {
 
         if (nome == null || nome.isBlank()) {
             throw new PersonagemInvalidoException("nome", "não pode ser nulo ou vazio"); // ATUALIZADO
@@ -113,7 +116,8 @@ public class PersonagemService {
                 motivacao,
                 saude,
                 dinheiro,
-                spriteDir
+                spriteDir,
+                personagemId
         );
 
         // define posição inicial

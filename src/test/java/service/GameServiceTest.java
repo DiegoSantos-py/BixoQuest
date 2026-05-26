@@ -68,7 +68,7 @@ class GameServiceTest {
                 personagemRepo
         );
 
-        personagem = new Personagem("Jogador", 40.0, 40.0, 40.0, 40.0, "sprites/jogador.png");
+        personagem = new Personagem("Jogador", 40.0, 40.0, 40.0, 40.0, "sprites/jogador.png", 1);
     }
 
     @AfterEach

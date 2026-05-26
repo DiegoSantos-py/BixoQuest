@@ -9,8 +9,6 @@ import model.Tempo.Semestre;
 import java.util.*;
 
 public class Personagem {
-    private static int  qntdPersonagem = 0;
-
     private int personagemId;
     private String nome;
     private double energia;
@@ -51,14 +49,14 @@ public class Personagem {
         }
     }
 
-    public Personagem(String nome, double energia, double motivacao, double saude, double dinheiro, String spriteDir){
+    public Personagem(String nome, double energia, double motivacao, double saude, double dinheiro, String spriteDir, int personagemId){
         this.nome = nome;
         this.saude = saude;
         this.motivacao = motivacao;
         this.dinheiro = dinheiro;
         this.energia = energia;
         this.spriteDir = spriteDir;
-        this.personagemId = qntdPersonagem++;
+        this.personagemId = personagemId;
         this.semestres = new ArrayList<>();
 
         this.conhecimentos = new HashMap<>();
@@ -149,6 +147,7 @@ public class Personagem {
                 ", dinheiro=" + dinheiro +
                 ", spriteDir='" + spriteDir + '\'' +
                 ", cX=" + cX +
-                ", cY=" + cY;
+                ", cY=" + cY +
+                ", local= "+ localAtual;
     }
 }

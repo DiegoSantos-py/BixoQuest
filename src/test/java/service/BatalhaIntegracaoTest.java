@@ -24,8 +24,8 @@ public class BatalhaIntegracaoTest {
         //cria o service de batalha o personagem e o animal etc bla bla(adicioan 5 de conhecimento pro player ter algum shield(importante)
         BatalhaService service = new BatalhaService();
 
-        Personagem personagem = new Personagem("Veterano", 100, 100, 100, 100, "sprite.png");
-        personagem.atualizarConhecimento(AreaConhecimento.ANI, 25); //faz o player ter mto conhecimento em animal pra aumentar o dano e fazer ele vencer
+        Personagem personagem = new Personagem("Veterano", 100, 100, 100, 100, "sprite.png", 1);
+        personagem.atualizarConhecimento(AreaConhecimento.ANI, 35); //faz o player ter mto conhecimento em animal pra aumentar o dano e fazer ele vencer
 
         java.util.ArrayList<String> falas = new java.util.ArrayList<>();
         falas.add("Au au");

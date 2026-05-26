@@ -36,7 +36,7 @@ public class ResultadoProvaRepositoryTest {
 
     @Test
     public void testAdicionarEBuscarResultadoProva() {
-        Personagem personagem = new Personagem("Teste", 100, 100, 100, 100, "sprite.png");
+        Personagem personagem = new Personagem("Teste", 100, 100, 100, 100, "sprite.png", 1);
         ResultadoProva resultado1 = new ResultadoProva(personagem, null, 8.5f, 5, true, false, false);
         ResultadoProva resultado2 = new ResultadoProva(personagem, null, 9.0f, 3, false, true, false);
 
@@ -66,7 +66,7 @@ public class ResultadoProvaRepositoryTest {
     //  Valida se a estrutura realmente separa por semestres
     @Test
     public void testAdicionarEmMultiplosSemestres() {
-        Personagem personagem = new Personagem("TesteMultiplo", 100, 100, 100, 100, "sprite.png");
+        Personagem personagem = new Personagem("TesteMultiplo", 100, 100, 100, 100, "sprite.png", 2);
         ResultadoProva resultadoSem1 = new ResultadoProva(personagem, "NAT-02", 7.0f, 2, true, false, false);
         ResultadoProva resultadoSem2 = new ResultadoProva(personagem, "HUM-01", 9.5f, 1, false, false, true);
 
@@ -100,7 +100,7 @@ public class ResultadoProvaRepositoryTest {
 
     @Test
     public void testSalvarECarregar() throws Exception {
-        Personagem personagem = new Personagem("SalvarTeste", 100, 100, 100, 100, "sprite.png");
+        Personagem personagem = new Personagem("SalvarTeste", 100, 100, 100, 100, "sprite.png", 3);
         ResultadoProva resultado = new ResultadoProva(personagem, null, 10.0f, 2, true, false, false);
 
         int jogadorId = 3;

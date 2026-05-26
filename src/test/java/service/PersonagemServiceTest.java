@@ -67,7 +67,7 @@ class PersonagemServiceTest {
                 "sprite.png",
                 localInicial,
                 0,
-                0
+                0, 1
         );
 
         assertNotNull(personagem);
@@ -87,7 +87,7 @@ class PersonagemServiceTest {
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         null, 100, 80, 90, 50,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
     }
@@ -97,7 +97,7 @@ class PersonagemServiceTest {
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "   ", 100, 80, 90, 50,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
     }
@@ -107,28 +107,28 @@ class PersonagemServiceTest {
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", -1, 80, 90, 50,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
 
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, -1, 90, 50,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
 
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, 80, -1, 50,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
 
         assertThrows(PersonagemInvalidoException.class, () ->
                 personagemService.criarPersonagem(
                         "Fulano", 100, 80, 90, -1,
-                        "sprite.png", localInicial, 0, 0
+                        "sprite.png", localInicial, 0, 0, 1
                 )
         );
     }
@@ -139,7 +139,7 @@ class PersonagemServiceTest {
     void deveMoverDentroDoMesmoLocalParaDireita() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
@@ -159,7 +159,7 @@ class PersonagemServiceTest {
 
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localPequeno, 1, 0
+                "sprite.png", localPequeno, 1, 0, 1
         );
 
         personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
@@ -187,7 +187,7 @@ class PersonagemServiceTest {
 
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", origem, 1, 0
+                "sprite.png", origem, 1, 0, 1
         );
 
         personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
@@ -214,7 +214,7 @@ class PersonagemServiceTest {
 
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", origem, 0, -1
+                "sprite.png", origem, 0, -1, 1
         );
 
         personagemService.mover(personagem, Direcao.CIMA, dia, diaService);
@@ -227,7 +227,7 @@ class PersonagemServiceTest {
     void deveExecutarEventoObrigatorioAoEntrarNaZona() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         ZonaInterativa zona = new ZonaInterativa(
@@ -257,7 +257,7 @@ class PersonagemServiceTest {
     void deveExecutarEventoAleatorioAoEntrarNaZona() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         ZonaInterativa zona = new ZonaInterativa(
@@ -287,7 +287,7 @@ class PersonagemServiceTest {
     void naoDeveExecutarEventoSePersonagemNaoEntrarNaZona() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 9, 9
+                "sprite.png", localInicial, 9, 9, 1
         );
 
         ZonaInterativa zona = new ZonaInterativa(
@@ -330,7 +330,7 @@ class PersonagemServiceTest {
 
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 50, 50, 100,
-                "sprite.png", ponto, 1, 0
+                "sprite.png", ponto, 1, 0, 1
         );
 
         personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
@@ -346,7 +346,7 @@ class PersonagemServiceTest {
     void calcularDesempenhoGeralDeveRetornarZeroSemSemestres() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         double desempenho = personagemService.calcularDesempenhoGeral(personagem);
@@ -358,7 +358,7 @@ class PersonagemServiceTest {
     void calcularDesempenhoGeralDeveRetornarUmQuandoTodasForemAprovadas() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         Disciplina d1 = new Disciplina();
@@ -387,7 +387,7 @@ class PersonagemServiceTest {
     void calcularDesempenhoGeralDeveRetornarMetadeQuandoMetadeForAprovada() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         Disciplina d1 = new Disciplina();
@@ -416,7 +416,7 @@ class PersonagemServiceTest {
     void calcularDesempenhoGeralDeveConsiderarMultiplosSemestres() {
         Personagem personagem = personagemService.criarPersonagem(
                 "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0
+                "sprite.png", localInicial, 0, 0, 1
         );
 
         Disciplina d1 = new Disciplina();

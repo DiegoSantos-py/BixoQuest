@@ -21,7 +21,7 @@ class PersonagemRepositoryTest {
     private PersonagemRepository repository;
 
     private Personagem criarPersonagem(String nome) {
-        return new Personagem(nome, 80.0, 70.0, 90.0, 50.0, "sprites/jogador.png");
+        return new Personagem(nome, 80.0, 70.0, 90.0, 50.0, "sprites/jogador.png", 1);
     }
 
     @BeforeEach
@@ -184,7 +184,7 @@ class PersonagemRepositoryTest {
     @Order(12)
     @DisplayName("Deve gerar JSON com estrutura esperada")
     void deveGerarJsonComEstruturaEsperada() throws Exception {
-        Personagem p = new Personagem("Ana", 80.0, 70.0, 90.0, 50.0, "sprites/ana.png");
+        Personagem p = new Personagem("Ana", 80.0, 70.0, 90.0, 50.0, "sprites/ana.png", 2);
         p.atualizarConhecimento(AreaConhecimento.MAT, 25.0);
         p.setcX(15);
         p.setcY(30);
