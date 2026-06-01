@@ -12,17 +12,13 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import view.menu.util.FonteUtil;
+
 import java.util.Objects;
 
 public class InicioView {
 
     private final PersonagemController personagemController;
-
-    private static final Font FONTE_PIXEL = Font.loadFont(
-            Objects.requireNonNull(Menu.class.getResourceAsStream(
-                    "/fonts/pixel_operator/PixelOperator-Bold.ttf")),
-            40
-    );
 
     private boolean primeiroEvento = true;
     private boolean jaMudouTela = false;
@@ -57,7 +53,7 @@ public class InicioView {
 
         Text texto = new Text("Mova o mouse para continuar");
         texto.setFill(Color.WHITE);
-        texto.setFont(FONTE_PIXEL);
+        texto.setFont(FonteUtil.pixel(40));
 
         ImageView logoView = new ImageView(logoImage);
         logoView.setFitWidth(600);

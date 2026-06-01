@@ -14,18 +14,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import view.menu.util.FonteUtil;
 
 import java.util.Objects;
 
 public class Menu {
 
     private final PersonagemController personagemController;
-
-    private static final Font FONTE_PIXEL = Font.loadFont(
-            Objects.requireNonNull(Menu.class.getResourceAsStream(
-                            "/fonts/pixel_operator/PixelOperator-Bold.ttf")),
-            24
-    );
 
     // Constructor Injection
     public Menu(PersonagemController personagemController) {
@@ -110,7 +105,7 @@ public class Menu {
     }
 
     private void estilizarBotao(Button botao) {
-        botao.setFont(FONTE_PIXEL);
+        botao.setFont(FonteUtil.pixel(24));
         botao.setTextFill(Color.WHITE);
 
         botao.setBackground(Background.EMPTY);

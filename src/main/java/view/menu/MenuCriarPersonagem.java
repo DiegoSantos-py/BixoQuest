@@ -4,14 +4,20 @@ import controller.PersonagemController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import view.menu.util.FonteUtil;
+
+import java.util.Objects;
 
 public class MenuCriarPersonagem {
+
     private final PersonagemController personagemController;
     private final int slotId;
+
+    private String spriteEscolhido = null;
 
     public MenuCriarPersonagem(PersonagemController personagemController, int slotId) {
         this.personagemController = personagemController;
@@ -23,38 +29,71 @@ public class MenuCriarPersonagem {
 
         VBox formContainer = new VBox(20);
         formContainer.setAlignment(Pos.CENTER);
-        Label lblTitulo = new Label("Criando personagem para o Slot " + slotId);
 
+        Image backgroundImage = new Image(
+                Objects.requireNonNull(getClass().getResourceAsStream("/assets/Background.png")
+                )
+        );
+
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setFitWidth(1920);
+        backgroundView.setFitHeight(1080);
+
+        Label lblTitulo = new Label("Criando personagem para o Slot " + slotId);
+        lblTitulo.setFont(FonteUtil.pixel(24));
 
         TextField campoNome = new TextField();
         campoNome.setPromptText("Digite o nome do estudante...");
         campoNome.setMaxWidth(400);
+        campoNome.setFont(FonteUtil.pixel(24));
+
         Label lblAparencia = new Label("Selecione a Aparência:");
+        lblAparencia.setFont(FonteUtil.pixel(24));
 
-        ToggleGroup grupoSprite = new ToggleGroup();
+        Button btnMasculino = criarBotaoPersonagem(
+                "/menuPersonagens/botaoEscolherPersonagem.png",
+                "/Jogador/Jogador1/rotations/south.png");
 
-        RadioButton rbMasculino = new RadioButton("Masculino");
-        rbMasculino.setToggleGroup(grupoSprite);
-        rbMasculino.setUserData("spriteMasculino.png");
-        rbMasculino.setSelected(true); // Default
+        Button btnFeminino = criarBotaoPersonagem(
+                "/menuPersonagens/botaoEscolherPersonagem.png",
+                "/Jogador/Jogador2/rotations/south.png");
 
-        RadioButton rbFeminino = new RadioButton("Feminino");
-        rbFeminino.setToggleGroup(grupoSprite);
-        rbFeminino.setUserData("spriteFeminino.png");
+        btnMasculino.setOnAction(event -> {
+            spriteEscolhido = "spriteMasculino.png";
+        });
 
-        HBox radioContainer = new HBox(30, rbMasculino, rbFeminino);
-        radioContainer.setAlignment(Pos.CENTER);
+        btnFeminino.setOnAction(event -> {
+            spriteEscolhido = "spriteFeminino.png";
+        });
 
+        HBox botoesAparencia = new HBox(30, btnMasculino, btnFeminino);
+        botoesAparencia.setAlignment(Pos.CENTER);
 
+        HBox botoesContainer = criarBotoes(window, campoNome);
+
+        formContainer.getChildren().addAll(
+                lblTitulo,
+                campoNome,
+                lblAparencia,
+                botoesAparencia,
+                botoesContainer
+        );
+
+        root.getChildren().addAll(backgroundView, formContainer);
+
+        window.setScene(new Scene(root, 1920, 1080));
+    }
+
+    private HBox criarBotoes(Stage window, TextField campoNome) {
         Button btnCriar = new Button("Confirmar e Criar");
-        btnCriar.setPrefSize(200, 50);
+        btnCriar.setPrefSize(350, 100);
+        btnCriar.setFont(FonteUtil.pixel(24));
+        btnCriar.setBackground(Background.EMPTY);
 
         Button btnCancelar = new Button("Cancelar");
-        btnCancelar.setPrefSize(200, 50);
-
-        HBox botoesContainer = new HBox(20, btnCriar, btnCancelar);
-        botoesContainer.setAlignment(Pos.CENTER);
-
+        btnCancelar.setPrefSize(350, 100);
+        btnCancelar.setFont(FonteUtil.pixel(24));
+        btnCancelar.setBackground(Background.EMPTY);
 
         btnCriar.setOnAction(event -> {
             String nome = campoNome.getText();
@@ -64,15 +103,28 @@ public class MenuCriarPersonagem {
                 return;
             }
 
-            String spriteEscolhido = grupoSprite.getSelectedToggle().getUserData().toString();
+            if (spriteEscolhido == null) {
+                Alert alerta = new Alert(Alert.AlertType.WARNING);
+                alerta.setTitle("Personagem");
+                alerta.setHeaderText(null);
+                alerta.setContentText("Selecione uma aparência antes de continuar.");
+                alerta.showAndWait();
+                return;
+            }
 
-            // Build the character
+            personagemController.criarESalvarPersonagem(
+                    nome,
+                    40.0,
+                    40.0,
+                    40.0,
+                    40.0,
+                    spriteEscolhido,
+                    null,
+                    0,
+                    0,
+                    slotId
+            );
 
-
-            // Send to Controller to save
-            personagemController.criarESalvarPersonagem(nome, 40.0, 40.0, 40.0, 40.0, spriteEscolhido, null, 0,0,slotId);
-
-            // Go back to the selection screen
             MenuPersonagens menu = new MenuPersonagens(personagemController);
             menu.exibir(window);
         });
@@ -82,9 +134,61 @@ public class MenuCriarPersonagem {
             menu.exibir(window);
         });
 
-        formContainer.getChildren().addAll(lblTitulo, campoNome, lblAparencia, radioContainer, botoesContainer);
-        root.getChildren().add(formContainer);
+        HBox botoesContainer = new HBox(20, btnCriar, btnCancelar);
+        botoesContainer.setAlignment(Pos.CENTER);
 
-        window.setScene(new Scene(root, 1920, 1080));
+        return botoesContainer;
+    }
+
+    private Button criarBotaoPersonagem(
+            String caminhoMoldura,
+            String caminhoSprite
+    ) {
+
+        ImageView moldura = new ImageView(
+                new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream(caminhoMoldura)
+                        )
+                )
+        );
+
+        moldura.setFitWidth(300);
+        moldura.setFitHeight(300);
+        moldura.setPreserveRatio(true);
+
+        ImageView sprite = new ImageView(
+                new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream(caminhoSprite)
+                        )
+                )
+        );
+
+        sprite.setFitWidth(200);
+        sprite.setFitHeight(200);
+        sprite.setPreserveRatio(true);
+
+        StackPane conteudo = new StackPane();
+        StackPane.setAlignment(sprite, Pos.CENTER);
+
+        sprite.setTranslateX(15);
+
+        conteudo.getChildren().addAll(
+                moldura,
+                sprite
+        );
+
+        Button botao = new Button();
+
+        botao.setGraphic(conteudo);
+        botao.setFont(FonteUtil.pixel(24));
+        botao.setBackground(Background.EMPTY);
+        botao.setBorder(Border.EMPTY);
+
+        botao.setPrefSize(300, 300);
+        botao.setFocusTraversable(false);
+
+        return botao;
     }
 }
