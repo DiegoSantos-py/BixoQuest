@@ -2,34 +2,41 @@ package view.menu;
 
 import controller.PersonagemController;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import model.Personagem;
-import view.menu.util.FonteUtil;
+import view.util.FonteUtil;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class MenuPersonagens {
+public class MenuPersonagens extends StackPane {
 
     private final PersonagemController personagemController;
+    private final Runnable aoVoltar;
+    private final Runnable aoCarregarPersonagem;
+    private final AcaoSlot aoCriarPersonagem;
 
-    public MenuPersonagens(PersonagemController personagemController) {
+    public MenuPersonagens(
+            PersonagemController personagemController,
+            Runnable aoVoltar,
+            Runnable aoCarregarPersonagem,
+            AcaoSlot aoCriarPersonagem
+    ) {
         this.personagemController = personagemController;
+        this.aoVoltar = aoVoltar;
+        this.aoCarregarPersonagem = aoCarregarPersonagem;
+        this.aoCriarPersonagem = aoCriarPersonagem;
+
+        montarTela();
     }
 
-    public void exibir(Stage window) {
-
+    private void montarTela() {
         Map<Integer, Personagem> personagens =
                 personagemController.carregarPersonagens();
-
-        StackPane root = new StackPane();
 
         Image bgImage = new Image(
                 Objects.requireNonNull(
@@ -44,30 +51,24 @@ public class MenuPersonagens {
         backgroundView.setFitHeight(1080);
         backgroundView.setPreserveRatio(false);
 
-        VBox menuItems = criarBotoesSlots(personagens, window);
+        VBox menuItems = criarBotoesSlots(personagens);
 
-        root.getChildren().addAll(backgroundView, menuItems);
-
-        Scene characterScene = new Scene(root, 1920, 1080);
-
-        window.setScene(characterScene);
+        getChildren().addAll(backgroundView, menuItems);
     }
 
-    private VBox criarBotoesSlots(Map<Integer, Personagem> personagens,
-                                  Stage window) {
-
+    private VBox criarBotoesSlots(Map<Integer, Personagem> personagens) {
         VBox menuItems = new VBox(50);
         menuItems.setAlignment(Pos.CENTER);
         menuItems.setTranslateY(70);
 
         for (int slotId = 1; slotId <= 3; slotId++) {
             Personagem personagem = personagens.get(slotId);
-            Button saveBotao = criarBotaoSlot(personagem, slotId, window);
+            Button saveBotao = criarBotaoSlot(personagem, slotId);
 
             menuItems.getChildren().add(saveBotao);
         }
 
-        Button btnVoltar = criarBotaoVoltar(window);
+        Button btnVoltar = criarBotaoVoltar();
         VBox.setMargin(btnVoltar, new javafx.geometry.Insets(60, 0, 0, 0));
 
         menuItems.getChildren().add(btnVoltar);
@@ -75,56 +76,38 @@ public class MenuPersonagens {
         return menuItems;
     }
 
-    private Button criarBotaoSlot(Personagem personagem,
-                                  int slotId,
-                                  Stage window) {
-
+    private Button criarBotaoSlot(Personagem personagem, int slotId) {
         Button saveBotao = new Button();
-        estilizarBotao(saveBotao, "/menuPersonagens/background_botao.png" );
+        estilizarBotao(saveBotao, "/menuPersonagens/background_botao.png");
 
         if (personagem != null) {
             saveBotao.setText(
                     "Slot " + slotId + " - Carregar: " + personagem.getNome()
             );
 
-            saveBotao.setOnAction(event -> {
-                // todo: fazer o botão de personagem de fato começar o jogo
-                System.out.println(personagem);
-            });
+            saveBotao.setOnAction(event -> aoCarregarPersonagem.run());
 
         } else {
             saveBotao.setText(
                     "Slot " + slotId + " - Criar Personagem"
             );
 
-            saveBotao.setOnAction(event -> {
-                MenuCriarPersonagem menuCriarPersonagem =
-                        new MenuCriarPersonagem(
-                                personagemController,
-                                slotId
-                        );
-
-                menuCriarPersonagem.exibir(window);
-            });
+            saveBotao.setOnAction(event -> aoCriarPersonagem.executar(slotId));
         }
 
         return saveBotao;
     }
 
-    private Button criarBotaoVoltar(Stage window) {
-
+    private Button criarBotaoVoltar() {
         Button btnVoltar = new Button("Voltar");
-        estilizarBotao(btnVoltar, "/menuPersonagens/background_botao.png" );
-        btnVoltar.setOnAction(event -> {
-            Menu mainMenu = new Menu(personagemController);
-            mainMenu.exibir(window);
-        });
+        estilizarBotao(btnVoltar, "/menuPersonagens/background_botao.png");
+
+        btnVoltar.setOnAction(event -> aoVoltar.run());
 
         return btnVoltar;
     }
 
     private void estilizarBotao(Button botao, String caminhoImagem) {
-
         Image imagem = new Image(
                 Objects.requireNonNull(
                         getClass().getResourceAsStream(caminhoImagem)
@@ -132,6 +115,7 @@ public class MenuPersonagens {
         );
 
         botao.setPrefSize(888, 135);
+
         BackgroundImage backgroundImage = new BackgroundImage(
                 imagem,
                 BackgroundRepeat.NO_REPEAT,
@@ -148,5 +132,11 @@ public class MenuPersonagens {
         );
 
         botao.setBorder(Border.EMPTY);
+        botao.setFocusTraversable(false);
+    }
+
+    @FunctionalInterface
+    public interface AcaoSlot {
+        void executar(int slotId);
     }
 }

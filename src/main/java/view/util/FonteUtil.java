@@ -1,4 +1,4 @@
-package view.menu.util;
+package view.util;
 
 import javafx.scene.text.Font;
 

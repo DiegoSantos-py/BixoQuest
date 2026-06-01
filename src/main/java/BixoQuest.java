@@ -3,18 +3,10 @@ import repository.EventoRepository;
 import repository.PersonagemRepository;
 import service.EventoService;
 import service.PersonagemService;
-import view.menu.*;
+import view.controleTelas.GerenciadorTelas;
 
 import controller.PersonagemController;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.Objects;
 
 public class BixoQuest extends Application {
 
@@ -33,13 +25,15 @@ public class BixoQuest extends Application {
             System.out.println("Erro ao carregar arquivos, dados corrompidos?");
         }
 
-//        Menu mainMenu = new Menu(personagemController);
-//        mainMenu.exibir(primaryStage);
-        InicioView inicio = new InicioView(personagemController);
-        inicio.exibir(primaryStage);
 
         primaryStage.setTitle("BixoQuest");
         primaryStage.setFullScreen(true);
+
+        GerenciadorTelas telas =
+                new GerenciadorTelas(primaryStage, personagemController);
+
+        telas.mostrarInicio();
+
         primaryStage.show();
     }
 

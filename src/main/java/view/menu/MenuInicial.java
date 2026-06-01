@@ -3,7 +3,6 @@ package view.menu;
 import controller.PersonagemController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,25 +11,32 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import view.menu.util.FonteUtil;
+import view.util.FonteUtil;
 
 import java.util.Objects;
 
-public class Menu {
+public class MenuInicial extends StackPane {
 
     private final PersonagemController personagemController;
+    private final Runnable aoIniciarJogo;
+    private final Runnable aoAbrirConfiguracoes;
+    private final Runnable aoSair;
 
-    // Constructor Injection
-    public Menu(PersonagemController personagemController) {
+    public MenuInicial(
+            PersonagemController personagemController,
+            Runnable aoIniciarJogo,
+            Runnable aoAbrirConfiguracoes,
+            Runnable aoSair
+    ) {
         this.personagemController = personagemController;
+        this.aoIniciarJogo = aoIniciarJogo;
+        this.aoAbrirConfiguracoes = aoAbrirConfiguracoes;
+        this.aoSair = aoSair;
+
+        montarTela();
     }
 
-    public void exibir(Stage primaryStage) {
-
-        StackPane root = new StackPane();
-
+    private void montarTela() {
         Image bgImage = new Image(
                 Objects.requireNonNull(
                         getClass().getResourceAsStream("/menuPrincipal/BackgroundMenu.png")
@@ -58,23 +64,16 @@ public class Menu {
 
         VBox.setMargin(logoView, new Insets(0, 0, 50, 0));
 
-        VBox botoes = criarBotoes(primaryStage);
+        VBox botoes = criarBotoes();
 
         menuItems.getChildren().addAll(logoView, botoes);
 
-        root.getChildren().addAll(backgroundView, menuItems);
-
-        Scene scene = new Scene(root, 1920, 1080);
+        getChildren().addAll(backgroundView, menuItems);
 
         StackPane.setMargin(menuItems, new Insets(50, 0, 0, 0));
-        primaryStage.setTitle("BixoQuest");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
     }
 
-    private VBox criarBotoes(Stage primaryStage) {
-
+    private VBox criarBotoes() {
         VBox botoes = new VBox(20);
         botoes.setAlignment(Pos.CENTER);
 
@@ -86,14 +85,9 @@ public class Menu {
         estilizarBotao(btnConfig);
         estilizarBotao(btnExit);
 
-        btnExit.setOnAction(event -> System.exit(0));
-
-        btnStart.setOnAction(event -> {
-            MenuPersonagens menuPersonagens =
-                    new MenuPersonagens(personagemController);
-
-            menuPersonagens.exibir(primaryStage);
-        });
+        btnStart.setOnAction(event -> aoIniciarJogo.run());
+        btnConfig.setOnAction(event -> aoAbrirConfiguracoes.run());
+        btnExit.setOnAction(event -> aoSair.run());
 
         botoes.getChildren().addAll(
                 btnStart,

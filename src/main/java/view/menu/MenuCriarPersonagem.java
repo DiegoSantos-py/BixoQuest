@@ -2,36 +2,44 @@ package view.menu;
 
 import controller.PersonagemController;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import view.menu.util.FonteUtil;
+import view.util.FonteUtil;
 
 import java.util.Objects;
 
-public class MenuCriarPersonagem {
+public class MenuCriarPersonagem extends StackPane {
 
     private final PersonagemController personagemController;
     private final int slotId;
+    private final Runnable aoConfirmar;
+    private final Runnable aoCancelar;
 
     private String spriteEscolhido = null;
 
-    public MenuCriarPersonagem(PersonagemController personagemController, int slotId) {
+    public MenuCriarPersonagem(
+            PersonagemController personagemController,
+            int slotId,
+            Runnable aoConfirmar,
+            Runnable aoCancelar
+    ) {
         this.personagemController = personagemController;
         this.slotId = slotId;
+        this.aoConfirmar = aoConfirmar;
+        this.aoCancelar = aoCancelar;
+
+        montarTela();
     }
 
-    public void exibir(Stage window) {
-        StackPane root = new StackPane();
-
+    private void montarTela() {
         VBox formContainer = new VBox(20);
         formContainer.setAlignment(Pos.CENTER);
 
         Image backgroundImage = new Image(
-                Objects.requireNonNull(getClass().getResourceAsStream("/assets/Background.png")
+                Objects.requireNonNull(
+                        getClass().getResourceAsStream("/assets/Background.png")
                 )
         );
 
@@ -52,11 +60,13 @@ public class MenuCriarPersonagem {
 
         Button btnMasculino = criarBotaoPersonagem(
                 "/menuPersonagens/botaoEscolherPersonagem.png",
-                "/Jogador/Jogador1/rotations/south.png");
+                "/Jogador/Jogador1/rotations/south.png"
+        );
 
         Button btnFeminino = criarBotaoPersonagem(
                 "/menuPersonagens/botaoEscolherPersonagem.png",
-                "/Jogador/Jogador2/rotations/south.png");
+                "/Jogador/Jogador2/rotations/south.png"
+        );
 
         btnMasculino.setOnAction(event -> {
             spriteEscolhido = "spriteMasculino.png";
@@ -69,7 +79,7 @@ public class MenuCriarPersonagem {
         HBox botoesAparencia = new HBox(30, btnMasculino, btnFeminino);
         botoesAparencia.setAlignment(Pos.CENTER);
 
-        HBox botoesContainer = criarBotoes(window, campoNome);
+        HBox botoesContainer = criarBotoes(campoNome);
 
         formContainer.getChildren().addAll(
                 lblTitulo,
@@ -79,12 +89,10 @@ public class MenuCriarPersonagem {
                 botoesContainer
         );
 
-        root.getChildren().addAll(backgroundView, formContainer);
-
-        window.setScene(new Scene(root, 1920, 1080));
+        getChildren().addAll(backgroundView, formContainer);
     }
 
-    private HBox criarBotoes(Stage window, TextField campoNome) {
+    private HBox criarBotoes(TextField campoNome) {
         Button btnCriar = new Button("Confirmar e Criar");
         btnCriar.setPrefSize(350, 100);
         btnCriar.setFont(FonteUtil.pixel(24));
@@ -125,14 +133,10 @@ public class MenuCriarPersonagem {
                     slotId
             );
 
-            MenuPersonagens menu = new MenuPersonagens(personagemController);
-            menu.exibir(window);
+            aoConfirmar.run();
         });
 
-        btnCancelar.setOnAction(event -> {
-            MenuPersonagens menu = new MenuPersonagens(personagemController);
-            menu.exibir(window);
-        });
+        btnCancelar.setOnAction(event -> aoCancelar.run());
 
         HBox botoesContainer = new HBox(20, btnCriar, btnCancelar);
         botoesContainer.setAlignment(Pos.CENTER);
@@ -144,7 +148,6 @@ public class MenuCriarPersonagem {
             String caminhoMoldura,
             String caminhoSprite
     ) {
-
         ImageView moldura = new ImageView(
                 new Image(
                         Objects.requireNonNull(
