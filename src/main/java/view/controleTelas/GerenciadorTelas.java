@@ -1,13 +1,17 @@
 package view.controleTelas;
 
 import controller.PersonagemController;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import view.controleTelas.CriadorCenas;
+
 
 public class GerenciadorTelas {
 
     private final Stage stage;
     private final CriadorCenas criadorCenas;
+    private Scene scene;
 
     public GerenciadorTelas(
             Stage stage,
@@ -17,37 +21,42 @@ public class GerenciadorTelas {
         this.criadorCenas = new CriadorCenas(this, personagemController);
     }
 
-    //TODO: CRIAR TODAS AS TELAS E GUARDAR EM CACHE PARA EVITAR RECRIAÇÃO TODA VEZ
+    private void trocarRoot(Parent root) {
+        if (scene == null) {
+            scene = new Scene(root, 1920, 1080);
+            stage.setScene(scene);
+        } else {
+            scene.setRoot(root);
+        }
+
+        stage.setFullScreen(true);
+    }
+
     public void mostrarInicio() {
-        trocarCena(criadorCenas.criarInicio());
+        trocarRoot(criadorCenas.criarInicio());
     }
 
     public void mostrarMenuInicial() {
-        trocarCena(criadorCenas.criarMenuInicial());
+        trocarRoot(criadorCenas.criarMenuInicial());
     }
 
     public void mostrarMenuPersonagens() {
-        trocarCena(criadorCenas.criarMenuPersonagens());
+        trocarRoot(criadorCenas.criarMenuPersonagens());
     }
 
     public void mostrarCriacaoPersonagem(int slotId) {
-        trocarCena(criadorCenas.criarCriacaoPersonagem(slotId));
+        trocarRoot(criadorCenas.criarCriacaoPersonagem(slotId));
     }
 
     public void mostrarAnimacaoInicio() {
-        trocarCena(criadorCenas.criarAnimacaoInicio());
+        trocarRoot(criadorCenas.criarAnimacaoInicio());
     }
 
     public void mostrarTelaJogo() {
-        // stage.setScene(criadorCenas.criarTelaJogo());
+        // trocarRoot(criadorCenas.criarTelaJogo());
     }
 
-    public void mostrarConfiguracoes() {
-        // stage.setScene(criadorCenas.criarConfiguracoes());
-    }
+    public void mostrarConfiguracoes(){
 
-    private void trocarCena(Scene scene) {
-        stage.setScene(scene);
-        stage.setFullScreen(true);
     }
 }
