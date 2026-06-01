@@ -33,8 +33,10 @@ public class BixoQuest extends Application {
             System.out.println("Erro ao carregar arquivos, dados corrompidos?");
         }
 
-        Menu mainMenu = new Menu(personagemController);
-        mainMenu.exibir(primaryStage);
+//        Menu mainMenu = new Menu(personagemController);
+//        mainMenu.exibir(primaryStage);
+        InicioView inicio = new InicioView(personagemController);
+        inicio.exibir(primaryStage);
 
         primaryStage.setTitle("BixoQuest");
         primaryStage.setFullScreen(true);
