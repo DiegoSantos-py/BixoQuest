@@ -2,11 +2,13 @@ package view.controleTelas;
 
 import controller.PersonagemController;
 import javafx.scene.Parent;
-import view.InicioView;
+import view.InicioDiaView;
+import view.InicioJogoView;
 import view.animacao.AnimacaoInicioView;
 import view.menu.MenuCriarPersonagem;
 import view.menu.MenuInicial;
 import view.menu.MenuPersonagens;
+import view.CenaJogoView;
 
 public class CriadorCenas {
 
@@ -50,15 +52,26 @@ public class CriadorCenas {
 
     public Parent criarAnimacaoInicio() {
         return new AnimacaoInicioView(
-                1960,
+                1920,
                 1080,
-                () -> gerenciador.mostrarMenuInicial()
+                () -> gerenciador.mostrarInicioDia()
         );
     }
 
     public Parent criarInicio() {
-        return new InicioView(
+        return new InicioJogoView(
                 () -> gerenciador.mostrarMenuInicial()
+        );
+    }
+
+    public Parent criarCenaJogo() {
+        CenaJogoView cenaJogoView = new CenaJogoView(1920, 1080);
+        return cenaJogoView.getRoot();
+    }
+
+    public Parent criarInicioDia() {
+        return new InicioDiaView(
+                () -> gerenciador.mostrarTelaJogo()
         );
     }
 

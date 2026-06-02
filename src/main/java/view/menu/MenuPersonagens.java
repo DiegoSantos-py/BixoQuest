@@ -64,12 +64,14 @@ public class MenuPersonagens extends StackPane {
         for (int slotId = 1; slotId <= 3; slotId++) {
             Personagem personagem = personagens.get(slotId);
             Button saveBotao = criarBotaoSlot(personagem, slotId);
-
+            if(slotId == 1) {
+                VBox.setMargin(saveBotao, new javafx.geometry.Insets(60, 0, 0, 0));
+            }
             menuItems.getChildren().add(saveBotao);
         }
 
         Button btnVoltar = criarBotaoVoltar();
-        VBox.setMargin(btnVoltar, new javafx.geometry.Insets(60, 0, 0, 0));
+        VBox.setMargin(btnVoltar, new javafx.geometry.Insets(30, 0, 0, 0));
 
         menuItems.getChildren().add(btnVoltar);
 

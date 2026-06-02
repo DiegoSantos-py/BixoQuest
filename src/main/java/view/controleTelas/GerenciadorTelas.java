@@ -53,9 +53,12 @@ public class GerenciadorTelas {
     }
 
     public void mostrarTelaJogo() {
-        // trocarRoot(criadorCenas.criarTelaJogo());
+        trocarRoot(criadorCenas.criarCenaJogo());
     }
 
+    public void mostrarInicioDia(){
+        trocarRoot(criadorCenas.criarInicioDia());
+    }
     public void mostrarConfiguracoes(){
 
     }

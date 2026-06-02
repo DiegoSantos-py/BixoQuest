@@ -63,6 +63,7 @@ public class AnimacaoInicioView extends StackPane {
         int proximoIndice = indiceAtual + 1;
 
         if (proximoIndice >= imagens.size()) {
+            System.out.println("Animação finalizada");
             aoFinalizar.run();
             return;
         }

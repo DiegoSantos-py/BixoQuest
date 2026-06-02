@@ -12,14 +12,14 @@ import view.util.FonteUtil;
 
 import java.util.Objects;
 
-public class InicioView extends StackPane {
+public class InicioJogoView extends StackPane {
 
     private final Runnable aoMoverMouse;
 
     private boolean primeiroEvento = true;
     private boolean jaMudouTela = false;
 
-    public InicioView(Runnable aoMoverMouse) {
+    public InicioJogoView(Runnable aoMoverMouse) {
         this.aoMoverMouse = aoMoverMouse;
 
         montarTela();
