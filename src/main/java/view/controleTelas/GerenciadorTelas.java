@@ -1,11 +1,11 @@
 package view.controleTelas;
 
+import controller.MapaController;
+import controller.NpcController;
 import controller.PersonagemController;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import view.controleTelas.CriadorCenas;
-
 
 public class GerenciadorTelas {
 
@@ -15,10 +15,17 @@ public class GerenciadorTelas {
 
     public GerenciadorTelas(
             Stage stage,
-            PersonagemController personagemController
+            PersonagemController personagemController,
+            MapaController mapaController,
+            NpcController npcController
     ) {
         this.stage = stage;
-        this.criadorCenas = new CriadorCenas(this, personagemController);
+        this.criadorCenas = new CriadorCenas(
+                this,
+                personagemController,
+                mapaController,
+                npcController
+        );
     }
 
     private void trocarRoot(Parent root) {
@@ -56,10 +63,11 @@ public class GerenciadorTelas {
         trocarRoot(criadorCenas.criarCenaJogo());
     }
 
-    public void mostrarInicioDia(){
+    public void mostrarInicioDia() {
         trocarRoot(criadorCenas.criarInicioDia());
     }
-    public void mostrarConfiguracoes(){
+
+    public void mostrarConfiguracoes() {
 
     }
 }
