@@ -23,6 +23,8 @@ public class CriadorCenas {
     private final NpcController npcController;
     private final DiretorCena diretorCena;
 
+    private CenaJogo cenaAtual;
+
     public CriadorCenas(
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
@@ -73,20 +75,69 @@ public class CriadorCenas {
 
     public Parent criarInicio() {
         return new InicioJogoView(
-                () -> gerenciador.mostrarMenuInicial()
+                () -> gerenciador.mostrarTelaJogo()
+                //() -> gerenciador.mostrarMenuInicial()
         );
     }
 
     public Parent criarCenaJogo() {
+        pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
         diretorCena.construirCenaPontoOnibus(construtor, mapaController, npcController);
-        CenaJogo cenaJogo = construtor.getResult();
-        return cenaJogo.buildPane();
+        construtor.setOnBordaAtingida(borda -> {
+            switch (borda) {
+//                case CenaJogo.BORDA_NORTE -> gerenciador.mostrarCenaAcima();
+//                case CenaJogo.BORDA_SUL   -> gerenciador.mostrarCenaAbaixo();
+                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaJogoEntrada();
+//                case CenaJogo.BORDA_OESTE -> gerenciador.mostrarCenaEsquerda();
+            }
+        });
+        cenaAtual  = construtor.getResult();
+        return cenaAtual.buildPane();
+    }
+
+    public Parent criarCenaEntradaModulo() {
+        pararCenaAtual();
+        ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
+        diretorCena.construirCenaEntradaModulo(construtor, mapaController, npcController);
+        construtor.setOnBordaAtingida(borda -> {
+            switch (borda) {
+                //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
+                //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
+                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaCantina();
+                //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
+            }
+        });
+        cenaAtual  = construtor.getResult();
+        return cenaAtual.buildPane();
+    }
+
+    public Parent criarCenaCantina() {
+        pararCenaAtual();
+        ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
+        diretorCena.construirCenaCantina(construtor, mapaController, npcController);
+        construtor.setOnBordaAtingida(borda -> {
+            switch (borda) {
+                //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
+                //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
+                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaJogo();
+                //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
+            }
+        });
+        cenaAtual  = construtor.getResult();
+        return cenaAtual.buildPane();
     }
 
     public Parent criarInicioDia() {
         return new InicioDiaView(
                 () -> gerenciador.mostrarTelaJogo()
         );
+    }
+
+    private void pararCenaAtual() {
+        if (cenaAtual != null) {
+            cenaAtual.parar();
+            cenaAtual = null;
+        }
     }
 }

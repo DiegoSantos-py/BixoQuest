@@ -34,6 +34,7 @@ public class GerenciadorTelas {
             stage.setScene(scene);
         } else {
             scene.setRoot(root);
+            root.requestFocus();
         }
 
         stage.setFullScreen(true);
@@ -62,6 +63,10 @@ public class GerenciadorTelas {
     public void mostrarTelaJogo() {
         trocarRoot(criadorCenas.criarCenaJogo());
     }
+
+    public void mostrarTelaJogoEntrada(){trocarRoot(criadorCenas.criarCenaEntradaModulo());}
+
+    public void mostrarTelaCantina(){trocarRoot(criadorCenas.criarCenaCantina());}
 
     public void mostrarInicioDia() {
         trocarRoot(criadorCenas.criarInicioDia());

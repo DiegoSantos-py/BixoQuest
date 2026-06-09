@@ -2,6 +2,7 @@ package view.construtores;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import view.cena.CenaJogo;
 
 import java.util.ArrayList;
@@ -16,10 +17,16 @@ import java.util.function.Consumer;
 public class ConstrutorCenaJogo implements Construtor {
 
     private ImageView background;
-    private final List<ImageView> elements = new ArrayList<>();
-    private final List<ImageView> npcs     = new ArrayList<>();
-    private final List<CenaJogo.ZoneEntry> zones = new ArrayList<>();
+    private final List<ImageView> elements        = new ArrayList<>();
+    private final List<Rectangle> elementHitboxes = new ArrayList<>();
+    private final List<ImageView> npcs            = new ArrayList<>();
+    private final List<Rectangle> npcHitboxes     = new ArrayList<>();
+    private final List<CenaJogo.ZoneEntry> zones  = new ArrayList<>();
     private ImageView playerView;
+    private Rectangle playerHitbox;
+    private double playerHitboxOffsetX;
+    private double playerHitboxOffsetY;
+    private Consumer<String> onBordaAtingida;
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -27,13 +34,21 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void addElement(String imagePath, double largura, double x, double y) {
+    public void addElement(String imagePath, double largura, double x, double y,
+                           double hitboxOffsetX, double hitboxOffsetY,
+                           double hitboxLargura, double hitboxAltura) {
         elements.add(carregarImagem(imagePath, largura, x, y));
+        elementHitboxes.add(criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
+                hitboxLargura, hitboxAltura));
     }
 
     @Override
-    public void addNPC(String imagePath, double largura, double x, double y) {
+    public void addNPC(String imagePath, double largura, double x, double y,
+                       double hitboxOffsetX, double hitboxOffsetY,
+                       double hitboxLargura, double hitboxAltura) {
         npcs.add(carregarImagem(imagePath, largura, x, y));
+        npcHitboxes.add(criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
+                hitboxLargura, hitboxAltura));
     }
 
     @Override
@@ -48,16 +63,33 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void setPlayer(String imagePath, double largura, double x, double y) {
-        playerView = carregarImagem(imagePath, largura, x, y);
+    public void setPlayer(String imagePath, double largura, double x, double y,
+                          double hitboxOffsetX, double hitboxOffsetY,
+                          double hitboxLargura, double hitboxAltura) {
+        playerView          = carregarImagem(imagePath, largura, x, y);
+        playerHitboxOffsetX = hitboxOffsetX;
+        playerHitboxOffsetY = hitboxOffsetY;
+        playerHitbox        = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
+                hitboxLargura, hitboxAltura);
+    }
+
+    @Override
+    public void setOnBordaAtingida(Consumer<String> onBordaAtingida) {
+        this.onBordaAtingida = onBordaAtingida;
     }
 
     @Override
     public CenaJogo getResult() {
-        return new CenaJogo(background, elements, npcs, zones, playerView);
+        return new CenaJogo(background,
+                elements, elementHitboxes,
+                npcs, npcHitboxes,
+                zones,
+                playerView, playerHitbox,
+                playerHitboxOffsetX, playerHitboxOffsetY,
+                onBordaAtingida);
     }
 
-    // ── Carregamento de imagens ───────────────────────────────────────────────
+    // ── Utilitários ───────────────────────────────────────────────────────────
 
     private ImageView carregarBackground(String caminho, double largura, double altura) {
         var stream = getClass().getResourceAsStream(caminho);
@@ -84,5 +116,11 @@ public class ConstrutorCenaJogo implements Construtor {
         iv.setLayoutX(x);
         iv.setLayoutY(y);
         return iv;
+    }
+
+    private Rectangle criarHitbox(double x, double y, double largura, double altura) {
+        Rectangle hitbox = new Rectangle(x, y, largura, altura);
+        hitbox.setVisible(true);
+        return hitbox;
     }
 }
