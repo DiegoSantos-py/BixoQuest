@@ -45,6 +45,7 @@ public class PersonagemController extends BaseController {
             Personagem p = service.criarESalvarPersonagem(nome, energia, motivacao,
                     saude, dinheiro, spriteDir, localInicial, posX, posY, personagemId);
             exibirSucesso("Personagem criado com sucesso.");
+
             return Optional.of(p);
         } catch (PersonagemInvalidoException e) {
             tratarInvalido(e);

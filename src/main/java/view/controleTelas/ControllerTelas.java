@@ -4,7 +4,6 @@ import controller.MapaController;
 import controller.NpcController;
 import controller.PersonagemController;
 import javafx.scene.Parent;
-import view.InicioDiaView;
 import view.InicioJogoView;
 import view.animacao.AnimacaoInicioView;
 import view.construtores.ConstrutorCenaJogo;
@@ -15,7 +14,7 @@ import view.menu.MenuPersonagens;
 import view.cena.CenaJogo;
 
 // TODO: refatorar essa classe. Tá muito acoplada
-public class CriadorCenas {
+public class ControllerTelas {
 
     private final GerenciadorTelas gerenciador;
     private final PersonagemController personagemController;
@@ -25,7 +24,7 @@ public class CriadorCenas {
 
     private CenaJogo cenaAtual;
 
-    public CriadorCenas(
+    public ControllerTelas(
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
             MapaController mapaController,
@@ -51,7 +50,7 @@ public class CriadorCenas {
         return new MenuPersonagens(
                 personagemController,
                 () -> gerenciador.mostrarMenuInicial(),
-                () -> gerenciador.mostrarAnimacaoInicio(),
+                slotId -> gerenciador.mostrarAnimacaoInicio(slotId),
                 slotId -> gerenciador.mostrarCriacaoPersonagem(slotId)
         );
     }
@@ -60,23 +59,23 @@ public class CriadorCenas {
         return new MenuCriarPersonagem(
                 personagemController,
                 slotId,
-                () -> gerenciador.mostrarAnimacaoInicio(),
+                sessao -> gerenciador.mostrarAnimacaoInicio(sessao),
                 () -> gerenciador.mostrarMenuPersonagens()
         );
     }
 
-    public Parent criarAnimacaoInicio() {
+    public Parent criarAnimacaoInicio(int sessaoAtual) {
         return new AnimacaoInicioView(
                 1920,
                 1080,
-                () -> gerenciador.mostrarInicioDia()
+                () -> gerenciador.mostrarTelaJogo()
         );
     }
 
     public Parent criarInicio() {
         return new InicioJogoView(
-                () -> gerenciador.mostrarTelaJogo()
-                //() -> gerenciador.mostrarMenuInicial()
+                //() -> gerenciador.mostrarTelaJogo()
+                () -> gerenciador.mostrarMenuInicial()
         );
     }
 
@@ -126,12 +125,6 @@ public class CriadorCenas {
         });
         cenaAtual  = construtor.getResult();
         return cenaAtual.buildPane();
-    }
-
-    public Parent criarInicioDia() {
-        return new InicioDiaView(
-                () -> gerenciador.mostrarTelaJogo()
-        );
     }
 
     private void pararCenaAtual() {

@@ -14,7 +14,7 @@ public class MenuCriarPersonagem extends StackPane {
 
     private final PersonagemController personagemController;
     private final int slotId;
-    private final Runnable aoConfirmar;
+    private final AcaoSlot aoConfirmar;
     private final Runnable aoCancelar;
 
     private String spriteEscolhido = null;
@@ -22,7 +22,7 @@ public class MenuCriarPersonagem extends StackPane {
     public MenuCriarPersonagem(
             PersonagemController personagemController,
             int slotId,
-            Runnable aoConfirmar,
+            AcaoSlot aoConfirmar,
             Runnable aoCancelar
     ) {
         this.personagemController = personagemController;
@@ -120,6 +120,8 @@ public class MenuCriarPersonagem extends StackPane {
                 return;
             }
 
+
+            //TODO: adicionar alerta caso criar e/ou salvar de errado
             personagemController.criarESalvarPersonagem(
                     nome,
                     40.0,
@@ -133,7 +135,7 @@ public class MenuCriarPersonagem extends StackPane {
                     slotId
             );
 
-            aoConfirmar.run();
+            aoConfirmar.executar(this.slotId);
         });
 
         btnCancelar.setOnAction(event -> aoCancelar.run());
@@ -193,5 +195,10 @@ public class MenuCriarPersonagem extends StackPane {
         botao.setFocusTraversable(false);
 
         return botao;
+    }
+
+    @FunctionalInterface
+    public interface AcaoSlot {
+        void executar(int slotId);
     }
 }

@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class GerenciadorTelas {
 
     private final Stage stage;
-    private final CriadorCenas criadorCenas;
+    private final ControllerTelas controllerTelas;
     private Scene scene;
 
     public GerenciadorTelas(
@@ -20,7 +20,7 @@ public class GerenciadorTelas {
             NpcController npcController
     ) {
         this.stage = stage;
-        this.criadorCenas = new CriadorCenas(
+        this.controllerTelas = new ControllerTelas(
                 this,
                 personagemController,
                 mapaController,
@@ -41,36 +41,32 @@ public class GerenciadorTelas {
     }
 
     public void mostrarInicio() {
-        trocarRoot(criadorCenas.criarInicio());
+        trocarRoot(controllerTelas.criarInicio());
     }
 
     public void mostrarMenuInicial() {
-        trocarRoot(criadorCenas.criarMenuInicial());
+        trocarRoot(controllerTelas.criarMenuInicial());
     }
 
     public void mostrarMenuPersonagens() {
-        trocarRoot(criadorCenas.criarMenuPersonagens());
+        trocarRoot(controllerTelas.criarMenuPersonagens());
     }
 
     public void mostrarCriacaoPersonagem(int slotId) {
-        trocarRoot(criadorCenas.criarCriacaoPersonagem(slotId));
+        trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));
     }
 
-    public void mostrarAnimacaoInicio() {
-        trocarRoot(criadorCenas.criarAnimacaoInicio());
+    public void mostrarAnimacaoInicio(int sessaoAtual) {
+        trocarRoot(controllerTelas.criarAnimacaoInicio(sessaoAtual));
     }
 
     public void mostrarTelaJogo() {
-        trocarRoot(criadorCenas.criarCenaJogo());
+        trocarRoot(controllerTelas.criarCenaJogo());
     }
 
-    public void mostrarTelaJogoEntrada(){trocarRoot(criadorCenas.criarCenaEntradaModulo());}
+    public void mostrarTelaJogoEntrada(){trocarRoot(controllerTelas.criarCenaEntradaModulo());}
 
-    public void mostrarTelaCantina(){trocarRoot(criadorCenas.criarCenaCantina());}
-
-    public void mostrarInicioDia() {
-        trocarRoot(criadorCenas.criarInicioDia());
-    }
+    public void mostrarTelaCantina(){trocarRoot(controllerTelas.criarCenaCantina());}
 
     public void mostrarConfiguracoes() {
 

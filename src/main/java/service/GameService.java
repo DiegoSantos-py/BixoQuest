@@ -38,10 +38,12 @@ public class GameService {
                        EventoRepository eventoRepo,
                        NpcRepository npcRepo,
                        PersonagemRepository personagemRepo) {
+
         this.diaService = diaService;
         this.semestreService = semestreService;
         this.personagemService = personagemService;
         this.inicializacaoService = inicializacaoService;
+
         this.localRepo = localRepo;
         this.semestreRepo = semestreRepo;
         this.disciplinaRepo = disciplinaRepo;
@@ -166,6 +168,7 @@ public class GameService {
         eventoRepo.salvar();
         npcRepo.salvar();
     }
+
 
     public Semestre getSemestre() { return semestre; }
     public Dia getDiaAtual() { return diaAtual; }

@@ -47,7 +47,7 @@
   },
   "3" : {
     "personagemId" : 3,
-    "nome" : "p3",
+    "nome" : "p4",
     "energia" : 40.0,
     "motivacao" : 40.0,
     "saude" : 40.0,
@@ -63,7 +63,7 @@
       "SOF" : 10.0,
       "ANI" : 10.0
     },
-    "spriteDir" : "spriteFeminino.png",
+    "spriteDir" : "spriteMasculino.png",
     "desempenhoAcademico" : 0.0,
     "cX" : 0,
     "cY" : 0

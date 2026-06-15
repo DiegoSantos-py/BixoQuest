@@ -4,8 +4,8 @@ import controller.MapaController;
 import controller.NpcController;
 
 /**
- * Conhece a estrutura (receita) de cada cena.
- * Recebe o Construtor e os Controllers como parâmetro — nunca acessa o produto diretamente.
+ * Conhece a estrutura (receita) de cada cena
+ * Recebe o Construtor e os Controllers como parâmetro — nunca acessa o produto diretamente
  */
 public class DiretorCena {
 

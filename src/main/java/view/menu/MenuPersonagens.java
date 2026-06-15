@@ -12,18 +12,19 @@ import view.util.FonteUtil;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class MenuPersonagens extends StackPane {
 
     private final PersonagemController personagemController;
     private final Runnable aoVoltar;
-    private final Runnable aoCarregarPersonagem;
+    private final AcaoSlot aoCarregarPersonagem;
     private final AcaoSlot aoCriarPersonagem;
 
     public MenuPersonagens(
             PersonagemController personagemController,
             Runnable aoVoltar,
-            Runnable aoCarregarPersonagem,
+            AcaoSlot aoCarregarPersonagem,
             AcaoSlot aoCriarPersonagem
     ) {
         this.personagemController = personagemController;
@@ -87,7 +88,8 @@ public class MenuPersonagens extends StackPane {
                     "Slot " + slotId + " - Carregar: " + personagem.getNome()
             );
 
-            saveBotao.setOnAction(event -> aoCarregarPersonagem.run());
+            //Ao clicar nesse botão, recupera jogo de x personagem
+            saveBotao.setOnAction(event -> aoCarregarPersonagem.executar(slotId));
 
         } else {
             saveBotao.setText(
