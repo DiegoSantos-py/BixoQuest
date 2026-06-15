@@ -3,7 +3,6 @@ package model.Ataque.Ataques;
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
-import model.Projetil.ProjetilID;
 
 public class AtaqueLatido extends Ataque {
 
@@ -12,7 +11,7 @@ public class AtaqueLatido extends Ataque {
 
     public AtaqueLatido(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
-        super(target, owner,dificuldade, 60,0,0);
+        super(target, owner,dificuldade, 200);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class AtaqueLatido extends Ataque {
                 (target.getY() + target.getVelocidade().getY() * dt *framesNoFuturo ) - owner.getY(),
                 (target.getX() + target.getVelocidade().getX() * dt * framesNoFuturo )- owner.getX()
             );
-            spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer, anguloParaPlayer, ProjetilID.BASICO, 1, 0f, 7.5f);
+            spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer, anguloParaPlayer, 1, 0f, 7.5f);
 
             projeteisSpawnados++;
             timer = 0;

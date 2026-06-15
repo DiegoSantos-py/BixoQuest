@@ -8,7 +8,6 @@ import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
 import model.Projetil.ProjetilFactory;
-import model.Projetil.ProjetilID;
 
 public abstract class Ataque {
     protected float tempoDecorrido = 0;
@@ -23,7 +22,7 @@ public abstract class Ataque {
     protected float minY;//os 4 lados da caixa q vai prender o player
 
     //(new Vector2D(960, 800)
-    public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxBasico, int maxHoming, int maxExplosivo) {
+    public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxProjeteis) {
 
         if(owner == null){
             throw new AtaqueInvalidoException("owner","owner não pode ser nulo");
@@ -39,7 +38,7 @@ public abstract class Ataque {
         this.maxY = 1000f;
         this.minX = 760f;
         this.minY = 600f;
-        this.factory = new ProjetilFactory(target, owner, maxBasico, maxHoming, maxExplosivo);
+        this.factory = new ProjetilFactory(target, owner, maxProjeteis);
     }
 
     public final void atualizar(float dt) {
@@ -52,11 +51,11 @@ public abstract class Ataque {
         factory.atualizar(dt);  
     }
 
-    protected void spawnProjetil(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, 
-                                 float anguloSpawn, float anguloHitbox, ProjetilID id, 
+    protected Projetil spawnProjetil(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, 
+                                 float anguloSpawn, float anguloHitbox, 
                                  int danoShield, float danoNota, float duracaoMaxima) {
         
-        factory.spawn(posX, posY, tamanhoX, tamanhoY, velocidade, anguloSpawn, anguloHitbox, id, 
+        return factory.spawn(posX, posY, tamanhoX, tamanhoY, velocidade, anguloSpawn, anguloHitbox, 
                       danoShield, danoNota, duracaoMaxima);
     }
 
@@ -159,9 +158,7 @@ public abstract class Ataque {
         this.finalizado = false;
         this.tempoDecorrido = 0;
         //restarta o ataque e desliga todos os projeteis da pool de projeteis(pra eles n ficarem no ar parados)
-        for (Projetil p : factory.getAtivos()) {
-            p.desativar();
-        }
+        factory.desativarTodos();
     }
 
     public List<Projetil> getProjeteis() { 

@@ -1,6 +1,7 @@
 package service;
 
 import model.Ataque.Ataque;
+import model.Ataque.Ataques.AtaqueMordidaHoming;
 import model.Ataque.Ataques.AtaqueProjetilHoming;
 import model.Disciplina.AreaConhecimento;
 import org.junit.jupiter.api.Test;
@@ -35,10 +36,10 @@ public class BatalhaIntegracaoTest {
         npcRepository.adicionarNpc(cachorro);
 
         EstadoBatalha estado = service.iniciarBatalha(personagem, cachorro, npcRepository);
-        Ataque homing  =  new AtaqueProjetilHoming(estado.getPlayerProva(),estado.getOponenteAtual(),estado.getAnimal().getIndole());
+        Ataque homing  =  new AtaqueMordidaHoming(estado.getPlayerProva(),estado.getOponenteAtual(),estado.getAnimal().getIndole());
         estado.getOponenteAtual().adicionarAtaque(homing);
 
-        boolean renderizarVisual = false; // Mude para true se quiser ver a janela e rodar a 60 FPS
+        boolean renderizarVisual = true; // Mude para true se quiser ver a janela e rodar a 60 FPS
 
         VisualizadorPanel panel = null;
         if (renderizarVisual) {

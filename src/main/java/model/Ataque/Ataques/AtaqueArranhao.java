@@ -11,7 +11,7 @@ public class AtaqueArranhao extends Ataque {
 
     public AtaqueArranhao(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
-        super(target, owner, dificuldade, 60,0,0);
+        super(target, owner, dificuldade, 60);
     }
 
     @Override

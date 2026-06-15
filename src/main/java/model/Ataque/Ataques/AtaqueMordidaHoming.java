@@ -5,17 +5,16 @@ import java.util.Random;
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
-import model.Projetil.Comportamentos.ProjetilExplosivo;
 import model.Projetil.Projetil;
 import model.Projetil.Comportamentos.ComportamentoFactory;
 
-public class AtaqueMordida extends Ataque {
+public class AtaqueMordidaHoming extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
     private Random random;
 
-    public AtaqueMordida(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
+    public AtaqueMordidaHoming(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 80);
         this.random = new Random();
     }
@@ -51,6 +50,7 @@ public class AtaqueMordida extends Ataque {
 
             if (p != null) {
                 p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));
+                p.addComportamento(ComportamentoFactory.getAI("HOMING"));
             }
 
             projeteisSpawnados++;
