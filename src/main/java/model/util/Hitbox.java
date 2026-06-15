@@ -99,11 +99,11 @@ public final class Hitbox {
         eixosCache[0].set(cos, sin);    
         eixosCache[1].set(-sin, cos);
 
-        // atualiza os vertices do cache
-        vertices[0].set(cx + (-hw * cos - (-hh) * sin), cy + (-hw * sin + (-hh) * cos));
-        vertices[1].set(cx + (hw * cos - (-hh) * sin), cy + (hw * sin + (-hh) * cos));
-        vertices[2].set(cx + (hw * cos - hh * sin), cy + (hw * sin + hh * cos));
-        vertices[3].set(cx + (-hw * cos - hh * sin), cy + (-hw * sin + hh * cos));
+        // atualiza os vertices do cache usando a função de matriz de rotação centralizada
+        MathUtils.rotacionarPonto(-hw, -hh, cos, sin, cx, cy, vertices[0]);
+        MathUtils.rotacionarPonto(hw, -hh, cos, sin, cx, cy, vertices[1]);
+        MathUtils.rotacionarPonto(hw, hh, cos, sin, cx, cy, vertices[2]);
+        MathUtils.rotacionarPonto(-hw, hh, cos, sin, cx, cy, vertices[3]);
     }
 
     public boolean checarColisao(Hitbox outra) {

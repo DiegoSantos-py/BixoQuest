@@ -2,7 +2,6 @@ package service;
 
 import model.Ataque.Ataque;
 import model.Ataque.Ataques.AtaqueMordidaHoming;
-import model.Ataque.Ataques.AtaqueProjetilHoming;
 import model.Disciplina.AreaConhecimento;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +16,7 @@ import model.Batalha.Oponente;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
 import repository.NpcRepository;
+import service.batalha.BatalhaService;
 
 public class BatalhaIntegracaoTest {
     private float dt = 0.0166f;
@@ -26,11 +26,11 @@ public class BatalhaIntegracaoTest {
         BatalhaService service = new BatalhaService();
 
         Personagem personagem = new Personagem("Veterano", 100, 100, 100, 100, "sprite.png", 1);
-        personagem.atualizarConhecimento(AreaConhecimento.ANI, 35); //faz o player ter mto conhecimento em animal pra aumentar o dano e fazer ele vencer
+        personagem.atualizarConhecimento(AreaConhecimento.ANI, 1); //faz o player ter mto conhecimento em animal pra aumentar o dano e fazer ele vencer
 
         java.util.ArrayList<String> falas = new java.util.ArrayList<>();
         falas.add("Au au");
-        Animal cachorro = new Animal("Cachorro", "spr/espirro.png", 40, 40, falas, Especie.CACHORRO, 40);
+        Animal cachorro = new Animal("Cachorro", "spr/espirro.png", 40, 40, falas, Especie.CACHORRO, 10);
 
         NpcRepository npcRepository = new NpcRepository();
         npcRepository.adicionarNpc(cachorro);
@@ -121,7 +121,7 @@ public class BatalhaIntegracaoTest {
                         if (estado.getAtaqueAtual() != null) {
                             System.out.println("Fase: " + estado.getTurnoAtual() +
 
-                                    " | Ataques: " + estado.getOponenteAtual().getAtaquesDisponiveis() +
+                                    " | Ataques: " + (estado.getOponenteAtual() != null ? estado.getOponenteAtual().getAtaquesDisponiveis() : "N/A") +
                                     " | Ataque: " + estado.getAtaqueAtual().getClass().getSimpleName() +
                                     " | Projéteis na tela: " + estado.getAtaqueAtual().getProjeteis().size());
 

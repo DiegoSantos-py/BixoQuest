@@ -1,4 +1,4 @@
-package service;
+package service.batalha;
 
 import model.Player.AcaoBatalha;
 import model.Player.PlayerProva;
