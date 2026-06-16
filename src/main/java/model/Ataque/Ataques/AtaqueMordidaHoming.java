@@ -15,7 +15,7 @@ public class AtaqueMordidaHoming extends Ataque {
     private Random random;
 
     public AtaqueMordidaHoming(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
-        super(target, owner, dificuldade, 80);
+        super(target, owner, dificuldade, 60);
         this.random = new Random();
     }
 
@@ -47,7 +47,7 @@ public class AtaqueMordidaHoming extends Ataque {
                     0,
                     0f,
                     1.5f,
-                    "assets/batalha/projeteis/mordida.png");
+                    "/assets/batalha/projeteis/mordida.png");
 
             if (p != null) {
                 p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));
@@ -66,6 +66,13 @@ public class AtaqueMordidaHoming extends Ataque {
                 this.encerrarAtaque();
             }
         }
+    }
+
+    @Override
+    public void reiniciarAtaque() {
+        super.reiniciarAtaque();
+        this.timer = 0;
+        this.projeteisSpawnados = 0;
     }
 
     @Override

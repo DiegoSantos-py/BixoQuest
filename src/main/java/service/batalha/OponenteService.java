@@ -7,8 +7,11 @@ import model.Batalha.Oponente;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Prova.Questao.Questao;
 import model.Npc.Animal;
+import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.Vector2D;
+
+import java.util.ArrayList;
 
 public class OponenteService {
 
@@ -29,6 +32,34 @@ public class OponenteService {
                 animalOponente.adicionarAtaque(new AtaqueLatido(null, animalOponente, animal.getIndole()));
                 break;
         }
+
+        ArrayList<AcaoBatalha> acoesDisponiveis = new ArrayList<>();
+        acoesDisponiveis.add(new AcaoBatalha(
+                "FAZER CARINHO",
+                ((float) (10 /animal.getIndole())),
+                1,
+                0,
+                0,
+                0
+                ));
+        acoesDisponiveis.add(new AcaoBatalha(
+                "TENTAR BRINCAR",
+                ((float) (5 /animal.getIndole())),
+                3,
+                0,
+                0,
+                0
+        ));
+
+        acoesDisponiveis.add(new AcaoBatalha(
+                "COMER SALGADO(VOCE)",
+                1   ,
+                0,
+                1,
+                0,
+                0
+        ));
+        animalOponente.setAcoesDisponiveis(acoesDisponiveis);
 
         return animalOponente;
     }

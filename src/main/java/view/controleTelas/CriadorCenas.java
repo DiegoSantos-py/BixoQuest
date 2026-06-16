@@ -15,6 +15,7 @@ import view.menu.MenuInicial;
 import view.menu.MenuPersonagens;
 import view.menu.MenuSeletorBatalha;
 import view.cena.CenaJogo;
+import view.cena.CenaBatalha;
 
 // TODO: refatorar essa classe. Tá muito acoplada
 public class CriadorCenas {
@@ -56,7 +57,8 @@ public class CriadorCenas {
     public Parent criarSeletorBatalha() {
         return new MenuSeletorBatalha(
                 batalhaController,
-                () -> gerenciador.mostrarMenuInicial()
+                () -> gerenciador.mostrarTelaBatalha(), // aoIniciarBatalha
+                () -> gerenciador.mostrarMenuInicial()  // aoVoltar
         );
     }
 
@@ -84,6 +86,19 @@ public class CriadorCenas {
                 1080,
                 () -> gerenciador.mostrarInicioDia()
         );
+    }
+
+    public Parent criarCenaMenuMorte(String texto) {
+        // TODO: Implementar MenuMorte
+        javafx.scene.layout.StackPane placeholder = new javafx.scene.layout.StackPane();
+        javafx.scene.control.Label label = new javafx.scene.control.Label("MENU MORTE: " + texto);
+        label.setTextFill(javafx.scene.paint.Color.RED);
+        placeholder.getChildren().add(label);
+        return placeholder;
+    }
+
+    public Parent criarTelaBatalha() {
+        return new CenaBatalha(batalhaController);
     }
 
     public Parent criarInicio() {

@@ -32,7 +32,7 @@ public class AtaqueProjetilHoming extends Ataque {
                     (target.getY() + target.getVelocidade().getY() * dt * framesNoFuturo) - owner.getY(),
                     (target.getX() + target.getVelocidade().getX() * dt * framesNoFuturo) - owner.getX());
             Projetil p = spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer,
-                    anguloParaPlayer, 1, 0f, 7.5f, "assets/batalha/projeteis/mordida.png");
+                    anguloParaPlayer, 1, 0f, 7.5f, "/assets/batalha/projeteis/mordida.png");
 
             if (p != null) {
                 p.addComportamento(ComportamentoFactory.getAI("HOMING"));
@@ -48,6 +48,13 @@ public class AtaqueProjetilHoming extends Ataque {
                 this.encerrarAtaque();
             }
         }
+    }
+
+    @Override
+    public void reiniciarAtaque() {
+        super.reiniciarAtaque();
+        this.timer = 0;
+        this.projeteisSpawnados = 0;
     }
 
     @Override

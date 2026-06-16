@@ -19,7 +19,7 @@ public class AtaqueLatido extends Ataque {
 
 
         timer += dt;
-        float velocidade =  10f * (dificuldade/2 + 0.5f); // 1 pra ind 10 2 pra ind 30
+        float velocidade =  50f * (dificuldade/2 + 0.5f); // 1 pra ind 10 2 pra ind 30
 
         int limiteProjeteis = 5 + (int)(dificuldade/10);
         if (timer >= (10 / dificuldade) && !this.isFinalizado() && projeteisSpawnados < limiteProjeteis) {
@@ -39,7 +39,7 @@ public class AtaqueLatido extends Ataque {
                     1,
                     0f,
                     7.5f,
-                    "assets/batalha/projeteis/latido.png");
+                    "/assets/batalha/projeteis/latido.png");
 
             projeteisSpawnados++;
             timer = 0;
@@ -54,6 +54,13 @@ public class AtaqueLatido extends Ataque {
     }
 
 
+
+    @Override
+    public void reiniciarAtaque() {
+        super.reiniciarAtaque();
+        this.timer = 0;
+        this.projeteisSpawnados = 0;
+    }
 
     @Override
     public String toString() {

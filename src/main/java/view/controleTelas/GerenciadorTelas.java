@@ -55,6 +55,14 @@ public class GerenciadorTelas {
         trocarRoot(criadorCenas.criarSeletorBatalha());
     }
 
+    public void mostrarMenuMorte(String texto) {
+        trocarRoot(criadorCenas.criarCenaMenuMorte(texto));
+    }
+
+    public void mostrarTelaBatalha() {
+        trocarRoot(criadorCenas.criarTelaBatalha());
+    }
+
     public void mostrarMenuPersonagens() {
         trocarRoot(criadorCenas.criarMenuPersonagens());
     }

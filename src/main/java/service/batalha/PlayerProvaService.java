@@ -10,6 +10,8 @@ import model.util.Vector2D;
 
 public class PlayerProvaService {
 
+    private final AcaoService acaoService = new AcaoService();
+
     public PlayerProva gerarPlayerProva(Personagem personagem, AreaConhecimento areaDaBatalha) {
         float conhecimento = (float) personagem.getConhecimento(areaDaBatalha);
         // Spawna o player na parte inferior da tela (assumindo 1920x1080)
@@ -41,10 +43,8 @@ public class PlayerProvaService {
         }
     }
 
-    public void executarAcao(PlayerProva player, int acaoIndex) {
-        AcaoBatalha acao = player.getAcoesDisponiveis().get(acaoIndex);
-        AcaoService service = new AcaoService();
-        service.executarAcao(acao, player);
+    public void executarAcao(PlayerProva player, AcaoBatalha acao) {
+        acaoService.executarAcao(acao, player);
         player.addTurnosUsados();
     }
 }

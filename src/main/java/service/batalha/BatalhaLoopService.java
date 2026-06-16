@@ -34,6 +34,11 @@ public class BatalhaLoopService {
                 estado.setVitoria(false);
                 return;
             }
+            if (player.getTurnosUsados() >= 15) {
+                estado.setFinalizado(true);
+                estado.setVitoria(false);
+                return;
+            }
         }
 
         if(estado.getTurnoAtual() == Turno.TURNO_PLAYER){
@@ -79,7 +84,8 @@ public class BatalhaLoopService {
     public void executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
         if (estado.getTurnoAtual() != Turno.TURNO_PLAYER) return;
         
-        playerProvaService.executarAcao(estado.getPlayerProva(), acaoIndex);
+        model.Player.AcaoBatalha acao = estado.getOponenteAtual().getAcoesDisponiveis().get(acaoIndex);
+        playerProvaService.executarAcao(estado.getPlayerProva(), acao);
         
         estado.setTurnoAtual(Turno.TURNO_INIMIGO);
     }

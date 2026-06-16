@@ -48,7 +48,7 @@ public class AtaqueMordida extends Ataque {
                     0,
                     0f,
                     1.5f,
-                    "assets/batalha/projeteis/mordida.png");
+                    "/assets/batalha/projeteis/mordida.png");
 
             if (p != null) {
                 p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));
@@ -66,6 +66,13 @@ public class AtaqueMordida extends Ataque {
                 this.encerrarAtaque();
             }
         }
+    }
+
+    @Override
+    public void reiniciarAtaque() {
+        super.reiniciarAtaque();
+        this.timer = 0;
+        this.projeteisSpawnados = 0;
     }
 
     @Override

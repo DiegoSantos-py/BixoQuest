@@ -17,9 +17,8 @@ public class PlayerProva extends EntidadeBatalha {
     private float danoAtaque;
     private float conhecimentoArea;
     private float TEMPO_IMUNIDADE = 0.5f; // 0.5 segundos de invulnerabilidade após receber dano
-    private float VELOCIDADE = 80f; // 80 unidades/s em todas as direcoes
+    private float VELOCIDADE = 130f; // 80 unidades/s em todas as direcoes
     private float tempoImunidadeRestante;
-    private ArrayList<AcaoBatalha> acoesDisponiveis;
     // --- Estatística de desempenho ---
     private ArrayList<Float> desempenhoQuestoes;
     private int turnosUsados;
@@ -37,16 +36,15 @@ public class PlayerProva extends EntidadeBatalha {
 
 
     public PlayerProva(Hitbox hitbox, Vector2D velocidade, float conhecimentoArea) {
-        super(hitbox, velocidade,"batalha/player/player.png");
+        super(hitbox, velocidade, "/assets/batalha/player.png");
         this.conhecimentoArea = conhecimentoArea;
         this.todosAcertosPerfeitos = true;
 
         this.shieldMaximo = Math.round(0.22f * this.conhecimentoArea - 1.8f);
         //^^^ formula pra conhecimento 10 shield 1, 20 pra 3 shield 30->5
-        if (this.shieldMaximo < 0) this.shieldMaximo = 0;
+        if (this.shieldMaximo <= 0) this.shieldMaximo = 3; // Mínimo de 3 escudos para não morrer instantaneamente
         this.shieldAtual = shieldMaximo;
         this.danoAtaque = this.conhecimentoArea / 4f + 1f ;
-        this.acoesDisponiveis = new ArrayList<AcaoBatalha>();
         this.desempenhoQuestaoAtual = 10f; //desempenho começa em 10 independemtnete da prova e vai caindo com dano
         this.desempenhoQuestoes = new ArrayList<Float>();
         this.turnosUsados = 0;
@@ -137,10 +135,10 @@ public class PlayerProva extends EntidadeBatalha {
             dx += -1;
         }
         if(movendoCima){
-            dy += 1;
+            dy += -1; // Na tela, para cima significa diminuir o Y
         }
         if(movendoBaixo){
-            dy += -1;
+            dy += 1;  // E para baixo significa aumentar o Y
         }
 
         float magnitude =  (float)Math.sqrt(dx * dx + dy * dy);
@@ -215,10 +213,6 @@ public class PlayerProva extends EntidadeBatalha {
 
     public boolean getPerdeuNota() {
         return perdeuNota;
-    }
-
-    public ArrayList<AcaoBatalha> getAcoesDisponiveis() {
-        return this.acoesDisponiveis;
     }
 
     public boolean getLevouAlgumDano() {

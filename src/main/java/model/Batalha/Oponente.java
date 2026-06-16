@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.Ataque.Ataque;
 import model.Disciplina.AreaConhecimento;
+import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.MathUtils;
 import model.util.Vector2D;
@@ -17,7 +18,7 @@ public class Oponente extends EntidadeBatalha {
     protected float hpAtual;
    
     protected List<Ataque> ataquesDisponiveis = new ArrayList<>();
-
+    protected List<AcaoBatalha> acoesDisponiveis = new ArrayList<>();
 
     public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaxio, String spriteDir) {
         super(hitbox, velocidade, spriteDir);
@@ -80,5 +81,13 @@ public class Oponente extends EntidadeBatalha {
     }
     public void adicionarAtaque(Ataque ataque) {
         this.ataquesDisponiveis.add(ataque);
+    }
+
+    public List<AcaoBatalha> getAcoesDisponiveis() {
+        return acoesDisponiveis;
+    }
+
+    public void setAcoesDisponiveis(List<AcaoBatalha> acoesDisponiveis) {
+        this.acoesDisponiveis = acoesDisponiveis;
     }
 }
