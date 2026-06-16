@@ -30,7 +30,7 @@ public class BatalhaIntegracaoTest {
 
         java.util.ArrayList<String> falas = new java.util.ArrayList<>();
         falas.add("Au au");
-        Animal cachorro = new Animal("Cachorro", "spr/espirro.png", 40, 40, falas, Especie.CACHORRO, 10);
+        Animal cachorro = new Animal("Cachorro", "spr/espirro.png", "dummy_batalha_sprite", 40, 40, falas, Especie.CACHORRO, 10);
 
         NpcRepository npcRepository = new NpcRepository();
         npcRepository.adicionarNpc(cachorro);

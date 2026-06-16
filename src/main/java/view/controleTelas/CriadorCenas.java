@@ -3,6 +3,7 @@ package view.controleTelas;
 import controller.MapaController;
 import controller.NpcController;
 import controller.PersonagemController;
+import controller.BatalhaController;
 import javafx.scene.Parent;
 import view.InicioDiaView;
 import view.InicioJogoView;
@@ -12,6 +13,7 @@ import view.construtores.DiretorCena;
 import view.menu.MenuCriarPersonagem;
 import view.menu.MenuInicial;
 import view.menu.MenuPersonagens;
+import view.menu.MenuSeletorBatalha;
 import view.cena.CenaJogo;
 
 // TODO: refatorar essa classe. Tá muito acoplada
@@ -21,6 +23,7 @@ public class CriadorCenas {
     private final PersonagemController personagemController;
     private final MapaController mapaController;
     private final NpcController npcController;
+    private final BatalhaController batalhaController;
     private final DiretorCena diretorCena;
 
     private CenaJogo cenaAtual;
@@ -29,12 +32,14 @@ public class CriadorCenas {
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
             MapaController mapaController,
-            NpcController npcController
+            NpcController npcController,
+            BatalhaController batalhaController
     ) {
         this.gerenciador           = gerenciador;
         this.personagemController  = personagemController;
         this.mapaController        = mapaController;
         this.npcController         = npcController;
+        this.batalhaController     = batalhaController;
         this.diretorCena           = new DiretorCena();
     }
 
@@ -43,7 +48,15 @@ public class CriadorCenas {
                 personagemController,
                 () -> gerenciador.mostrarMenuPersonagens(),
                 () -> gerenciador.mostrarConfiguracoes(),
+                () -> gerenciador.mostrarSeletorBatalha(),
                 () -> System.exit(0)
+        );
+    }
+
+    public Parent criarSeletorBatalha() {
+        return new MenuSeletorBatalha(
+                batalhaController,
+                () -> gerenciador.mostrarMenuInicial()
         );
     }
 
@@ -75,8 +88,7 @@ public class CriadorCenas {
 
     public Parent criarInicio() {
         return new InicioJogoView(
-                () -> gerenciador.mostrarTelaJogo()
-                //() -> gerenciador.mostrarMenuInicial()
+                () -> gerenciador.mostrarMenuInicial()
         );
     }
 

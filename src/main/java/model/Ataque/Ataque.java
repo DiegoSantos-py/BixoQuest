@@ -53,10 +53,10 @@ public abstract class Ataque {
 
     protected Projetil spawnProjetil(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, 
                                  float anguloSpawn, float anguloHitbox, 
-                                 int danoShield, float danoNota, float duracaoMaxima) {
+                                 int danoShield, float danoNota, float duracaoMaxima, String spriteDir) {
         
         return factory.spawn(posX, posY, tamanhoX, tamanhoY, velocidade, anguloSpawn, anguloHitbox, 
-                      danoShield, danoNota, duracaoMaxima);
+                      danoShield, danoNota, duracaoMaxima, spriteDir);
     }
 
     protected abstract void logicaAtaque(float dt);

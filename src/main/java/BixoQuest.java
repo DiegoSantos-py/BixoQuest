@@ -12,7 +12,9 @@ import service.PersonagemService;
 import view.controleTelas.GerenciadorTelas;
 
 import controller.PersonagemController;
+import controller.BatalhaController;
 import javafx.stage.Stage;
+import service.batalha.BatalhaService;
 
 public class BixoQuest extends Application {
 
@@ -44,11 +46,15 @@ public class BixoQuest extends Application {
         primaryStage.setTitle("BixoQuest");
         primaryStage.setFullScreen(true);
 
+        BatalhaService batalhaService = new BatalhaService();
+        BatalhaController batalhaController = new BatalhaController(batalhaService, npcRepository);
+
         GerenciadorTelas telas =
                 new GerenciadorTelas(primaryStage,
                         personagemController,
                         mapaController,
-                        npcController);
+                        npcController,
+                        batalhaController);
 
         telas.mostrarInicio();
 

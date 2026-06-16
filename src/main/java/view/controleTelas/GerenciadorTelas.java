@@ -3,6 +3,7 @@ package view.controleTelas;
 import controller.MapaController;
 import controller.NpcController;
 import controller.PersonagemController;
+import controller.BatalhaController;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,14 +18,16 @@ public class GerenciadorTelas {
             Stage stage,
             PersonagemController personagemController,
             MapaController mapaController,
-            NpcController npcController
+            NpcController npcController,
+            BatalhaController batalhaController
     ) {
         this.stage = stage;
         this.criadorCenas = new CriadorCenas(
                 this,
                 personagemController,
                 mapaController,
-                npcController
+                npcController,
+                batalhaController
         );
     }
 
@@ -46,6 +49,10 @@ public class GerenciadorTelas {
 
     public void mostrarMenuInicial() {
         trocarRoot(criadorCenas.criarMenuInicial());
+    }
+
+    public void mostrarSeletorBatalha() {
+        trocarRoot(criadorCenas.criarSeletorBatalha());
     }
 
     public void mostrarMenuPersonagens() {

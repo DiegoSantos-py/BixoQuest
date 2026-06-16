@@ -37,7 +37,7 @@ public class PlayerProva extends EntidadeBatalha {
 
 
     public PlayerProva(Hitbox hitbox, Vector2D velocidade, float conhecimentoArea) {
-        super(hitbox, velocidade);
+        super(hitbox, velocidade,"batalha/player/player.png");
         this.conhecimentoArea = conhecimentoArea;
         this.todosAcertosPerfeitos = true;
 

@@ -16,7 +16,7 @@ public class AtaqueArranhao extends Ataque {
 
     @Override
     protected void logicaAtaque(float dt) {
-
+        //alguem tem q fazer esse ataque
     }
 
     @Override

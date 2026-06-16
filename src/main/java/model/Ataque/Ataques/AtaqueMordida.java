@@ -47,7 +47,8 @@ public class AtaqueMordida extends Ataque {
                     anguloAleatorio,
                     0,
                     0f,
-                    1.5f);
+                    1.5f,
+                    "assets/batalha/projeteis/mordida.png");
 
             if (p != null) {
                 p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));

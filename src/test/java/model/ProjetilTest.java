@@ -25,8 +25,8 @@ class ProjetilTest {
         Projetil missil = new Projetil(
                 new Hitbox(new Vector2D(0, 0), new Vector2D(5, 5), 0),
                 new Vector2D(0, 10),
-                5, 0f, 1000f);
-        missil.reviver(0, 0, 5, 5, 0, 10, 0, 5, 0f, 1000f); // reespawna o missl em 0,0 , velocidade 10 em y , sem
+                5, 0f, 1000f, "dummy_sprite");
+        missil.reviver(0, 0, 5, 5, 0, 10, 0, 5, 0f, 1000f, "dummy_sprite"); // reespawna o missl em 0,0 , velocidade 10 em y , sem
                                                             // rotacao na hitbox e dando 5 de dano
                                                             // shield, 0 dano nota e durando 1 segundo
         missil.setTarget(alvo);
@@ -60,8 +60,8 @@ class ProjetilTest {
         Projetil tiro = new Projetil(
                 new Hitbox(new Vector2D(10, 10), new Vector2D(10, 10), 0),
                 new Vector2D(0, 0),
-                5, 0f, 1000f);
-        tiro.reviver(10, 10, 10, 10, 0, 0, 0, 5, 0f, 1000f);
+                5, 0f, 1000f, "dummy_sprite");
+        tiro.reviver(10, 10, 10, 10, 0, 0, 0, 5, 0f, 1000f, "dummy_sprite");
         tiro.setTarget(alvo);
 
         // Roda 1 frame — colisão deve acontecer, dano ser aplicado e projétil morrer

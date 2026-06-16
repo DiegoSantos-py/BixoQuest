@@ -35,9 +35,10 @@ public class Projetil extends EntidadeBatalha {
             Vector2D velocidade,
             int danoShield,
             float danoNota,
-            float duracaoMaxima) {
+            float duracaoMaxima,
+            String spriteDir) {
 
-        super(hitbox, velocidade);
+        super(hitbox, velocidade, spriteDir);
 
         if (hitbox == null) {
             throw new ProjetilInvalidoException(
@@ -139,7 +140,8 @@ public class Projetil extends EntidadeBatalha {
             float anguloHitbox,
             int danoShield,
             float danoNota,
-            float duracaoMaxima) {
+            float duracaoMaxima,
+            String spriteDir) {
 
         if (sizeX <= 0) {
             throw new ProjetilInvalidoException(
@@ -186,7 +188,7 @@ public class Projetil extends EntidadeBatalha {
         this.comportamentosAI.clear();
         this.comportamentosDespawn.clear();
         this.comportamentosAoColidir.clear();
-
+        this.spriteDir = spriteDir;
         this.ativar();
     }
 

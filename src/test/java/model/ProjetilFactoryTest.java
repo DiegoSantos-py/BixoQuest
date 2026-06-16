@@ -29,7 +29,7 @@ class ProjetilFactoryTest {
 
         mockOwner = new Oponente(
                 new Hitbox(new Vector2D(50, 50), new Vector2D(10, 10), 0),
-                new Vector2D(0, 0), "Boss", 100f) {
+                new Vector2D(0, 0), "Boss", 100f, "dummy_sprite") {
             // @Override n funciona
             public model.Ataque.Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
                 return new model.Ataque.Ataques.AtaqueMordida(alvo, owner, 10.0f);
@@ -44,7 +44,7 @@ class ProjetilFactoryTest {
 
         // Spawnar 8 vezes numa pool de 5 → deve reutilizar os mesmos 5 objetos em ciclo
         for (int i = 0; i < 8; i++) {
-            factory.spawn(0, 0, 10, 10, 10f, 0f, 0f, 5, 1.0f, 1000f);
+            factory.spawn(0, 0, 10, 10, 10f, 0f, 0f, 5, 1.0f, 1000f, "dummy_sprite");
         }
 
         List<Projetil> ativos = factory.getAtivos();
@@ -58,10 +58,10 @@ class ProjetilFactoryTest {
     void testInjecaoDeComportamentos() {
         ProjetilFactory factory = new ProjetilFactory(mockPlayer, mockOwner, 5);
 
-        Projetil p1 = factory.spawn(10, 10, 5, 5, 10f, 0f, 0f, 5, 1.0f, 1000f);
+        Projetil p1 = factory.spawn(10, 10, 5, 5, 10f, 0f, 0f, 5, 1.0f, 1000f, "dummy_sprite");
         p1.addComportamento(new model.Projetil.Comportamentos.ProjetilQueSegue());
 
-        Projetil p2 = factory.spawn(10, 10, 5, 5, 10f, 0f, 0f, 5, 1.0f, 1000f);
+        Projetil p2 = factory.spawn(10, 10, 5, 5, 10f, 0f, 0f, 5, 1.0f, 1000f, "dummy_sprite");
         p2.addComportamentoDespawn(new model.Projetil.Comportamentos.ProjetilExplosivo());
 
         List<Projetil> ativos = factory.getAtivos();
@@ -76,7 +76,7 @@ class ProjetilFactoryTest {
         ProjetilFactory factory = new ProjetilFactory(mockPlayer, mockOwner, 3);
 
         // Duração curtíssima
-        factory.spawn(0, 0, 5, 5, 10f, 0f, 0f, 1, 0f, 0.001f);
+        factory.spawn(0, 0, 5, 5, 10f, 0f, 0f, 1, 0f, 0.001f, "dummy_sprite");
 
         // Primeira atualização: tempoDeVida vai de 0→1s, mas o check é ANTES do
         // incremento

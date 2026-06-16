@@ -20,7 +20,8 @@ public class ProjetilPool {
         for (int i = 0; i < capacidade; i++) {
             pool[i] = new Projetil(
                     new Hitbox(new Vector2D(0, 0), new Vector2D(0, 0), 0),
-                    new Vector2D(0, 0), 0, 0, 0);
+                    new Vector2D(0, 0), 0, 0, 0,
+                    "Null");
         }
     }
 
@@ -42,13 +43,13 @@ public class ProjetilPool {
     // pool's
     public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY,
             float velX, float velY, float anguloHitbox,
-            int danoShield, float danoNota, float duracaoMaxima) {
+            int danoShield, float danoNota, float duracaoMaxima, String spriteDir) {
         if (pool.length == 0)
             return null;
 
         Projetil p = pool[index];
         index = (index + 1) % pool.length;
-        p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima);
+        p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima, spriteDir);
         return p;
     }
 

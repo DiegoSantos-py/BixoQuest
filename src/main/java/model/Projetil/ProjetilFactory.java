@@ -24,12 +24,12 @@ public class ProjetilFactory {
 
     public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY,
                           float velocidade, float anguloSpawn, float anguloHitbox,
-                          int danoShield, float danoNota, float duracaoMaxima) {
+                          int danoShield, float danoNota, float duracaoMaxima, String spriteDir) {
 
         float velX = (float) (velocidade * Math.cos(anguloSpawn));
         float velY = (float) (velocidade * Math.sin(anguloSpawn));
 
-        return pool.spawn(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima);
+        return pool.spawn(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima, spriteDir);
     }
 
     public void atualizar(float dt)       {

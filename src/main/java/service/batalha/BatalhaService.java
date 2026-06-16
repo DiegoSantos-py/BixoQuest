@@ -45,7 +45,7 @@ public class BatalhaService {
         //mas cada questao é 1 oponente difernete com 1 ATAQUE(em média)(pode ter mais)
         for(Questao questao : provaBatalha.getQuestoes()){
             //cria os oponentes de cada questao
-            Oponente oponenteQuestao = oponenteService.criarOponenteQuestao(questao);
+            Oponente oponenteQuestao = oponenteService.criarOponenteQuestao(questao, provaBatalha.getSpriteDirProva());
             for(var ataque : oponenteQuestao.getAtaquesDisponiveis()){
                 //seta o targeet dos ataques como o jogador
                 ataque.setTarget(playerProva);

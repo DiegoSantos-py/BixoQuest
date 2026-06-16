@@ -36,7 +36,7 @@ class NpcRepositoryTest {
     }
 
     private Animal criarAnimal(String nome) {
-        return new Animal(nome, "sprites/animal.png", 0, 0,
+        return new Animal(nome, "sprites/animal.png", "dummy_batalha_sprite", 0, 0,
                 new ArrayList<>(List.of("*rosna*", "*abana o rabo*")),
                 Especie.CACHORRO, 8);
     }

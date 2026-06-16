@@ -29,7 +29,17 @@ public class AtaqueLatido extends Ataque {
                 (target.getY() + target.getVelocidade().getY() * dt *framesNoFuturo ) - owner.getY(),
                 (target.getX() + target.getVelocidade().getX() * dt * framesNoFuturo )- owner.getX()
             );
-            spawnProjetil(owner.getX(), owner.getY(), 40, 40, velocidade, anguloParaPlayer, anguloParaPlayer, 1, 0f, 7.5f);
+            spawnProjetil(owner.getX(),
+                    owner.getY(),
+                    40,
+                    40,
+                    velocidade,
+                    anguloParaPlayer,
+                    anguloParaPlayer,
+                    1,
+                    0f,
+                    7.5f,
+                    "assets/batalha/projeteis/latido.png");
 
             projeteisSpawnados++;
             timer = 0;
