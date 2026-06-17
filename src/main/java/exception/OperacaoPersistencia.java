@@ -6,8 +6,8 @@ package exception;
  */
 public enum OperacaoPersistencia {
 
-    SALVAR("Erro ao salvar disciplinas no arquivo"),
-    CARREGAR("Erro ao carregar disciplinas do arquivo");
+    SALVAR("Erro ao salvar dados no arquivo"),
+    CARREGAR("Erro ao carregar dados do arquivo");
 
     private final String mensagem;
 

@@ -12,6 +12,8 @@ import model.util.Vector2D;
 
 public class Oponente extends EntidadeBatalha {
     protected String nome;
+    protected String descricao;//a descricao do canto superior esquerdo
+    protected String textoCaixa; //o texto engraçado da caixa de dialogo da batalha
     protected boolean isDerrotado = false;
     protected AreaConhecimento areaConhecimento;
     protected float hpMaximo;
@@ -20,18 +22,22 @@ public class Oponente extends EntidadeBatalha {
     protected List<Ataque> ataquesDisponiveis = new ArrayList<>();
     protected List<AcaoBatalha> acoesDisponiveis = new ArrayList<>();
 
-    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaxio, String spriteDir) {
+    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaxio, String spriteDir, String descricao, String textoCaixa) {
         super(hitbox, velocidade, spriteDir);
         this.nome = nome;
         this.hpAtual = hpMaximo;
+        this.descricao = descricao;
+        this.textoCaixa = textoCaixa;
     }
 
-    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo, AreaConhecimento areaConhecimento, String spriteDir) {
+    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo, AreaConhecimento areaConhecimento, String spriteDir,  String descricao, String textoCaixa) {
         super(hitbox, velocidade, spriteDir);
         this.nome = nome;
         this.areaConhecimento = areaConhecimento;
         this.hpMaximo = hpMaximo;
         this.hpAtual = hpMaximo;
+        this.descricao = descricao;
+        this.textoCaixa = textoCaixa;
     }
 
 
@@ -56,6 +62,19 @@ public class Oponente extends EntidadeBatalha {
     }
     public float getHpMaximo() {
         return hpMaximo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+    public String getTextoCaixa() {
+        return textoCaixa;
+    }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+    public void setTextoCaixa(String textoCaixa) {
+        this.textoCaixa = textoCaixa;
     }
 
 

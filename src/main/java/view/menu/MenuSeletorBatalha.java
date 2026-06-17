@@ -74,16 +74,26 @@ public class MenuSeletorBatalha extends StackPane {
         VBox botoes = new VBox(15);
         botoes.setAlignment(Pos.CENTER);
 
-        // Apenas para testes, inicializa direto o Atim
-        Button btnOponente = new Button("Batalhar com Atim (CACHORRO)");
-        estilizarBotao(btnOponente);
-        
-        btnOponente.setOnAction(event -> {
-            batalhaController.iniciarBatalhaAtim();
-            aoIniciarBatalha.run(); 
-        });
-        
-        botoes.getChildren().add(btnOponente);
+        List<model.Npc.Animal> animais = batalhaController.getAnimaisDisponiveis();
+
+        if (animais == null || animais.isEmpty()) {
+            Text vazio = new Text("Nenhum animal disponível no repositório.");
+            vazio.setFill(Color.WHITE);
+            vazio.setFont(FonteUtil.pixel(20));
+            botoes.getChildren().add(vazio);
+        } else {
+            for (model.Npc.Animal animal : animais) {
+                Button btnOponente = new Button("Batalhar com " + animal.getNome() + " (" + animal.getEspecie() + ")");
+                estilizarBotao(btnOponente);
+                
+                btnOponente.setOnAction(event -> {
+                    batalhaController.iniciarBatalhaTeste(animal);
+                    aoIniciarBatalha.run(); 
+                });
+                
+                botoes.getChildren().add(btnOponente);
+            }
+        }
 
         return botoes;
     }

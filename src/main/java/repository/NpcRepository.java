@@ -43,6 +43,11 @@ public class NpcRepository {
      */
     public NpcRepository() {
         this.npcs = new HashMap<>();
+        try {
+            this.carregar();
+        } catch (PersistenciaException e) {
+            System.err.println("Erro ao carregar npcs.json: " + e.getMessage());
+        }
     }
 
     private static ObjectMapper criarMapper() {
@@ -116,7 +121,7 @@ public class NpcRepository {
             );
 
         } catch (Exception e) {
-
+            e.printStackTrace();
             throw new PersistenciaException(
                     OperacaoPersistencia.CARREGAR,
                     e

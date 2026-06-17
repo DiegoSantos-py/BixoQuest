@@ -60,17 +60,27 @@ public class CenaBatalha extends StackPane {
     private double minigameCursorX = -350;
     private double minigameCursorDir = 1;
 
-    private final AudioService audioService = new AudioService();
+    private boolean renderHitbox = false;
+    private Text textDebugHitbox;
 
-    public CenaBatalha(BatalhaController batalhaController) {
+    private final AudioService audioService = new AudioService();
+    private final Runnable aoVoltar;
+
+    public CenaBatalha(BatalhaController batalhaController, Runnable aoVoltar) {
         this.batalhaController = batalhaController;
+        this.aoVoltar = aoVoltar;
         montarTela();
         atualizarDadosIniciais();
         iniciarLoop();
         configurarControles();
         
         // Inicia a música de fundo
-        audioService.playBGM("/assets/audio/musicaAnimal1.mp3");
+        if (batalhaController.getEstadoAtual() != null) {
+            String musica = batalhaController.getEstadoAtual().getMusicaDir();
+            if (musica != null && !musica.isEmpty()) {
+                audioService.playBGM(musica);
+            }
+        }
     }
 
     private void configurarControles() {
@@ -85,6 +95,11 @@ public class CenaBatalha extends StackPane {
                         case S: p.setMovendoBaixo(true); break;
                         case A: p.setMovendoEsquerda(true); break;
                         case D: p.setMovendoDireita(true); break;
+                        case F2: 
+                            renderHitbox = !renderHitbox;
+                            textDebugHitbox.setText("HITBOX DEBUG: " + (renderHitbox ? "ON" : "OFF"));
+                            textDebugHitbox.setVisible(true);
+                            break;
                         default: break;
                     }
                 });
@@ -114,6 +129,11 @@ public class CenaBatalha extends StackPane {
                 }
                 float dt = (agora - ultimoTempo) / 1_000_000_000f;
                 ultimoTempo = agora;
+                
+                // Evita o "pulo" gigantesco ou aceleração quando o jogo minimiza ou dá lag
+                if (dt > 0.05f) {
+                    dt = 0.05f;
+                }
                 
                 try {
                     batalhaController.atualizar(dt);
@@ -200,7 +220,8 @@ public class CenaBatalha extends StackPane {
             double graus = Math.toDegrees(entidade.getHitbox().getAnguloRotacao());
             
             // Compensar a orientação nativa da imagem do projétil (+90 graus para alinhar sprite que aponta pra cima)
-            if (entidade instanceof model.Projetil.Projetil) {
+            // Ignorar para o arranhão, pois ele já tem as dimensões físicas em sincronia com o sprite visual
+            if (entidade instanceof model.Projetil.Projetil && !sDir.contains("arranhao")) {
                 graus += 90;
             }
 
@@ -255,11 +276,13 @@ public class CenaBatalha extends StackPane {
         arenaPane.getChildren().add(pSprite != null ? pSprite : buildRect(spriteLX, spriteLY, visualW, visualH, Color.RED));
         
         // Desenha a hitbox do player exatamente onde ela fica fisicamente
-        float hitboxLX = p.getX() - minX - pW / 2;
-        float hitboxLY = p.getY() - minY - pH / 2;
-        Rectangle pHb = buildRect(hitboxLX, hitboxLY, pW, pH, Color.TRANSPARENT);
-        pHb.setStroke(Color.BLUE); pHb.setStrokeWidth(2);
-        arenaPane.getChildren().add(pHb);
+        if (renderHitbox) {
+            float hitboxLX = p.getX() - minX - pW / 2;
+            float hitboxLY = p.getY() - minY - pH / 2;
+            Rectangle pHb = buildRect(hitboxLX, hitboxLY, pW, pH, Color.TRANSPARENT);
+            pHb.setStroke(Color.BLUE); pHb.setStrokeWidth(2);
+            arenaPane.getChildren().add(pHb);
+        }
         
         //System.out.println("DEBUG Player Coords: physical(" + p.getX() + ", " + p.getY() + ") -> local(" + pLX + ", " + pLY + ")");
 
@@ -272,9 +295,25 @@ public class CenaBatalha extends StackPane {
 
             ImageView prSprite = criarSprite(proj, prW, prH, prLX, prLY);
             arenaPane.getChildren().add(prSprite != null ? prSprite : buildRect(prLX, prLY, prW, prH, Color.WHITE));
-            Rectangle prHb = buildRect(prLX, prLY, prW, prH, Color.TRANSPARENT);
-            prHb.setStroke(Color.RED); prHb.setStrokeWidth(2);
-            arenaPane.getChildren().add(prHb);
+            
+            if (renderHitbox) {
+                Rectangle prHb = buildRect(prLX, prLY, prW, prH, Color.TRANSPARENT);
+                prHb.setStroke(Color.RED); prHb.setStrokeWidth(2);
+                
+                double grausHitbox = Math.toDegrees(proj.getHitbox().getAnguloRotacao());
+                
+                // Se o sprite sofreu +90 de compensação, o retângulo de debug precisa sofrer o mesmo para casar visualmente,
+                // A não ser que seja o arranhão, que não sofre compensação
+                if (!proj.getSpriteUrl().contains("arranhao")) {
+                    grausHitbox += 90;
+                }
+                
+                if (grausHitbox != 0) {
+                    prHb.setRotate(grausHitbox);
+                }
+                
+                arenaPane.getChildren().add(prHb);
+            }
         }
     }
 
@@ -359,7 +398,13 @@ public class CenaBatalha extends StackPane {
                 resultText.setFont(FonteUtil.pixel(24));
                 resultText.setFill(isVitoria ? Color.YELLOW : Color.RED);
                 
-                finalBox.getChildren().addAll(titleText, resultText);
+                Button btnVoltar = criarBotaoFundoPretoBordaLaranja("VOLTAR");
+                btnVoltar.setOnAction(e -> {
+                    parar();
+                    if (aoVoltar != null) aoVoltar.run();
+                });
+                
+                finalBox.getChildren().addAll(titleText, resultText, btnVoltar);
                 dynamicBox.getChildren().add(finalBox);
                 break;
         }
@@ -474,14 +519,27 @@ public class CenaBatalha extends StackPane {
         
         StackPane.setAlignment(hudShields, Pos.BOTTOM_RIGHT);
         
-        this.getChildren().addAll(layoutPrincipal, hudShields);
+        textDebugHitbox = new Text("HITBOX DEBUG: OFF");
+        textDebugHitbox.setFont(FonteUtil.pixel(16));
+        textDebugHitbox.setFill(Color.YELLOW);
+        textDebugHitbox.setVisible(false); // Inicia oculto até apertar F2
+        StackPane.setAlignment(textDebugHitbox, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(textDebugHitbox, new Insets(20));
+        
+        this.getChildren().addAll(layoutPrincipal, hudShields, textDebugHitbox);
     }
 
     private void atualizarDadosIniciais() {
         if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null) {
-            textNomeInimigo.setText(batalhaController.getEstadoAtual().getOponenteAtual().getNome().toUpperCase());
+            model.Batalha.Oponente op = batalhaController.getEstadoAtual().getOponenteAtual();
+            textNomeInimigo.setText(op.getNome().toUpperCase());
+            
+            if (op.getDescricao() != null) {
+                textDescricaoInimigo.setText(op.getDescricao().toUpperCase());
+            }
+
             try {
-                String spriteDir = batalhaController.getEstadoAtual().getOponenteAtual().getSpriteUrl();
+                String spriteDir = op.getSpriteUrl();
                 if(spriteDir != null && !spriteDir.isEmpty()) {
                     if(!spriteDir.startsWith("/")) spriteDir = "/" + spriteDir;
                     spriteInimigo.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spriteDir))));
@@ -534,10 +592,17 @@ public class CenaBatalha extends StackPane {
         caixaTexto.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
         
         if (textDialogo == null) {
-            textDialogo = new Text("ELE PARECE DESCONFIADO.");
+            textDialogo = new Text();
             textDialogo.setFill(Color.WHITE);
             textDialogo.setFont(FonteUtil.pixel(20));
         }
+        
+        if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual().getTextoCaixa() != null) {
+            textDialogo.setText(batalhaController.getEstadoAtual().getOponenteAtual().getTextoCaixa().toUpperCase());
+        } else {
+            textDialogo.setText("ELE PARECE DESCONFIADO.");
+        }
+        
         caixaTexto.getChildren().add(textDialogo);
 
         // Botoes
@@ -626,5 +691,12 @@ public class CenaBatalha extends StackPane {
         btn.setOnMouseExited(e -> btn.setTextFill(Color.WHITE));
         
         return btn;
+    }
+
+    public void parar() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+        audioService.stopBGM();
     }
 }

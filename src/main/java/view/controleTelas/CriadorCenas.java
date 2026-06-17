@@ -98,7 +98,7 @@ public class CriadorCenas {
     }
 
     public Parent criarTelaBatalha() {
-        return new CenaBatalha(batalhaController);
+        return new CenaBatalha(batalhaController, () -> gerenciador.mostrarSeletorBatalha());
     }
 
     public Parent criarInicio() {

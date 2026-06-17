@@ -1,0 +1,14 @@
+{
+  "atim": {
+    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "descricao": "Ele parece desconfiado.",
+    "textoCaixa": "Ele lambeu seu sapato."
+  },
+
+
+  "azetona": {
+    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
+  }
+}

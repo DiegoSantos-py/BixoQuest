@@ -26,8 +26,9 @@ public class EstadoBatalha {
     private Ataque ataqueAtual;
     private ProvaBatalha provaBatalha;
     private Animal animal;
+    private String musicaDir;
 
-    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal, NpcRepository npcRepository) {
+    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal, NpcRepository npcRepository, String musicaDir) {
         if (playerProva == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("playerProva", "não pode ser nulo");
         }
@@ -56,7 +57,9 @@ public class EstadoBatalha {
         this.finalizado = false;
         this.vitoria = false;
         this.oponenteAtual = filaOponentes.poll();
+        this.musicaDir = (musicaDir != null ? musicaDir : "/assets/audio/fallback.mp3");
     }
+
 
     public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes,
                          ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository) {
@@ -181,5 +184,9 @@ public class EstadoBatalha {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("ataqueAtual", "não pode ser nulo");
         }
         this.ataqueAtual = ataqueAtual;
+    }
+    
+    public String getMusicaDir() {
+        return this.musicaDir;
     }
 }

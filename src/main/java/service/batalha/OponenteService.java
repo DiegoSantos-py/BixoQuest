@@ -4,23 +4,45 @@ import model.Ataque.Ataques.AtaqueArranhao;
 import model.Ataque.Ataques.AtaqueLatido;
 import model.Ataque.Ataques.AtaqueMordida;
 import model.Batalha.Oponente;
+import model.Batalha.OponenteDados;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Prova.Questao.Questao;
 import model.Npc.Animal;
 import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.Vector2D;
+import repository.OponenteAnimalRepository;
 
 import java.util.ArrayList;
 
 public class OponenteService {
+
+    OponenteAnimalRepository oponenteAnimalRepository;
+
+    public OponenteService(OponenteAnimalRepository oponenteAnimalRepository) {
+        this.oponenteAnimalRepository = oponenteAnimalRepository;
+    }
+
 
     public Oponente criarOponenteAnimal(Animal animal) {
         float hpCalculado = animal.getIndole();
         // Spawna o inimigo na parte superior da tela
         Hitbox hitboxAnimal = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
         //gera o oponente a partir do animal(npc do mapa)
-        Oponente animalOponente = new Oponente(hitboxAnimal, new Vector2D(0, 0), animal.getNome(), hpCalculado, AreaConhecimento.ANI, animal.getSpriteBatalhaDir());
+        OponenteDados dadosDoAnimal;
+        try {
+            dadosDoAnimal = oponenteAnimalRepository.buscarPorNome(animal.getNome());
+        }
+        catch(Exception e){
+
+            dadosDoAnimal = new OponenteDados(
+                    "assets/batalha/animais/default.png",
+                    "Ele não estava no json de oponentes",
+                    "NADA AQUI FOI PLANEJADO"
+            );
+        }
+        Oponente animalOponente = new Oponente(hitboxAnimal, new Vector2D(0, 0), animal.getNome(), hpCalculado, AreaConhecimento.ANI,
+                dadosDoAnimal.getSpriteDir(), dadosDoAnimal.getDescricao(), dadosDoAnimal.getTextoCaixa());
         //ataque mordida padrão de todos os animais
         animalOponente.adicionarAtaque(new AtaqueMordida(null, animalOponente, animal.getIndole()));
         //mas arranhao é exclusivo de gato e latido é exclusivo de cachorro
@@ -68,8 +90,9 @@ public class OponenteService {
         float hpCalculado = questao.getHp();
         // Spawna a questao na parte superior da tela
         Hitbox hitboxQuestao = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
-        Oponente oponenteQuestao = new Oponente(hitboxQuestao, new Vector2D(0, 0), questao.getNome(), hpCalculado, questao.getAreaConhecimento(), spriteDirProva);
-        //cada questão tem 1 ataque atribuido a ela, e o oponente recebe esse ataque
+        Oponente oponenteQuestao = new Oponente(hitboxQuestao, new Vector2D(0, 0), questao.getNome(), hpCalculado, questao.getAreaConhecimento(),
+                spriteDirProva, questao.getDescricao(), questao.getTextoCaixa());
+        //cada questão tem(até o momento) 1 ataque atribuido a ela, e o oponente recebe esse ataque
         oponenteQuestao.adicionarAtaque(questao.getAtaque());
 
         return oponenteQuestao;

@@ -9,7 +9,9 @@ import model.Personagem;
 import model.Player.PlayerProva;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Prova.Questao.Questao;
+import model.util.MathUtils;
 import repository.NpcRepository;
+import repository.OponenteAnimalRepository;
 import repository.ResultadoProvaRepository;
 
 import java.util.LinkedList;
@@ -17,7 +19,8 @@ import java.util.Queue;
 
 public class BatalhaService {
 
-    private final OponenteService oponenteService = new OponenteService();
+    private final OponenteAnimalRepository oponenteAnimalRepository = new OponenteAnimalRepository();
+    private final OponenteService oponenteService = new OponenteService(oponenteAnimalRepository);
     private final BatalhaLoopService loopService = new BatalhaLoopService();
     private final BatalhaFinalizacaoService finalizacaoService = new BatalhaFinalizacaoService();
     private final PlayerProvaService playerProvaService = new PlayerProvaService();
@@ -34,8 +37,8 @@ public class BatalhaService {
         Queue<Oponente> oponentes = new LinkedList<>();
         //adiciona todos os oponentes da batalha(No caso 1 unico(o animal em si))
         oponentes.add(oponenteAnimal);
-
-        return new EstadoBatalha(playerProva, personagem, oponentes, animal, npcRepository);
+        String musicaDir = "/assets/audio/musicaAnimal" + MathUtils.randomIntInRange(1,3) + ".mp3"; //escolhe uma musica aleatoria
+        return new EstadoBatalha(playerProva, personagem, oponentes, animal, npcRepository, musicaDir);
     }
 
     //mesmo fluxo pra prova
@@ -75,11 +78,12 @@ public class BatalhaService {
         finalizacaoService.salvarAnimalNoRepositorio(estado, animal);
     }
 
-    public void finalizarBatalha(EstadoBatalha estado, ProvaBatalha provaBatalha) {
-        finalizacaoService.finalizarBatalha(estado, provaBatalha);
-    }
-
-    public void finalizarBatalha(EstadoBatalha estado, Animal animal) {
-        finalizacaoService.finalizarBatalha(estado, animal);
+    public void finalizarBatalha(EstadoBatalha estado) {
+        if (estado.getAnimal() != null) {
+            finalizacaoService.finalizarBatalha(estado, estado.getAnimal());
+        }
+        if(estado.getProvaBatalha() != null) {
+            finalizacaoService.finalizarBatalha(estado, estado.getProvaBatalha());
+        }
     }
 }

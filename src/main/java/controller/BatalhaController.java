@@ -37,7 +37,6 @@ public class BatalhaController extends BaseController {
         Animal animalBase = new Animal(
                 "Atim",
                 "assets/batalha/oponentes/animais/atim.png",
-                "assets/batalha/oponentes/animais/atim.png",
                 0,
                 0,
                 falas,
@@ -48,6 +47,14 @@ public class BatalhaController extends BaseController {
     }
 
     // --- GETTERS PARA A UI ---
+
+    public List<Animal> getAnimaisDisponiveis() {
+        if (npcRepository != null) {
+            return npcRepository.buscarAnimais();
+        }
+        return new ArrayList<>();
+    }
+    
     
     public EstadoBatalha getEstadoAtual() {
         return estadoAtual;
@@ -60,7 +67,6 @@ public class BatalhaController extends BaseController {
         return acoes != null ? acoes : new ArrayList<>();
     }
 
-    // --- ROTAS DE AÇÕES (UI -> SERVICE) ---
 
     public void executarAcao(int indexAcao) {
         if (estadoAtual != null) {
@@ -74,7 +80,6 @@ public class BatalhaController extends BaseController {
         }
     }
 
-    // --- GAME LOOP ---
 
     public void atualizar(float dt) {
         if (estadoAtual != null) {
@@ -84,12 +89,8 @@ public class BatalhaController extends BaseController {
 
     // --- FINALIZAÇÃO ---
     public void finalizarBatalha() {
-        if (estadoAtual != null) {
-            if (estadoAtual.isBatalhaAnimal()) {
-                batalhaService.finalizarBatalha(estadoAtual, estadoAtual.getAnimal());
-            } else {
-                batalhaService.finalizarBatalha(estadoAtual, estadoAtual.getProvaBatalha());
-            }
+        {
+            batalhaService.finalizarBatalha(estadoAtual);
         }
     }
 
