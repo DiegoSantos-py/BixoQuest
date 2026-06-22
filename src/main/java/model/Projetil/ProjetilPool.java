@@ -46,11 +46,23 @@ public class ProjetilPool {
         if (pool.length == 0)
             return null;
 
-        Projetil p = pool[index];
-        index = (index + 1) % pool.length;
-        p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima,
-                spriteDir);
-        return p;
+        int attempts = 0;
+        //percorre o pool tentando achar um projetil que não está ativo ou não é persistente
+        //essse attempts é pra minuscula possiilidiade de todos os projeteis serem persistentes
+        //e caso isso aconteça, ele retorna null
+        while (attempts < pool.length) {
+            Projetil p = pool[index];
+            index = (index + 1) % pool.length;
+
+            if (!p.isAtivo() || !p.isPersistente()) {
+                p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima,
+                        spriteDir);
+                return p;
+            }
+            attempts++;
+        }
+        
+        return null;
     }
 
     public void atualizar(float dt) {

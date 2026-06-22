@@ -3,6 +3,7 @@ package model.Evento.Prova.Questao;
 import model.Ataque.Ataques.AtaqueArranhao;
 import model.Ataque.Ataques.AtaqueLatido;
 import model.Ataque.Ataques.AtaqueMordida;
+import model.Ataque.Ataques.Provas.Matematica.AtaqueAmplitudeMaxima;
 import model.Ataque.Ataques.Provas.Matematica.AtaqueFuncaoAfim;
 import model.Disciplina.AreaConhecimento;
 
@@ -45,7 +46,7 @@ public class QuestaoFactory {
                 5f + nivel * 5f,
                 AreaConhecimento.MAT,
                 6f + nivel * 3f,
-                new AtaqueArranhao(null, null, 6f + nivel * 3f),
+                new AtaqueAmplitudeMaxima(null, null, 6f + nivel * 3f),
                 "ciclicamente aterrorizante",
                 "Voce sente seu sangue pulsar."
         );

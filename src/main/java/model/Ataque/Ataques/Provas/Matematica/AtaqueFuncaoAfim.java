@@ -28,12 +28,14 @@ public class AtaqueFuncaoAfim extends Ataque {
         float interval = 0.15f / (dificuldade / 10f); // Ex: Dificuldade 10 spawna a cada 1 segundo
         int maxProjeteis = (int) (attackDuration / interval);
         if (!eixosSpawnados) {
-            spawnProjetil(boxCentroX,boxCentroY,200,200 ,0,0,0,0,
-                    0,10,"/assets/batalha/projeteis/eixos.png" );
+            Projetil eixos = spawnProjetil(boxCentroX, boxCentroY, 200, 200, 0, 0, 0, 0,
+                    0, 12.5f, "/assets/batalha/projeteis/eixos.png");
+            if (eixos != null) {
+                eixos.setPersistente(true);
+            }
             eixosSpawnados = true;
         }
         if (timer >= interval && projeteisSpawnados < maxProjeteis) {
-
 
             // Spawna aleatoriamente na area de ataque do inimigo
             float posX = boxCentroX - 200 + (random.nextFloat() * 400);
@@ -53,10 +55,10 @@ public class AtaqueFuncaoAfim extends Ataque {
                     "/assets/batalha/projeteis/arranhaoPrevia.png");
 
             if (previa != null) {
-                // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight Pattern)
+                // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight
+                // Pattern)
                 previa.addComportamentoDespawn(
-                        model.Projetil.Comportamentos.ComportamentoFactory.getDespawn("SPAWN_FUNCAO")
-                );
+                        model.Projetil.Comportamentos.ComportamentoFactory.getDespawn("SPAWN_FUNCAO"));
 
                 projeteisSpawnados++;
                 timer = 0;
@@ -81,4 +83,3 @@ public class AtaqueFuncaoAfim extends Ataque {
         this.eixosSpawnados = false;
     }
 }
-

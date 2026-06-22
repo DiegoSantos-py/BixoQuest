@@ -21,6 +21,8 @@ public class Projetil extends EntidadeBatalha {
     // duração máxima em ms
     protected float duracaoMaxima;
 
+    protected boolean persistente = false;
+
     protected EntidadeBatalha owner;
     protected PlayerProva target;
     protected ProjetilFactory factory;
@@ -99,6 +101,14 @@ public class Projetil extends EntidadeBatalha {
 
     public PlayerProva getTarget() {
         return target;
+    }
+
+    public boolean isPersistente() {
+        return persistente;
+    }
+
+    public void setPersistente(boolean persistente) {
+        this.persistente = persistente;
     }
     public void addComportamentoColisao(ComportamentoAoColidirComPlayer colisao) {
         this.comportamentosAoColidir.add(colisao);
@@ -181,6 +191,7 @@ public class Projetil extends EntidadeBatalha {
         this.comportamentosAI.clear();
         this.comportamentosDespawn.clear();
         this.comportamentosAoColidir.clear();
+        this.persistente = false;
         this.spriteDir = spriteDir;
         this.ativar();
     }
