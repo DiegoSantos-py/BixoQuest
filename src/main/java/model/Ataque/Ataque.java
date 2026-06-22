@@ -24,9 +24,6 @@ public abstract class Ataque {
     //(new Vector2D(960, 800)
     public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxProjeteis) {
 
-        if(owner == null){
-            throw new AtaqueInvalidoException("owner","owner não pode ser nulo");
-        }
         if(dificuldade<0){
             throw new AtaqueInvalidoException("dificuldade", "dificuldade precisa ser maior que 0");
         }
@@ -45,6 +42,9 @@ public abstract class Ataque {
         if (finalizado) return;
         if(this.target == null){
             throw new NullTargetException();
+        }
+        if(this.owner == null){
+            throw new AtaqueInvalidoException("owner","nao pode ser nulo");
         }
         tempoDecorrido += dt;
         logicaAtaque(dt);
@@ -152,6 +152,11 @@ public abstract class Ataque {
     public void setTarget(PlayerProva target) {
         this.target = target;
         this.factory.setTarget(target);
+    }
+
+    public void setOwner(EntidadeBatalha owner) {
+        this.owner = owner;
+        this.factory.setOwner(owner);
     }
 
     public void reiniciarAtaque() {

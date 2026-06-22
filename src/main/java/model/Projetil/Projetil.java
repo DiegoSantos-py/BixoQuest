@@ -90,13 +90,6 @@ public class Projetil extends EntidadeBatalha {
     }
 
     public void setOwner(EntidadeBatalha owner) {
-
-        if (owner == null) {
-            throw new ProjetilInvalidoException(
-                    "owner",
-                    "não pode ser nulo");
-        }
-
         this.owner = owner;
     }
 
@@ -221,6 +214,10 @@ public class Projetil extends EntidadeBatalha {
 
         if (this.target == null) {
             throw new NullTargetException();
+        }
+
+        if (this.owner == null) {
+            throw new ProjetilInvalidoException("owner", "não pode ser nulo durante a atualização");
         }
 
         if (!isAtivo()) {

@@ -31,18 +31,23 @@ public class BatalhaController extends BaseController {
         this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, animalBase, this.npcRepository);
     }
 
+    public void iniciarProvaTeste(model.Evento.Prova.ProvaIDs provaId) {
+        Personagem personagemBase = new Personagem();
+        model.Evento.Prova.ProvaBatalha prova = model.Evento.Prova.ProvaFactory.criar(provaId, 1);
+        this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, prova, new repository.ResultadoProvaRepository());
+    }
+
     public void iniciarBatalhaAtim() {
         ArrayList<String> falas = new ArrayList<>();
         falas.add("oi");
         Animal animalBase = new Animal(
                 "Atim",
-                "assets/batalha/oponentes/animais/atim.png",
+                "/assets/batalha/oponentes/animais/atim.png",
                 0,
                 0,
                 falas,
                 Especie.CACHORRO,
-                10
-        );
+                10);
         iniciarBatalhaTeste(animalBase);
     }
 
@@ -54,19 +59,21 @@ public class BatalhaController extends BaseController {
         }
         return new ArrayList<>();
     }
-    
-    
+
     public EstadoBatalha getEstadoAtual() {
         return estadoAtual;
     }
 
-    public List<AcaoBatalha> getAcoes() {
-        if (estadoAtual == null || estadoAtual.getOponenteAtual() == null) return new ArrayList<>();
-        
-        List<AcaoBatalha> acoes = estadoAtual.getOponenteAtual().getAcoesDisponiveis();
-        return acoes != null ? acoes : new ArrayList<>();
+    public boolean isBatalhaAnimal() {
+        return estadoAtual != null && estadoAtual.isBatalhaAnimal();
     }
 
+    public List<AcaoBatalha> getAcoes() {
+        if (estadoAtual == null) return new ArrayList<>();
+
+        List<AcaoBatalha> acoes = estadoAtual.getAcoesBatalha();
+        return acoes != null ? acoes : new ArrayList<>();
+    }
 
     public void executarAcao(int indexAcao) {
         if (estadoAtual != null) {
@@ -79,7 +86,6 @@ public class BatalhaController extends BaseController {
             batalhaService.atacarOponenteAtual(estadoAtual, multiplicadorPrecisao);
         }
     }
-
 
     public void atualizar(float dt) {
         if (estadoAtual != null) {

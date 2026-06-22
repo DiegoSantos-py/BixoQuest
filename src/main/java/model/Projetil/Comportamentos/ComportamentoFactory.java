@@ -20,6 +20,12 @@ public class ComportamentoFactory {
                 1, 0.2f, // Dá 1 de dano no shield, 0.2 na nota
                 0.2f     // Dura apenas 0.2 segundos
         ));
+        despawnCache.put("SPAWN_FUNCAO", new ProjetilSpawnAoMorrer(
+                "/assets/batalha/projeteis/arranhao.png",
+                3, 650, // Tamanho igual ao da prévia (3x600)
+                1, 0.5f, // Dá 1 de dano no shield, 0.2 na nota
+                0.2f     // Dura apenas 0.2 segundos
+        ));
     }
 
     public static ComportamentoProjetil getAI(String key) {

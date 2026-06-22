@@ -39,8 +39,7 @@ public class ProjetilPool {
         }
     }
 
-    // Takes pre-decomposed velX/velY — angle math is the factory's job, not the
-    // pool's
+
     public Projetil spawn(float posX, float posY, float tamanhoX, float tamanhoY,
             float velX, float velY, float anguloHitbox,
             int danoShield, float danoNota, float duracaoMaxima, String spriteDir) {
@@ -49,7 +48,8 @@ public class ProjetilPool {
 
         Projetil p = pool[index];
         index = (index + 1) % pool.length;
-        p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima, spriteDir);
+        p.reviver(posX, posY, tamanhoX, tamanhoY, velX, velY, anguloHitbox, danoShield, danoNota, duracaoMaxima,
+                spriteDir);
         return p;
     }
 
@@ -71,4 +71,10 @@ public class ProjetilPool {
                 ativos.add(p);
         return ativos;
     }
+
+    public void atualizarOwner(EntidadeBatalha owner) {
+        for (Projetil p : pool) p.setOwner(owner);
+    }
+
+
 }

@@ -29,7 +29,7 @@ class ProjetilFactoryTest {
 
         mockOwner = new Oponente(
                 new Hitbox(new Vector2D(50, 50), new Vector2D(10, 10), 0),
-                new Vector2D(0, 0), "Boss", 100f, "dummy_sprite") {
+                new Vector2D(0, 0), "Boss", 100f, "dummy_sprite", "dummy_descricao", "dummy_texto") {
             // @Override n funciona
             public model.Ataque.Ataque criarAtaque(PlayerProva alvo, EntidadeBatalha owner) {
                 return new model.Ataque.Ataques.AtaqueMordida(alvo, owner, 10.0f);

@@ -14,6 +14,7 @@ import model.util.Vector2D;
 import repository.OponenteAnimalRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OponenteService {
 
@@ -23,29 +24,28 @@ public class OponenteService {
         this.oponenteAnimalRepository = oponenteAnimalRepository;
     }
 
-
     public Oponente criarOponenteAnimal(Animal animal) {
         float hpCalculado = animal.getIndole();
         // Spawna o inimigo na parte superior da tela
         Hitbox hitboxAnimal = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
-        //gera o oponente a partir do animal(npc do mapa)
+        // gera o oponente a partir do animal(npc do mapa)
         OponenteDados dadosDoAnimal;
         try {
             dadosDoAnimal = oponenteAnimalRepository.buscarPorNome(animal.getNome());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
 
             dadosDoAnimal = new OponenteDados(
-                    "assets/batalha/animais/default.png",
+                    "/assets/batalha/oponentes/animais/default.png",
                     "Ele não estava no json de oponentes",
-                    "NADA AQUI FOI PLANEJADO"
-            );
+                    "NADA AQUI FOI PLANEJADO");
         }
-        Oponente animalOponente = new Oponente(hitboxAnimal, new Vector2D(0, 0), animal.getNome(), hpCalculado, AreaConhecimento.ANI,
+        Oponente animalOponente = new Oponente(hitboxAnimal, new Vector2D(0, 0), animal.getNome(), hpCalculado,
+                AreaConhecimento.ANI,
                 dadosDoAnimal.getSpriteDir(), dadosDoAnimal.getDescricao(), dadosDoAnimal.getTextoCaixa());
-        //ataque mordida padrão de todos os animais
+        animalOponente.setMaxTurnos(15);
+        // ataque mordida padrão de todos os animais
         animalOponente.adicionarAtaque(new AtaqueMordida(null, animalOponente, animal.getIndole()));
-        //mas arranhao é exclusivo de gato e latido é exclusivo de cachorro
+        // mas arranhao é exclusivo de gato e latido é exclusivo de cachorro
         switch (animal.getEspecie()) {
             case GATO:
                 animalOponente.adicionarAtaque(new AtaqueArranhao(null, animalOponente, animal.getIndole()));
@@ -55,44 +55,46 @@ public class OponenteService {
                 break;
         }
 
+        return animalOponente;
+    }
+
+    public List<AcaoBatalha> gerarAcoesAnimal(Animal animal) {
         ArrayList<AcaoBatalha> acoesDisponiveis = new ArrayList<>();
         acoesDisponiveis.add(new AcaoBatalha(
                 "FAZER CARINHO",
-                ((float) (10 /animal.getIndole())),
+                ((float) (10 / animal.getIndole())),
                 1,
                 0,
                 0,
-                0
-                ));
+                0));
         acoesDisponiveis.add(new AcaoBatalha(
                 "TENTAR BRINCAR",
-                ((float) (5 /animal.getIndole())),
+                ((float) (5 / animal.getIndole())),
                 3,
                 0,
                 0,
-                0
-        ));
+                0));
 
         acoesDisponiveis.add(new AcaoBatalha(
                 "COMER SALGADO(VOCE)",
-                1   ,
+                1,
                 0,
                 1,
                 0,
-                0
-        ));
-        animalOponente.setAcoesDisponiveis(acoesDisponiveis);
-
-        return animalOponente;
+                0));
+        return acoesDisponiveis;
     }
 
     public Oponente criarOponenteQuestao(Questao questao, String spriteDirProva) {
         float hpCalculado = questao.getHp();
         // Spawna a questao na parte superior da tela
         Hitbox hitboxQuestao = new Hitbox(new Vector2D(960, 300), new Vector2D(50, 50), 0.0f);
-        Oponente oponenteQuestao = new Oponente(hitboxQuestao, new Vector2D(0, 0), questao.getNome(), hpCalculado, questao.getAreaConhecimento(),
+        Oponente oponenteQuestao = new Oponente(hitboxQuestao, new Vector2D(0, 0), questao.getNome(), hpCalculado,
+                questao.getAreaConhecimento(),
                 spriteDirProva, questao.getDescricao(), questao.getTextoCaixa());
-        //cada questão tem(até o momento) 1 ataque atribuido a ela, e o oponente recebe esse ataque
+        oponenteQuestao.setMaxTurnos(30);
+        // cada questão tem(até o momento) 1 ataque atribuido a ela, e o oponente recebe
+        // esse ataque
         oponenteQuestao.adicionarAtaque(questao.getAtaque());
 
         return oponenteQuestao;

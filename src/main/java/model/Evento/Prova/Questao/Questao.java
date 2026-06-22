@@ -8,11 +8,12 @@ public class Questao {
     private String descricao;
     private String textoCaixa;
     private AreaConhecimento areaConhecimento;
-    private float dificuldade; //escala com nivel da prova
+    private float dificuldade; // escala com nivel da prova
     private Ataque ataque;
     private float hp;
 
-    public Questao(String nome, float hp, AreaConhecimento areaConhecimento, float dificuldade, Ataque ataque,String descricao ,String textoCaixa) {
+    public Questao(String nome, float hp, AreaConhecimento areaConhecimento, float dificuldade, Ataque ataque,
+            String descricao, String textoCaixa) {
         this.nome = nome;
         this.hp = hp;
         this.areaConhecimento = areaConhecimento;
@@ -23,13 +24,14 @@ public class Questao {
 
     }
 
-    public float getHp(){
+    public float getHp() {
         return hp;
     }
 
-    public void setHp(float hp){
+    public void setHp(float hp) {
         this.hp = hp;
     }
+
     public String getNome() {
         return nome;
     }
@@ -70,5 +72,3 @@ public class Questao {
         this.ataque = ataque;
     }
 }
-
-

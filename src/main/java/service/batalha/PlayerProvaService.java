@@ -15,7 +15,7 @@ public class PlayerProvaService {
     public PlayerProva gerarPlayerProva(Personagem personagem, AreaConhecimento areaDaBatalha) {
         float conhecimento = (float) personagem.getConhecimento(areaDaBatalha);
         // Spawna o player na parte inferior da tela (assumindo 1920x1080)
-        Hitbox hitboxPlayerProva = new Hitbox(new Vector2D(960, 800), new Vector2D(5, 5), 0.0f);
+        Hitbox hitboxPlayerProva = new Hitbox(new Vector2D(960, 800), new Vector2D(10, 10), 0.0f);
         //o player inicia de forma estatica
         Vector2D velocidadeInicial = new Vector2D(0, 0);
         return new PlayerProva(hitboxPlayerProva, velocidadeInicial, conhecimento);

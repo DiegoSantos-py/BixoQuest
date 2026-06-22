@@ -7,10 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import model.Batalha.Oponente;
@@ -52,25 +49,42 @@ public class MenuSeletorBatalha extends StackPane {
         titulo.setFont(FonteUtil.pixel(48));
         titulo.setFill(Color.WHITE);
 
-        VBox botoes = criarBotoes();
+        HBox tabs = new javafx.scene.layout.HBox(20);
+        tabs.setAlignment(Pos.CENTER);
+        
+        Button btnAnimais = new Button("Animais");
+        estilizarBotao(btnAnimais);
+        btnAnimais.setPrefWidth(200);
+        
+        Button btnProvas = new Button("Provas");
+        estilizarBotao(btnProvas);
+        btnProvas.setPrefWidth(200);
+        
+        tabs.getChildren().addAll(btnAnimais, btnProvas);
 
-        ScrollPane scrollPane = new ScrollPane(botoes);
+        ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         scrollPane.setPrefViewportHeight(600);
         scrollPane.setMaxWidth(600);
         scrollPane.setPadding(new Insets(20));
 
+        btnAnimais.setOnAction(e -> scrollPane.setContent(criarBotoesAnimais()));
+        btnProvas.setOnAction(e -> scrollPane.setContent(criarBotoesProvas()));
+        
+        // Aba inicial padrão
+        scrollPane.setContent(criarBotoesAnimais());
+
         Button btnVoltar = new Button("Voltar");
         estilizarBotao(btnVoltar);
         btnVoltar.setOnAction(e -> aoVoltar.run());
 
-        menuItems.getChildren().addAll(titulo, scrollPane, btnVoltar);
+        menuItems.getChildren().addAll(titulo, tabs, scrollPane, btnVoltar);
 
         getChildren().addAll(backgroundView, menuItems);
     }
 
-    private VBox criarBotoes() {
+    private VBox criarBotoesAnimais() {
         VBox botoes = new VBox(15);
         botoes.setAlignment(Pos.CENTER);
 
@@ -93,6 +107,25 @@ public class MenuSeletorBatalha extends StackPane {
                 
                 botoes.getChildren().add(btnOponente);
             }
+        }
+
+        return botoes;
+    }
+
+    private VBox criarBotoesProvas() {
+        VBox botoes = new VBox(15);
+        botoes.setAlignment(Pos.CENTER);
+
+        for (model.Evento.Prova.ProvaIDs provaId : model.Evento.Prova.ProvaIDs.values()) {
+            Button btnProva = new Button("Iniciar " + provaId.name());
+            estilizarBotao(btnProva);
+            
+            btnProva.setOnAction(event -> {
+                batalhaController.iniciarProvaTeste(provaId);
+                aoIniciarBatalha.run(); 
+            });
+            
+            botoes.getChildren().add(btnProva);
         }
 
         return botoes;

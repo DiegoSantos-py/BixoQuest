@@ -79,7 +79,7 @@ public class MenuInicial extends StackPane {
         // F1 Keybind para Seletor de Batalha (Garante que vai pegar após o root carregar)
         this.setFocusTraversable(true);
         this.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.F1) {
+            if (event.getCode() == KeyCode.OPEN_BRACKET) {
                 aoAbrirSeletorBatalha.run();
             }
         });

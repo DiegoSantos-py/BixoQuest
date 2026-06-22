@@ -20,6 +20,7 @@ public class BatalhaLoopService {
 
         if (oponenteAtual != null && oponenteAtual.isDerrotado()) {
             iniciarNovaQuestao(estado);
+            oponenteAtual = estado.getOponenteAtual();
         }
 
         if (oponenteAtual == null) {
@@ -34,11 +35,12 @@ public class BatalhaLoopService {
                 estado.setVitoria(false);
                 return;
             }
-            if (player.getTurnosUsados() >= 15) {
-                estado.setFinalizado(true);
-                estado.setVitoria(false);
-                return;
-            }
+        }
+        
+        if (player.getTurnosUsados() >= oponenteAtual.getMaxTurnos()) {
+            estado.setFinalizado(true);
+            estado.setVitoria(false);
+            return;
         }
 
         if(estado.getTurnoAtual() == Turno.TURNO_PLAYER){
@@ -77,6 +79,7 @@ public class BatalhaLoopService {
         //salva a nota da questao anterior
         Oponente oponenteAtual = estado.getFilaOponentes().poll();
         estado.setOponenteAtual(oponenteAtual);
+        estado.setTurnoAtual(Turno.TURNO_PLAYER);
     }
 
 
@@ -84,7 +87,7 @@ public class BatalhaLoopService {
     public void executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
         if (estado.getTurnoAtual() != Turno.TURNO_PLAYER) return;
         
-        model.Player.AcaoBatalha acao = estado.getOponenteAtual().getAcoesDisponiveis().get(acaoIndex);
+        model.Player.AcaoBatalha acao = estado.getAcoesBatalha().get(acaoIndex);
         playerProvaService.executarAcao(estado.getPlayerProva(), acao);
         
         estado.setTurnoAtual(Turno.TURNO_INIMIGO);

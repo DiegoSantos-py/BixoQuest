@@ -17,10 +17,10 @@ public class Oponente extends EntidadeBatalha {
     protected boolean isDerrotado = false;
     protected AreaConhecimento areaConhecimento;
     protected float hpMaximo;
+    protected int maxTurnos = 15;
     protected float hpAtual;
    
     protected List<Ataque> ataquesDisponiveis = new ArrayList<>();
-    protected List<AcaoBatalha> acoesDisponiveis = new ArrayList<>();
 
     public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaxio, String spriteDir, String descricao, String textoCaixa) {
         super(hitbox, velocidade, spriteDir);
@@ -47,6 +47,14 @@ public class Oponente extends EntidadeBatalha {
             this.hpAtual = 0;
             this.isDerrotado = true;
         }
+    }
+
+    public int getMaxTurnos() {
+        return this.maxTurnos;
+    }
+
+    public void setMaxTurnos(int maxTurnos) {
+        this.maxTurnos = maxTurnos;
     }
 
     public String getNome() {
@@ -78,6 +86,7 @@ public class Oponente extends EntidadeBatalha {
     }
 
 
+
     public List<Ataque> getAtaquesDisponiveis() {
         return ataquesDisponiveis;
     }
@@ -99,14 +108,7 @@ public class Oponente extends EntidadeBatalha {
         return isDerrotado;
     }
     public void adicionarAtaque(Ataque ataque) {
+        ataque.setOwner(this);
         this.ataquesDisponiveis.add(ataque);
-    }
-
-    public List<AcaoBatalha> getAcoesDisponiveis() {
-        return acoesDisponiveis;
-    }
-
-    public void setAcoesDisponiveis(List<AcaoBatalha> acoesDisponiveis) {
-        this.acoesDisponiveis = acoesDisponiveis;
     }
 }

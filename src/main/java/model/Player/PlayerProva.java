@@ -17,7 +17,7 @@ public class PlayerProva extends EntidadeBatalha {
     private float danoAtaque;
     private float conhecimentoArea;
     private float TEMPO_IMUNIDADE = 0.5f; // 0.5 segundos de invulnerabilidade após receber dano
-    private float VELOCIDADE = 130f; // 80 unidades/s em todas as direcoes
+    private float VELOCIDADE = 150f; // 80 unidades/s em todas as direcoes
     private float tempoImunidadeRestante;
     // --- Estatística de desempenho ---
     private ArrayList<Float> desempenhoQuestoes;
@@ -36,7 +36,7 @@ public class PlayerProva extends EntidadeBatalha {
 
 
     public PlayerProva(Hitbox hitbox, Vector2D velocidade, float conhecimentoArea) {
-        super(hitbox, velocidade, "/assets/batalha/player.png");
+        super(hitbox, velocidade, "/assets/batalha/player/player.png");
         this.conhecimentoArea = conhecimentoArea;
         this.todosAcertosPerfeitos = true;
 
@@ -192,6 +192,10 @@ public class PlayerProva extends EntidadeBatalha {
         this.movendoDireita = movendoDireita;
     }
 
+
+    public int getShieldMaximo() {
+        return shieldMaximo;
+    }
 
     public int getShieldAtual() {
         return shieldAtual;

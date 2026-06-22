@@ -35,6 +35,7 @@ public class CenaBatalha extends StackPane {
     private StackPane barraProgressoBackground;
     private Rectangle barraProgressoFill;
     private Text textProgresso;
+    private Text textHpInimigo;
 
     private StackPane dynamicBox;
     private HBox hudShields;
@@ -54,6 +55,7 @@ public class CenaBatalha extends StackPane {
     private UIState estadoUI = null;
     private model.Batalha.Turno turnoAnterior = null;
     private int escudosAnteriores = -1;
+    private model.Batalha.Oponente oponenteAnterior = null;
     
     // Minigame variables
     private Rectangle minigameCursor;
@@ -158,7 +160,16 @@ public class CenaBatalha extends StackPane {
         }
 
         model.Batalha.Turno turnoAtual = batalhaController.getEstadoAtual().getTurnoAtual();
-        
+        model.Batalha.Oponente oponenteAtual = batalhaController.getEstadoAtual().getOponenteAtual();
+
+        if (oponenteAtual != oponenteAnterior) {
+            oponenteAnterior = oponenteAtual;
+            atualizarDadosIniciais();
+            if (turnoAtual == model.Batalha.Turno.TURNO_PLAYER) {
+                mudarEstadoUI(UIState.MENU_PRINCIPAL);
+            }
+        }
+
         if (turnoAtual != turnoAnterior) {
             turnoAnterior = turnoAtual;
             if (turnoAtual == model.Batalha.Turno.TURNO_PLAYER) {
@@ -179,8 +190,19 @@ public class CenaBatalha extends StackPane {
 
     private void atualizarTextosHUD() {
         if (batalhaController.getEstadoAtual() != null) {
-            int turnos = batalhaController.getEstadoAtual().getPlayerProva().getTurnosUsados();
-            textTurno.setText("TURNOS:\n" + turnos + "/15");
+            int maxTurnos = 15;
+            if (batalhaController.getEstadoAtual().getOponenteAtual() != null) {
+                maxTurnos = batalhaController.getEstadoAtual().getOponenteAtual().getMaxTurnos();
+            }
+
+            if (batalhaController.isBatalhaAnimal()) {
+                int turnos = batalhaController.getEstadoAtual().getPlayerProva().getTurnosUsados();
+                textTurno.setText("TURNOS:\n" + turnos + "/" + maxTurnos);
+            } else {
+                float nota = batalhaController.getEstadoAtual().getPlayerProva().getDesempenhoQuestaoAtual();
+                int turnos = batalhaController.getEstadoAtual().getPlayerProva().getTurnosUsados();
+                textTurno.setText(String.format("NOTA: %.1f\nTURNOS: %d/%d", nota, turnos, maxTurnos));
+            }
             
             if (batalhaController.getEstadoAtual().getOponenteAtual() != null) {
                 float hpAtual = batalhaController.getEstadoAtual().getOponenteAtual().getHpAtual();
@@ -189,7 +211,13 @@ public class CenaBatalha extends StackPane {
                     int porcentagem = (int) ((1f - (hpAtual / hpMax)) * 100);
                     if (porcentagem < 0) porcentagem = 0;
                     if (porcentagem > 100) porcentagem = 100;
-                    textProgresso.setText(porcentagem + "% DOMADO");
+                    
+                    if (textHpInimigo != null) {
+                        textHpInimigo.setText(String.format("HP: %.0f/%.0f", hpAtual, hpMax));
+                    }
+                    
+                    String label = batalhaController.isBatalhaAnimal() ? "% DOMADO" : "% CONCLUÍDO";
+                    textProgresso.setText(porcentagem + label);
                     barraProgressoFill.setWidth((porcentagem / 100f) * 800f);
                 }
             }
@@ -234,7 +262,17 @@ public class CenaBatalha extends StackPane {
 
             return iv;
         } catch (Exception e) {
-            return null;
+            try {
+                Image fallback = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/batalha/oponentes/animais/default.png")));
+                ImageView iv = new ImageView(fallback);
+                iv.setFitWidth(largura);
+                iv.setFitHeight(altura);
+                iv.setLayoutX(localX);
+                iv.setLayoutY(localY);
+                return iv;
+            } catch (Exception ex) {
+                return null;
+            }
         }
     }
 
@@ -255,17 +293,15 @@ public class CenaBatalha extends StackPane {
         float minX = atk.getMinX();
         float minY = atk.getMinY();
 
-        // Mantém fundo + bordas (primeiros 5 filhos), remove o resto
         while (arenaPane.getChildren().size() > 5) {
             arenaPane.getChildren().remove(5);
         }
 
         // Player
         model.Player.PlayerProva p = estado.getPlayerProva();
-        float pW = p.getHitbox().getTamanho().getX(); // Hitbox real (ex: 5x5)
+        float pW = p.getHitbox().getTamanho().getX();
         float pH = p.getHitbox().getTamanho().getY();
         
-        // Tamanho visual do player (maior que a hitbox para ficar visível)
         float visualW = 15f;
         float visualH = 15f;
         float spriteLX = p.getX() - minX - visualW / 2;
@@ -302,8 +338,6 @@ public class CenaBatalha extends StackPane {
                 
                 double grausHitbox = Math.toDegrees(proj.getHitbox().getAnguloRotacao());
                 
-                // Se o sprite sofreu +90 de compensação, o retângulo de debug precisa sofrer o mesmo para casar visualmente,
-                // A não ser que seja o arranhão, que não sofre compensação
                 if (!proj.getSpriteUrl().contains("arranhao")) {
                     grausHitbox += 90;
                 }
@@ -381,38 +415,144 @@ public class CenaBatalha extends StackPane {
                 break;
             case FINALIZADA:
                 audioService.stopBGM();
-                
-                dynamicBox.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(6))));
-                dynamicBox.setPadding(new Insets(20));
-                
-                boolean isVitoria = batalhaController.getEstadoAtual().isVitoria();
-                
-                VBox finalBox = new VBox(20);
-                finalBox.setAlignment(Pos.CENTER);
-                
-                Text titleText = new Text("BATALHA FINALIZADA");
-                titleText.setFont(FonteUtil.pixel(32));
-                titleText.setFill(Color.WHITE);
-                
-                Text resultText = new Text(isVitoria ? "VOCÊ VENCEU!" : "VOCÊ PERDEU...");
-                resultText.setFont(FonteUtil.pixel(24));
-                resultText.setFill(isVitoria ? Color.YELLOW : Color.RED);
-                
-                Button btnVoltar = criarBotaoFundoPretoBordaLaranja("VOLTAR");
-                btnVoltar.setOnAction(e -> {
-                    parar();
-                    if (aoVoltar != null) aoVoltar.run();
-                });
-                
-                finalBox.getChildren().addAll(titleText, resultText, btnVoltar);
-                dynamicBox.getChildren().add(finalBox);
+                if (batalhaController.isBatalhaAnimal()) {
+                    montarTelaFinalizadaAnimal();
+                } else {
+                    montarTelaFinalizadaProva();
+                }
                 break;
         }
     }
 
+    private void montarTelaFinalizadaAnimal() {
+        dynamicBox.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(6))));
+        dynamicBox.setPadding(new Insets(20));
+        
+        boolean isVitoria = batalhaController.getEstadoAtual().isVitoria();
+        
+        VBox finalBox = new VBox(20);
+        finalBox.setAlignment(Pos.CENTER);
+        
+        Text titleText = new Text("BATALHA FINALIZADA");
+        titleText.setFont(FonteUtil.pixel(32));
+        titleText.setFill(Color.WHITE);
+        
+        Text resultText = new Text(isVitoria ? "VOCÊ VENCEU!" : "VOCÊ PERDEU...");
+        resultText.setFont(FonteUtil.pixel(24));
+        resultText.setFill(isVitoria ? Color.YELLOW : Color.RED);
+        
+        Button btnVoltar = criarBotaoFundoPretoBordaLaranja("VOLTAR");
+        btnVoltar.setOnAction(e -> {
+            parar();
+            batalhaController.finalizarBatalha();
+            if (aoVoltar != null) aoVoltar.run();
+        });
+        
+        finalBox.getChildren().addAll(titleText, resultText, btnVoltar);
+        dynamicBox.getChildren().add(finalBox);
+    }
+
+    private void montarTelaFinalizadaProva() {
+        dynamicBox.setBorder(new Border(new BorderStroke(Color.web("#8A2BE2"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
+        dynamicBox.setPadding(new Insets(20));
+        
+        boolean isVitoria = batalhaController.getEstadoAtual().isVitoria();
+        model.Player.PlayerProva pp = batalhaController.getEstadoAtual().getPlayerProva();
+        
+        BorderPane layout = new BorderPane();
+        
+        // --- TOP ---
+        VBox topLeft = new VBox(10);
+        Text t1 = new Text(isVitoria ? "PROVA CONCLUÍDA" : "PROVA FALHOU");
+        t1.setFont(FonteUtil.pixel(32)); t1.setFill(Color.WHITE);
+        Text t2 = new Text(isVitoria ? "\"FOI UM SUCESSO!\"" : "\"VOCÊ FALHOU!\"");
+        t2.setFont(FonteUtil.pixel(20)); t2.setFill(Color.WHITE);
+        topLeft.getChildren().addAll(t1, t2);
+        
+        int turnos = pp.getTurnosUsados();
+        int maxTurnos = 30;
+        if (batalhaController.getEstadoAtual().getOponenteAtual() != null) {
+            maxTurnos = batalhaController.getEstadoAtual().getOponenteAtual().getMaxTurnos();
+        }
+        Text t3 = new Text("TURNOS:\n" + turnos + "/" + maxTurnos);
+        t3.setFont(FonteUtil.pixel(24)); t3.setFill(Color.WHITE); t3.setTextAlignment(TextAlignment.CENTER);
+        VBox topRight = new VBox(t3);
+        topRight.setAlignment(Pos.TOP_RIGHT);
+        
+        BorderPane top = new BorderPane();
+        top.setLeft(topLeft);
+        top.setRight(topRight);
+        layout.setTop(top);
+        
+        // --- CENTER ---
+        HBox center = new HBox(50);
+        center.setAlignment(Pos.CENTER);
+        center.setPadding(new Insets(20, 0, 20, 0));
+        
+        VBox col1 = new VBox(10);
+        Text c1t1 = new Text("DESEMPENHO GERAL:");
+        c1t1.setFont(FonteUtil.pixel(16)); c1t1.setFill(Color.WHITE);
+        col1.getChildren().add(c1t1);
+        
+        java.util.ArrayList<Float> desempenhos = pp.getDesempenhoQuestoes();
+        for (int i = 0; i < desempenhos.size(); i++) {
+            float notaQ = desempenhos.get(i);
+            Text qT = new Text(String.format("QUESTÃO %d: %.0f%%", (i+1), notaQ * 10f));
+            qT.setFont(FonteUtil.pixel(16)); qT.setFill(Color.WHITE);
+            col1.getChildren().add(qT);
+        }
+        
+        VBox col2 = new VBox(10);
+        col2.setAlignment(Pos.CENTER);
+        Text c2t1 = new Text("BÔNUS:");
+        c2t1.setFont(FonteUtil.pixel(16)); c2t1.setFill(Color.WHITE);
+        col2.getChildren().add(c2t1);
+        
+        boolean perfeitos = pp.getTodosAcertosPerfeitos();
+        boolean nPNota = !pp.getPerdeuNota();
+        boolean nLDano = !pp.getLevouAlgumDano();
+        boolean m20 = turnos <= 20;
+        
+        Text b1 = new Text("TODOS OS ATAQUES\nPERFEITOS: " + (perfeitos ? "+25%" : "0%"));
+        b1.setFont(FonteUtil.pixel(12)); b1.setFill(Color.WHITE); b1.setTextAlignment(TextAlignment.CENTER);
+        Text b2 = new Text("NÃO PERDEU NOTA: " + (nPNota ? "+25%" : "0%"));
+        b2.setFont(FonteUtil.pixel(12)); b2.setFill(Color.WHITE); b2.setTextAlignment(TextAlignment.CENTER);
+        Text b3 = new Text("NÃO LEVOU NENHUM\nDANO: " + (nLDano ? "+25%" : "0%"));
+        b3.setFont(FonteUtil.pixel(12)); b3.setFill(Color.WHITE); b3.setTextAlignment(TextAlignment.CENTER);
+        Text b4 = new Text("MENOS DE 20\nTURNOS: " + (m20 ? "+25%" : "0%"));
+        b4.setFont(FonteUtil.pixel(12)); b4.setFill(Color.WHITE); b4.setTextAlignment(TextAlignment.CENTER);
+        
+        col2.getChildren().addAll(b1, b2, b3, b4);
+        
+        center.getChildren().addAll(col1, col2);
+        layout.setCenter(center);
+        
+        // --- BOTTOM ---
+        BorderPane bottom = new BorderPane();
+        
+        float nf = service.batalha.BatalhaFinalizacaoService.calcularNotaFinal(desempenhos, pp);
+        
+        Text notaText = new Text(String.format("NOTA FINAL: %.2f", nf));
+        notaText.setFont(FonteUtil.pixel(24)); notaText.setFill(Color.WHITE);
+        bottom.setLeft(notaText);
+        BorderPane.setAlignment(notaText, Pos.CENTER_LEFT);
+        
+        Button btnCont = criarBotaoFundoPretoBordaLaranja("CONTINUAR");
+        btnCont.setOnAction(e -> {
+            parar();
+            batalhaController.finalizarBatalha();
+            if (aoVoltar != null) aoVoltar.run();
+        });
+        bottom.setRight(btnCont);
+        BorderPane.setAlignment(btnCont, Pos.CENTER_RIGHT);
+        
+        layout.setBottom(bottom);
+        dynamicBox.getChildren().add(layout);
+    }
+
     private void atualizarMinigame(float dt) {
         if (minigameCursor != null) {
-            minigameCursorX += minigameCursorDir * 1200 * dt; // Velocidade do cursor
+            minigameCursorX += minigameCursorDir * 600 * dt; // Velocidade do cursor
             if (minigameCursorX >= 350) {
                 minigameCursorX = 350;
                 minigameCursorDir = -1;
@@ -428,18 +568,21 @@ public class CenaBatalha extends StackPane {
         if (batalhaController.getEstadoAtual() == null) return;
         
         int shieldsAtuais = batalhaController.getEstadoAtual().getPlayerProva().getShieldAtual();
+        int maxShields = batalhaController.getEstadoAtual().getPlayerProva().getShieldMaximo();
+        
         if (shieldsAtuais != escudosAnteriores) {
             escudosAnteriores = shieldsAtuais;
             
             hudShields.getChildren().clear();
-            for(int i = 0; i < shieldsAtuais; i++) {
+            for(int i = 0; i < maxShields; i++) {
                 ImageView shield = new ImageView();
                 try {
-                    shield.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/batalha/escudo.png"))));
+                    String imgPath = (i < shieldsAtuais) ? "/assets/batalha/player/PlayerProvaShield.png" : "/assets/batalha/player/PlayerProvaShieldQuebrado.png";
+                    shield.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imgPath))));
                     shield.setFitWidth(40);
                     shield.setFitHeight(40);
                 } catch (Exception e) {
-                    Rectangle rect = new Rectangle(40, 40, Color.GOLD);
+                    Rectangle rect = new Rectangle(40, 40, (i < shieldsAtuais) ? Color.GOLD : Color.GRAY);
                     hudShields.getChildren().add(rect);
                     continue;
                 }
@@ -461,6 +604,9 @@ public class CenaBatalha extends StackPane {
         
         // Esquerda (Nome e Descrição)
         VBox infoInimigo = new VBox(10);
+        infoInimigo.setPrefWidth(400); // Fixed width to balance header
+        infoInimigo.setMaxWidth(400);
+        
         textNomeInimigo = new Text("NOME");
         textNomeInimigo.setFont(FonteUtil.pixel(40));
         textNomeInimigo.setFill(Color.WHITE);
@@ -481,11 +627,18 @@ public class CenaBatalha extends StackPane {
         cabecalho.setCenter(spriteInimigo);
 
         // Direita (Turnos)
+        VBox infoTurnoBox = new VBox();
+        infoTurnoBox.setPrefWidth(400); // Same width as infoInimigo
+        infoTurnoBox.setMaxWidth(400);
+        infoTurnoBox.setAlignment(Pos.TOP_RIGHT);
+        
         textTurno = new Text("TURNOS:\n1/15");
         textTurno.setFont(FonteUtil.pixel(32));
         textTurno.setFill(Color.WHITE);
-        textTurno.setTextAlignment(TextAlignment.CENTER);
-        cabecalho.setRight(textTurno);
+        textTurno.setTextAlignment(TextAlignment.RIGHT);
+        
+        infoTurnoBox.getChildren().add(textTurno);
+        cabecalho.setRight(infoTurnoBox);
 
         // --- 2. BARRA DE PROGRESSO (Middle Section) ---
         barraProgressoBackground = new StackPane();
@@ -497,7 +650,7 @@ public class CenaBatalha extends StackPane {
         barraProgressoFill = new Rectangle(0, 40, Color.web("#FF69B4")); // Rosa
         StackPane.setAlignment(barraProgressoFill, Pos.CENTER_LEFT);
 
-        textProgresso = new Text("0% DOMADO");
+        textProgresso = new Text("0%");
         textProgresso.setFont(FonteUtil.pixel(20));
         textProgresso.setFill(Color.BLACK);
 
@@ -515,7 +668,15 @@ public class CenaBatalha extends StackPane {
         hudShields.setPickOnBounds(false);
 
         // --- MONTAGEM FINAL ---
-        layoutPrincipal.getChildren().addAll(cabecalho, barraProgressoBackground, dynamicBox);
+        textHpInimigo = new Text("HP: -/-");
+        textHpInimigo.setFont(FonteUtil.pixel(20));
+        textHpInimigo.setFill(Color.WHITE);
+
+        VBox barraContainer = new VBox(5);
+        barraContainer.setAlignment(Pos.CENTER);
+        barraContainer.getChildren().addAll(textHpInimigo, barraProgressoBackground);
+
+        layoutPrincipal.getChildren().addAll(cabecalho, barraContainer, dynamicBox);
         
         StackPane.setAlignment(hudShields, Pos.BOTTOM_RIGHT);
         
@@ -545,7 +706,12 @@ public class CenaBatalha extends StackPane {
                     spriteInimigo.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spriteDir))));
                 }
             } catch (Exception e) {
-                System.out.println("Não foi possível carregar o sprite do oponente.");
+                System.out.println("Não foi possível carregar o sprite do oponente. Usando fallback...");
+                try {
+                    spriteInimigo.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/batalha/oponentes/animais/default.png"))));
+                } catch (Exception ex) {
+                    System.out.println("Fallback também falhou!");
+                }
             }
         }
     }
@@ -589,18 +755,19 @@ public class CenaBatalha extends StackPane {
         // Caixa de texto
         StackPane caixaTexto = new StackPane();
         caixaTexto.setPrefSize(1000, 150);
-        caixaTexto.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
-        
-        if (textDialogo == null) {
-            textDialogo = new Text();
-            textDialogo.setFill(Color.WHITE);
-            textDialogo.setFont(FonteUtil.pixel(20));
-        }
-        
-        if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual().getTextoCaixa() != null) {
+        caixaTexto.setBorder(new Border(
+                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
+
+        textDialogo = new Text();
+        textDialogo.setFill(Color.WHITE);
+        textDialogo.setFont(FonteUtil.pixel(20));
+
+        if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null
+                && batalhaController.getEstadoAtual().getOponenteAtual().getTextoCaixa() != null) {
             textDialogo.setText(batalhaController.getEstadoAtual().getOponenteAtual().getTextoCaixa().toUpperCase());
         } else {
-            textDialogo.setText("ELE PARECE DESCONFIADO.");
+            textDialogo.setText(
+                    batalhaController.isBatalhaAnimal() ? "ELE PARECE DESCONFIADO." : "A QUESTÃO PARECE DIFÍCIL.");
         }
         
         caixaTexto.getChildren().add(textDialogo);
@@ -609,7 +776,7 @@ public class CenaBatalha extends StackPane {
         HBox botoesBox = new HBox(40);
         botoesBox.setAlignment(Pos.CENTER);
         
-        Button btnDomar = criarBotaoFundoPretoBordaLaranja("TENTAR DOMAR");
+        Button btnDomar = criarBotaoFundoPretoBordaLaranja(batalhaController.isBatalhaAnimal() ? "TENTAR DOMAR" : "RESPONDER");
         btnDomar.setOnAction(e -> mudarEstadoUI(UIState.MINIGAME_ATAQUE));
         
         Button btnAcoes = criarBotaoFundoPretoBordaLaranja("AÇÕES DISPONÍVEIS");
@@ -625,7 +792,7 @@ public class CenaBatalha extends StackPane {
         VBox container = new VBox(10);
         container.setAlignment(Pos.CENTER);
 
-        Text titulo = new Text("TENTANDO DOMAR!");
+        Text titulo = new Text(batalhaController.isBatalhaAnimal() ? "TENTANDO DOMAR!" : "RESPONDENDO!");
         titulo.setFill(Color.WHITE);
         titulo.setFont(FonteUtil.pixel(20));
 

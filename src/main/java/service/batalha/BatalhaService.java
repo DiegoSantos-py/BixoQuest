@@ -16,6 +16,8 @@ import repository.ResultadoProvaRepository;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.List;
+import model.Player.AcaoBatalha;
 
 public class BatalhaService {
 
@@ -25,37 +27,40 @@ public class BatalhaService {
     private final BatalhaFinalizacaoService finalizacaoService = new BatalhaFinalizacaoService();
     private final PlayerProvaService playerProvaService = new PlayerProvaService();
 
-    //inicia a batalha animal
+    // inicia a batalha animal
     public EstadoBatalha iniciarBatalha(Personagem personagem, Animal animal, NpcRepository npcRepository) {
         Oponente oponenteAnimal = oponenteService.criarOponenteAnimal(animal);
-        //seta o target de cada ataque dos animais como o o jogador
+        // seta o target de cada ataque dos animais como o o jogador
         PlayerProva playerProva = playerProvaService.gerarPlayerProva(personagem, AreaConhecimento.ANI);
-        for(var ataque : oponenteAnimal.getAtaquesDisponiveis()){
+        for (var ataque : oponenteAnimal.getAtaquesDisponiveis()) {
             ataque.setTarget(playerProva);
         }
 
         Queue<Oponente> oponentes = new LinkedList<>();
-        //adiciona todos os oponentes da batalha(No caso 1 unico(o animal em si))
+        // adiciona todos os oponentes da batalha(No caso 1 unico(o animal em si))
         oponentes.add(oponenteAnimal);
-        String musicaDir = "/assets/audio/musicaAnimal" + MathUtils.randomIntInRange(1,3) + ".mp3"; //escolhe uma musica aleatoria
-        return new EstadoBatalha(playerProva, personagem, oponentes, animal, npcRepository, musicaDir);
+        String musicaDir = "/assets/audio/musicaAnimal" + MathUtils.randomIntInRange(1, 3) + ".mp3"; // escolhe uma
+                                                                                                     // musica aleatoria
+        List<AcaoBatalha> acoes = oponenteService.gerarAcoesAnimal(animal);
+        return new EstadoBatalha(playerProva, personagem, oponentes, animal, npcRepository, musicaDir, acoes);
     }
 
-    //mesmo fluxo pra prova
-    public EstadoBatalha iniciarBatalha(Personagem personagem, ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository) {
+    // mesmo fluxo pra prova
+    public EstadoBatalha iniciarBatalha(Personagem personagem, ProvaBatalha provaBatalha,
+            ResultadoProvaRepository resultadoProvaRepository) {
         Queue<Oponente> oponentes = new LinkedList<>();
         PlayerProva playerProva = playerProvaService.gerarPlayerProva(personagem, provaBatalha.getAreaConhecimento());
-        //mas cada questao é 1 oponente difernete com 1 ATAQUE(em média)(pode ter mais)
-        for(Questao questao : provaBatalha.getQuestoes()){
-            //cria os oponentes de cada questao
+        // mas cada questao é 1 oponente difernete com 1 ATAQUE(em média)(pode ter mais)
+        for (Questao questao : provaBatalha.getQuestoes()) {
+            // cria os oponentes de cada questao
             Oponente oponenteQuestao = oponenteService.criarOponenteQuestao(questao, provaBatalha.getSpriteDirProva());
-            for(var ataque : oponenteQuestao.getAtaquesDisponiveis()){
-                //seta o targeet dos ataques como o jogador
+            for (var ataque : oponenteQuestao.getAtaquesDisponiveis()) {
+                // seta o targeet dos ataques como o jogador
                 ataque.setTarget(playerProva);
             }
             oponentes.add(oponenteQuestao);
         }
-        return new EstadoBatalha(playerProva, personagem, oponentes, provaBatalha, resultadoProvaRepository);
+        return new EstadoBatalha(playerProva, personagem, oponentes, provaBatalha, resultadoProvaRepository, provaBatalha.getAcoesBatalha());
     }
 
     public void atualizar(EstadoBatalha estado, float dt) {
@@ -82,7 +87,7 @@ public class BatalhaService {
         if (estado.getAnimal() != null) {
             finalizacaoService.finalizarBatalha(estado, estado.getAnimal());
         }
-        if(estado.getProvaBatalha() != null) {
+        if (estado.getProvaBatalha() != null) {
             finalizacaoService.finalizarBatalha(estado, estado.getProvaBatalha());
         }
     }
