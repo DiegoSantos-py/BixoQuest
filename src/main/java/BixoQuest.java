@@ -1,16 +1,10 @@
+import controller.GameController;
 import controller.MapaController;
 import controller.NpcController;
 import javafx.application.Application;
-import repository.EventoRepository;
-import repository.LocalRepository;
-import repository.NpcRepository;
-import repository.PersonagemRepository;
-import service.EventoService;
-import service.MapaService;
-import service.NpcService;
-import service.PersonagemService;
+import repository.*;
+import service.*;
 import view.controleTelas.GerenciadorTelas;
-
 import controller.PersonagemController;
 import javafx.stage.Stage;
 
@@ -18,37 +12,65 @@ public class BixoQuest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Repositórios
+        LocalRepository localRepository = new LocalRepository();
+        SemestreRepository semestreRepository = new SemestreRepository();
+        DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
         EventoRepository eventoRepository = new EventoRepository();
-        EventoService eventoService = new EventoService(eventoRepository);
-
-        PersonagemRepository personagemRepository = new PersonagemRepository();
-        PersonagemService personagemService = new PersonagemService(personagemRepository,eventoService);
-        PersonagemController personagemController= new PersonagemController(personagemService);
-
-        LocalRepository mapaRepository = new LocalRepository();
-        MapaService mapaService = new MapaService(mapaRepository);
-        MapaController mapaController = new MapaController(mapaService);
-
         NpcRepository npcRepository = new NpcRepository();
+        PersonagemRepository personagemRepository = new PersonagemRepository();
+
+        // Serviços
+        EventoService eventoService = new EventoService(eventoRepository);
+        PersonagemService personagemService = new PersonagemService(personagemRepository, eventoService);
+        DiaService diaService = new DiaService();
+        SemestreService semestreService = new SemestreService( semestreRepository, disciplinaRepository);
+        MapaService mapaService = new MapaService(localRepository);
         NpcService npcService = new NpcService(npcRepository);
+        InicializacaoService inicializacaoService = new InicializacaoService(
+                localRepository,
+                disciplinaRepository,
+                eventoRepository,
+                npcRepository,
+                semestreRepository,
+                personagemRepository
+        );
+
+        GameService gameService = new GameService(
+                diaService,
+                semestreService,
+                personagemService,
+                inicializacaoService,
+                localRepository,
+                semestreRepository,
+                disciplinaRepository,
+                eventoRepository,
+                npcRepository,
+                personagemRepository
+        );
+
+        PersonagemController personagemController = new PersonagemController(personagemService);
+        MapaController mapaController = new MapaController(mapaService);
         NpcController npcController = new NpcController(npcService);
+        GameController gameController = new GameController(gameService);
+
+
         try {
-            personagemRepository.carregar();
             eventoRepository.carregar();
-        }
-        catch (Exception PersistenciaException){
+            personagemRepository.carregar();
+        } catch (Exception e) {
             System.out.println("Erro ao carregar arquivos, dados corrompidos?");
         }
-
 
         primaryStage.setTitle("BixoQuest");
         primaryStage.setFullScreen(true);
 
-        GerenciadorTelas telas =
-                new GerenciadorTelas(primaryStage,
-                        personagemController,
-                        mapaController,
-                        npcController);
+        GerenciadorTelas telas = new GerenciadorTelas(
+                primaryStage,
+                personagemController,
+                mapaController,
+                npcController,
+                gameController);
 
         telas.mostrarInicio();
 

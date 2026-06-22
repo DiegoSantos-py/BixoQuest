@@ -1,5 +1,6 @@
 package view.controleTelas;
 
+import controller.GameController;
 import controller.MapaController;
 import controller.NpcController;
 import controller.PersonagemController;
@@ -20,6 +21,7 @@ public class ControllerTelas {
     private final PersonagemController personagemController;
     private final MapaController mapaController;
     private final NpcController npcController;
+    private final GameController gameController;
     private final DiretorCena diretorCena;
 
     private CenaJogo cenaAtual;
@@ -28,12 +30,13 @@ public class ControllerTelas {
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
             MapaController mapaController,
-            NpcController npcController
+            NpcController npcController, GameController gameController
     ) {
         this.gerenciador           = gerenciador;
         this.personagemController  = personagemController;
         this.mapaController        = mapaController;
         this.npcController         = npcController;
+        this.gameController        = gameController;
         this.diretorCena           = new DiretorCena();
     }
 
@@ -66,9 +69,9 @@ public class ControllerTelas {
 
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         return new AnimacaoInicioView(
-                1920,
-                1080,
-                () -> gerenciador.mostrarTelaJogo()
+                () -> gerenciador.mostrarTelaJogo(),
+                gameController,
+                sessaoAtual
         );
     }
 

@@ -54,7 +54,7 @@ public class Semestre {
     }
 
     @JsonIgnore
-    public int getQuantidadeDias() {return this.dias.size();}
+    public int getDiaAtual() {return this.dias.size();}
 
     public boolean terminou() {
         return dias.size() >= MAX_DIAS;

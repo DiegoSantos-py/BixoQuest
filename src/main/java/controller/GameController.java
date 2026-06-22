@@ -16,7 +16,7 @@ public class GameController extends BaseController {
 
     // Inicialização
     /** Exibe erro se ocorrer falha ao carregar arquivos ou inicializar o jogo */
-    public void iniciarJogo(Personagem personagem) {
+    public void iniciarJogo(int personagem) {
         try {
             service.iniciarJogo(personagem);
             exibirSucesso("Jogo iniciado com sucesso.");
@@ -45,7 +45,7 @@ public class GameController extends BaseController {
         return service.getSemestre();
     }
 
-    public Dia getDiaAtual() {
+    public int getDiaAtual() {
         return service.getDiaAtual();
     }
 

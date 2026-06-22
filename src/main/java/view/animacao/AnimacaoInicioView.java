@@ -1,5 +1,6 @@
 package view.animacao;
 
+import controller.GameController;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
@@ -22,15 +23,29 @@ import java.util.Objects;
 public class AnimacaoInicioView extends StackPane {
 
     private final Runnable aoFinalizar;
-
-    private final List<Node> frames = List.of(
-            criarImagem("/animacao/Animacao_inicio1.png"),
-            criarImagem("/animacao/Animacao_inicio2.png"),
-            montarTelaInicioDia()
-
-    );
-
+    private final GameController gameController;
+    private final List<Node> frames;
     private int indiceAtual = 0;
+
+    public AnimacaoInicioView(
+            Runnable aoFinalizar,
+            GameController gameController,
+            int sessaoAtual
+    ) {
+        this.aoFinalizar = aoFinalizar;
+        this.gameController = gameController;
+
+        gameController.iniciarJogo(sessaoAtual); // inicializa antes de montar a tela
+
+        this.frames = List.of(
+                criarImagem("/animacao/Animacao_inicio1.png"),
+                criarImagem("/animacao/Animacao_inicio2.png"),
+                montarTelaInicioDia()             // gameController já está atribuído
+        );
+
+        getChildren().add(frames.get(0));
+        iniciarAnimacao();
+    }
 
     private ImageView criarImagem (String sprite){
         Image backgroundImage = new Image(
@@ -43,6 +58,7 @@ public class AnimacaoInicioView extends StackPane {
         backgroundView.setFitHeight(1080);
         return backgroundView;
     }
+
     private StackPane montarTelaInicioDia() {
         ImageView backgroundView = criarImagem("/assets/Background.png");
 
@@ -59,7 +75,7 @@ public class AnimacaoInicioView extends StackPane {
         bgView.setFitWidth(600);
         bgView.setPreserveRatio(true);
 
-        Text bg_texto = new Text("Dia ");
+        Text bg_texto = new Text("Dia " + Integer.toString(gameController.getDiaAtual()));
         bg_texto.setFont(FonteUtil.pixel(40));
         bg_texto.setFill(Color.WHITE);
 
@@ -79,18 +95,6 @@ public class AnimacaoInicioView extends StackPane {
         tela.getChildren().addAll(backgroundView, inicioItens, texto);
 
         return tela;
-    }
-
-    public AnimacaoInicioView(
-            double largura,
-            double altura,
-            Runnable aoFinalizar
-    ) {
-        this.aoFinalizar = aoFinalizar;
-
-        getChildren().addAll(frames.get(0));
-
-        iniciarAnimacao();
     }
 
     private void iniciarAnimacao() {

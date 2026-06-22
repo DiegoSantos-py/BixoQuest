@@ -26,7 +26,7 @@ public class GameService {
 
     private Semestre semestre;
     private Dia diaAtual;
-    private Personagem personagem;
+    private int personagem;
 
     public GameService(DiaService diaService,
                        SemestreService semestreService,
@@ -58,7 +58,7 @@ public class GameService {
      * Se não existir, inicia um novo jogo.
      * lança PersistenciaException se ocorrer falha ao carregar qualquer arquivo
      */
-    public void iniciarJogo(Personagem personagem) throws PersistenciaException {
+    public void iniciarJogo(int personagem) throws PersistenciaException {
         this.personagem = personagem;
 
         // 1. Carrega e reconstrói todos os objetos do jogo
@@ -67,7 +67,7 @@ public class GameService {
         // 2. Verifica se o personagem já tem semestres salvos
         List<Semestre> semestresExistentes;
         try {
-            semestresExistentes = semestreRepo.getSemestresPorJogador(personagem.getPersonagemId());
+            semestresExistentes = semestreRepo.getSemestresPorJogador(personagem);
         } catch (Exception e) {
             semestresExistentes = null;
         }
@@ -77,18 +77,11 @@ public class GameService {
             semestre = semestresExistentes.get(semestresExistentes.size() - 1);
         } else {
             // Novo jogo — cria primeiro semestre
-            semestre = semestreService.iniciarPrimeiroSemestre(personagem.getPersonagemId());
+            semestre = semestreService.iniciarPrimeiroSemestre(personagem);
         }
 
         // 3. Avança para o próximo dia
         diaAtual = semestreService.avancarDia(semestre);
-
-        // 4. Define posição inicial no ponto de ônibus
-        Local pontoOnibus = localRepo.buscarPorTipo(TipoLocal.PONTO_ONIBUS);
-        personagem.setLocalAtual(pontoOnibus);
-        personagem.setcX(0);
-        personagem.setcY(0);
-        personagem.setEnergia(40.0);
 
         // 5. Inicia o dia
         diaService.iniciarDia(diaAtual);
@@ -111,15 +104,10 @@ public class GameService {
             // Avança para o próximo dia
             diaAtual = semestreService.avancarDia(semestre);
 
-            Local pontoOnibus = localRepo.buscarPorTipo(TipoLocal.PONTO_ONIBUS);
-            personagem.setLocalAtual(pontoOnibus);
-            personagem.setcX(0);
-            personagem.setcY(0);
-
             diaService.iniciarDia(diaAtual);
         } else {
             // Encerra o semestre e inicia o próximo
-            semestre = semestreService.encerrarSemestre(personagem, semestre);
+            semestre = semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
         }
     }
 
@@ -130,7 +118,7 @@ public class GameService {
     public boolean encerrarJogo() {
         List<Semestre> semestresJogador;
         try {
-            semestresJogador = semestreRepo.getSemestresPorJogador(personagem.getPersonagemId());
+            semestresJogador = semestreRepo.getSemestresPorJogador(personagem);
         } catch (Exception e) {
             return false;
         }
@@ -171,7 +159,7 @@ public class GameService {
 
 
     public Semestre getSemestre() { return semestre; }
-    public Dia getDiaAtual() { return diaAtual; }
-    public Personagem getPersonagem() { return personagem; }
-    public void setPersonagem(Personagem personagem) { this.personagem = personagem; }
+    public int getDiaAtual() { return semestre.getDiaAtual(); }
+    public Personagem getPersonagem() { return personagemRepo.buscarPorId(personagem); }
+    public void setPersonagem(int personagem) { this.personagem = personagem; }
 }

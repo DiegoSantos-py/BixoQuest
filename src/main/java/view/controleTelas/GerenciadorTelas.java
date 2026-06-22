@@ -1,5 +1,6 @@
 package view.controleTelas;
 
+import controller.GameController;
 import controller.MapaController;
 import controller.NpcController;
 import controller.PersonagemController;
@@ -17,14 +18,16 @@ public class GerenciadorTelas {
             Stage stage,
             PersonagemController personagemController,
             MapaController mapaController,
-            NpcController npcController
+            NpcController npcController,
+            GameController gameController
     ) {
         this.stage = stage;
         this.controllerTelas = new ControllerTelas(
                 this,
                 personagemController,
                 mapaController,
-                npcController
+                npcController,
+                gameController
         );
     }
 

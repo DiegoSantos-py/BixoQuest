@@ -83,4 +83,6 @@ public class Dia {
 
     public boolean isSaiuDoPonto() { return saiuDoPonto; }
     public void setSaiuDoPonto(boolean saiuDoPonto) { this.saiuDoPonto = saiuDoPonto; }
+
+
 }
