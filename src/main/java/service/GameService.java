@@ -61,10 +61,10 @@ public class GameService {
     public void iniciarJogo(int personagem) throws PersistenciaException {
         this.personagem = personagem;
 
-        // 1. Carrega e reconstrói todos os objetos do jogo
+        // Carrega e reconstrói todos os objetos do jogo
         inicializacaoService.inicializar();
 
-        // 2. Verifica se o personagem já tem semestres salvos
+        //  Verifica se o personagem já tem semestres salvos
         List<Semestre> semestresExistentes;
         try {
             semestresExistentes = semestreRepo.getSemestresPorJogador(personagem);
@@ -74,16 +74,16 @@ public class GameService {
 
         if (semestresExistentes != null && !semestresExistentes.isEmpty()) {
             // Retoma sessão anterior — usa o último semestre
-            semestre = semestresExistentes.get(semestresExistentes.size() - 1);
+            this.semestre = semestresExistentes.get(semestresExistentes.size() - 1);
         } else {
             // Novo jogo — cria primeiro semestre
-            semestre = semestreService.iniciarPrimeiroSemestre(personagem);
+            this.semestre = semestreService.iniciarPrimeiroSemestre(personagem);
         }
 
-        // 3. Avança para o próximo dia
+        //  Avança para o próximo dia
         diaAtual = semestreService.avancarDia(semestre);
 
-        // 5. Inicia o dia
+        //  Inicia o dia
         diaService.iniciarDia(diaAtual);
     }
 

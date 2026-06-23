@@ -8,5 +8,7 @@ public enum AreaConhecimento {
     HUM,
     NAT,
     TFC,
+    TCC,
+    EST,
     ANI
 }

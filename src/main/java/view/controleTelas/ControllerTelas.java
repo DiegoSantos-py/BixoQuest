@@ -90,7 +90,7 @@ public class ControllerTelas {
             switch (borda) {
 //                case CenaJogo.BORDA_NORTE -> gerenciador.mostrarCenaAcima();
 //                case CenaJogo.BORDA_SUL   -> gerenciador.mostrarCenaAbaixo();
-                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaJogoEntrada();
+                case LESTE -> gerenciador.mostrarTelaJogoEntrada();
 //                case CenaJogo.BORDA_OESTE -> gerenciador.mostrarCenaEsquerda();
             }
         });
@@ -106,7 +106,7 @@ public class ControllerTelas {
             switch (borda) {
                 //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
                 //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
-                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaCantina();
+                case LESTE -> gerenciador.mostrarTelaCantina();
                 //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
             }
         });
@@ -122,7 +122,7 @@ public class ControllerTelas {
             switch (borda) {
                 //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
                 //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
-                case CenaJogo.BORDA_LESTE -> gerenciador.mostrarTelaJogo();
+                case LESTE -> gerenciador.mostrarTelaJogo();
                 //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
             }
         });

@@ -16,6 +16,7 @@ public class Semestre {
     private Map<Disciplina, Boolean> resultados;
     private static int numeroSemestreGlobal = 0;
     private int numeroSemestre;
+    private int diaAtual;
     private Map<String, Boolean> resultadosNomes = new HashMap<>();
 
     public Semestre(){
@@ -53,8 +54,7 @@ public class Semestre {
         this.dias = dias;
     }
 
-    @JsonIgnore
-    public int getDiaAtual() {return this.dias.size();}
+    public int getDiaAtual() {return this.diaAtual;}
 
     public boolean terminou() {
         return dias.size() >= MAX_DIAS;
@@ -62,10 +62,15 @@ public class Semestre {
 
     public void adicionarDia(Dia dia){
         dias.add(dia);
+        this.diaAtual = dias.size();
     }
 
     public Map<Disciplina, Boolean> getResultados() {
         return resultados;
+    }
+
+    public void setDiaAtual(int diaAtual) {
+        this.diaAtual = diaAtual;
     }
 
     public boolean foiAprovado(Disciplina d) {

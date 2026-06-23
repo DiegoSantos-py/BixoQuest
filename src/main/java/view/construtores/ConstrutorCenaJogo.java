@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import view.cena.CenaJogo;
+import view.util.Borda;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ConstrutorCenaJogo implements Construtor {
     private Rectangle playerHitbox;
     private double playerHitboxOffsetX;
     private double playerHitboxOffsetY;
-    private Consumer<String> onBordaAtingida;
+    private Consumer<Borda> onBordaAtingida;
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -74,7 +75,7 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void setOnBordaAtingida(Consumer<String> onBordaAtingida) {
+    public void setOnBordaAtingida(Consumer<Borda> onBordaAtingida) {
         this.onBordaAtingida = onBordaAtingida;
     }
 
@@ -120,7 +121,7 @@ public class ConstrutorCenaJogo implements Construtor {
 
     private Rectangle criarHitbox(double x, double y, double largura, double altura) {
         Rectangle hitbox = new Rectangle(x, y, largura, altura);
-        hitbox.setVisible(false);
+        hitbox.setVisible(true);
         return hitbox;
     }
 }

@@ -4,13 +4,10 @@ import exception.Local.LocalDuplicadoException;
 import exception.Local.LocalInvalidoException;
 import exception.Local.LocalNaoEncontradoException;
 import exception.PersistenciaException;
-import model.Local.Direcao;
-import model.Local.Local;
-import model.Local.Mapa;
-import model.Local.TipoLocal;
-import model.Local.ZonaInterativa;
+import model.Local.*;
 import service.MapaService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +34,7 @@ public class MapaController extends BaseController {
         try {
             Mapa mapa = service.criarMapa();
             exibirSucesso("Mapa criado com sucesso.");
+            service.salvar();
             return Optional.of(mapa);
         } catch (PersistenciaException e) {
             tratarErroPersistencia(e);
@@ -55,6 +53,15 @@ public class MapaController extends BaseController {
         }
     }
 
+    public String buscarSpritePorNome(String nome) {
+        try {
+            return service.buscarSpritePorNome(nome);
+        } catch (LocalNaoEncontradoException e) {
+            tratarNaoEncontrado(e);
+            return "/assets/Errors/ImageNotFound.png";
+        }
+    }
+
     /** Retorna Optional vazio se não existir local com o tipo informado */
     public Optional<Local> buscarPorTipo(TipoLocal tipo) {
         try {
@@ -69,16 +76,12 @@ public class MapaController extends BaseController {
         return service.carregarLocais();
     }
 
-    // Lógica de negócio
-    /** Exibe erro se origem, destino ou direção forem inválidos ou conexão já existir */
-    public void conectarLocais(Local origem, Local destino, Direcao direcao) {
+    public List<ElementoLocal> getElementos(String nomeLocal) {
         try {
-            service.conectarLocais(origem, destino, direcao);
-            exibirSucesso("Locais conectados com sucesso.");
-        } catch (LocalInvalidoException e) {
-            tratarInvalido(e);
-        } catch (LocalDuplicadoException e) {
-            tratarDuplicado(e);
+            return service.buscarPorNome(nomeLocal).getElementos();
+        } catch (LocalNaoEncontradoException e) {
+            tratarNaoEncontrado(e);
+            return List.of();
         }
     }
 

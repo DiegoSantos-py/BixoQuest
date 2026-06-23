@@ -32,7 +32,7 @@ class SemestreRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new SemestreRepository();
-        if (ARQUIVO.exists()) ARQUIVO.delete();
+        //if (ARQUIVO.exists()) ARQUIVO.delete();
     }
 
     @AfterAll

@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -60,7 +59,7 @@ public class AnimacaoInicioView extends StackPane {
     }
 
     private StackPane montarTelaInicioDia() {
-        ImageView backgroundView = criarImagem("/assets/Background.png");
+        ImageView backgroundView = criarImagem("/assets/background/Background.png");
 
         VBox inicioItens = new VBox();
         inicioItens.setAlignment(Pos.CENTER);
@@ -75,7 +74,9 @@ public class AnimacaoInicioView extends StackPane {
         bgView.setFitWidth(600);
         bgView.setPreserveRatio(true);
 
+
         Text bg_texto = new Text("Dia " + Integer.toString(gameController.getDiaAtual()));
+
         bg_texto.setFont(FonteUtil.pixel(40));
         bg_texto.setFill(Color.WHITE);
 

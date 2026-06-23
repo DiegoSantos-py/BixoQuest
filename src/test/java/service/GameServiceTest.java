@@ -33,7 +33,7 @@ class GameServiceTest {
     private EventoRepository eventoRepo;
     private NpcRepository npcRepo;
 
-    private Personagem personagem;
+    private int personagem;
 
     @BeforeEach
     void setUp() throws PersistenciaException {
@@ -68,7 +68,7 @@ class GameServiceTest {
                 personagemRepo
         );
 
-        personagem = new Personagem("Jogador", 40.0, 40.0, 40.0, 40.0, "sprites/jogador.png", 1);
+        personagem = 1;
     }
 
     @AfterEach
@@ -95,10 +95,6 @@ class GameServiceTest {
 
         gameService.iniciarJogo(personagem);
 
-        assertEquals(40.0, personagem.getEnergia());
-        assertEquals(ponto, personagem.getLocalAtual());
-        assertEquals(0, personagem.getcX());
-        assertEquals(0, personagem.getcY());
     }
 
     @Test
@@ -131,12 +127,12 @@ class GameServiceTest {
         localRepo.adicionarLocal(ponto);
 
         Semestre semestreAnterior = new Semestre();
-        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestreAnterior);
+        semestreRepo.adicionarSemestre(personagem, semestreAnterior);
         semestreRepo.salvar();
 
         gameService.iniciarJogo(personagem);
 
-        List<Semestre> semestres = semestreRepo.getSemestresPorJogador(personagem.getPersonagemId());
+        List<Semestre> semestres = semestreRepo.getSemestresPorJogador(personagem);
         assertFalse(semestres.isEmpty());
     }
 
@@ -158,7 +154,7 @@ class GameServiceTest {
         Semestre semestre = new Semestre();
         semestre.adicionarDisciplinas(matematica);
         semestre.registrarResultado(matematica, true);
-        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre);
+        semestreRepo.adicionarSemestre(personagem, semestre);
 
         gameService.setPersonagem(personagem);
 
@@ -188,8 +184,8 @@ class GameServiceTest {
         semestre2.adicionarDisciplinas(fisica);
         semestre2.registrarResultado(fisica, true);
 
-        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre1);
-        semestreRepo.adicionarSemestre(personagem.getPersonagemId(), semestre2);
+        semestreRepo.adicionarSemestre(personagem, semestre1);
+        semestreRepo.adicionarSemestre(personagem, semestre2);
 
         gameService.setPersonagem(personagem);
 

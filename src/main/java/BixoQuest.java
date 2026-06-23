@@ -72,6 +72,7 @@ public class BixoQuest extends Application {
                 npcController,
                 gameController);
 
+        mapaController.criarMapa();
         telas.mostrarInicio();
 
         primaryStage.show();

@@ -9,6 +9,7 @@ public abstract class BaseController {
 
     // Persistência
     protected void tratarErroPersistencia(RepositoryException e) {
+        e.getCause().printStackTrace();
         exibirErro("Erro de persistência: " + e.getMessage());
     }
 

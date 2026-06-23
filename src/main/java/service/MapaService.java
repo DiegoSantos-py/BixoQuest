@@ -20,7 +20,11 @@ public class MapaService {
     // Inicialização
     /*lança PersistenciaException se ocorrer falha ao carregar o arquivo*/
     public void carregar() throws PersistenciaException {
-        localRepo.carregar();
+        if (!localRepo.arquivoExiste()) {
+            criarMapa();
+        } else {
+            localRepo.carregar();
+        }
     }
 
     /*lança PersistenciaException se ocorrer falha ao salvar o arquivo*/
@@ -44,15 +48,18 @@ public class MapaService {
         return localRepo.buscarPorNome(nome);
     }
 
+    public String buscarSpritePorNome(String nome) {return localRepo.buscarSpritePorNome(nome);}
+
     // Criação do mapa
     /*lança PersistenciaException se ocorrer falha ao salvar após criação*/
+    //TODO: adicionar verificação para evitar que esse método seja chamado 2 vezes
     public Mapa criarMapa() throws PersistenciaException {
         Mapa mapa = new Mapa();
 
         Local[] pontos   = criarPontosDeOnibus();
-        Local[] entradas = criarEstruturaModulo("Entrada módulo ", TipoLocal.ENTRADA);
-        Local[] cantinas = criarEstruturaModulo("Cantina módulo ", TipoLocal.CANTINA);
-        Local[] salas    = criarEstruturaModulo("Sala módulo ", TipoLocal.SALA);
+        Local[] entradas = criarEstruturaModulo("Entrada módulo ", TipoLocal.ENTRADA, "/assets/background/background_entrada_modulo.png");
+        Local[] cantinas = criarEstruturaModulo("Cantina módulo ", TipoLocal.CANTINA, "/assets/background/background_cantina.png");
+        Local[] salas    = criarEstruturaModulo("Sala módulo ", TipoLocal.SALA, "/assets/background/background_sala.png");
         Local[] extras   = criarExtras("Laboratório", "Colegiado");
 
         conectarMapa(pontos, entradas, cantinas, salas, extras);
@@ -109,24 +116,24 @@ public class MapaService {
     // Helpers privados
     private Local[] criarPontosDeOnibus() {
         return new Local[]{
-                new Local("Ponto de ônibus 1", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS),
-                new Local("Ponto de ônibus 2", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS),
-                new Local("Ponto de ônibus 3", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS)
+                new Local("Ponto de ônibus 1", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS, "/assets/background/Background_ponto_onibus.png"),
+                new Local("Ponto de ônibus 2", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS, "/assets/background/Background_ponto_onibus.png"),
+                new Local("Ponto de ônibus 3", criarAreaPadrao(), TipoLocal.PONTO_ONIBUS, "/assets/background/Background_ponto_onibus.png")
         };
     }
 
-    private Local[] criarEstruturaModulo(String nomeBase, TipoLocal tipo) {
+    private Local[] criarEstruturaModulo(String nomeBase, TipoLocal tipo, String spriteDir) {
         Local[] locais = new Local[7];
         for (int i = 0; i < 7; i++) {
-            locais[i] = new Local(nomeBase + (i + 1), criarAreaPadrao(), tipo);
+            locais[i] = new Local(nomeBase + (i + 1), criarAreaPadrao(), tipo, spriteDir);
         }
         return locais;
     }
 
     private Local[] criarExtras(String n1, String n2) {
         return new Local[]{
-                new Local(n1, criarAreaPadrao(), TipoLocal.LABORATORIO),
-                new Local(n2, criarAreaPadrao(), TipoLocal.COLEGIADO)
+                new Local(n1, criarAreaPadrao(), TipoLocal.LABORATORIO, "/assets/background/background_laboratorio.png"),
+                new Local(n2, criarAreaPadrao(), TipoLocal.COLEGIADO, "/assets/background/background_cantina.png")
         };
     }
 

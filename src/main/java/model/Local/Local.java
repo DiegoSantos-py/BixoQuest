@@ -17,6 +17,7 @@ public class Local {
     private String spriteDir;
     private Area area;
     private TipoLocal tipo;
+    private List<ElementoLocal> elementos = new ArrayList<>();
 
     public Local() {
         this.vizinhos = new HashMap<>();
@@ -31,10 +32,11 @@ public class Local {
         this.zonas = new ArrayList<>();
     }
 
-    public Local(String nome, Area area, TipoLocal tipo) {
+    public Local(String nome, Area area, TipoLocal tipo, String spriteDir) {
         this.nome = nome;
         this.area = area;
         this.tipo = tipo;
+        this.spriteDir = spriteDir;
         this.vizinhos = new HashMap<>();
         this.zonas = new ArrayList<>();
     }
@@ -67,6 +69,10 @@ public class Local {
         this.vizinhos.put(direcao, local);
         this.vizinhosNomes.put(direcao.name(), local.getNome()); // sincroniza
     }
+
+    public List<ElementoLocal> getElementos() { return elementos; }
+    public void setElementos(List<ElementoLocal> elementos) { this.elementos = elementos; }
+    public void adicionarElemento(ElementoLocal elemento) { this.elementos.add(elemento); }
 
     public String getNome() {
         return nome;

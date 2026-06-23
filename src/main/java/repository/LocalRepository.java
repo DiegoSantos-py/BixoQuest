@@ -7,12 +7,14 @@ import exception.Local.LocalNaoEncontradoException;
 import exception.OperacaoPersistencia;
 import exception.PersistenciaException;
 import model.Local.Direcao;
+import model.Local.ElementoLocal;
 import model.Local.Local;
 import model.Local.TipoLocal;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +49,9 @@ public class LocalRepository {
         return m;
     }
 
+    public boolean arquivoExiste() {
+        return ARQUIVO.exists() && ARQUIVO.length() > 0;
+    }
 
     /**
       Salva o mapa de locais no arquivo JSON.
@@ -74,12 +79,9 @@ public class LocalRepository {
       lança PersistenciaException se ocorrer falha ao carregar o arquivo
      */
     public void carregar() throws PersistenciaException {
-        // Se o arquivo ainda não existir, não há nada a carregar.
         if (!ARQUIVO.exists()) return;
 
         try {
-            // Lê o arquivo JSON e converte para:
-            // HashMap<String, Local>
             this.locais = mapper.readValue(
                     ARQUIVO,
                     mapper.getTypeFactory()
@@ -90,42 +92,47 @@ public class LocalRepository {
                             )
             );
 
-            /*
-              Reconstrói os vizinhos reais de cada local.
-
-              Durante a persistência, geralmente não se salva diretamente
-              a referência completa para outro Local, pois isso poderia gerar
-              ciclos no JSON.
-
-              Por isso, salva-se como:
-
-              "vizinhosNomes": {
-                  "CIMA": "Sala 1",
-                  "DIREITA": "Cantina 1"
-              }
-
-              Depois do carregamento, esses nomes são convertidos novamente
-              para referências reais dentro do mapa de vizinhos.
-             */
             for (Local local : locais.values()) {
+                // reconstrói vizinhos
                 for (Map.Entry<String, String> entry : local.getVizinhosNomes().entrySet()) {
-
-                    // Converte a String salva no JSON para o enum Direcao.
                     Direcao direcao = Direcao.valueOf(entry.getKey());
-
-                    // Busca o objeto Local correspondente ao nome salvo.
                     Local vizinho = locais.get(entry.getValue());
-
-                    // Se o vizinho existir no mapa, adiciona a referência real.
                     if (vizinho != null) {
                         local.getVizinhos().put(direcao, vizinho);
                     }
                 }
+
+                // carrega elementos do JSON correspondente
+                carregarElementos(local);
             }
 
         } catch (Exception e) {
             throw new PersistenciaException(OperacaoPersistencia.CARREGAR, e);
         }
+    }
+
+    private void carregarElementos(Local local) {
+        String nomeArquivo = normalizarNome(local.getNome()) + ".json";
+        File arquivo = new File("elementos/" + nomeArquivo);
+
+        if (!arquivo.exists()) return;
+
+        try {
+            List<ElementoLocal> elementos = mapper.readValue(
+                    arquivo,
+                    mapper.getTypeFactory().constructCollectionType(List.class, ElementoLocal.class)
+            );
+            local.setElementos(elementos);
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar elementos de " + local.getNome() + ": " + e.getMessage());
+        }
+    }
+
+    private String normalizarNome(String nome) {
+        return nome.toLowerCase()
+                .replaceAll("[^a-z0-9]", "_")
+                .replaceAll("_+", "_")
+                .replaceAll("^_|_$", "");
     }
 
 
@@ -169,6 +176,16 @@ public class LocalRepository {
         }
 
         return local;
+    }
+
+    public String buscarSpritePorNome(String nome) {
+        Local local = locais.get(nome);
+
+        if (local == null) {
+            throw new LocalNaoEncontradoException(nome);
+        }
+
+        return local.getSpriteDir();
     }
 
     /**

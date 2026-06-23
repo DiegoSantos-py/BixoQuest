@@ -103,6 +103,7 @@ public class SemestreRepository {
      lança PersistenciaException se ocorrer falha ao carregar o arquivo
      */
     public void carregar() throws PersistenciaException {
+        if (!ARQUIVO.exists() || ARQUIVO.length() == 0) return;
 
         // Se o arquivo ainda não existir,
         // não há estado salvo para recuperar.

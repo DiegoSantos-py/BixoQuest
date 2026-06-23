@@ -80,7 +80,7 @@ public class SemestreService {
     }
 
     /**lança SemestreInvalidoException  se o semestre for nulo
-     lança PersistenciaException       se ocorrer falha ao salvar após encerramento*/
+     lança PersistenciaException se ocorrer falha ao salvar após encerramento*/
     public Semestre encerrarSemestre(Personagem personagem, Semestre semestre)
             throws PersistenciaException {
         if (semestre == null) {

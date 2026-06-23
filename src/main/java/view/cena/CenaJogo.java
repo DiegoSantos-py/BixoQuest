@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import view.movimento.SistemaMovimento;
+import view.util.Borda;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,24 +24,6 @@ import java.util.function.Consumer;
  */
 public class CenaJogo {
 
-    // ── Constantes ────────────────────────────────────────────────────────────
-
-    private static final double VELOCIDADE   = 4.0;
-    private static final double LARGURA_TELA = 1920;
-    private static final double ALTURA_TELA  = 1080;
-
-    // Caminhos dos GIFs por direção
-    private static final String GIF_SOUTH = "/Jogador/Jogador1/Animação/walk_south.gif";
-    private static final String GIF_NORTH = "/Jogador/Jogador1/Animação/walk_north.gif";
-    private static final String GIF_EAST  = "/Jogador/Jogador1/Animação/walk_east.gif";
-    private static final String GIF_WEST  = "/Jogador/Jogador1/Animação/walk_west.gif";
-
-    // Identificadores de borda
-    public static final String BORDA_NORTE = "norte";
-    public static final String BORDA_SUL   = "sul";
-    public static final String BORDA_LESTE = "leste";
-    public static final String BORDA_OESTE = "oeste";
-
     // ── Dados visuais ─────────────────────────────────────────────────────────
 
     private final ImageView background;
@@ -52,7 +36,7 @@ public class CenaJogo {
     private final Rectangle playerHitbox;
     private final double playerHitboxOffsetX;
     private final double playerHitboxOffsetY;
-    private final Consumer<String> onBordaAtingida;
+    private final Consumer<Borda> onBordaAtingida;
 
     // ── Estado de movimento ───────────────────────────────────────────────────
 
@@ -75,7 +59,7 @@ public class CenaJogo {
                     Rectangle playerHitbox,
                     double playerHitboxOffsetX,
                     double playerHitboxOffsetY,
-                    Consumer<String> onBordaAtingida) {
+                    Consumer<Borda> onBordaAtingida) {
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -137,109 +121,29 @@ public class CenaJogo {
 
     }
 
-    // ── Game loop principal ───────────────────────────────────────────────────
+    private SistemaMovimento sistemaMovimento;
 
     private void iniciarGameLoop() {
         if (playerView == null) return;
 
+        sistemaMovimento = new SistemaMovimento(
+                playerView,
+                playerHitbox,
+                playerHitboxOffsetX,
+                playerHitboxOffsetY,
+                elementHitboxes,
+                npcHitboxes,
+                onBordaAtingida
+        );
+
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                moverJogador();
+                sistemaMovimento.atualizar(teclasPressionadas);
                 verificarColisaoZonas();
             }
         };
         gameLoop.start();
-    }
-
-    // ── Movimento do jogador ──────────────────────────────────────────────────
-
-    private void moverJogador() {
-        double x = playerView.getLayoutX();
-        double y = playerView.getLayoutY();
-        double novoX = x;
-        double novoY = y;
-
-        boolean moveu = false;
-
-        if (teclasPressionadas.contains(KeyCode.W) || teclasPressionadas.contains(KeyCode.UP)) {
-            novoY -= VELOCIDADE;
-            trocarGif(GIF_NORTH);
-            moveu = true;
-        }
-        if (teclasPressionadas.contains(KeyCode.S) || teclasPressionadas.contains(KeyCode.DOWN)) {
-            novoY += VELOCIDADE;
-            trocarGif(GIF_SOUTH);
-            moveu = true;
-        }
-        if (teclasPressionadas.contains(KeyCode.A) || teclasPressionadas.contains(KeyCode.LEFT)) {
-            novoX -= VELOCIDADE;
-            trocarGif(GIF_WEST);
-            moveu = true;
-        }
-        if (teclasPressionadas.contains(KeyCode.D) || teclasPressionadas.contains(KeyCode.RIGHT)) {
-            novoX += VELOCIDADE;
-            trocarGif(GIF_EAST);
-            moveu = true;
-        }
-
-        if (!moveu) return;
-
-        // Verifica bordas antes de aplicar movimento
-        double larguraPlayer = playerView.getFitWidth();
-        double alturaPlayer  = (playerView.getImage().getHeight()
-                / playerView.getImage().getWidth()) * larguraPlayer;
-
-        if (novoX <= 0) {
-            dispararBorda(BORDA_OESTE);
-            return;
-        }
-        if (novoX >= LARGURA_TELA - larguraPlayer) {
-            dispararBorda(BORDA_LESTE);
-            return;
-        }
-        if (novoY <= 0) {
-            dispararBorda(BORDA_NORTE);
-            return;
-        }
-        if (novoY >= ALTURA_TELA - alturaPlayer) {
-            dispararBorda(BORDA_SUL);
-            return;
-        }
-
-        // Aplica nova posição ao sprite e à hitbox
-        playerView.setLayoutX(novoX);
-        playerView.setLayoutY(novoY);
-        playerHitbox.setX(novoX + playerHitboxOffsetX);
-        playerHitbox.setY(novoY + playerHitboxOffsetY);
-
-        if (colidindoComHitbox()) {
-            playerView.setLayoutX(x);
-            playerView.setLayoutY(y);
-            playerHitbox.setX(x + playerHitboxOffsetX);
-            playerHitbox.setY(y + playerHitboxOffsetY);
-        }
-    }
-
-    // ── Disparo de evento de borda ────────────────────────────────────────────
-
-    private void dispararBorda(String borda) {
-        if (onBordaAtingida != null)
-            onBordaAtingida.accept(borda);
-    }
-
-    // ── Colisão entre hitboxes ────────────────────────────────────────────────
-
-    private boolean colidindoComHitbox() {
-        var playerBounds = playerHitbox.getBoundsInParent();
-
-        boolean colideElemento = elementHitboxes.stream()
-                .anyMatch(h -> playerBounds.intersects(h.getBoundsInParent()));
-
-        boolean colideNPC = npcHitboxes.stream()
-                .anyMatch(h -> playerBounds.intersects(h.getBoundsInParent()));
-
-        return colideElemento || colideNPC;
     }
 
     // ── Colisão com zonas interativas ─────────────────────────────────────────
@@ -251,20 +155,6 @@ public class CenaJogo {
                 zone.onEnter().accept(zone.id());
             }
         });
-    }
-
-    // ── Troca de GIF conforme direção ─────────────────────────────────────────
-
-    private String gifAtual = GIF_SOUTH;
-
-    private void trocarGif(String caminho) {
-        if (gifAtual.equals(caminho)) return;
-
-        var stream = getClass().getResourceAsStream(caminho);
-        if (stream == null) return;
-
-        gifAtual = caminho;
-        playerView.setImage(new Image(stream));
     }
 
     // ── Parar o loop ──────────────────────────────────────────────────────────
