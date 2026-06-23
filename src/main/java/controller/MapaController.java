@@ -5,6 +5,7 @@ import exception.Local.LocalInvalidoException;
 import exception.Local.LocalNaoEncontradoException;
 import exception.PersistenciaException;
 import model.Local.*;
+import model.Npc.Npc;
 import service.MapaService;
 
 import java.util.List;
@@ -72,6 +73,15 @@ public class MapaController extends BaseController {
         }
     }
 
+    public List<Npc> getNpcsDoLocal(String nomeLocal) {
+        try {
+            return service.getNpcsDoLocal(nomeLocal);
+        } catch (LocalNaoEncontradoException e) {
+            tratarNaoEncontrado(e);
+            return List.of();
+        }
+    }
+
     public Map<String, Local> carregarLocais() {
         return service.carregarLocais();
     }
@@ -92,6 +102,15 @@ public class MapaController extends BaseController {
             exibirSucesso("Zona adicionada com sucesso.");
         } catch (LocalInvalidoException e) {
             tratarInvalido(e);
+        }
+    }
+
+    public List<ZonaInterativa> getZonasDoLocal(String nomeLocal) {
+        try {
+            return service.buscarPorNome(nomeLocal).getZonaInterativasDisponiveis();
+        } catch (LocalNaoEncontradoException e) {
+            tratarNaoEncontrado(e);
+            return List.of();
         }
     }
 

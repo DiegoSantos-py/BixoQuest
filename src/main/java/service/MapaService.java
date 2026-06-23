@@ -5,16 +5,22 @@ import exception.Local.LocalInvalidoException;
 import exception.Local.LocalNaoEncontradoException;
 import exception.PersistenciaException;
 import model.Local.*;
+import model.Npc.Npc;
 import repository.LocalRepository;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MapaService {
 
     private final LocalRepository localRepo;
+    private final NpcService npcService;
 
-    public MapaService(LocalRepository localRepo) {
+    public MapaService(LocalRepository localRepo, NpcService npcService) {
+
         this.localRepo = localRepo;
+        this.npcService = npcService;
     }
 
     // Inicialização
@@ -111,6 +117,13 @@ public class MapaService {
         }
 
         local.getZonaInterativasDisponiveis().add(zona);
+    }
+
+    public List<Npc> getNpcsDoLocal(String nomeLocal) {
+        Local local = localRepo.buscarPorNome(nomeLocal);
+        return local.getNomesNpcs().stream()
+                .map(npcService::buscarPorNome)
+                .collect(Collectors.toList());
     }
 
     // Helpers privados

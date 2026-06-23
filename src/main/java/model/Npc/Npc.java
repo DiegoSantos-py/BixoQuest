@@ -22,9 +22,15 @@ public abstract class Npc {
     private String nome;
     private int cX;
     private int cY;
+    private int largura;
+    private int hitboxOffsetX;
+    private int hitboxOffsetY;
+    private int hitboxLargura;
+    private int hitboxAltura;
     private ArrayList<String> falas;
     private String spriteDir;
     private boolean isInteragido;
+
 
     public Npc() {}
 
@@ -36,6 +42,20 @@ public abstract class Npc {
         this.falas = falas;
     }
 
+    public Npc(String nome, String spriteDir, int cX, int cY, ArrayList<String> falas,
+               int largura, int hitboxOffsetX, int hitboxOffsetY,
+               int hitboxLargura, int hitboxAltura) {
+        this.nome = nome;
+        this.spriteDir = spriteDir;
+        this.cX = cX;
+        this.cY = cY;
+        this.falas = falas;
+        this.largura = largura;
+        this.hitboxOffsetX = hitboxOffsetX;
+        this.hitboxOffsetY = hitboxOffsetY;
+        this.hitboxLargura = hitboxLargura;
+        this.hitboxAltura = hitboxAltura;
+    }
 
     public ArrayList<String> getFalas() { return falas; }
     public void setFalas(ArrayList<String> falas) { this.falas = falas; }
@@ -49,6 +69,21 @@ public abstract class Npc {
     public void setSpriteDir(String spriteDir) { this.spriteDir = spriteDir; }
     public boolean isInteragido() { return isInteragido; }
     public void setInteragido(boolean interagido) { isInteragido = interagido; }
+
+    public int getLargura() { return largura; }
+    public void setLargura(int largura) { this.largura = largura; }
+
+    public int getHitboxOffsetX() { return hitboxOffsetX; }
+    public void setHitboxOffsetX(int hitboxOffsetX) { this.hitboxOffsetX = hitboxOffsetX; }
+
+    public int getHitboxOffsetY() { return hitboxOffsetY; }
+    public void setHitboxOffsetY(int hitboxOffsetY) { this.hitboxOffsetY = hitboxOffsetY; }
+
+    public int getHitboxLargura() { return hitboxLargura; }
+    public void setHitboxLargura(int hitboxLargura) { this.hitboxLargura = hitboxLargura; }
+
+    public int getHitboxAltura() { return hitboxAltura; }
+    public void setHitboxAltura(int hitboxAltura) { this.hitboxAltura = hitboxAltura; }
 
     @JsonIgnore
     public String getFalaAleatoria() {

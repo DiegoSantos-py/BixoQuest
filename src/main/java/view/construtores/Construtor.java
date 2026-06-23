@@ -15,7 +15,7 @@ public interface Construtor {
                     double hitboxOffsetX, double hitboxOffsetY,
                     double hitboxLargura, double hitboxAltura);
 
-    void addNPC(String imagePath, double largura, double x, double y,
+    void addNPC(String imagePath, String nome, double largura, double x, double y,
                 double hitboxOffsetX, double hitboxOffsetY,
                 double hitboxLargura, double hitboxAltura);
 

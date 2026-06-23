@@ -3,6 +3,8 @@ package view.construtores;
 import controller.MapaController;
 import controller.NpcController;
 
+import java.util.function.Consumer;
+
 /**
  * Conhece a estrutura (receita) de cada cena
  * Recebe o Construtor e os Controllers como parâmetro — nunca acessa o produto diretamente
@@ -11,7 +13,8 @@ public class DiretorCena {
 
     public void construirCenaPontoOnibus(Construtor construtor,
                                          MapaController mapaController,
-                                         NpcController npcController) {
+                                         NpcController npcController,
+                                         Consumer<String> onZona) {
 
         construtor.setBackground(mapaController.buscarSpritePorNome("Ponto de ônibus 1"), 1920, 1080);
 
@@ -21,22 +24,20 @@ public class DiretorCena {
                         e.getHitboxLargura(), e.getHitboxAltura())
         );
 
-        // TODO: substituir pela lista de NPCs vindo do NpcController
-        // npcController.getNpcs().forEach(npc ->
-        //     construtor.addNPC(npc.getSprite(), npc.getLargura(), npc.getX(), npc.getY(),
-        //             npc.getHitboxOffsetX(), npc.getHitboxOffsetY(),
-        //             npc.getHitboxLargura(), npc.getHitboxAltura())
-        // );
+        mapaController.getNpcsDoLocal("Ponto de ônibus 1").forEach(npc ->
+                construtor.addNPC(npc.getSpriteDir(), npc.getNome(), npc.getLargura(), npc.getcX(), npc.getcY(),
+                        npc.getHitboxOffsetX(), npc.getHitboxOffsetY(),
+                        npc.getHitboxLargura(), npc.getHitboxAltura())
+        );
 
-        // TODO: substituir pela lista de zonas vindo do MapaController
-        // mapaController.getZonas().forEach(zona ->
-        //     construtor.addInteractiveZone(
-        //         zona.getId(), zona.getSprite(),
-        //         zona.getLargura(), zona.getAltura(),
-        //         zona.getX(), zona.getY(),
-        //         id -> {}
-        //     )
-        // );
+        mapaController.getZonasDoLocal("Ponto de ônibus 1").forEach(zona ->
+                construtor.addInteractiveZone(
+                        zona.getNome(), zona.getSprite(),
+                        zona.getLargura(), zona.getAltura(),
+                        zona.getX(), zona.getY(),
+                        onZona
+                )
+        );
 
         // TODO: conectar ao MapaService
         construtor.setOnBordaAtingida(borda -> System.out.println("Borda atingida: " + borda));

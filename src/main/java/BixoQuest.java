@@ -25,8 +25,8 @@ public class BixoQuest extends Application {
         PersonagemService personagemService = new PersonagemService(personagemRepository, eventoService);
         DiaService diaService = new DiaService();
         SemestreService semestreService = new SemestreService( semestreRepository, disciplinaRepository);
-        MapaService mapaService = new MapaService(localRepository);
         NpcService npcService = new NpcService(npcRepository);
+        MapaService mapaService = new MapaService(localRepository, npcService);
         InicializacaoService inicializacaoService = new InicializacaoService(
                 localRepository,
                 disciplinaRepository,
@@ -72,7 +72,7 @@ public class BixoQuest extends Application {
                 npcController,
                 gameController);
 
-        mapaController.criarMapa();
+
         telas.mostrarInicio();
 
         primaryStage.show();

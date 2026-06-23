@@ -31,6 +31,8 @@ public class CenaJogo {
     private final List<Rectangle> elementHitboxes;
     private final List<ImageView> npcs;
     private final List<Rectangle> npcHitboxes;
+    private final List<String> npcNomes;
+    private final Consumer<String> onNpcAtingido;
     private final List<ZoneEntry> zones;
     private final ImageView playerView;
     private final Rectangle playerHitbox;
@@ -59,7 +61,9 @@ public class CenaJogo {
                     Rectangle playerHitbox,
                     double playerHitboxOffsetX,
                     double playerHitboxOffsetY,
-                    Consumer<Borda> onBordaAtingida) {
+                    Consumer<Borda> onBordaAtingida,
+                    List<String> npcNomes,
+                    Consumer<String> onNpcAtingido) {
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -71,6 +75,8 @@ public class CenaJogo {
         this.playerHitboxOffsetX = playerHitboxOffsetX;
         this.playerHitboxOffsetY = playerHitboxOffsetY;
         this.onBordaAtingida     = onBordaAtingida;
+        this.npcNomes = npcNomes;
+        this.onNpcAtingido = onNpcAtingido;
     }
 
     // ── Montagem do Pane JavaFX ───────────────────────────────────────────────
@@ -155,6 +161,16 @@ public class CenaJogo {
                 zone.onEnter().accept(zone.id());
             }
         });
+    }
+
+    private void verificarColisaoNpcs() {
+        for (int i = 0; i < npcHitboxes.size(); i++) {
+            if (playerHitbox.getBoundsInParent()
+                    .intersects(npcHitboxes.get(i).getBoundsInParent())) {
+                if (onNpcAtingido != null)
+                    onNpcAtingido.accept(npcNomes.get(i));
+            }
+        }
     }
 
     // ── Parar o loop ──────────────────────────────────────────────────────────

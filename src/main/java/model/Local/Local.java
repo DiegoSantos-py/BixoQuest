@@ -18,6 +18,7 @@ public class Local {
     private Area area;
     private TipoLocal tipo;
     private List<ElementoLocal> elementos = new ArrayList<>();
+    private List<String> nomesNpcs = new ArrayList<>();
 
     public Local() {
         this.vizinhos = new HashMap<>();
@@ -73,6 +74,10 @@ public class Local {
     public List<ElementoLocal> getElementos() { return elementos; }
     public void setElementos(List<ElementoLocal> elementos) { this.elementos = elementos; }
     public void adicionarElemento(ElementoLocal elemento) { this.elementos.add(elemento); }
+
+    public List<String> getNomesNpcs() { return nomesNpcs; }
+    public void setNomesNpcs(List<String> nomesNpcs) { this.nomesNpcs = nomesNpcs; }
+    public void adicionarNpc(String nomeNpc) { this.nomesNpcs.add(nomeNpc); }
 
     public String getNome() {
         return nome;

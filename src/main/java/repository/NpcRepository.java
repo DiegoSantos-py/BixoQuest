@@ -95,6 +95,7 @@ public class NpcRepository {
      lança PersistenciaException se ocorrer falha ao carregar o arquivo
      */
     public void carregar() throws PersistenciaException {
+        if (!ARQUIVO.exists() || ARQUIVO.length() == 0) return;
 
         // Se o arquivo não existir,
         // não existe estado salvo para recuperar.

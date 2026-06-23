@@ -23,11 +23,13 @@ public class ConstrutorCenaJogo implements Construtor {
     private final List<ImageView> npcs            = new ArrayList<>();
     private final List<Rectangle> npcHitboxes     = new ArrayList<>();
     private final List<CenaJogo.ZoneEntry> zones  = new ArrayList<>();
+    private final List<String> npcNomes           = new ArrayList<>();
     private ImageView playerView;
     private Rectangle playerHitbox;
     private double playerHitboxOffsetX;
     private double playerHitboxOffsetY;
     private Consumer<Borda> onBordaAtingida;
+    private Consumer<String> onNpcAtingido;
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -44,12 +46,17 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void addNPC(String imagePath, double largura, double x, double y,
+    public void addNPC(String imagePath, String nome, double largura, double x, double y,
                        double hitboxOffsetX, double hitboxOffsetY,
                        double hitboxLargura, double hitboxAltura) {
+        npcNomes.add(nome);
         npcs.add(carregarImagem(imagePath, largura, x, y));
         npcHitboxes.add(criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura));
+    }
+
+    public void setOnNpcAtingido(Consumer<String> onNpcAtingido) {
+        this.onNpcAtingido = onNpcAtingido;
     }
 
     @Override
@@ -87,7 +94,10 @@ public class ConstrutorCenaJogo implements Construtor {
                 zones,
                 playerView, playerHitbox,
                 playerHitboxOffsetX, playerHitboxOffsetY,
-                onBordaAtingida);
+                onBordaAtingida,
+                npcNomes,
+                onNpcAtingido
+                );
     }
 
     // ── Utilitários ───────────────────────────────────────────────────────────
