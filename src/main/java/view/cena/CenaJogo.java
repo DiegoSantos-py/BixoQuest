@@ -38,6 +38,7 @@ public class CenaJogo {
     private final double playerHitboxOffsetX;
     private final double playerHitboxOffsetY;
     private final Consumer<Borda> onBordaAtingida;
+    private final String spriteBase;
 
     // ── Estado de movimento ───────────────────────────────────────────────────
 
@@ -62,7 +63,8 @@ public class CenaJogo {
                     double playerHitboxOffsetY,
                     Consumer<Borda> onBordaAtingida,
                     List<String> npcNomes,
-                    Consumer<String> onNpcAtingido) {
+                    Consumer<String> onNpcAtingido,
+                    String spriteBase) {
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -76,6 +78,7 @@ public class CenaJogo {
         this.onBordaAtingida     = onBordaAtingida;
         this.npcNomes = npcNomes;
         this.onNpcAtingido = onNpcAtingido;
+        this.spriteBase = spriteBase;
     }
 
     // ── Montagem do Pane JavaFX ───────────────────────────────────────────────
@@ -141,7 +144,8 @@ public class CenaJogo {
                 playerHitboxOffsetY,
                 elementHitboxes,
                 npcHitboxes,
-                onBordaAtingida
+                onBordaAtingida,
+                spriteBase
         );
 
         gameLoop = new AnimationTimer() {

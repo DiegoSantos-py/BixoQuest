@@ -69,11 +69,11 @@ public class MenuCriarPersonagem extends StackPane {
         );
 
         btnMasculino.setOnAction(event -> {
-            spriteEscolhido = "spriteMasculino.png";
+            spriteEscolhido = "/Jogador/Jogador1/";
         });
 
         btnFeminino.setOnAction(event -> {
-            spriteEscolhido = "spriteFeminino.png";
+            spriteEscolhido = "/Jogador/Jogador2/";
         });
 
         HBox botoesAparencia = new HBox(30, btnMasculino, btnFeminino);

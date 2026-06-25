@@ -17,7 +17,8 @@ public class DiretorCena {
                                          Consumer<String> onZona,
                                          Consumer<String> onNpc,
                                          double playerX,
-                                         double playerY) {
+                                         double playerY,
+                                         String spriteBase) {
 
         construtor.setBackground(mapaController.buscarSpritePorNome("Ponto de ônibus 1"), 1920, 1080);
 
@@ -47,7 +48,7 @@ public class DiretorCena {
 
 
         // TODO: substituir pelo player vindo de um PlayerController
-        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
+        construtor.setPlayer(spriteBase, 350, playerX, playerY,
                 150, 150, 48, 96);
     }
 
@@ -55,12 +56,13 @@ public class DiretorCena {
                                            MapaController mapaController,
                                            NpcController npcController,
                                            double playerX,
-                                           double playerY){
+                                           double playerY,
+                                           String spriteBase){
     construtor.setBackground("/assets/background/background_entrada_modulo.png", 1920,1080);
 
     construtor.addElement("/assets/placa_modulo_2.png", 500, 600, 500, 140,100, 150, 75);
 
-    construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
+    construtor.setPlayer(spriteBase, 350, playerX, playerY,
                 150, 150, 48, 96);
     }
 
@@ -68,10 +70,11 @@ public class DiretorCena {
                                      MapaController mapaController,
                                      NpcController npcController,
                                      double playerX,
-                                     double playerY){
+                                     double playerY,
+                                     String spriteBase){
     construtor.setBackground("/assets/background/background_cantina.png", 1920, 1080);
 
-        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
+        construtor.setPlayer(spriteBase, 350, playerX, playerY,
                 150, 150, 48, 96);
 
     }

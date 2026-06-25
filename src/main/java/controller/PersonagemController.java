@@ -71,6 +71,15 @@ public class PersonagemController extends BaseController {
         }
     }
 
+    public String getSpriteBase(int id){
+        try {
+            return service.getSpriteBase(id);
+        } catch (PersonagemNaoEncontradoException e){
+            tratarNaoEncontrado(e);
+            return "/assets/Errors/ImageNotFound.png";
+        }
+    }
+
     public boolean existe(Personagem personagem) {
         return service.existe(personagem);
     }

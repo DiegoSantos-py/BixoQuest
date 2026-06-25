@@ -17,7 +17,7 @@
       "SOF" : 10.0,
       "ANI" : 10.0
     },
-    "spriteDir" : "spriteMasculino.png",
+    "spriteDir" : "/Jogador/Jogador1/",
     "desempenhoAcademico" : 0.0,
     "cX" : 0,
     "cY" : 0
@@ -40,7 +40,32 @@
       "SOF" : 10.0,
       "ANI" : 10.0
     },
-    "spriteDir" : "spriteFeminino.png",
+    "spriteDir" : "/Jogador/Jogador2/",
+    "desempenhoAcademico" : 0.0,
+    "cX" : 0,
+    "cY" : 0
+  },
+  "3" : {
+    "personagemId" : 3,
+    "nome" : "camile",
+    "energia" : 40.0,
+    "motivacao" : 40.0,
+    "saude" : 40.0,
+    "dinheiro" : 40.0,
+    "localAtualNome" : null,
+    "conhecimentosNomes" : {
+      "COM" : 10.0,
+      "NAT" : 10.0,
+      "TFC" : 10.0,
+      "MAT" : 10.0,
+      "HUM" : 10.0,
+      "TCC" : 10.0,
+      "EST" : 10.0,
+      "HAR" : 10.0,
+      "SOF" : 10.0,
+      "ANI" : 10.0
+    },
+    "spriteDir" : "/Jogador/Jogador2/",
     "desempenhoAcademico" : 0.0,
     "cX" : 0,
     "cY" : 0

@@ -30,6 +30,7 @@ public class ConstrutorCenaJogo implements Construtor {
     private double playerHitboxOffsetY;
     private Consumer<Borda> onBordaAtingida;
     private Consumer<String> onNpcAtingido;
+    private String spriteBase;
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -43,7 +44,6 @@ public class ConstrutorCenaJogo implements Construtor {
         elements.add(carregarImagem(imagePath, largura, x, y));
         Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
-        hitbox.setVisible(true);
         hitbox.setFill(javafx.scene.paint.Color.rgb(255, 0, 0, 0.3));
         elementHitboxes.add(hitbox);
     }
@@ -56,7 +56,6 @@ public class ConstrutorCenaJogo implements Construtor {
         npcs.add(carregarImagem(imagePath, largura, x, y));
         Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
-        hitbox.setVisible(true);
         hitbox.setFill(javafx.scene.paint.Color.rgb(0, 255, 0, 0.3));
         npcHitboxes.add(hitbox);
     }
@@ -77,20 +76,21 @@ public class ConstrutorCenaJogo implements Construtor {
         view.setFitHeight(spriteAltura);
         view.setPreserveRatio(false);
         Rectangle hitbox = criarHitbox(hitboxX, hitboxY, hitboxLargura, hitboxAltura);
-        hitbox.setVisible(true);
-        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 0, 255, 0.3));
+        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 255, 0, 0.3));
         zones.add(new CenaJogo.ZoneEntry(id, view, hitbox, onEnter));
     }
 
     @Override
-    public void setPlayer(String imagePath, double largura, double x, double y,
+    public void setPlayer(String spriteBase, double largura, double x, double y,
                           double hitboxOffsetX, double hitboxOffsetY,
                           double hitboxLargura, double hitboxAltura) {
-        playerView          = carregarImagem(imagePath, largura, x, y);
+        playerView          = carregarImagem(spriteBase + "rotations/south.png", largura, x, y);
         playerHitboxOffsetX = hitboxOffsetX;
         playerHitboxOffsetY = hitboxOffsetY;
         playerHitbox        = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
+        playerHitbox.setFill(javafx.scene.paint.Color.rgb(0, 0, 255, 0.3));
+        this.spriteBase = spriteBase;
     }
 
     @Override
@@ -108,7 +108,8 @@ public class ConstrutorCenaJogo implements Construtor {
                 playerHitboxOffsetX, playerHitboxOffsetY,
                 onBordaAtingida,
                 npcNomes,
-                onNpcAtingido
+                onNpcAtingido,
+                spriteBase
                 );
     }
 

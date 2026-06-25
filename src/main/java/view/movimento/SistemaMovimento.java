@@ -16,15 +16,17 @@ public class SistemaMovimento {
     private static final double LARGURA_TELA = 1920;
     private static final double ALTURA_TELA  = 1080;
 
-    private static final String GIF_SOUTH = "/Jogador/Jogador1/Animação/walk_south.gif";
-    private static final String GIF_NORTH = "/Jogador/Jogador1/Animação/walk_north.gif";
-    private static final String GIF_EAST  = "/Jogador/Jogador1/Animação/walk_east.gif";
-    private static final String GIF_WEST  = "/Jogador/Jogador1/Animação/walk_west.gif";
+    private final String spriteBase;
 
-    private static final String PARADO_SOUTH = "/Jogador/Jogador1/rotations/south.png";
-    private static final String PARADO_NORTH = "/Jogador/Jogador1/rotations/north.png";
-    private static final String PARADO_EAST  = "/Jogador/Jogador1/rotations/east.png";
-    private static final String PARADO_WEST  = "/Jogador/Jogador1/rotations/west.png";
+    private static final String PARADO_SOUTH = "rotations/south.png";
+    private static final String PARADO_NORTH = "rotations/north.png";
+    private static final String PARADO_EAST  = "rotations/east.png";
+    private static final String PARADO_WEST  = "rotations/west.png";
+
+    private static final String GIF_SOUTH = "Animação/walk_south.gif";
+    private static final String GIF_NORTH = "Animação/walk_north.gif";
+    private static final String GIF_EAST  = "Animação/walk_east.gif";
+    private static final String GIF_WEST  = "Animação/walk_west.gif";
 
     private String gifAtual = GIF_SOUTH;
     private String ultimaDirecao = GIF_SOUTH;
@@ -44,7 +46,8 @@ public class SistemaMovimento {
                             double hitboxOffsetY,
                             List<Rectangle> elementHitboxes,
                             List<Rectangle> npcHitboxes,
-                            Consumer<Borda> onBordaAtingida) {
+                            Consumer<Borda> onBordaAtingida,
+                            String spriteBase) {
         this.playerView       = playerView;
         this.playerHitbox     = playerHitbox;
         this.hitboxOffsetX    = hitboxOffsetX;
@@ -52,6 +55,7 @@ public class SistemaMovimento {
         this.elementHitboxes  = elementHitboxes;
         this.npcHitboxes      = npcHitboxes;
         this.onBordaAtingida  = onBordaAtingida;
+        this.spriteBase = spriteBase;
     }
 
     public void atualizar(Set<KeyCode> teclasPressionadas) {
@@ -143,10 +147,10 @@ public class SistemaMovimento {
     private void trocarGifParado() {
 
         String parado = switch (ultimaDirecao) {
-            case GIF_NORTH -> PARADO_NORTH;
-            case GIF_EAST  -> PARADO_EAST;
-            case GIF_WEST  -> PARADO_WEST;
-            default        -> PARADO_SOUTH;
+            case GIF_NORTH -> (spriteBase + PARADO_NORTH);
+            case GIF_EAST  -> (spriteBase + PARADO_EAST);
+            case GIF_WEST  -> (spriteBase + PARADO_WEST);
+            default        -> (spriteBase + PARADO_SOUTH);
         };
 
 
@@ -160,7 +164,7 @@ public class SistemaMovimento {
 
     private void trocarGif(String caminho) {
         if (gifAtual.equals(caminho)) return;
-        var stream = getClass().getResourceAsStream(caminho);
+        var stream = getClass().getResourceAsStream(spriteBase + caminho);
         if (stream == null) return;
         gifAtual = caminho;
         playerView.setImage(new Image(stream));

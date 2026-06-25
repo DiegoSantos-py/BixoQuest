@@ -72,6 +72,8 @@ public class PersonagemService {
         return personagemRepo.buscarPorId(id);
     }
 
+    public String getSpriteBase(int id) {return buscarPorId(id).getSpriteDir();}
+
     public boolean existe(Personagem personagem) {
         return personagemRepo.existePersonagem(personagem);
     }

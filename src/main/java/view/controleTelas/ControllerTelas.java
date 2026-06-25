@@ -27,6 +27,7 @@ public class ControllerTelas {
 
     private CenaJogo cenaAtual;
     private Borda ultimaBorda;
+    private int sessaoAtual;
 
     public ControllerTelas(
             GerenciadorTelas gerenciador,
@@ -71,6 +72,7 @@ public class ControllerTelas {
     }
 
     public Parent criarAnimacaoInicio(int sessaoAtual) {
+        this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
                 () -> gerenciador.mostrarTelaPonto(),
                 gameController,
@@ -90,6 +92,7 @@ public class ControllerTelas {
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
         double[] pos = calcularPosicaoInicial(ultimaBorda);
+        String spriteBase = personagemController.getSpriteBase(sessaoAtual);
         diretorCena.construirCenaPontoOnibus(
                 construtor,
                 mapaController,
@@ -101,7 +104,7 @@ public class ControllerTelas {
                     }
                 },
                 nome -> System.out.println("NPC atingido: " + nome), // temporário
-                pos[0], pos[1]);
+                pos[0], pos[1], spriteBase);
 
         construtor.setOnBordaAtingida(borda -> {
             ultimaBorda = borda;
@@ -118,11 +121,12 @@ public class ControllerTelas {
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
         double[] pos = calcularPosicaoInicial(ultimaBorda);
+        String spriteBase = personagemController.getSpriteBase(sessaoAtual);
         diretorCena.construirCenaEntradaModulo(
                 construtor,
                 mapaController,
                 npcController,
-                pos[0], pos[1]);
+                pos[0], pos[1], spriteBase);
 
         construtor.setOnBordaAtingida(borda -> {
                     ultimaBorda = borda;
@@ -139,11 +143,12 @@ public class ControllerTelas {
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
         double[] pos = calcularPosicaoInicial(ultimaBorda);
+        String spriteBase = personagemController.getSpriteBase(sessaoAtual);
         diretorCena.construirCenaCantina(
                 construtor,
                 mapaController,
                 npcController,
-                pos[0], pos[1]);
+                pos[0], pos[1], spriteBase);
 
         construtor.setOnBordaAtingida(borda -> {
                     ultimaBorda = borda;
