@@ -41,8 +41,11 @@ public class ConstrutorCenaJogo implements Construtor {
                            double hitboxOffsetX, double hitboxOffsetY,
                            double hitboxLargura, double hitboxAltura) {
         elements.add(carregarImagem(imagePath, largura, x, y));
-        elementHitboxes.add(criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
-                hitboxLargura, hitboxAltura));
+        Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
+                hitboxLargura, hitboxAltura);
+        hitbox.setVisible(true);
+        hitbox.setFill(javafx.scene.paint.Color.rgb(255, 0, 0, 0.3));
+        elementHitboxes.add(hitbox);
     }
 
     @Override
@@ -51,23 +54,32 @@ public class ConstrutorCenaJogo implements Construtor {
                        double hitboxLargura, double hitboxAltura) {
         npcNomes.add(nome);
         npcs.add(carregarImagem(imagePath, largura, x, y));
-        npcHitboxes.add(criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
-                hitboxLargura, hitboxAltura));
+        Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
+                hitboxLargura, hitboxAltura);
+        hitbox.setVisible(true);
+        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 255, 0, 0.3));
+        npcHitboxes.add(hitbox);
     }
 
+    @Override
     public void setOnNpcAtingido(Consumer<String> onNpcAtingido) {
         this.onNpcAtingido = onNpcAtingido;
     }
 
     @Override
     public void addInteractiveZone(String id, String imagePath,
-                                   double largura, double altura,
-                                   double x, double y,
+                                   double spriteLargura, double spriteAltura,
+                                   double spriteX, double spriteY,
+                                   double hitboxX, double hitboxY,
+                                   double hitboxLargura, double hitboxAltura,
                                    Consumer<String> onEnter) {
-        ImageView view = carregarImagem(imagePath, largura, x, y);
-        view.setFitHeight(altura);
+        ImageView view = carregarImagem(imagePath, spriteLargura, spriteX, spriteY);
+        view.setFitHeight(spriteAltura);
         view.setPreserveRatio(false);
-        zones.add(new CenaJogo.ZoneEntry(id, view, onEnter));
+        Rectangle hitbox = criarHitbox(hitboxX, hitboxY, hitboxLargura, hitboxAltura);
+        hitbox.setVisible(true);
+        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 0, 255, 0.3));
+        zones.add(new CenaJogo.ZoneEntry(id, view, hitbox, onEnter));
     }
 
     @Override

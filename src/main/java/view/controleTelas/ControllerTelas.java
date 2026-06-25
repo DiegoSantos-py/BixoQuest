@@ -13,6 +13,7 @@ import view.menu.MenuCriarPersonagem;
 import view.menu.MenuInicial;
 import view.menu.MenuPersonagens;
 import view.cena.CenaJogo;
+import view.util.Borda;
 
 // TODO: refatorar essa classe. Tá muito acoplada
 public class ControllerTelas {
@@ -25,6 +26,7 @@ public class ControllerTelas {
     private final DiretorCena diretorCena;
 
     private CenaJogo cenaAtual;
+    private Borda ultimaBorda;
 
     public ControllerTelas(
             GerenciadorTelas gerenciador,
@@ -41,6 +43,7 @@ public class ControllerTelas {
     }
 
     public Parent criarMenuInicial() {
+        pararCenaAtual();
         return new MenuInicial(
                 personagemController,
                 () -> gerenciador.mostrarMenuPersonagens(),
@@ -69,7 +72,7 @@ public class ControllerTelas {
 
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarTelaJogo(),
+                () -> gerenciador.mostrarTelaPonto(),
                 gameController,
                 sessaoAtual
         );
@@ -82,18 +85,30 @@ public class ControllerTelas {
         );
     }
 
-    public Parent criarCenaJogo() {
+    public Parent criarCenaPonto() {
         pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
-        diretorCena.construirCenaPontoOnibus(construtor, mapaController, npcController);
+
+        double[] pos = calcularPosicaoInicial(ultimaBorda);
+        diretorCena.construirCenaPontoOnibus(
+                construtor,
+                mapaController,
+                npcController,
+                id -> {
+                    switch (id) {
+                        case "Banco de ônibus 1" -> gerenciador.mostrarMenuInicial();
+                        default -> System.err.println("Zona não encontrada");
+                    }
+                },
+                nome -> System.out.println("NPC atingido: " + nome), // temporário
+                pos[0], pos[1]);
+
         construtor.setOnBordaAtingida(borda -> {
-            switch (borda) {
-//                case CenaJogo.BORDA_NORTE -> gerenciador.mostrarCenaAcima();
-//                case CenaJogo.BORDA_SUL   -> gerenciador.mostrarCenaAbaixo();
-                case LESTE -> gerenciador.mostrarTelaJogoEntrada();
-//                case CenaJogo.BORDA_OESTE -> gerenciador.mostrarCenaEsquerda();
-            }
+            ultimaBorda = borda;
+            mapaController.getVizinho("Ponto de ônibus 1", borda.getDirecao())
+                    .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
         });
+
         cenaAtual  = construtor.getResult();
         return cenaAtual.buildPane();
     }
@@ -101,15 +116,20 @@ public class ControllerTelas {
     public Parent criarCenaEntradaModulo() {
         pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
-        diretorCena.construirCenaEntradaModulo(construtor, mapaController, npcController);
+
+        double[] pos = calcularPosicaoInicial(ultimaBorda);
+        diretorCena.construirCenaEntradaModulo(
+                construtor,
+                mapaController,
+                npcController,
+                pos[0], pos[1]);
+
         construtor.setOnBordaAtingida(borda -> {
-            switch (borda) {
-                //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
-                //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
-                case LESTE -> gerenciador.mostrarTelaCantina();
-                //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
-            }
-        });
+                    ultimaBorda = borda;
+                    mapaController.getVizinho("Entrada módulo 1", borda.getDirecao())
+                            .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
+                }
+        );
         cenaAtual  = construtor.getResult();
         return cenaAtual.buildPane();
     }
@@ -117,15 +137,20 @@ public class ControllerTelas {
     public Parent criarCenaCantina() {
         pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
-        diretorCena.construirCenaCantina(construtor, mapaController, npcController);
+
+        double[] pos = calcularPosicaoInicial(ultimaBorda);
+        diretorCena.construirCenaCantina(
+                construtor,
+                mapaController,
+                npcController,
+                pos[0], pos[1]);
+
         construtor.setOnBordaAtingida(borda -> {
-            switch (borda) {
-                //case CenaJogo.BORDA_NORTE -> gerenciador.mostrarTelaJogo();
-                //case CenaJogo.BORDA_SUL   -> gerenciador.mostrarTelaJogo();
-                case LESTE -> gerenciador.mostrarTelaJogo();
-                //case CenaJogo.BORDA_OESTE -> gerenciador.mostrarTelaJogo();
-            }
-        });
+                    ultimaBorda = borda;
+                    mapaController.getVizinho("Cantina módulo 1", borda.getDirecao())
+                            .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
+                }
+        );
         cenaAtual  = construtor.getResult();
         return cenaAtual.buildPane();
     }
@@ -135,5 +160,15 @@ public class ControllerTelas {
             cenaAtual.parar();
             cenaAtual = null;
         }
+    }
+
+    private double[] calcularPosicaoInicial(Borda borda) {
+        return switch (borda) {
+            case NORTE -> new double[]{700, 800};
+            case SUL   -> new double[]{700, 50};
+            case LESTE -> new double[]{50,  500};
+            case OESTE -> new double[]{1800, 500};
+            case null  -> new double[]{700, 700};
+        };
     }
 }

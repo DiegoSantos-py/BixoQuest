@@ -20,7 +20,6 @@ import java.util.function.Consumer;
  * Responsável por montar o Pane JavaFX, movimentar o jogador,
  * detectar colisões com hitboxes de elementos/NPCs e zonas interativas.
  *
- * TODO: migrar lógica de movimento e posição para o PersonagemController
  */
 public class CenaJogo {
 
@@ -47,7 +46,7 @@ public class CenaJogo {
 
     // ── Registro interno de zona interativa ───────────────────────────────────
 
-    public record ZoneEntry(String id, ImageView view, Consumer<String> onEnter) {}
+    public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
 
     // ── Construtor — chamado apenas pelo ConstrutorCenaJogo ───────────────────
 
@@ -90,7 +89,10 @@ public class CenaJogo {
         pane.getChildren().addAll(elements);
         pane.getChildren().addAll(elementHitboxes);
 
-        zones.forEach(z -> pane.getChildren().add(z.view()));
+        zones.forEach(z -> {
+            pane.getChildren().add(z.view());
+            pane.getChildren().add(z.hitbox());
+        });
 
         pane.getChildren().addAll(npcs);
         pane.getChildren().addAll(npcHitboxes);
@@ -156,8 +158,10 @@ public class CenaJogo {
 
     private void verificarColisaoZonas() {
         zones.forEach(zone -> {
-            if (playerHitbox.getBoundsInParent()
-                    .intersects(zone.view().getBoundsInParent())) {
+            var playerBounds = playerHitbox.getBoundsInParent();
+            var zoneBounds = zone.hitbox().getBoundsInParent();
+            boolean colidindo = playerBounds.intersects(zoneBounds);
+            if (colidindo) {
                 zone.onEnter().accept(zone.id());
             }
         });

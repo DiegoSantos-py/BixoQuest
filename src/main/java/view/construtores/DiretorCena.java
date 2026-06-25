@@ -14,7 +14,10 @@ public class DiretorCena {
     public void construirCenaPontoOnibus(Construtor construtor,
                                          MapaController mapaController,
                                          NpcController npcController,
-                                         Consumer<String> onZona) {
+                                         Consumer<String> onZona,
+                                         Consumer<String> onNpc,
+                                         double playerX,
+                                         double playerY) {
 
         construtor.setBackground(mapaController.buscarSpritePorNome("Ponto de ônibus 1"), 1920, 1080);
 
@@ -30,40 +33,45 @@ public class DiretorCena {
                         npc.getHitboxLargura(), npc.getHitboxAltura())
         );
 
+        construtor.setOnNpcAtingido(onNpc);
+
         mapaController.getZonasDoLocal("Ponto de ônibus 1").forEach(zona ->
                 construtor.addInteractiveZone(
                         zona.getNome(), zona.getSprite(),
-                        zona.getLargura(), zona.getAltura(),
+                        zona.getSpriteLargura(), zona.getSpriteAltura(),
+                        zona.getSpriteX(), zona.getSpriteY(),
                         zona.getX(), zona.getY(),
+                        zona.getLargura(), zona.getAltura(),
                         onZona
-                )
-        );
+                ));
 
-        // TODO: conectar ao MapaService
-        construtor.setOnBordaAtingida(borda -> System.out.println("Borda atingida: " + borda));
 
         // TODO: substituir pelo player vindo de um PlayerController
-        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, 700, 700,
+        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
                 150, 150, 48, 96);
     }
 
     public void construirCenaEntradaModulo(Construtor construtor,
                                            MapaController mapaController,
-                                           NpcController npcController){
+                                           NpcController npcController,
+                                           double playerX,
+                                           double playerY){
     construtor.setBackground("/assets/background/background_entrada_modulo.png", 1920,1080);
 
     construtor.addElement("/assets/placa_modulo_2.png", 500, 600, 500, 140,100, 150, 75);
 
-    construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, 500, 700,
+    construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
                 150, 150, 48, 96);
     }
 
     public void construirCenaCantina(Construtor construtor,
                                      MapaController mapaController,
-                                     NpcController npcController){
+                                     NpcController npcController,
+                                     double playerX,
+                                     double playerY){
     construtor.setBackground("/assets/background/background_cantina.png", 1920, 1080);
 
-        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, 500, 700,
+        construtor.setPlayer("/Jogador/Jogador1/rotations/south.png", 350, playerX, playerY,
                 150, 150, 48, 96);
 
     }

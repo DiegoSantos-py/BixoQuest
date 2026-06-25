@@ -5,6 +5,11 @@ public class ZonaInterativa {
     private String nome;
     private String sprite;
 
+    private int spriteLargura;
+    private int spriteAltura;
+    private int spriteX;
+    private int spriteY;
+
     public ZonaInterativa() {
     }
 
@@ -48,4 +53,17 @@ public class ZonaInterativa {
     public int getLargura() { return area.getMaxX() - area.getMinX(); }
 
     public int getAltura() { return area.getMaxY() - area.getMinY(); }
+
+    public int getSpriteLargura() { return spriteLargura; }
+    public void setSpriteLargura(int spriteLargura) { this.spriteLargura = spriteLargura; }
+
+    public int getSpriteAltura() { return spriteAltura; }
+    public void setSpriteAltura(int spriteAltura) { this.spriteAltura = spriteAltura; }
+
+    public int getSpriteX() { return spriteX; }
+    public void setSpriteX(int spriteX) { this.spriteX = spriteX; }
+
+    public int getSpriteY() { return spriteY; }
+    public void setSpriteY(int spriteY) { this.spriteY = spriteY; }
+
 }

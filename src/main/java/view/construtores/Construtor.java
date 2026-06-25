@@ -19,14 +19,19 @@ public interface Construtor {
                 double hitboxOffsetX, double hitboxOffsetY,
                 double hitboxLargura, double hitboxAltura);
 
-    void addInteractiveZone(String id, String imagePath, double largura, double altura,
-                            double x, double y, Consumer<String> onEnter);
+    void addInteractiveZone(String id, String imagePath,
+                            double spriteLargura, double spriteAltura,
+                            double spriteX, double spriteY,
+                            double hitboxX, double hitboxY,
+                            double hitboxLargura, double hitboxAltura,
+                            Consumer<String> onEnter);
 
     void setPlayer(String imagePath, double largura, double x, double y,
                    double hitboxOffsetX, double hitboxOffsetY,
                    double hitboxLargura, double hitboxAltura);
 
     void setOnBordaAtingida(Consumer<Borda> onBordaAtingida);
+    void setOnNpcAtingido(Consumer<String> onNpcAtingido);
 
     CenaJogo getResult();
 }

@@ -49,6 +49,8 @@ public class DisciplinaRepository {
 
     // Carrega os dados do arquivo JSON para memória.
     public void carregar() throws PersistenciaException {
+        if (!ARQUIVO.exists() || ARQUIVO.length() == 0) return;
+
         if (!ARQUIVO.exists()) return;
 
         try {

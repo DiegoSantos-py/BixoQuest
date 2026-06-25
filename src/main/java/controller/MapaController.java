@@ -114,6 +114,19 @@ public class MapaController extends BaseController {
         }
     }
 
+    public Optional<String> getVizinho(String nomeLocal, String direcao) {
+        try {
+            Local local = service.buscarPorNome(nomeLocal);
+            Direcao d = Direcao.valueOf(direcao);
+            Local vizinho = local.getVizinho(d);
+            return Optional.ofNullable(vizinho).map(Local::getNome);
+        } catch (LocalNaoEncontradoException e) {
+            tratarNaoEncontrado(e);
+            return Optional.empty();
+        }
+    }
+
+
     // Exibição
     @Override
     protected void exibirErro(String mensagem) {
