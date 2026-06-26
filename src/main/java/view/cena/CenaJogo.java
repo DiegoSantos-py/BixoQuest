@@ -93,7 +93,7 @@ public class CenaJogo {
         pane.getChildren().addAll(elementHitboxes);
 
         zones.forEach(z -> {
-            pane.getChildren().add(z.view());
+            if (z.view() != null) pane.getChildren().add(z.view());
             pane.getChildren().add(z.hitbox());
         });
 

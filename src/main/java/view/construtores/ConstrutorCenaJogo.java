@@ -41,7 +41,9 @@ public class ConstrutorCenaJogo implements Construtor {
     public void addElement(String imagePath, double largura, double x, double y,
                            double hitboxOffsetX, double hitboxOffsetY,
                            double hitboxLargura, double hitboxAltura) {
-        elements.add(carregarImagem(imagePath, largura, x, y));
+        if (imagePath != null && !imagePath.isEmpty()) {
+            elements.add(carregarImagem(imagePath, largura, x, y));
+        }
         Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
         hitbox.setFill(javafx.scene.paint.Color.rgb(255, 0, 0, 0.3));
@@ -72,12 +74,16 @@ public class ConstrutorCenaJogo implements Construtor {
                                    double hitboxX, double hitboxY,
                                    double hitboxLargura, double hitboxAltura,
                                    Consumer<String> onEnter) {
-        ImageView view = carregarImagem(imagePath, spriteLargura, spriteX, spriteY);
-        view.setFitHeight(spriteAltura);
-        view.setPreserveRatio(false);
         Rectangle hitbox = criarHitbox(hitboxX, hitboxY, hitboxLargura, hitboxAltura);
         hitbox.setFill(javafx.scene.paint.Color.rgb(0, 255, 0, 0.3));
-        zones.add(new CenaJogo.ZoneEntry(id, view, hitbox, onEnter));
+        if (imagePath != null && !imagePath.isEmpty()) {
+            ImageView view = carregarImagem(imagePath, spriteLargura, spriteX, spriteY);
+            view.setFitHeight(spriteAltura);
+            view.setPreserveRatio(false);
+            zones.add(new CenaJogo.ZoneEntry(id, view, hitbox, onEnter));
+        } else {
+            zones.add(new CenaJogo.ZoneEntry(id, null, hitbox, onEnter));
+        }
     }
 
     @Override

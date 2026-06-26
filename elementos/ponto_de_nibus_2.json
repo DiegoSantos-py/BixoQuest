@@ -1,0 +1,42 @@
+[
+  {
+    "sprite": "/assets/arvore.png",
+    "largura": 700,
+    "x": 50,
+    "y": 150,
+    "hitboxOffsetX": 285,
+    "hitboxOffsetY": 190,
+    "hitboxLargura": 100,
+    "hitboxAltura": 150
+  },
+  {
+    "sprite": "/assets/arbusto_sem_flor.png",
+    "largura": 300,
+    "x": 50,
+    "y": 850,
+    "hitboxOffsetX": 80,
+    "hitboxOffsetY": 70,
+    "hitboxLargura": 100,
+    "hitboxAltura": 100
+  },
+  {
+    "sprite": "/assets/arbusto_com_flor.png",
+    "largura": 450,
+    "x": 350,
+    "y": 50,
+    "hitboxOffsetX": 170,
+    "hitboxOffsetY": 110,
+    "hitboxLargura": 100,
+    "hitboxAltura": 100
+  },
+  {
+    "sprite": "/assets/placa_ponto2.png",
+    "largura": 300,
+    "x": 1000,
+    "y": 650,
+    "hitboxOffsetX": 130,
+    "hitboxOffsetY": 200,
+    "hitboxLargura": 50,
+    "hitboxAltura": 100
+  }
+]

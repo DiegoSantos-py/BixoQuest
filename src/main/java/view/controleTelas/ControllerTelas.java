@@ -14,8 +14,8 @@ import view.menu.MenuInicial;
 import view.menu.MenuPersonagens;
 import view.cena.CenaJogo;
 import view.util.Borda;
+import java.util.function.Consumer;
 
-// TODO: refatorar essa classe. Tá muito acoplada
 public class ControllerTelas {
 
     private final GerenciadorTelas gerenciador;
@@ -74,7 +74,7 @@ public class ControllerTelas {
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarTelaPonto(),
+                () -> gerenciador.mostrarCenaPorNome("Ponto de ônibus 1"),
                 gameController,
                 sessaoAtual
         );
@@ -93,7 +93,7 @@ public class ControllerTelas {
 
         double[] pos = calcularPosicaoInicial(ultimaBorda);
         String spriteBase = personagemController.getSpriteBase(sessaoAtual);
-        diretorCena.construirCenaPontoOnibus(
+        diretorCena.construirCena(
                 construtor,
                 mapaController,
                 npcController,
@@ -104,7 +104,7 @@ public class ControllerTelas {
                     }
                 },
                 nome -> System.out.println("NPC atingido: " + nome), // temporário
-                pos[0], pos[1], spriteBase);
+                pos[0], pos[1], spriteBase, "Ponto de ônibus 1");
 
         construtor.setOnBordaAtingida(borda -> {
             ultimaBorda = borda;
@@ -116,47 +116,27 @@ public class ControllerTelas {
         return cenaAtual.buildPane();
     }
 
-    public Parent criarCenaEntradaModulo() {
+    public Parent criarCena(String nomeLocal, Consumer<String> onZona) {
         pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
-        double[] pos = calcularPosicaoInicial(ultimaBorda);
-        String spriteBase = personagemController.getSpriteBase(sessaoAtual);
-        diretorCena.construirCenaEntradaModulo(
-                construtor,
-                mapaController,
-                npcController,
-                pos[0], pos[1], spriteBase);
-
-        construtor.setOnBordaAtingida(borda -> {
-                    ultimaBorda = borda;
-                    mapaController.getVizinho("Entrada módulo 1", borda.getDirecao())
-                            .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
-                }
-        );
-        cenaAtual  = construtor.getResult();
-        return cenaAtual.buildPane();
-    }
-
-    public Parent criarCenaCantina() {
-        pararCenaAtual();
-        ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
         double[] pos = calcularPosicaoInicial(ultimaBorda);
         String spriteBase = personagemController.getSpriteBase(sessaoAtual);
-        diretorCena.construirCenaCantina(
-                construtor,
-                mapaController,
-                npcController,
-                pos[0], pos[1], spriteBase);
-
         construtor.setOnBordaAtingida(borda -> {
-                    ultimaBorda = borda;
-                    mapaController.getVizinho("Cantina módulo 1", borda.getDirecao())
-                            .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
-                }
-        );
-        cenaAtual  = construtor.getResult();
+            ultimaBorda = borda;
+            mapaController.getVizinho(nomeLocal, borda.getDirecao())
+                    .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
+        });
+
+
+        diretorCena.construirCena(construtor, mapaController, npcController,
+                onZona,
+                nome -> System.out.println("NPC: " + nome),
+                pos[0], pos[1], spriteBase, nomeLocal);
+        cenaAtual = construtor.getResult();
+
+
         return cenaAtual.buildPane();
     }
 
@@ -170,9 +150,9 @@ public class ControllerTelas {
     private double[] calcularPosicaoInicial(Borda borda) {
         return switch (borda) {
             case NORTE -> new double[]{700, 800};
-            case SUL   -> new double[]{700, 50};
+            case SUL   -> new double[]{700, 150};
             case LESTE -> new double[]{50,  500};
-            case OESTE -> new double[]{1800, 500};
+            case OESTE -> new double[]{1700, 500};
             case null  -> new double[]{700, 700};
         };
     }

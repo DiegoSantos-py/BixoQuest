@@ -63,24 +63,21 @@ public class GerenciadorTelas {
         trocarRoot(controllerTelas.criarAnimacaoInicio(sessaoAtual));
     }
 
-    public void mostrarTelaPonto() {
-        trocarRoot(controllerTelas.criarCenaPonto());
-    }
-
-    public void mostrarTelaJogoEntrada(){trocarRoot(controllerTelas.criarCenaEntradaModulo());}
-
-    public void mostrarTelaCantina(){trocarRoot(controllerTelas.criarCenaCantina());}
 
     public void mostrarCenaPorNome(String nome) {
         if (nome == null) return;
 
-        if (nome.startsWith("Ponto de ônibus"))     mostrarTelaPonto();
-        else if (nome.startsWith("Entrada módulo")) mostrarTelaJogoEntrada();
-        else if (nome.startsWith("Cantina módulo")) mostrarTelaCantina();
-        //else if (nome.startsWith("Sala módulo"))      mostrarTelaSala();
-        //else if (nome.equals("Laboratório"))          mostrarTelaLaboratorio();
-        //else if (nome.equals("Colegiado"))            mostrarTelaColegiado();
-        else System.err.println("Cena não encontrada para local: " + nome);
+        if (nome.startsWith("Ponto de ônibus")) {
+            trocarRoot(controllerTelas.criarCena(nome, id -> {
+                switch (id) {
+                    case "Banco de ônibus" -> mostrarMenuInicial();
+                    default -> mostrarCenaPorNome(id);
+                }
+            }));
+        } else {
+            trocarRoot(controllerTelas.criarCena(nome,
+                    id -> mostrarCenaPorNome(id)));
+        }
     }
 
     public void mostrarConfiguracoes() {

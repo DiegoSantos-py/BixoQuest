@@ -1,0 +1,11 @@
+[
+  {
+    "sprite": "/assets/placa_modulo_2.png",
+    "largura": 500,
+    "x": 600,
+    "y": 500,
+    "hitboxOffsetX": 140,
+    "hitboxOffsetY": 100,
+    "hitboxLargura": 150,
+    "hitboxAltura": 75
+  }]

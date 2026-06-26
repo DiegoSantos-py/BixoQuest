@@ -1,0 +1,519 @@
+{
+  "Colegiado" : {
+    "nome" : "Colegiado",
+    "vizinhosNomes" : {
+      "BAIXO" : "Sala módulo 5"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "COLEGIADO",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Ponto de ônibus 1" : {
+    "nome" : "Ponto de ônibus 1",
+    "vizinhosNomes" : {
+      "CIMA" : "Entrada módulo 2"
+    },
+    "spriteDir" : "/assets/background/Background_ponto_onibus.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "PONTO_ONIBUS",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Banco de ônibus",
+      "sprite": "/assets/ponto_de_onibus.png",
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 750,
+        "maxX": 950,
+        "minY": 500,
+        "maxY": 600
+      }
+    }]
+  },
+  "Ponto de ônibus 2" : {
+    "nome" : "Ponto de ônibus 2",
+    "vizinhosNomes" : {
+      "CIMA" : "Entrada módulo 4"
+    },
+    "spriteDir" : "/assets/background/Background_ponto_onibus.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "PONTO_ONIBUS",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Banco de ônibus",
+      "sprite": "/assets/ponto_de_onibus.png",
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 750,
+        "maxX": 950,
+        "minY": 500,
+        "maxY": 600
+      }
+    } ]
+  },
+  "Ponto de ônibus 3" : {
+    "nome" : "Ponto de ônibus 3",
+    "vizinhosNomes" : {
+      "CIMA" : "Entrada módulo 6"
+    },
+    "spriteDir" : "/assets/background/Background_ponto_onibus.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "PONTO_ONIBUS",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Banco de ônibus",
+      "sprite": "/assets/ponto_de_onibus.png",
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 750,
+        "maxX": 950,
+        "minY": 500,
+        "maxY": 600
+      }
+    } ]
+  },
+  "Cantina módulo 1" : {
+    "nome" : "Cantina módulo 1",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 1",
+      "ESQUERDA" : "Cantina módulo 2",
+      "CIMA" : "Sala módulo 1"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 3" : {
+    "nome" : "Cantina módulo 3",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 3",
+      "ESQUERDA" : "Cantina módulo 4",
+      "DIREITA" : "Cantina módulo 2",
+      "CIMA" : "Sala módulo 3"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 2" : {
+    "nome" : "Cantina módulo 2",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 2",
+      "ESQUERDA" : "Cantina módulo 3",
+      "DIREITA" : "Cantina módulo 1",
+      "CIMA" : "Sala módulo 2"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Laboratório" : {
+    "nome" : "Laboratório",
+    "vizinhosNomes" : {
+      "BAIXO" : "Sala módulo 3"
+    },
+    "spriteDir" : "/assets/background/background_laboratorio.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "LABORATORIO",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 5" : {
+    "nome" : "Cantina módulo 5",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 5",
+      "ESQUERDA" : "Cantina módulo 6",
+      "DIREITA" : "Cantina módulo 4",
+      "CIMA" : "Sala módulo 5"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 4" : {
+    "nome" : "Cantina módulo 4",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 4",
+      "ESQUERDA" : "Cantina módulo 5",
+      "DIREITA" : "Cantina módulo 3",
+      "CIMA" : "Sala módulo 4"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 7" : {
+    "nome" : "Cantina módulo 7",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 7",
+      "DIREITA" : "Cantina módulo 6",
+      "CIMA" : "Sala módulo 7"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Cantina módulo 6" : {
+    "nome" : "Cantina módulo 6",
+    "vizinhosNomes" : {
+      "BAIXO" : "Entrada módulo 6",
+      "ESQUERDA" : "Cantina módulo 7",
+      "DIREITA" : "Cantina módulo 5",
+      "CIMA" : "Sala módulo 6"
+    },
+    "spriteDir" : "/assets/background/background_cantina.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "CANTINA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 3" : {
+    "nome" : "Sala módulo 3",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 3",
+      "CIMA" : "Laboratório"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : []
+  },
+  "Entrada módulo 7" : {
+    "nome" : "Entrada módulo 7",
+    "vizinhosNomes" : {
+      "DIREITA" : "Entrada módulo 6",
+      "CIMA" : "Cantina módulo 7"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 4" : {
+    "nome" : "Sala módulo 4",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 4"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 1" : {
+    "nome" : "Sala módulo 1",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 1"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 5" : {
+    "nome" : "Entrada módulo 5",
+    "vizinhosNomes" : {
+      "ESQUERDA" : "Entrada módulo 6",
+      "DIREITA" : "Entrada módulo 4",
+      "CIMA" : "Cantina módulo 5"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 2" : {
+    "nome" : "Sala módulo 2",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 2"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 6" : {
+    "nome" : "Entrada módulo 6",
+    "vizinhosNomes" : {
+      "BAIXO" : "Ponto de ônibus 3",
+      "ESQUERDA" : "Entrada módulo 7",
+      "DIREITA" : "Entrada módulo 5",
+      "CIMA" : "Cantina módulo 6"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 7" : {
+    "nome" : "Sala módulo 7",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 7"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 5" : {
+    "nome" : "Sala módulo 5",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 5",
+      "CIMA" : "Colegiado"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Sala módulo 6" : {
+    "nome" : "Sala módulo 6",
+    "vizinhosNomes" : {
+      "BAIXO" : "Cantina módulo 6"
+    },
+    "spriteDir" : "/assets/background/background_sala.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "SALA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 3" : {
+    "nome" : "Entrada módulo 3",
+    "vizinhosNomes" : {
+      "ESQUERDA" : "Entrada módulo 4",
+      "DIREITA" : "Entrada módulo 2",
+      "CIMA" : "Cantina módulo 3"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 4" : {
+    "nome" : "Entrada módulo 4",
+    "vizinhosNomes" : {
+      "BAIXO" : "Ponto de ônibus 2",
+      "ESQUERDA" : "Entrada módulo 5",
+      "DIREITA" : "Entrada módulo 3",
+      "CIMA" : "Cantina módulo 4"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 1" : {
+    "nome" : "Entrada módulo 1",
+    "vizinhosNomes" : {
+      "ESQUERDA" : "Entrada módulo 2",
+      "CIMA" : "Cantina módulo 1"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  },
+  "Entrada módulo 2" : {
+    "nome" : "Entrada módulo 2",
+    "vizinhosNomes" : {
+      "BAIXO" : "Ponto de ônibus 1",
+      "ESQUERDA" : "Entrada módulo 3",
+      "DIREITA" : "Entrada módulo 1",
+      "CIMA" : "Cantina módulo 2"
+    },
+    "spriteDir" : "/assets/background/background_entrada_modulo.png",
+    "area" : {
+      "maxX" : 500,
+      "minX" : -500,
+      "maxY" : 500,
+      "minY" : -500
+    },
+    "tipo" : "ENTRADA",
+    "elementos" : [ ],
+    "nomesNpcs" : [ ],
+    "zonaInterativasDisponiveis" : [ ]
+  }
+}

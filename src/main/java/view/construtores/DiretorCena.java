@@ -11,32 +11,32 @@ import java.util.function.Consumer;
  */
 public class DiretorCena {
 
-    public void construirCenaPontoOnibus(Construtor construtor,
-                                         MapaController mapaController,
-                                         NpcController npcController,
-                                         Consumer<String> onZona,
-                                         Consumer<String> onNpc,
-                                         double playerX,
-                                         double playerY,
-                                         String spriteBase) {
+    public void construirCena(Construtor construtor,
+                              MapaController mapaController,
+                              NpcController npcController,
+                              Consumer<String> onZona,
+                              Consumer<String> onNpc,
+                              double playerX,
+                              double playerY,
+                              String spriteBase,
+                              String nomeLocal) {
 
-        construtor.setBackground(mapaController.buscarSpritePorNome("Ponto de ônibus 1"), 1920, 1080);
+        construtor.setBackground(mapaController.buscarSpritePorNome(nomeLocal), 1920, 1080);
 
-        mapaController.getElementos("Ponto de ônibus 1").forEach(e ->
+        mapaController.getElementos(nomeLocal).forEach(e ->
                 construtor.addElement(e.getSprite(), e.getLargura(), e.getX(), e.getY(),
                         e.getHitboxOffsetX(), e.getHitboxOffsetY(),
                         e.getHitboxLargura(), e.getHitboxAltura())
         );
 
-        mapaController.getNpcsDoLocal("Ponto de ônibus 1").forEach(npc ->
-                construtor.addNPC(npc.getSpriteDir(), npc.getNome(), npc.getLargura(), npc.getcX(), npc.getcY(),
+        mapaController.getNpcsDoLocal(nomeLocal).forEach(npc ->
+                construtor.addNPC(npc.getSpriteDir(), npc.getNome(), npc.getLargura(),
+                        npc.getcX(), npc.getcY(),
                         npc.getHitboxOffsetX(), npc.getHitboxOffsetY(),
                         npc.getHitboxLargura(), npc.getHitboxAltura())
         );
 
-        construtor.setOnNpcAtingido(onNpc);
-
-        mapaController.getZonasDoLocal("Ponto de ônibus 1").forEach(zona ->
+        mapaController.getZonasDoLocal(nomeLocal).forEach(zona ->
                 construtor.addInteractiveZone(
                         zona.getNome(), zona.getSprite(),
                         zona.getSpriteLargura(), zona.getSpriteAltura(),
@@ -44,12 +44,11 @@ public class DiretorCena {
                         zona.getX(), zona.getY(),
                         zona.getLargura(), zona.getAltura(),
                         onZona
-                ));
+                )
+        );
 
-
-        // TODO: substituir pelo player vindo de um PlayerController
-        construtor.setPlayer(spriteBase, 350, playerX, playerY,
-                150, 150, 48, 96);
+        construtor.setOnNpcAtingido(onNpc);
+        construtor.setPlayer(spriteBase, 350, playerX, playerY, 150, 150, 48, 96);
     }
 
     public void construirCenaEntradaModulo(Construtor construtor,
