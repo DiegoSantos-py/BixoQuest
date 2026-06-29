@@ -3,9 +3,12 @@ package model.Evento.Prova.Questao;
 import model.Ataque.Ataques.AtaqueArranhao;
 import model.Ataque.Ataques.Provas.Matematica.AtaqueIntegral2;
 import model.Ataque.Ataques.Provas.Matematica.AtaqueVetores;
+
+import model.Ataque.Ataques.Provas.Matematica.AtaqueIntegral;
 import model.Ataque.Ataques.Provas.Matematica.AtaqueRetaTangente;
 import model.Ataque.Ataques.AtaqueLatido;
 import model.Ataque.Ataques.AtaqueMordida;
+
 import model.Ataque.Ataques.Provas.Matematica.AtaqueAmplitudeMaxima;
 import model.Ataque.Ataques.Provas.Matematica.AtaqueFuncaoAfim;
 import model.Disciplina.AreaConhecimento;
@@ -60,7 +63,7 @@ public class QuestaoFactory {
                 10f + nivel * 15f,
                 AreaConhecimento.MAT,
                 8f + nivel * 4f,
-                new AtaqueIntegral2(null, null, 8f + nivel * 4f),
+                new AtaqueIntegral(null, null, 8f + nivel * 4f),
                 "Pelo menos é so uma integral...",
                 "Não se esqueça do +C"
         );
