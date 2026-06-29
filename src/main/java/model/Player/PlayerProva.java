@@ -17,7 +17,7 @@ public class PlayerProva extends EntidadeBatalha {
     private float danoAtaque;
     private float conhecimentoArea;
     private float TEMPO_IMUNIDADE = 0.5f; // 0.5 segundos de invulnerabilidade após receber dano
-    private float VELOCIDADE = 150f; // 80 unidades/s em todas as direcoes
+    private float VELOCIDADE = 200f;
     private float tempoImunidadeRestante;
     // --- Estatística de desempenho ---
     private ArrayList<Float> desempenhoQuestoes;
@@ -97,6 +97,9 @@ public class PlayerProva extends EntidadeBatalha {
     public void ReceberDano(int danoShield, float danoNota) {
         if (tempoImunidadeRestante > 0) {
             return; 
+        }
+        if (danoShield <= 0 && danoNota <= 0f) {
+            return; // projéteis inofensivos (como prévias) não contam como hit
         }
 
         this.levouAlgumDano = true;

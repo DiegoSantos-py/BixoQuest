@@ -62,6 +62,9 @@ public class CenaBatalha extends StackPane {
     private double minigameCursorX = -350;
     private double minigameCursorDir = 1;
 
+    private float baseOpX = -1;
+    private float baseOpY = -1;
+
     private boolean renderHitbox = false;
     private Text textDebugHitbox;
 
@@ -182,6 +185,16 @@ public class CenaBatalha extends StackPane {
         if (estadoUI == UIState.MINIGAME_ATAQUE) {
             atualizarMinigame(dt);
         }
+
+        if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null) {
+            model.Batalha.Oponente op = batalhaController.getEstadoAtual().getOponenteAtual();
+            if (baseOpX != -1 && baseOpY != -1) {
+                float deltaX = op.getX() - baseOpX;
+                float deltaY = op.getY() - baseOpY;
+                spriteInimigo.setTranslateX(deltaX);
+                spriteInimigo.setTranslateY(deltaY);
+            }
+        }
         
         atualizarHUDShields();
         atualizarTextosHUD();
@@ -246,12 +259,6 @@ public class CenaBatalha extends StackPane {
             iv.setLayoutY(localY);
 
             double graus = Math.toDegrees(entidade.getHitbox().getAnguloRotacao());
-            
-            // Compensar a orientação nativa da imagem do projétil (+90 graus para alinhar sprite que aponta pra cima)
-            // Ignorar para o arranhão, pois ele já tem as dimensões físicas em sincronia com o sprite visual
-            if (entidade instanceof model.Projetil.Projetil && !sDir.contains("arranhao")) {
-                graus += 90;
-            }
 
             if (graus != 0) {
                 iv.setRotate(graus);
@@ -320,7 +327,7 @@ public class CenaBatalha extends StackPane {
             arenaPane.getChildren().add(pHb);
         }
         
-        //System.out.println("DEBUG Player Coords: physical(" + p.getX() + ", " + p.getY() + ") -> local(" + pLX + ", " + pLY + ")");
+
 
         // Projéteis
         for (model.Projetil.Projetil proj : estado.getAtaqueAtual().getProjeteis()) {
@@ -330,22 +337,25 @@ public class CenaBatalha extends StackPane {
             float prLY = proj.getY() - minY - prH / 2;
 
             ImageView prSprite = criarSprite(proj, prW, prH, prLX, prLY);
-            arenaPane.getChildren().add(prSprite != null ? prSprite : buildRect(prLX, prLY, prW, prH, Color.WHITE));
+            if (prSprite != null) {
+                arenaPane.getChildren().add(prSprite);
+            } else if (proj.getSpriteUrl() != null && !proj.getSpriteUrl().isEmpty()) {
+                // sprite esperado mas falhou ao carregar — mostra fallback
+                arenaPane.getChildren().add(buildRect(prLX, prLY, prW, prH, Color.WHITE));
+            }
+            // spriteDir vazio = hitbox invisível, não renderiza nada
             
             if (renderHitbox) {
                 Rectangle prHb = buildRect(prLX, prLY, prW, prH, Color.TRANSPARENT);
                 prHb.setStroke(Color.RED); prHb.setStrokeWidth(2);
-                
+
+                // usa o ângulo bruto da hitbox — SEM o offset +90 do sprite
                 double grausHitbox = Math.toDegrees(proj.getHitbox().getAnguloRotacao());
-                
-                if (!proj.getSpriteUrl().contains("arranhao")) {
-                    grausHitbox += 90;
-                }
-                
+
                 if (grausHitbox != 0) {
                     prHb.setRotate(grausHitbox);
                 }
-                
+
                 arenaPane.getChildren().add(prHb);
             }
         }
@@ -619,12 +629,16 @@ public class CenaBatalha extends StackPane {
         infoInimigo.getChildren().addAll(textNomeInimigo, textDescricaoInimigo);
         cabecalho.setLeft(infoInimigo);
 
-        // Centro (Sprite)
+        // Centro (Sprite desacoplado do layout rígido)
         spriteInimigo = new ImageView();
         spriteInimigo.setFitWidth(300);
         spriteInimigo.setFitHeight(300);
         spriteInimigo.setPreserveRatio(true);
-        cabecalho.setCenter(spriteInimigo);
+        
+        // Placeholder invisível para o BorderPane não encolher
+        Pane placeholderSprite = new Pane();
+        placeholderSprite.setPrefSize(300, 300);
+        cabecalho.setCenter(placeholderSprite);
 
         // Direita (Turnos)
         VBox infoTurnoBox = new VBox();
@@ -686,13 +700,21 @@ public class CenaBatalha extends StackPane {
         textDebugHitbox.setVisible(false); // Inicia oculto até apertar F2
         StackPane.setAlignment(textDebugHitbox, Pos.BOTTOM_LEFT);
         StackPane.setMargin(textDebugHitbox, new Insets(20));
+
+        // Adiciona o spriteInimigo flutuando no topo, alinhado onde o placeholder está
+        StackPane.setAlignment(spriteInimigo, Pos.TOP_CENTER);
         
-        this.getChildren().addAll(layoutPrincipal, hudShields, textDebugHitbox);
+        this.getChildren().addAll(layoutPrincipal, hudShields, textDebugHitbox, spriteInimigo);
     }
 
     private void atualizarDadosIniciais() {
         if (batalhaController.getEstadoAtual() != null && batalhaController.getEstadoAtual().getOponenteAtual() != null) {
             model.Batalha.Oponente op = batalhaController.getEstadoAtual().getOponenteAtual();
+            
+            // Salva posição base do oponente para calcular o delta de movimentação
+            baseOpX = op.getX();
+            baseOpY = op.getY();
+
             textNomeInimigo.setText(op.getNome().toUpperCase());
             
             if (op.getDescricao() != null) {

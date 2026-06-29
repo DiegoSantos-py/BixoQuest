@@ -110,10 +110,10 @@ public class Projetil extends EntidadeBatalha {
     public void setPersistente(boolean persistente) {
         this.persistente = persistente;
     }
+
     public void addComportamentoColisao(ComportamentoAoColidirComPlayer colisao) {
         this.comportamentosAoColidir.add(colisao);
     }
-
 
     public void addComportamento(ComportamentoProjetil ai) {
         if (ai == null) {
@@ -187,6 +187,7 @@ public class Projetil extends EntidadeBatalha {
         this.duracaoMaxima = duracaoMaxima;
 
         this.tempoDeVida = 0;
+        this.velocidadeAngular = 0f;
 
         this.comportamentosAI.clear();
         this.comportamentosDespawn.clear();
@@ -213,7 +214,7 @@ public class Projetil extends EntidadeBatalha {
         if (this.target == null) {
             throw new NullTargetException();
         }
-        for(ComportamentoAoColidirComPlayer comportamento : this.comportamentosAoColidir) {
+        for (ComportamentoAoColidirComPlayer comportamento : this.comportamentosAoColidir) {
             comportamento.aoColidirComPlayer(this, this.target);
         }
         this.target.ReceberDano(
@@ -262,8 +263,16 @@ public class Projetil extends EntidadeBatalha {
         return danoShield;
     }
 
+    public void setDanoShield(int danoShield) {
+        this.danoShield = danoShield;
+    }
+
     public float getDanoNota() {
         return danoNota;
+    }
+
+    public void setDanoNota(float danoNota) {
+        this.danoNota = danoNota;
     }
 
     public float getTempoDeVida() {

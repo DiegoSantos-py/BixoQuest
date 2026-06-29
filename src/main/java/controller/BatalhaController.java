@@ -3,6 +3,9 @@ package controller;
 import model.Batalha.EstadoBatalha;
 import model.Batalha.Oponente;
 import model.Disciplina.AreaConhecimento;
+import model.Evento.Prova.ProvaBatalha;
+import model.Evento.Prova.ProvaFactory;
+import model.Evento.Prova.ProvaIDs;
 import model.Npc.Animal;
 import model.Npc.Especie;
 import model.Personagem;
@@ -10,6 +13,7 @@ import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.Vector2D;
 import repository.NpcRepository;
+import repository.ResultadoProvaRepository;
 import service.batalha.BatalhaService;
 
 import java.util.ArrayList;
@@ -27,14 +31,28 @@ public class BatalhaController extends BaseController {
     }
 
     public void iniciarBatalhaTeste(Animal animalBase) {
+        iniciarBatalhaTeste(animalBase, 0f);
+    }
+
+    public void iniciarBatalhaTeste(Animal animalBase, float bonusConhecimento) {
         Personagem personagemBase = new Personagem();
+        if (bonusConhecimento != 0) {
+            for (AreaConhecimento area : AreaConhecimento.values()) {
+                personagemBase.atualizarConhecimento(area, bonusConhecimento);
+            }
+        }
         this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, animalBase, this.npcRepository);
     }
 
-    public void iniciarProvaTeste(model.Evento.Prova.ProvaIDs provaId) {
+    public void iniciarProvaTeste(ProvaIDs provaId, float bonusConhecimento) {
         Personagem personagemBase = new Personagem();
-        model.Evento.Prova.ProvaBatalha prova = model.Evento.Prova.ProvaFactory.criar(provaId, 1);
-        this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, prova, new repository.ResultadoProvaRepository());
+        if (bonusConhecimento != 0) {
+            for (AreaConhecimento area : AreaConhecimento.values()) {
+                personagemBase.atualizarConhecimento(area, bonusConhecimento);
+            }
+        }
+        ProvaBatalha prova = ProvaFactory.criar(provaId, 1);
+        this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, prova, new ResultadoProvaRepository());
     }
 
     public void iniciarBatalhaAtim() {
@@ -69,7 +87,8 @@ public class BatalhaController extends BaseController {
     }
 
     public List<AcaoBatalha> getAcoes() {
-        if (estadoAtual == null) return new ArrayList<>();
+        if (estadoAtual == null)
+            return new ArrayList<>();
 
         List<AcaoBatalha> acoes = estadoAtual.getAcoesBatalha();
         return acoes != null ? acoes : new ArrayList<>();

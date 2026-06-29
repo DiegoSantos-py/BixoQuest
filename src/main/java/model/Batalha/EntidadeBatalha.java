@@ -55,6 +55,13 @@ public abstract class EntidadeBatalha {
     public float getY(){
         return this.hitbox.getCentro().getY();
     }
+    public void setX(float x){
+        this.hitbox.getCentro().setX(x);
+    }
+    public void setY(float y){
+        this.hitbox.getCentro().setY(y);
+    }
+
     public Vector2D getCentro() {
         return hitbox.getCentro();
     }

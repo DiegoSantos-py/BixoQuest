@@ -15,17 +15,22 @@ public class ProjetilQueSegue implements ComportamentoProjetil, ComportamentoAoC
             Vector2D direcaoDesejada = projetil.getTarget().getCentro().subtrair(projetil.getCentro()).normalize();
 
             // define a velocidade máxima que ele pode atingir
-            float velocidadeMaxima = 105f;
+            float velocidadeMaxima = 125f;
             Vector2D velocidadeDesejada = direcaoDesejada.mult(velocidadeMaxima);
 
             // define a força com que ele vai seguir o target (quanto maior, mais rápido ele vira/acelera)
-            float forcaInercia = 5.0f;
+            float forcaInercia = 4.5f;
 
             // calcula a aceleracao (VelocidadeDesejada - VelocidadeAtual) * força
             Vector2D aceleracao = velocidadeDesejada.subtrair(projetil.getVelocidade()).mult(forcaInercia * dt);
 
             // aplica a aceleração na getVelocidade() atual
-            projetil.setVelocidade(projetil.getVelocidade().add(aceleracao));;
+            projetil.setVelocidade(projetil.getVelocidade().add(aceleracao));
+            
+            // rotaciona visualmente e fisicamente a hitbox para apontar na direção do movimento
+            // (+90 graus / PI/2 radianos para compensar que os sprites apontam para cima por padrão)
+            float anguloAtual = (float) Math.atan2(projetil.getVelocidade().getY(), projetil.getVelocidade().getX()) + (float) (Math.PI / 2);
+            projetil.getHitbox().setAnguloRad(anguloAtual);
         }
         //boom temos inercia
 

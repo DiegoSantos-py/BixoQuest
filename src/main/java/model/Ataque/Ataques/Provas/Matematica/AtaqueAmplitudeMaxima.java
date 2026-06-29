@@ -32,63 +32,52 @@ public class AtaqueAmplitudeMaxima extends Ataque {
 
 
         timer += dt;
-        float velocidade =  55f * (dificuldade/2 + 0.5f); // 1 pra ind 10 2 pra ind 30
+        float velocidade =  35f * (dificuldade/2 + 0.5f); // 1 pra ind 10 2 pra ind 30
 
 
-        int limiteProjeteis = 25 + (int)(dificuldade/10);
-        if (timer >= (8 / dificuldade) && !this.isFinalizado() && projeteisSpawnados < limiteProjeteis) {
+        int limiteProjeteis = 12 + (int)(dificuldade/10);
+        if (timer >= (10 / dificuldade) && !this.isFinalizado() && projeteisSpawnados < limiteProjeteis) {
             int canto = MathUtils.randomIntInRange(1,4); //1 = esquerda, 2 = cima, 3 = direita, 4 = baixo
-            float MultipladorAleatorio = MathUtils.randomFloatInRange(0.5f,2f);
+            float MultipladorAleatorio = MathUtils.randomFloatInRange(1f,1.5f);
             float angulo = 0f;
             float spawn1X = 0f, spawn1Y = 0f;
-            float spawn2X = 0f, spawn2Y = 0f;
-            String comp1 = "";
-            String comp2 = "";
+            String comp = "";
+
+            float midX = (getMinX() + getMaxX()) / 2f;
+            float midY = (getMinY() + getMaxY()) / 2f;
+
+            boolean goesUp = MathUtils.randomFloatInRange(0, 1) > 0.5f;
 
             switch (canto) {
                 case 1: // Esquerda
-                    spawn1X = topLeftX; spawn1Y = topLeftY;
-                    spawn2X = bottomLeftX; spawn2Y = bottomLeftY;
+                    spawn1X = getMinX(); spawn1Y = midY;
                     angulo = 0f; // Para a direita
-                    comp1 = "SENOIDAL_X_UP";
-                    comp2 = "SENOIDAL_X_DOWN";
+                    comp = goesUp ? "SENOIDAL_X_UP" : "SENOIDAL_X_DOWN";
                     break;
                 case 2: // Cima
-                    spawn1X = topLeftX; spawn1Y = topLeftY;
-                    spawn2X = topRightX; spawn2Y = topRightY;
+                    spawn1X = midX; spawn1Y = getMinY();
                     angulo = (float) (Math.PI / 2); // Para baixo
-                    comp1 = "SENOIDAL_Y_UP";
-                    comp2 = "SENOIDAL_Y_DOWN";
+                    comp = goesUp ? "SENOIDAL_Y_UP" : "SENOIDAL_Y_DOWN";
                     break;
                 case 3: // Direita
-                    spawn1X = topRightX; spawn1Y = topRightY;
-                    spawn2X = bottomRightX; spawn2Y = bottomRightY;
+                    spawn1X = getMaxX(); spawn1Y = midY;
                     angulo = (float) Math.PI; // Para a esquerda
-                    comp1 = "SENOIDAL_X_UP";
-                    comp2 = "SENOIDAL_X_DOWN";
+                    comp = goesUp ? "SENOIDAL_X_UP" : "SENOIDAL_X_DOWN";
                     break;
                 case 4: // Baixo
-                    spawn1X = bottomLeftX; spawn1Y = bottomLeftY;
-                    spawn2X = bottomRightX; spawn2Y = bottomRightY;
+                    spawn1X = midX; spawn1Y = getMaxY();
                     angulo = (float) (-Math.PI / 2); // Para cima
-                    comp1 = "SENOIDAL_Y_UP";
-                    comp2 = "SENOIDAL_Y_DOWN";
+                    comp = goesUp ? "SENOIDAL_Y_UP" : "SENOIDAL_Y_DOWN";
                     break;
             }
 
-            // Spawna o primeiro projetil
-            model.Projetil.Projetil p1 = spawnProjetil(spawn1X, spawn1Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0f, 2.5f, "/assets/batalha/projeteis/latido.png");
+            // Spawna o projetil
+            model.Projetil.Projetil p1 = spawnProjetil(spawn1X, spawn1Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0.5f, 2.5f, "/assets/batalha/projeteis/latido.png");
             if (p1 != null) {
-                p1.addComportamento(model.Projetil.Comportamentos.ComportamentoFactory.getAI(comp1));
+                p1.addComportamento(model.Projetil.Comportamentos.ComportamentoFactory.getAI(comp));
             }
             
-            // Spawna o segundo projetil
-            model.Projetil.Projetil p2 = spawnProjetil(spawn2X, spawn2Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0f, 2.5f, "/assets/batalha/projeteis/latido.png");
-            if (p2 != null) {
-                p2.addComportamento(model.Projetil.Comportamentos.ComportamentoFactory.getAI(comp2));
-            }
-
-            projeteisSpawnados += 2;
+            projeteisSpawnados += 1;
             timer = 0;
         }
 
@@ -111,6 +100,6 @@ public class AtaqueAmplitudeMaxima extends Ataque {
 
     @Override
     public String toString() {
-        return "Ataque Latido";
+        return "Ataque Amplitude Maxima";
     }
 }

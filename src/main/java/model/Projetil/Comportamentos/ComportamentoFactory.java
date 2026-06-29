@@ -13,22 +13,23 @@ public class ComportamentoFactory {
 
     static {
         comportamentoCache.put("HOMING", new ProjetilQueSegue());
-        comportamentoCache.put("SENOIDAL_X_UP", new ProjetilSenoidal(200f, (float) Math.PI * 2, true));
-        comportamentoCache.put("SENOIDAL_X_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 2, true));
-        comportamentoCache.put("SENOIDAL_Y_UP", new ProjetilSenoidal(200f, (float) Math.PI * 2, false));
-        comportamentoCache.put("SENOIDAL_Y_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 2, false));
+        comportamentoCache.put("PREDITIVO", new ProjetilQuePreve());
+        comportamentoCache.put("SENOIDAL_X_UP", new ProjetilSenoidal(200f, (float) Math.PI * 1.5f, true));
+        comportamentoCache.put("SENOIDAL_X_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, true));
+        comportamentoCache.put("SENOIDAL_Y_UP", new ProjetilSenoidal(200f, (float) Math.PI * 1.5f, false));
+        comportamentoCache.put("SENOIDAL_Y_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, false));
         despawnCache.put("EXPLOSIVO", new ProjetilExplosivo());
         despawnCache.put("SPAWN_ARRANHAO", new ProjetilSpawnAoMorrer(
                 "/assets/batalha/projeteis/arranhao.png",
-                3, 650, // Tamanho igual ao da prévia (3x600)
-                1, 0.2f, // Dá 1 de dano no shield, 0.2 na nota
-                0.2f     // Dura apenas 0.2 segundos
+                3, 650,
+                1, 0.75f,
+                0.2f
         ));
         despawnCache.put("SPAWN_FUNCAO", new ProjetilSpawnAoMorrer(
                 "/assets/batalha/projeteis/arranhao.png",
-                3, 650, // Tamanho igual ao da prévia (3x600)
-                1, 0.5f, // Dá 1 de dano no shield, 0.2 na nota
-                0.2f     // Dura apenas 0.2 segundos
+                3, 650,
+                1, 0.75f,
+                0.2f
         ));
     }
 

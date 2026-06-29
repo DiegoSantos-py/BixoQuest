@@ -5,12 +5,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import model.Batalha.Oponente;
+import model.Evento.Prova.ProvaIDs;
+import model.Npc.Animal;
 import view.util.FonteUtil;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class MenuSeletorBatalha extends StackPane {
     private final BatalhaController batalhaController;
     private final Runnable aoIniciarBatalha;
     private final Runnable aoVoltar;
+    private TextField inputConhecimento;
 
     public MenuSeletorBatalha(BatalhaController batalhaController, Runnable aoIniciarBatalha, Runnable aoVoltar) {
         this.batalhaController = batalhaController;
@@ -33,9 +36,7 @@ public class MenuSeletorBatalha extends StackPane {
     private void montarTela() {
         Image bgImage = new Image(
                 Objects.requireNonNull(
-                        getClass().getResourceAsStream("/menuPrincipal/BackgroundMenu.png")
-                )
-        );
+                        getClass().getResourceAsStream("/menuPrincipal/BackgroundMenu.png")));
 
         ImageView backgroundView = new ImageView(bgImage);
         backgroundView.setFitWidth(1920);
@@ -49,18 +50,24 @@ public class MenuSeletorBatalha extends StackPane {
         titulo.setFont(FonteUtil.pixel(48));
         titulo.setFill(Color.WHITE);
 
-        HBox tabs = new javafx.scene.layout.HBox(20);
+        HBox tabs = new HBox(20);
         tabs.setAlignment(Pos.CENTER);
-        
+
         Button btnAnimais = new Button("Animais");
         estilizarBotao(btnAnimais);
         btnAnimais.setPrefWidth(200);
-        
+
         Button btnProvas = new Button("Provas");
         estilizarBotao(btnProvas);
         btnProvas.setPrefWidth(200);
-        
+
         tabs.getChildren().addAll(btnAnimais, btnProvas);
+
+        inputConhecimento = new TextField("0");
+        inputConhecimento.setPromptText("Bônus Global de Conhecimento");
+        inputConhecimento.setMaxWidth(300);
+        inputConhecimento.setFont(FonteUtil.pixel(16));
+        inputConhecimento.setStyle("-fx-alignment: center;");
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
@@ -71,7 +78,7 @@ public class MenuSeletorBatalha extends StackPane {
 
         btnAnimais.setOnAction(e -> scrollPane.setContent(criarBotoesAnimais()));
         btnProvas.setOnAction(e -> scrollPane.setContent(criarBotoesProvas()));
-        
+
         // Aba inicial padrão
         scrollPane.setContent(criarBotoesAnimais());
 
@@ -79,16 +86,26 @@ public class MenuSeletorBatalha extends StackPane {
         estilizarBotao(btnVoltar);
         btnVoltar.setOnAction(e -> aoVoltar.run());
 
-        menuItems.getChildren().addAll(titulo, tabs, scrollPane, btnVoltar);
+        menuItems.getChildren().addAll(titulo, inputConhecimento, tabs, scrollPane, btnVoltar);
 
         getChildren().addAll(backgroundView, menuItems);
+    }
+
+    private float lerBonus() {
+        try {
+            String texto = inputConhecimento.getText().replace(",", ".").trim();
+            if (!texto.isEmpty()) return Float.parseFloat(texto);
+        } catch (NumberFormatException ex) {
+            System.out.println("Valor inválido de conhecimento. Assumindo 0.");
+        }
+        return 0f;
     }
 
     private VBox criarBotoesAnimais() {
         VBox botoes = new VBox(15);
         botoes.setAlignment(Pos.CENTER);
 
-        List<model.Npc.Animal> animais = batalhaController.getAnimaisDisponiveis();
+        List<Animal> animais = batalhaController.getAnimaisDisponiveis();
 
         if (animais == null || animais.isEmpty()) {
             Text vazio = new Text("Nenhum animal disponível no repositório.");
@@ -96,15 +113,15 @@ public class MenuSeletorBatalha extends StackPane {
             vazio.setFont(FonteUtil.pixel(20));
             botoes.getChildren().add(vazio);
         } else {
-            for (model.Npc.Animal animal : animais) {
+            for (Animal animal : animais) {
                 Button btnOponente = new Button("Batalhar com " + animal.getNome() + " (" + animal.getEspecie() + ")");
                 estilizarBotao(btnOponente);
-                
+
                 btnOponente.setOnAction(event -> {
-                    batalhaController.iniciarBatalhaTeste(animal);
-                    aoIniciarBatalha.run(); 
+                    batalhaController.iniciarBatalhaTeste(animal, lerBonus());
+                    aoIniciarBatalha.run();
                 });
-                
+
                 botoes.getChildren().add(btnOponente);
             }
         }
@@ -116,15 +133,15 @@ public class MenuSeletorBatalha extends StackPane {
         VBox botoes = new VBox(15);
         botoes.setAlignment(Pos.CENTER);
 
-        for (model.Evento.Prova.ProvaIDs provaId : model.Evento.Prova.ProvaIDs.values()) {
+        for (ProvaIDs provaId : ProvaIDs.values()) {
             Button btnProva = new Button("Iniciar " + provaId.name());
             estilizarBotao(btnProva);
-            
+
             btnProva.setOnAction(event -> {
-                batalhaController.iniciarProvaTeste(provaId);
-                aoIniciarBatalha.run(); 
+                batalhaController.iniciarProvaTeste(provaId, lerBonus());
+                aoIniciarBatalha.run();
             });
-            
+
             botoes.getChildren().add(btnProva);
         }
 
