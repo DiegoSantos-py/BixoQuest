@@ -11,6 +11,7 @@ import view.construtores.ConstrutorCenaJogo;
 import view.construtores.DiretorCena;
 import view.menu.MenuCriarPersonagem;
 import view.menu.MenuInicial;
+import view.menu.MenuPause;
 import view.menu.MenuPersonagens;
 import view.cena.CenaJogo;
 import view.util.Borda;
@@ -21,7 +22,6 @@ public class ControllerTelas {
     private final GerenciadorTelas gerenciador;
     private final PersonagemController personagemController;
     private final MapaController mapaController;
-    private final NpcController npcController;
     private final GameController gameController;
     private final DiretorCena diretorCena;
 
@@ -32,13 +32,11 @@ public class ControllerTelas {
     public ControllerTelas(
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
-            MapaController mapaController,
-            NpcController npcController, GameController gameController
+            MapaController mapaController, GameController gameController
     ) {
         this.gerenciador           = gerenciador;
         this.personagemController  = personagemController;
         this.mapaController        = mapaController;
-        this.npcController         = npcController;
         this.gameController        = gameController;
         this.diretorCena           = new DiretorCena();
     }
@@ -71,6 +69,12 @@ public class ControllerTelas {
         );
     }
 
+    public Parent criarMenuPause(){
+        return new MenuPause(
+                () -> gerenciador.mostrarMenuInicial()
+        );
+    }
+
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
@@ -82,38 +86,8 @@ public class ControllerTelas {
 
     public Parent criarInicio() {
         return new InicioJogoView(
-                //() -> gerenciador.mostrarTelaJogo()
                 () -> gerenciador.mostrarMenuInicial()
         );
-    }
-
-    public Parent criarCenaPonto() {
-        pararCenaAtual();
-        ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
-
-        double[] pos = calcularPosicaoInicial(ultimaBorda);
-        String spriteBase = personagemController.getSpriteBase(sessaoAtual);
-        diretorCena.construirCena(
-                construtor,
-                mapaController,
-                npcController,
-                id -> {
-                    switch (id) {
-                        case "Banco de ônibus 1" -> gerenciador.mostrarMenuInicial();
-                        default -> System.err.println("Zona não encontrada");
-                    }
-                },
-                nome -> System.out.println("NPC atingido: " + nome), // temporário
-                pos[0], pos[1], spriteBase, "Ponto de ônibus 1");
-
-        construtor.setOnBordaAtingida(borda -> {
-            ultimaBorda = borda;
-            mapaController.getVizinho("Ponto de ônibus 1", borda.getDirecao())
-                    .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
-        });
-
-        cenaAtual  = construtor.getResult();
-        return cenaAtual.buildPane();
     }
 
     public Parent criarCena(String nomeLocal, Consumer<String> onZona) {
@@ -130,10 +104,12 @@ public class ControllerTelas {
         });
 
 
-        diretorCena.construirCena(construtor, mapaController, npcController,
+        diretorCena.construirCena(construtor, mapaController,
                 onZona,
                 nome -> System.out.println("NPC: " + nome),
-                pos[0], pos[1], spriteBase, nomeLocal);
+                pos[0], pos[1], spriteBase, nomeLocal,
+                () -> ,
+                () -> gerenciador.mostrarMenuPause());
         cenaAtual = construtor.getResult();
 
 

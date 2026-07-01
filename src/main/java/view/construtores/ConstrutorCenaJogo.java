@@ -31,6 +31,8 @@ public class ConstrutorCenaJogo implements Construtor {
     private Consumer<Borda> onBordaAtingida;
     private Consumer<String> onNpcAtingido;
     private String spriteBase;
+    private  Runnable onPressionarTAB;
+    private  Runnable onPressionarESC;
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -105,6 +107,12 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
+    public void setOnPressionarTAB(Runnable onPressionarTAB){ this.onPressionarTAB = onPressionarTAB;}
+
+    @Override
+    public void setOnPressionarESC(Runnable onPressionarESC){ this.onPressionarESC = onPressionarESC;}
+
+    @Override
     public CenaJogo getResult() {
         return new CenaJogo(background,
                 elements, elementHitboxes,
@@ -115,7 +123,9 @@ public class ConstrutorCenaJogo implements Construtor {
                 onBordaAtingida,
                 npcNomes,
                 onNpcAtingido,
-                spriteBase
+                spriteBase,
+                onPressionarTAB,
+                onPressionarESC
                 );
     }
 

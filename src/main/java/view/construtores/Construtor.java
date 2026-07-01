@@ -32,6 +32,8 @@ public interface Construtor {
 
     void setOnBordaAtingida(Consumer<Borda> onBordaAtingida);
     void setOnNpcAtingido(Consumer<String> onNpcAtingido);
+    void setOnPressionarTAB(Runnable onPressionarTAB);
+    void setOnPressionarESC(Runnable onPressionarESC);
 
     CenaJogo getResult();
 }

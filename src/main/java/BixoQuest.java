@@ -51,7 +51,6 @@ public class BixoQuest extends Application {
 
         PersonagemController personagemController = new PersonagemController(personagemService);
         MapaController mapaController = new MapaController(mapaService);
-        NpcController npcController = new NpcController(npcService);
         GameController gameController = new GameController(gameService);
 
 
@@ -69,7 +68,6 @@ public class BixoQuest extends Application {
                 primaryStage,
                 personagemController,
                 mapaController,
-                npcController,
                 gameController);
 
 

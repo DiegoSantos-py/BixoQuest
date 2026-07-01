@@ -2,7 +2,6 @@ package view.controleTelas;
 
 import controller.GameController;
 import controller.MapaController;
-import controller.NpcController;
 import controller.PersonagemController;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ public class GerenciadorTelas {
             Stage stage,
             PersonagemController personagemController,
             MapaController mapaController,
-            NpcController npcController,
             GameController gameController
     ) {
         this.stage = stage;
@@ -26,7 +24,6 @@ public class GerenciadorTelas {
                 this,
                 personagemController,
                 mapaController,
-                npcController,
                 gameController
         );
     }
@@ -58,6 +55,8 @@ public class GerenciadorTelas {
     public void mostrarCriacaoPersonagem(int slotId) {
         trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));
     }
+
+    public void mostrarMenuPause(){trocarRoot(controllerTelas.criarMenuPause());}
 
     public void mostrarAnimacaoInicio(int sessaoAtual) {
         trocarRoot(controllerTelas.criarAnimacaoInicio(sessaoAtual));

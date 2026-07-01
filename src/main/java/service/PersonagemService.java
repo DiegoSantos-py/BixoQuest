@@ -16,6 +16,7 @@ import model.Tempo.Semestre;
 import repository.PersonagemRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,20 +95,20 @@ public class PersonagemService {
                                       int personagemId) {
 
         if (nome == null || nome.isBlank()) {
-            throw new PersonagemInvalidoException("nome", "não pode ser nulo ou vazio"); // ATUALIZADO
+            throw new PersonagemInvalidoException("nome", "não pode ser nulo ou vazio");
         }
 
         if (energia < 0) {
-            throw new PersonagemInvalidoException("energia", "não pode ser negativa"); // ATUALIZADO
+            throw new PersonagemInvalidoException("energia", "não pode ser negativa");
         }
         if (motivacao < 0) {
-            throw new PersonagemInvalidoException("motivacao", "não pode ser negativa"); // ATUALIZADO
+            throw new PersonagemInvalidoException("motivacao", "não pode ser negativa");
         }
         if (saude < 0) {
-            throw new PersonagemInvalidoException("saude", "não pode ser negativa"); // ATUALIZADO
+            throw new PersonagemInvalidoException("saude", "não pode ser negativa");
         }
         if (dinheiro < 0) {
-            throw new PersonagemInvalidoException("dinheiro", "não pode ser negativo"); // ATUALIZADO
+            throw new PersonagemInvalidoException("dinheiro", "não pode ser negativo");
         }
 
         Personagem personagem = new Personagem(
@@ -226,5 +227,19 @@ public class PersonagemService {
         }
 
         return (double) totalAprovadas / totalDisciplinas;
+    }
+
+    public Map<String, Double> getAtributos(int personagemId) {
+
+        Personagem p = buscarPorId(personagemId);
+
+        Map<String, Double> atributos = new LinkedHashMap<>();
+
+        atributos.put("Energia", p.getEnergia());
+        atributos.put("Motivação", p.getMotivacao());
+        atributos.put("Saúde", p.getSaude());
+        atributos.put("Dinheiro", p.getDinheiro());
+
+        return atributos;
     }
 }

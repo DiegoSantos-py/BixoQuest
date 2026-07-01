@@ -13,13 +13,14 @@ public class DiretorCena {
 
     public void construirCena(Construtor construtor,
                               MapaController mapaController,
-                              NpcController npcController,
                               Consumer<String> onZona,
                               Consumer<String> onNpc,
                               double playerX,
                               double playerY,
                               String spriteBase,
-                              String nomeLocal) {
+                              String nomeLocal,
+                              Runnable onPressionarTAB,
+                              Runnable onPressionarESC) {
 
         construtor.setBackground(mapaController.buscarSpritePorNome(nomeLocal), 1920, 1080);
 

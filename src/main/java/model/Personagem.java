@@ -28,7 +28,6 @@ public class Personagem {
 
     @JsonIgnore
     private List<Semestre> semestres;
-    private double desempenhoAcademico;
 
     private int cX = 0;
     private int cY = 0;
@@ -122,7 +121,6 @@ public class Personagem {
     }
     public List<Semestre> getSemestres() { return semestres; }
     public void adicionarSemestre(Semestre semestre) { this.semestres.add(semestre); }
-    public double getDesempenhoAcademico() { return desempenhoAcademico; }
     public String getLocalAtualNome() { return localAtualNome; }
     public void setLocalAtualNome(String nome) { this.localAtualNome = nome; }
 

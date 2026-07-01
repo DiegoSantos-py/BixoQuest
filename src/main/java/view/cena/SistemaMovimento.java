@@ -1,4 +1,4 @@
-package view.movimento;
+package view.cena;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

@@ -80,6 +80,10 @@ public class PersonagemController extends BaseController {
         }
     }
 
+    public Map<String, Double> getAtributos(int personagemId) {
+        return service.getAtributos(personagemId);
+    }
+
     public boolean existe(Personagem personagem) {
         return service.existe(personagem);
     }
@@ -111,4 +115,5 @@ public class PersonagemController extends BaseController {
     private void tratarNaoEncontrado(PersonagemNaoEncontradoException e) {
         exibirErro("Não encontrado: " + e.getMessage());
     }
+
 }

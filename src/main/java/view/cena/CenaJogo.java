@@ -1,13 +1,10 @@
 package view.cena;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import view.movimento.SistemaMovimento;
 import view.util.Borda;
 
 import java.util.HashSet;
@@ -23,8 +20,6 @@ import java.util.function.Consumer;
  */
 public class CenaJogo {
 
-    // ── Dados visuais ─────────────────────────────────────────────────────────
-
     private final ImageView background;
     private final List<ImageView> elements;
     private final List<Rectangle> elementHitboxes;
@@ -39,17 +34,15 @@ public class CenaJogo {
     private final double playerHitboxOffsetY;
     private final Consumer<Borda> onBordaAtingida;
     private final String spriteBase;
+    private final Runnable onPressionarTAB;
+    private final Runnable onPressionarESC;
 
-    // ── Estado de movimento ───────────────────────────────────────────────────
-
-    private final Set<KeyCode> teclasPressionadas = new HashSet<>();
     private AnimationTimer gameLoop;
-
-    // ── Registro interno de zona interativa ───────────────────────────────────
+    private SistemaMovimento sistemaMovimento;
+    private SistemaColisao sistemaColisao;
+    private GerenciadorEntrada gerenciadorEntrada;
 
     public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
-
-    // ── Construtor — chamado apenas pelo ConstrutorCenaJogo ───────────────────
 
     public CenaJogo(ImageView background,
                     List<ImageView> elements,
@@ -64,7 +57,9 @@ public class CenaJogo {
                     Consumer<Borda> onBordaAtingida,
                     List<String> npcNomes,
                     Consumer<String> onNpcAtingido,
-                    String spriteBase) {
+                    String spriteBase,
+                    Runnable onPressionarTAB,
+                    Runnable onPressionarESC) {
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -76,12 +71,12 @@ public class CenaJogo {
         this.playerHitboxOffsetX = playerHitboxOffsetX;
         this.playerHitboxOffsetY = playerHitboxOffsetY;
         this.onBordaAtingida     = onBordaAtingida;
-        this.npcNomes = npcNomes;
-        this.onNpcAtingido = onNpcAtingido;
-        this.spriteBase = spriteBase;
+        this.npcNomes            = npcNomes;
+        this.onNpcAtingido       = onNpcAtingido;
+        this.spriteBase          = spriteBase;
+        this.onPressionarTAB     = onPressionarTAB;
+        this.onPressionarESC     = onPressionarESC;
     }
-
-    // ── Montagem do Pane JavaFX ───────────────────────────────────────────────
 
     public Pane buildPane() {
         Pane pane = new Pane();
@@ -105,83 +100,37 @@ public class CenaJogo {
             pane.getChildren().add(playerHitbox);
         }
 
-        configurarControles(pane);
+        gerenciadorEntrada = new GerenciadorEntrada(onPressionarTAB, onPressionarESC);
+        gerenciadorEntrada.configurar(pane);
+
         iniciarGameLoop();
-
-
 
         return pane;
     }
-
-    // ── Controles de teclado ──────────────────────────────────────────────────
-
-    private void configurarControles(Pane pane) {
-        pane.setFocusTraversable(true);
-
-        pane.setOnKeyPressed(e -> {
-            System.out.println("tecla: " + e.getCode());
-            teclasPressionadas.add(e.getCode());
-        });
-        pane.setOnKeyReleased(e -> teclasPressionadas.remove(e.getCode()));
-
-        pane.setOnMouseClicked(e -> pane.requestFocus());
-
-        pane.sceneProperty().addListener((obs, old, scene) -> {
-            if (scene != null) pane.requestFocus();
-        });
-
-    }
-
-    private SistemaMovimento sistemaMovimento;
 
     private void iniciarGameLoop() {
         if (playerView == null) return;
 
         sistemaMovimento = new SistemaMovimento(
-                playerView,
-                playerHitbox,
-                playerHitboxOffsetX,
-                playerHitboxOffsetY,
-                elementHitboxes,
-                npcHitboxes,
-                onBordaAtingida,
-                spriteBase
+                playerView, playerHitbox,
+                playerHitboxOffsetX, playerHitboxOffsetY,
+                elementHitboxes, npcHitboxes, onBordaAtingida, spriteBase
+        );
+
+        sistemaColisao = new SistemaColisao(
+                playerHitbox, zones, npcHitboxes, npcNomes, onNpcAtingido
         );
 
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                sistemaMovimento.atualizar(teclasPressionadas);
-                verificarColisaoZonas();
+                sistemaMovimento.atualizar(gerenciadorEntrada.getTeclasPressionadas());
+                sistemaColisao.verificarZonas();
+                sistemaColisao.verificarNpcs();
             }
         };
         gameLoop.start();
     }
-
-    // ── Colisão com zonas interativas ─────────────────────────────────────────
-
-    private void verificarColisaoZonas() {
-        zones.forEach(zone -> {
-            var playerBounds = playerHitbox.getBoundsInParent();
-            var zoneBounds = zone.hitbox().getBoundsInParent();
-            boolean colidindo = playerBounds.intersects(zoneBounds);
-            if (colidindo) {
-                zone.onEnter().accept(zone.id());
-            }
-        });
-    }
-
-    private void verificarColisaoNpcs() {
-        for (int i = 0; i < npcHitboxes.size(); i++) {
-            if (playerHitbox.getBoundsInParent()
-                    .intersects(npcHitboxes.get(i).getBoundsInParent())) {
-                if (onNpcAtingido != null)
-                    onNpcAtingido.accept(npcNomes.get(i));
-            }
-        }
-    }
-
-    // ── Parar o loop ──────────────────────────────────────────────────────────
 
     public void parar() {
         if (gameLoop != null)
