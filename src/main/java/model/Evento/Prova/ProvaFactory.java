@@ -4,6 +4,7 @@ import model.Disciplina.AreaConhecimento;
 import model.Evento.Prova.Provas.ProvasNaturezas;
 import model.Player.AcaoBatalha;
 import model.Evento.Prova.Provas.ProvasMatematica;
+import model.Evento.Prova.Provas.ProvasSoftware;
 import java.util.ArrayList;
 
 public class ProvaFactory {
@@ -18,6 +19,7 @@ public class ProvaFactory {
             case MAT_02: return criarMatematica(2);
             case MAT_03: return criarMatematica(3);
             case NAT_01: return criarNatureza(1);
+            case SOFT_01: return criarSoftware(1);
             default:
                 throw new IllegalArgumentException("ProvaIDs sem implementacao na factory: " + id);
         }
@@ -52,5 +54,17 @@ public class ProvaFactory {
 
 
 
+    public static ProvaBatalha criarSoftware(int nivel){
+        switch (nivel){
+            case 1:
+                return ProvasSoftware.criarSoftwareNivel1();
+            case 2:
+                throw new IllegalArgumentException("Nivel 2 de software em construcao.");
+            case 3:
+                throw new IllegalArgumentException("Nivel 3 de software em construcao.");
+            default:
+                throw new IllegalArgumentException("Niveis so vao de 1 a 3.");
+        }
+    }
 
 }

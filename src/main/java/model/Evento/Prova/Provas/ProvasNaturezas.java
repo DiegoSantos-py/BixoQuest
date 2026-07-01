@@ -29,7 +29,7 @@ public class ProvasNaturezas {
                 0,
                 acoes,
                 "naturezas.png",
-                "naturezas.mp3"
+                "naturezas1.mp3"
         );
 
         prova.addQuestao(new Questao(
