@@ -18,9 +18,7 @@ public class DiretorCena {
                               double playerX,
                               double playerY,
                               String spriteBase,
-                              String nomeLocal,
-                              Runnable onPressionarTAB,
-                              Runnable onPressionarESC) {
+                              String nomeLocal) {
 
         construtor.setBackground(mapaController.buscarSpritePorNome(nomeLocal), 1920, 1080);
 

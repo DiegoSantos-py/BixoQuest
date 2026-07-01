@@ -1,5 +1,6 @@
 package view.construtores;
 
+import controller.PersonagemController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -31,8 +32,21 @@ public class ConstrutorCenaJogo implements Construtor {
     private Consumer<Borda> onBordaAtingida;
     private Consumer<String> onNpcAtingido;
     private String spriteBase;
-    private  Runnable onPressionarTAB;
-    private  Runnable onPressionarESC;
+
+    private PersonagemController personagemController;
+    private int personagemId;
+    private Runnable onSairParaMenuPrincipal;
+
+    @Override
+    public void setPersonagem(PersonagemController personagemController, int personagemId) {
+        this.personagemController = personagemController;
+        this.personagemId = personagemId;
+    }
+
+    @Override
+    public void setOnSairParaMenuPrincipal(Runnable onSairParaMenuPrincipal) {
+        this.onSairParaMenuPrincipal = onSairParaMenuPrincipal;
+    }
 
     @Override
     public void setBackground(String imagePath, double largura, double altura) {
@@ -107,12 +121,6 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void setOnPressionarTAB(Runnable onPressionarTAB){ this.onPressionarTAB = onPressionarTAB;}
-
-    @Override
-    public void setOnPressionarESC(Runnable onPressionarESC){ this.onPressionarESC = onPressionarESC;}
-
-    @Override
     public CenaJogo getResult() {
         return new CenaJogo(background,
                 elements, elementHitboxes,
@@ -124,9 +132,10 @@ public class ConstrutorCenaJogo implements Construtor {
                 npcNomes,
                 onNpcAtingido,
                 spriteBase,
-                onPressionarTAB,
-                onPressionarESC
-                );
+                personagemController,
+                personagemId,
+                onSairParaMenuPrincipal
+        );
     }
 
     // ── Utilitários ───────────────────────────────────────────────────────────

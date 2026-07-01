@@ -25,6 +25,8 @@ public class MenuAtributosPersonagem extends StackPane {
     private final int personagemId;
     private final Runnable aoVoltar;
 
+    private VBox atributosContainer; // guardamos referência pra poder atualizar depois
+
     public MenuAtributosPersonagem(
             PersonagemController personagemController,
             int personagemId,
@@ -35,19 +37,22 @@ public class MenuAtributosPersonagem extends StackPane {
         this.aoVoltar = aoVoltar;
 
         montarTela();
+        setVisible(false);
+        setManaged(false); // não ocupa espaço nem aparece até abrir()
     }
 
     private void montarTela() {
 
-        Image bgImage = new Image(
-                Objects.requireNonNull(
-                        getClass().getResourceAsStream("/background.png")
+        ImageView background = new ImageView(
+                new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream("/menuPersonagens/BackgroundMenu.png")
+                        )
                 )
         );
-
-        ImageView background = new ImageView(bgImage);
-        background.setFitWidth(1920);
-        background.setFitHeight(1080);
+        // acompanha o tamanho real do container pai (StackPane da CenaJogo)
+        background.fitWidthProperty().bind(widthProperty());
+        background.fitHeightProperty().bind(heightProperty());
         background.setPreserveRatio(false);
 
         VBox painel = new VBox(30);
@@ -57,13 +62,15 @@ public class MenuAtributosPersonagem extends StackPane {
         titulo.setFont(FonteUtil.pixel(36));
         titulo.setTextFill(Color.WHITE);
 
-        VBox atributos = criarListaAtributos();
+        atributosContainer = new VBox(20);
+        atributosContainer.setAlignment(Pos.CENTER_LEFT);
+        atualizarAtributos(); // popula a lista já na criação
 
         Button btnVoltar = criarBotaoVoltar();
 
         painel.getChildren().addAll(
                 titulo,
-                atributos,
+                atributosContainer,
                 btnVoltar
         );
 
@@ -72,31 +79,30 @@ public class MenuAtributosPersonagem extends StackPane {
         StackPane.setMargin(painel, new Insets(40));
     }
 
-    private VBox criarListaAtributos() {
-
-        VBox lista = new VBox(20);
-        lista.setAlignment(Pos.CENTER_LEFT);
+    /**
+     * Reconstrói a lista de atributos a partir do estado atual do personagem.
+     * Chamado na criação e sempre que o menu é reaberto (abrir()).
+     */
+    private void atualizarAtributos() {
+        atributosContainer.getChildren().clear();
 
         Map<String, Double> atributos =
                 personagemController.getAtributos(personagemId);
 
         for (Map.Entry<String, Double> atributo : atributos.entrySet()) {
-
-            lista.getChildren().add(
+            atributosContainer.getChildren().add(
                     criarLinhaAtributo(
                             atributo.getKey(),
                             atributo.getValue()
                     )
             );
         }
-
-        return lista;
     }
 
     private HBox criarLinhaAtributo(String nome, double valor) {
 
         HBox linha = new HBox(15);
-        linha.setAlignment(Pos.CENTER_LEFT);
+        linha.setAlignment(Pos.CENTER);
 
         ImageView icone = criarIcone(nome);
 
@@ -120,18 +126,19 @@ public class MenuAtributosPersonagem extends StackPane {
 
     private ImageView criarIcone(String atributo) {
 
+
         String caminho =
-                "/atributos/" +
+                "/assets/atributos/" +
                         atributo.toLowerCase() +
                         ".png";
 
-        Image imagem = new Image(
-                Objects.requireNonNull(
-                        getClass().getResourceAsStream(caminho)
+        ImageView view = new ImageView(
+                new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream(caminho)
+                        )
                 )
         );
-
-        ImageView view = new ImageView(imagem);
         view.setFitWidth(32);
         view.setFitHeight(32);
 
@@ -139,25 +146,31 @@ public class MenuAtributosPersonagem extends StackPane {
     }
 
     private Button criarBotaoVoltar() {
-
         Button botao = new Button("Voltar");
-
         estilizarBotao(botao);
-
-        botao.setOnAction(e -> aoVoltar.run());
-
+        botao.setOnAction(e -> fechar());
         return botao;
     }
 
     private void estilizarBotao(Button botao) {
-
         botao.setFont(FonteUtil.pixel(24));
         botao.setTextFill(Color.WHITE);
-
         botao.setBackground(Background.EMPTY);
         botao.setBorder(Border.EMPTY);
-
         botao.setPrefWidth(220);
         botao.setFocusTraversable(false);
+    }
+
+    public void abrir() {
+        atualizarAtributos(); // garante dados frescos antes de mostrar
+        setVisible(true);
+        setManaged(true);
+        toFront();
+    }
+
+    public void fechar() {
+        setVisible(false);
+        setManaged(false);
+        aoVoltar.run();
     }
 }

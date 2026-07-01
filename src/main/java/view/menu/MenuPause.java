@@ -1,8 +1,8 @@
 package view.menu;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -11,38 +11,43 @@ import view.util.FonteUtil;
 import java.util.Objects;
 
 public class MenuPause extends StackPane {
+    private final Runnable onPressionarContinuar;
     private final Runnable onPressionarSair;
 
-    public MenuPause(Runnable onPressionarSair){
+    public MenuPause(Runnable onPressionarContinuar, Runnable onPressionarSair) {
+        this.onPressionarContinuar = onPressionarContinuar;
         this.onPressionarSair = onPressionarSair;
 
         montarTela();
+        setVisible(false);
+        setManaged(false); // não ocupa espaço no layout enquanto escondido
     }
 
     private void montarTela() {
         VBox formContainer = new VBox(20);
-        formContainer.setAlignment(Pos.BOTTOM_CENTER);
+        formContainer.setAlignment(Pos.CENTER);
 
-        Image backgroundImage = new Image(
-                Objects.requireNonNull(
-                        getClass().getResourceAsStream("/menuPersonagens/BackgroundMenu.png")
+        ImageView backgroundView = new ImageView(
+                new Image(
+                        Objects.requireNonNull(
+                                getClass().getResourceAsStream("/menuPersonagens/BackgroundMenu.png")
+                        )
                 )
         );
+        // acompanha o tamanho real do StackPane pai, em vez de valor fixo
+        backgroundView.fitWidthProperty().bind(widthProperty());
+        backgroundView.fitHeightProperty().bind(heightProperty());
 
-        ImageView backgroundView = new ImageView(backgroundImage);
-        backgroundView.setFitWidth(1920);
-        backgroundView.setFitHeight(1080);
+        Button btnContinuar = criarBotao("/menuPersonagens/background_botao.png", "Continuar", onPressionarContinuar);
+        Button btnSair = criarBotao("/menuPersonagens/background_botao.png", "Sair", onPressionarSair);
 
-        Button btnSair = criarBotao("/menuPersonagens/background_botao.png");
-
-        formContainer.getChildren().addAll(
-                btnSair
-        );
+        formContainer.getChildren().addAll(btnContinuar, btnSair);
 
         getChildren().addAll(backgroundView, formContainer);
     }
 
-    private Button criarBotao(String caminhoMoldura) {
+    private Button criarBotao(String caminhoMoldura, String texto, Runnable acao) {
+
         ImageView moldura = new ImageView(
                 new Image(
                         Objects.requireNonNull(
@@ -52,26 +57,36 @@ public class MenuPause extends StackPane {
         );
 
         moldura.setFitWidth(300);
-        moldura.setFitHeight(300);
         moldura.setPreserveRatio(true);
 
-        StackPane conteudo = new StackPane();
-        StackPane.setAlignment(moldura, Pos.CENTER);
+        Label label = new Label(texto);
+        label.setFont(FonteUtil.pixel(24));
+        label.setStyle("-fx-text-fill: white;");
 
-        conteudo.getChildren().addAll(moldura);
+        StackPane conteudo = new StackPane(
+                moldura,
+                label
+        );
 
-        Button btnSair = new Button("Sair");
-        btnSair.setPrefSize(350, 100);
-        btnSair.setFont(FonteUtil.pixel(24));
-        btnSair.setBackground(Background.EMPTY);
-        btnSair.setBorder(Border.EMPTY);
-        btnSair.setGraphic(conteudo);
+        Button btn = new Button();
+        btn.setFocusTraversable(false);
+        btn.setGraphic(conteudo);
+        btn.setBackground(Background.EMPTY);
+        btn.setBorder(Border.EMPTY);
+        btn.setOnAction(e -> acao.run());
 
-        btnSair.setOnAction(event -> {
-            onPressionarSair.run();
-        });
+        return btn;
+    }
 
+    public void abrir() {
+        setVisible(true);
+        setManaged(true);
+        toFront();
+    }
 
-        return btnSair;
+    public void fechar() {
+        setVisible(false);
+        setManaged(false);
+
     }
 }

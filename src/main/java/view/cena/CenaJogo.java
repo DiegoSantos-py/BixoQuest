@@ -1,15 +1,14 @@
 package view.cena;
 
+import controller.PersonagemController;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import view.util.Borda;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -34,13 +33,19 @@ public class CenaJogo {
     private final double playerHitboxOffsetY;
     private final Consumer<Borda> onBordaAtingida;
     private final String spriteBase;
-    private final Runnable onPressionarTAB;
-    private final Runnable onPressionarESC;
+
 
     private AnimationTimer gameLoop;
     private SistemaMovimento sistemaMovimento;
     private SistemaColisao sistemaColisao;
     private GerenciadorEntrada gerenciadorEntrada;
+
+    private StackPane raizCena;
+    private GerenciadorMenus gerenciadorMenus;
+
+    private final PersonagemController personagemController;
+    private final int personagemId;
+    private final Runnable onSairParaMenuPrincipal;
 
     public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
 
@@ -58,8 +63,9 @@ public class CenaJogo {
                     List<String> npcNomes,
                     Consumer<String> onNpcAtingido,
                     String spriteBase,
-                    Runnable onPressionarTAB,
-                    Runnable onPressionarESC) {
+                    PersonagemController personagemController,
+                    int personagemId,
+                    Runnable onSairParaMenuPrincipal) {
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -74,38 +80,44 @@ public class CenaJogo {
         this.npcNomes            = npcNomes;
         this.onNpcAtingido       = onNpcAtingido;
         this.spriteBase          = spriteBase;
-        this.onPressionarTAB     = onPressionarTAB;
-        this.onPressionarESC     = onPressionarESC;
+        this.personagemController = personagemController;
+        this.personagemId         = personagemId;
+        this.onSairParaMenuPrincipal = onSairParaMenuPrincipal;
     }
 
     public Pane buildPane() {
-        Pane pane = new Pane();
+        Pane conteudoJogo = new Pane();
 
         if (background != null)
-            pane.getChildren().add(background);
+            conteudoJogo.getChildren().add(background);
 
-        pane.getChildren().addAll(elements);
-        pane.getChildren().addAll(elementHitboxes);
+        conteudoJogo.getChildren().addAll(elements);
+        conteudoJogo.getChildren().addAll(elementHitboxes);
 
         zones.forEach(z -> {
-            if (z.view() != null) pane.getChildren().add(z.view());
-            pane.getChildren().add(z.hitbox());
+            if (z.view() != null) conteudoJogo.getChildren().add(z.view());
+            conteudoJogo.getChildren().add(z.hitbox());
         });
 
-        pane.getChildren().addAll(npcs);
-        pane.getChildren().addAll(npcHitboxes);
+        conteudoJogo.getChildren().addAll(npcs);
+        conteudoJogo.getChildren().addAll(npcHitboxes);
 
         if (playerView != null) {
-            pane.getChildren().add(playerView);
-            pane.getChildren().add(playerHitbox);
+            conteudoJogo.getChildren().add(playerView);
+            conteudoJogo.getChildren().add(playerHitbox);
         }
 
-        gerenciadorEntrada = new GerenciadorEntrada(onPressionarTAB, onPressionarESC);
-        gerenciadorEntrada.configurar(pane);
+        raizCena = new StackPane(conteudoJogo);
 
+        gerenciadorEntrada = new GerenciadorEntrada(
+                this::abrirMenuAtributos,
+                this::alternarMenuPause);
+        gerenciadorEntrada.configurar(raizCena); // foco/teclado no StackPane
+
+        inicializarMenus();
         iniciarGameLoop();
 
-        return pane;
+        return raizCena; // retorna o StackPane
     }
 
     private void iniciarGameLoop() {
@@ -130,6 +142,43 @@ public class CenaJogo {
             }
         };
         gameLoop.start();
+    }
+
+    private void inicializarMenus() {
+        gerenciadorMenus = new GerenciadorMenus(
+                raizCena,
+                personagemController,
+                personagemId,
+                onSairParaMenuPrincipal,
+                pausado -> {
+                    if (pausado) {
+                        if (gameLoop != null) gameLoop.stop();
+                    } else {
+                        if (gameLoop != null) gameLoop.start();
+                    }
+                }
+        );
+    }
+
+    private void alternarMenuPause() {
+        if (gerenciadorMenus.atributosAberto()) {
+            gerenciadorMenus.fecharAtributos();
+            return;
+        }
+        if (gerenciadorMenus.pauseAberto()) {
+            gerenciadorMenus.fecharPause();
+        } else {
+            gerenciadorMenus.abrirPause();
+        }
+    }
+
+    // no listener de ESC ou botão de menu:
+    private void abrirMenuPause() {
+        gerenciadorMenus.abrirPause();
+    }
+
+    private void abrirMenuAtributos(){
+        gerenciadorMenus.abrirAtributos();
     }
 
     public void parar() {

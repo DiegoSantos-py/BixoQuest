@@ -5,6 +5,7 @@ import controller.MapaController;
 import controller.PersonagemController;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 public class GerenciadorTelas {
@@ -32,6 +33,8 @@ public class GerenciadorTelas {
         if (scene == null) {
             scene = new Scene(root, 1920, 1080);
             stage.setScene(scene);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            stage.setFullScreenExitHint("");
         } else {
             scene.setRoot(root);
             root.requestFocus();
@@ -55,8 +58,6 @@ public class GerenciadorTelas {
     public void mostrarCriacaoPersonagem(int slotId) {
         trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));
     }
-
-    public void mostrarMenuPause(){trocarRoot(controllerTelas.criarMenuPause());}
 
     public void mostrarAnimacaoInicio(int sessaoAtual) {
         trocarRoot(controllerTelas.criarAnimacaoInicio(sessaoAtual));

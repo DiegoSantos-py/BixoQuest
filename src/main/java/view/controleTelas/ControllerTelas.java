@@ -9,10 +9,7 @@ import view.InicioJogoView;
 import view.animacao.AnimacaoInicioView;
 import view.construtores.ConstrutorCenaJogo;
 import view.construtores.DiretorCena;
-import view.menu.MenuCriarPersonagem;
-import view.menu.MenuInicial;
-import view.menu.MenuPause;
-import view.menu.MenuPersonagens;
+import view.menu.*;
 import view.cena.CenaJogo;
 import view.util.Borda;
 import java.util.function.Consumer;
@@ -69,12 +66,6 @@ public class ControllerTelas {
         );
     }
 
-    public Parent criarMenuPause(){
-        return new MenuPause(
-                () -> gerenciador.mostrarMenuInicial()
-        );
-    }
-
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
@@ -94,24 +85,24 @@ public class ControllerTelas {
         pararCenaAtual();
         ConstrutorCenaJogo construtor = new ConstrutorCenaJogo();
 
-
         double[] pos = calcularPosicaoInicial(ultimaBorda);
         String spriteBase = personagemController.getSpriteBase(sessaoAtual);
+
         construtor.setOnBordaAtingida(borda -> {
             ultimaBorda = borda;
             mapaController.getVizinho(nomeLocal, borda.getDirecao())
                     .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
         });
 
+        construtor.setPersonagem(personagemController, sessaoAtual); // ajuste conforme seu id real
+        construtor.setOnSairParaMenuPrincipal(() -> gerenciador.mostrarMenuInicial()); // ajuste ao seu GerenciadorTelas
 
         diretorCena.construirCena(construtor, mapaController,
                 onZona,
                 nome -> System.out.println("NPC: " + nome),
-                pos[0], pos[1], spriteBase, nomeLocal,
-                () -> ,
-                () -> gerenciador.mostrarMenuPause());
-        cenaAtual = construtor.getResult();
+                pos[0], pos[1], spriteBase, nomeLocal);
 
+        cenaAtual = construtor.getResult();
 
         return cenaAtual.buildPane();
     }

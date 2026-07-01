@@ -235,10 +235,10 @@ public class PersonagemService {
 
         Map<String, Double> atributos = new LinkedHashMap<>();
 
-        atributos.put("Energia", p.getEnergia());
-        atributos.put("Motivação", p.getMotivacao());
-        atributos.put("Saúde", p.getSaude());
-        atributos.put("Dinheiro", p.getDinheiro());
+        atributos.put("energia", p.getEnergia());
+        atributos.put("motivação", p.getMotivacao());
+        atributos.put("saúde", p.getSaude());
+        atributos.put("dinheiro", p.getDinheiro());
 
         return atributos;
     }
