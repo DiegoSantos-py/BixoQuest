@@ -15,7 +15,7 @@ public class ProvasSoftware {
         ArrayList<AcaoBatalha> acoes = new ArrayList<>();
         
         acoes.add(new AcaoBatalha("DEBUGAR CODIGO",  0.9f, 2, 0, 1, 0));
-        acoes.add(new AcaoBatalha("PESQUISAR NO STACK", 0.6f, 1, 1, 0, 0));
+        acoes.add(new AcaoBatalha("PEDIR AJUDA PRO TIO CLAUDIO", 0.5f, 1, 1, 0.1f, 0.5f));
         acoes.add(new AcaoBatalha("CHUTAR SOLUCAO", 0.2f, 0, 0, 0, 0));
         acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 0));
 
