@@ -45,7 +45,7 @@ public class AtaqueArranhao extends Ataque {
                     anguloAleatorio,
                     0, 0f, // Nenhum dano
                     1.25f, // Permanece como prévia por 1.25 segundos
-                    "/assets/batalha/projeteis/arranhaoPrevia.png");
+                    "arranhaoPrevia.png");
 
             if (previa != null) {
                 // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight Pattern)

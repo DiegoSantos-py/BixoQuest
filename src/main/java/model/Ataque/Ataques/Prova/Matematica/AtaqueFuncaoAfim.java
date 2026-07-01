@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
@@ -29,7 +29,7 @@ public class AtaqueFuncaoAfim extends Ataque {
         int maxProjeteis = (int) (attackDuration / interval);
         if (!eixosSpawnados) {
             Projetil eixos = spawnProjetil(boxCentroX, boxCentroY, 200, 200, 0, 0, 0, 0,
-                    0, 12.5f, "/assets/batalha/projeteis/eixos.png");
+                    0, 12.5f, "eixos.png");
             if (eixos != null) {
                 eixos.setPersistente(true);
             }
@@ -52,7 +52,7 @@ public class AtaqueFuncaoAfim extends Ataque {
                     anguloAleatorio,
                     0, 0f, // Nenhum dano
                     1.25f, // Permanece como prévia por 1.25 segundos
-                    "/assets/batalha/projeteis/arranhaoPrevia.png");
+                    "arranhaoPrevia.png");
 
             if (previa != null) {
                 // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight

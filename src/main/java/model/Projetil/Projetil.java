@@ -40,7 +40,7 @@ public class Projetil extends EntidadeBatalha {
             float duracaoMaxima,
             String spriteDir) {
 
-        super(hitbox, velocidade, spriteDir);
+        super(hitbox, velocidade, "/assets/batalha/projeteis/" + spriteDir);
 
         if (hitbox == null) {
             throw new ProjetilInvalidoException(
@@ -193,7 +193,7 @@ public class Projetil extends EntidadeBatalha {
         this.comportamentosDespawn.clear();
         this.comportamentosAoColidir.clear();
         this.persistente = false;
-        this.spriteDir = spriteDir;
+        this.spriteDir = "/assets/batalha/projeteis/" + spriteDir;
         this.ativar();
     }
 

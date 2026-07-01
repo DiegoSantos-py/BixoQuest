@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
@@ -37,9 +37,9 @@ public class AtaqueIntegral extends Ataque {
     protected void logicaAtaque(float dt) {
 
         if (direcao == 1) {
-            spriteDir = "/assets/batalha/projeteis/integral.png";
+            spriteDir = "integral.png";
         } else {
-            spriteDir = "/assets/batalha/projeteis/integralInvertida.png";
+            spriteDir = "integralInvertida.png";
         }
 
         // spawna o símbolo uma única vez no primeiro frame do ataque
@@ -63,7 +63,7 @@ public class AtaqueIntegral extends Ataque {
             float offsetRotacao = (float) Math.toRadians(10) * direcao;
             integralHitbox = spawnProjetil(
                     boxCentroX, boxCentroY,
-                    99, 444,
+                    99, 480,
                     0f, 0f,
                     offsetRotacao, 0,
                     0f,
@@ -114,7 +114,7 @@ public class AtaqueIntegral extends Ataque {
                         1,
                         1.5f,
                         4f,
-                        "/assets/batalha/projeteis/c.png"); // PLACEHOLDER
+                        "c.png"); // PLACEHOLDER
             }
 
             projeteisSpawnados += projeteisPorBurst;

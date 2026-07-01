@@ -83,20 +83,20 @@ public class BatalhaLoopService {
     }
 
 
-    //o turno so aumenta qndo o PLAYER FAZ ALGO!!
-    public void executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
-        if (estado.getTurnoAtual() != Turno.TURNO_PLAYER) return;
+    public boolean executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
+        if (estado.getTurnoAtual() != Turno.TURNO_PLAYER) return false;
         
         model.Player.AcaoBatalha acao = estado.getAcoesBatalha().get(acaoIndex);
-        playerProvaService.executarAcao(estado.getPlayerProva(), acao);
+        boolean sucesso = playerProvaService.executarAcao(estado.getPlayerProva(), acao);
         
         estado.setTurnoAtual(Turno.TURNO_INIMIGO);
+        return sucesso;
     }
 
     public void atacarOponenteAtual(EstadoBatalha estado, float multiplicadorPrecisao) {
         Oponente oponenteAtual = estado.getOponenteAtual();
         if (oponenteAtual != null && !oponenteAtual.isDerrotado()) {
-            if(multiplicadorPrecisao < 1){
+            if(multiplicadorPrecisao < 1.25){
                 estado.getPlayerProva().setTodosAcertosPerfeitos(false);
             }
             float danoCausado = estado.getPlayerProva().getDanoAtaque() * multiplicadorPrecisao;

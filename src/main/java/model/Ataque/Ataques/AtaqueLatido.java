@@ -40,7 +40,7 @@ public class AtaqueLatido extends Ataque {
                     1,
                     0f,
                     7.5f,
-                    "/assets/batalha/projeteis/latido.png");
+                    "latido.png");
 
             projeteisSpawnados++;
             timer = 0;

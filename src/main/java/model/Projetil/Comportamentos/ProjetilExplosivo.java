@@ -20,7 +20,7 @@ public class ProjetilExplosivo implements ComportamentoProjetil, ComportamentoAo
             float angle = (float)(i * (Math.PI * 2) / 8) + projetil.getHitbox().getAnguloRotacao();
             System.out.println(angle);
             projetil.getFactory().spawn(cx, cy, 15, 15, 150f, angle, angle, 1, 0.1f, 10f,
-                    "/assets/batalha/projeteis/osso.png");
+                    "osso.png");
         }
     }
 

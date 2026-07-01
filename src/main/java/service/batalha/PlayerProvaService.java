@@ -43,8 +43,9 @@ public class PlayerProvaService {
         }
     }
 
-    public void executarAcao(PlayerProva player, AcaoBatalha acao) {
-        acaoService.executarAcao(acao, player);
+    public boolean executarAcao(PlayerProva player, AcaoBatalha acao) {
+        boolean sucesso = acaoService.executarAcao(acao, player);
         player.addTurnosUsados();
+        return sucesso;
     }
 }

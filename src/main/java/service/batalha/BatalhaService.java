@@ -67,8 +67,8 @@ public class BatalhaService {
         loopService.atualizar(estado, dt);
     }
 
-    public void executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
-        loopService.executarAcaoPlayer(estado, acaoIndex);
+    public boolean executarAcaoPlayer(EstadoBatalha estado, int acaoIndex) {
+        return loopService.executarAcaoPlayer(estado, acaoIndex);
     }
 
     public void atacarOponenteAtual(EstadoBatalha estado, float multiplicadorPrecisao) {

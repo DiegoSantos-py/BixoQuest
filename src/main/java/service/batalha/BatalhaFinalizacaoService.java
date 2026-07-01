@@ -64,7 +64,7 @@ public class BatalhaFinalizacaoService {
         // nota final é a media de todos os desempenhos individuais de cada questão
         notaFinal /= (desempenho.isEmpty()) ? 1 : desempenho.size();
         // ganha PONTO SE
-        notaFinal += (playerProva.getTurnosUsados() <= 20) ? 0.25f : 0;// TERMINAR A PROVA RAPIDO,
+        notaFinal += (playerProva.getTurnosUsados() <= 10) ? 0.25f : 0;// TERMINAR A PROVA RAPIDO,
         notaFinal += (playerProva.getTodosAcertosPerfeitos()) ? 0.25f : 0;// SE TERMINAR COM TODOS OS ACERTOS
                                                                           // PERFEITOS(no meio do slider)
         notaFinal += (!playerProva.getPerdeuNota()) ? 0.25f : 0; // SEM PERDER NOTA(pode levar dano no shield)

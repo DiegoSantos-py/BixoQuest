@@ -14,6 +14,7 @@ import model.util.Hitbox;
 import model.util.Vector2D;
 import repository.NpcRepository;
 import repository.ResultadoProvaRepository;
+import service.AudioService;
 import service.batalha.BatalhaService;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class BatalhaController extends BaseController {
 
     private final BatalhaService batalhaService;
     private final NpcRepository npcRepository;
+    private final AudioService audioService = new AudioService();
     private EstadoBatalha estadoAtual;
 
     public BatalhaController(BatalhaService batalhaService, NpcRepository npcRepository) {
@@ -94,10 +96,11 @@ public class BatalhaController extends BaseController {
         return acoes != null ? acoes : new ArrayList<>();
     }
 
-    public void executarAcao(int indexAcao) {
+    public boolean executarAcao(int indexAcao) {
         if (estadoAtual != null) {
-            batalhaService.executarAcaoPlayer(estadoAtual, indexAcao);
+            return batalhaService.executarAcaoPlayer(estadoAtual, indexAcao);
         }
+        return false;
     }
 
     public void registrarAtaquePlayer(float multiplicadorPrecisao) {
@@ -110,6 +113,60 @@ public class BatalhaController extends BaseController {
         if (estadoAtual != null) {
             batalhaService.atualizar(estadoAtual, dt);
         }
+    }
+
+    // --- INPUT ---
+
+    /** Chamado pela View quando uma tecla é pressionada. */
+    public void onTeclaPressionada(javafx.scene.input.KeyCode code) {
+        if (estadoAtual == null || estadoAtual.getPlayerProva() == null) return;
+        model.Player.PlayerProva p = estadoAtual.getPlayerProva();
+        switch (code) {
+            case W: p.setMovendoCima(true); break;
+            case S: p.setMovendoBaixo(true); break;
+            case A: p.setMovendoEsquerda(true); break;
+            case D: p.setMovendoDireita(true); break;
+            default: break;
+        }
+    }
+
+    /** Chamado pela View quando uma tecla é solta. */
+    public void onTeclaLiberada(javafx.scene.input.KeyCode code) {
+        if (estadoAtual == null || estadoAtual.getPlayerProva() == null) return;
+        model.Player.PlayerProva p = estadoAtual.getPlayerProva();
+        switch (code) {
+            case W: p.setMovendoCima(false); break;
+            case S: p.setMovendoBaixo(false); break;
+            case A: p.setMovendoEsquerda(false); break;
+            case D: p.setMovendoDireita(false); break;
+            default: break;
+        }
+    }
+
+    // --- ÁUDIO ---
+
+    public void iniciarAudio() {
+        if (estadoAtual != null) {
+            String musica = estadoAtual.getMusicaDir();
+            if (musica != null && !musica.isEmpty()) {
+                audioService.playBGM(musica);
+            }
+        }
+    }
+
+    public void pararAudio() {
+        audioService.stopBGM();
+    }
+
+    // --- LÓGICA DE PRECISÃO (regra de negócio, não pertence à View) ---
+
+    /**
+     * Converte a distância do cursor ao centro (0 = centro, 350 = borda)
+     * em um multiplicador de precisão entre 0.0 e 1.5.
+     */
+    public float calcularPrecisao(double distanciaDoCentro) {
+        float precisao = (float) (1.5 - (distanciaDoCentro / 350.0) * 1.5);
+        return Math.max(0f, precisao);
     }
 
     // --- FINALIZAÇÃO ---

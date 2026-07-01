@@ -1,9 +1,9 @@
 package model.Evento.Prova;
 
 import model.Disciplina.AreaConhecimento;
-import model.Evento.Prova.Questao.QuestaoFactory;
+import model.Evento.Prova.Provas.ProvasNaturezas;
 import model.Player.AcaoBatalha;
-
+import model.Evento.Prova.Provas.ProvasMatematica;
 import java.util.ArrayList;
 
 public class ProvaFactory {
@@ -17,6 +17,7 @@ public class ProvaFactory {
             case MAT_01: return criarMatematica(1);
             case MAT_02: return criarMatematica(2);
             case MAT_03: return criarMatematica(3);
+            case NAT_01: return criarNatureza(1);
             default:
                 throw new IllegalArgumentException("ProvaIDs sem implementacao na factory: " + id);
         }
@@ -25,9 +26,9 @@ public class ProvaFactory {
     public static ProvaBatalha criarMatematica(int nivel) {
         switch (nivel) {
             case 1:
-                return criarMatematicaNivel1();
+                return ProvasMatematica.criarMatematicaNivel1();
             case 2:
-               return criarMatematicaNivel2();
+               return ProvasMatematica.criarMatematicaNivel2();
             case 3:
                 // return criarMatematicaNivel3();
                 throw new IllegalArgumentException("Nivel 3 de matematica em construcao.");
@@ -36,65 +37,20 @@ public class ProvaFactory {
         }
     }
 
-    // --- Matematica Niveis ---------------------------------------------------
-
-    private static ProvaBatalha criarMatematicaNivel1() {
-        int nivel = 1;
-        ArrayList<AcaoBatalha> acoes = new ArrayList<>();
-        // favor nao botar mais de 4 acoes em prol da UI
-        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 1, 0f));
-        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 0, 0, 0f));
-        acoes.add(new AcaoBatalha("REVISAR ANOTACOES", 0.6f, 1, 1, 0, 0f));
-        acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 5f));
-
-        ProvaBatalha prova = new ProvaBatalha(
-                "Matematica 1",
-                "aaaaaa",
-                AreaConhecimento.MAT,
-                nivel,
-                0, // quantidadeQuestoes começa em 0; addQuestao incrementa
-                acoes,
-                "/assets/batalha/oponentes/provas/matematica.png",
-                "/assets/audio/provas/matematica1.mp3"
-        );
-
-        // 1 questao de demonstracao com ataque tipo cachorro (Latido)
-        prova.addQuestao(QuestaoFactory.criarFuncaoAfim(nivel));
-
-        prova.addQuestao(QuestaoFactory.criarSenoidal(nivel));
-        
-        prova.addQuestao(QuestaoFactory.criarRetaTangente(nivel));
-
-        prova.addQuestao(QuestaoFactory.criarFuncaoIntegral(nivel));
-        return prova;
+    public static ProvaBatalha criarNatureza(int nivel){
+        switch (nivel){
+            case 1:
+                return ProvasNaturezas.criarNaturezas1();
+            case 2:
+                throw new  IllegalArgumentException("Nivel 2 de nat em construcao.");
+            case 3:
+                throw new IllegalArgumentException("Nivel 3 de naturezas em construcao.");
+            default:
+                throw new IllegalArgumentException("Niveis so vao de 1 a 3.");
+        }
     }
 
-    
-    private static ProvaBatalha criarMatematicaNivel2() {
-        int nivel = 2;
-        ArrayList<AcaoBatalha> acoes = new ArrayList<>();
-        // favor nao botar mais de 4 acoes em prol da UI
-        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 1, 0f));
-        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 0, 0, 0f));
-        acoes.add(new AcaoBatalha("REVISAR ANOTACOES", 0.6f, 1, 1, 0, 0f));
-        acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 5f));
 
-        ProvaBatalha prova = new ProvaBatalha(
-                "Matematica 2",
-                "sim",
-                AreaConhecimento.MAT,
-                nivel,
-                0, // quantidadeQuestoes começa em 0; addQuestao incrementa
-                acoes,
-                "/assets/batalha/oponentes/provas/matematica.png",
-                "/assets/audio/provas/matematica2.mp3"
-        );
 
-        // 1 questao de demonstracao com ataque tipo cachorro (Latido)
-        prova.addQuestao(QuestaoFactory.criarQuestaoVetores(nivel));
 
-        prova.addQuestao(QuestaoFactory.criarFuncaoIntegral2(nivel));
-
-        return prova;
-    }
 }

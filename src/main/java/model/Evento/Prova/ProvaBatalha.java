@@ -26,8 +26,9 @@ public class ProvaBatalha extends Evento {
         this.quantidadeQuestoes = quantidadeQuestoes;
         this.questoes = new LinkedList<>();
         this.acoesBatalha = acoesBatalha; // favor nao botar mais de 4 ações em prol da UI
-        this.spriteDirProva = spriteDirProva;
-        this.musicaDir = musicaDir;
+        this.spriteDirProva = "/assets/batalha/oponentes/provas/" +  spriteDirProva;
+        this.musicaDir = "/assets/audio/provas/" + musicaDir;
+
     }
 
 

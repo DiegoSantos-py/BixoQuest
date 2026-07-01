@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
@@ -24,7 +24,7 @@ public class AtaqueIntegral2 extends Ataque {
     private float velAngIntegral  = .623f;                // rad/s — rotação do símbolo
     private float velAngSpawn     = velAngIntegral * 2f; // rad/s — rotação dos bursts
     private int   projeteisPorBurst = 4 + (int)(dificuldade/6f);
-    private float velocidadeSaida   = 100f * (1+ (dificuldade/10f));              // px/s
+    private float velocidadeSaida   = 110f * (1+ (dificuldade/10f));              // px/s
     private float attackDuration    = 12.5f;
     String spriteDir;
 
@@ -39,10 +39,10 @@ public class AtaqueIntegral2 extends Ataque {
     protected void logicaAtaque(float dt) {
 
         if(direcao==1){
-            spriteDir = "/assets/batalha/projeteis/integral.png";
+            spriteDir = "integral.png";
         }
         else{
-            spriteDir = "/assets/batalha/projeteis/integralInvertida.png";
+            spriteDir = "integralInvertida.png";
         }
 
         // spawna o símbolo uma única vez no primeiro frame do ataque
@@ -80,7 +80,7 @@ public class AtaqueIntegral2 extends Ataque {
             
             integralHitbox = spawnProjetil(
                     boxCentroX, boxCentroY,
-                    99, 444,
+                    99, 480,
                     0f, 0f,
                     offsetRotacao, 0,
                     0f,
@@ -89,7 +89,7 @@ public class AtaqueIntegral2 extends Ataque {
 
             integralHitbox2 = spawnProjetil(
                     boxCentroX, boxCentroY,
-                    99, 444,
+                    99, 480,
                     0f, 0f,
                     offsetRotacao + (float) Math.PI / 2f, 0,
                     0f,
@@ -135,7 +135,7 @@ public class AtaqueIntegral2 extends Ataque {
         // acumula o ângulo do burst independente do símbolo
         anguloSpawn += velAngSpawn * dt;
 
-        float interval = 2f / (dificuldade / 10f);
+        float interval = 1.8f / (dificuldade / 10f);
         int maxBursts = (int) (attackDuration / interval);
 
         if (timer >= interval && projeteisSpawnados < maxBursts * projeteisPorBurst) {
@@ -154,7 +154,7 @@ public class AtaqueIntegral2 extends Ataque {
                         1,
                         1f,
                         4f,
-                        "/assets/batalha/projeteis/c.png"); // PLACEHOLDER
+                        "c.png"); 
                 
                 spawnProjetil(
                         boxCentroX, boxCentroY,
@@ -165,8 +165,8 @@ public class AtaqueIntegral2 extends Ataque {
                         1,
                         1f,
                         4f,
-                        "/assets/batalha/projeteis/mais.png"); // PLACEHOLDER
-            }
+                        "mais.png"); 
+                    }
 
             projeteisSpawnados += projeteisPorBurst;
             timer = 0;

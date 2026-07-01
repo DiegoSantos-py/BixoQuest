@@ -20,13 +20,13 @@ public class ComportamentoFactory {
         comportamentoCache.put("SENOIDAL_Y_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, false));
         despawnCache.put("EXPLOSIVO", new ProjetilExplosivo());
         despawnCache.put("SPAWN_ARRANHAO", new ProjetilSpawnAoMorrer(
-                "/assets/batalha/projeteis/arranhao.png",
+                "arranhao.png",
                 3, 650,
                 1, 0.75f,
                 0.2f
         ));
         despawnCache.put("SPAWN_FUNCAO", new ProjetilSpawnAoMorrer(
-                "/assets/batalha/projeteis/arranhao.png",
+                "arranhao.png",
                 3, 650,
                 1, 0.75f,
                 0.2f

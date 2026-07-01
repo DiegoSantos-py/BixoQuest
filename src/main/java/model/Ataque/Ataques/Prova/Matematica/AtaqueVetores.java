@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
@@ -75,7 +75,7 @@ public class AtaqueVetores extends Ataque {
                         1,
                         1f,
                         4.5f,
-                        "/assets/batalha/projeteis/vetor.png"); // Changed to vetor.png
+                        "vetor.png"); // Changed to vetor.png
             }
 
             projeteisSpawnados++;

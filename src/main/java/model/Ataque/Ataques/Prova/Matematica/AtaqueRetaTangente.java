@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
@@ -35,7 +35,7 @@ public class AtaqueRetaTangente extends Ataque {
                     0f, 0f,
                     1, 1f, // Dano
                     attackDuration, 
-                    "/assets/batalha/projeteis/ponto.png"); // Placeholder para o projétil ponto
+                    "ponto.png"); // Placeholder para o projétil ponto
 
             if (pontoHoming != null) {
                 pontoHoming.addComportamento(ComportamentoFactory.getAI("PREDITIVO"));
@@ -66,7 +66,7 @@ public class AtaqueRetaTangente extends Ataque {
                     anguloTangente,
                     0, 0f, // Nenhum dano
                     0.5f,
-                    "/assets/batalha/projeteis/arranhaoPrevia.png");
+                    "arranhaoPrevia.png");
 
             if (previa != null) {
                 // Ao desaparecer a prévia, spawna o arranhão real

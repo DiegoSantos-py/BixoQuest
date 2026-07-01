@@ -1,4 +1,4 @@
-package model.Ataque.Ataques.Provas.Matematica;
+package model.Ataque.Ataques.Prova.Matematica;
 
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
@@ -18,17 +18,6 @@ public class AtaqueAmplitudeMaxima extends Ataque {
     @Override
     protected void logicaAtaque(float dt) {
 
-        float topLeftX = getMinX();
-        float topLeftY = getMinY();
-
-        float topRightX = getMaxX();
-        float topRightY = getMinY();
-
-        float bottomLeftX = getMinX();
-        float bottomLeftY = getMaxY();
-
-        float bottomRightX = getMaxX();
-        float bottomRightY = getMaxY();
 
 
         timer += dt;
@@ -72,7 +61,7 @@ public class AtaqueAmplitudeMaxima extends Ataque {
             }
 
             // Spawna o projetil
-            model.Projetil.Projetil p1 = spawnProjetil(spawn1X, spawn1Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0.5f, 2.5f, "/assets/batalha/projeteis/latido.png");
+            model.Projetil.Projetil p1 = spawnProjetil(spawn1X, spawn1Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0.5f, 2.5f, "latido.png");
             if (p1 != null) {
                 p1.addComportamento(model.Projetil.Comportamentos.ComportamentoFactory.getAI(comp));
             }

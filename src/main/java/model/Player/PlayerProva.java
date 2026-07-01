@@ -56,20 +56,7 @@ public class PlayerProva extends EntidadeBatalha {
         this.movendoDireita = false;
     }
 
-    public void aplicarBonusAcao(int bonusDano, int bonusShield, int bonusConhecimento) {
-        this.danoAtaque += bonusDano;
-        this.conhecimentoArea += bonusConhecimento;
 
-        int novoShieldMax = (int) Math.round(0.22f * this.conhecimentoArea - 1.8f);
-        if (novoShieldMax > this.shieldMaximo) {
-            this.shieldMaximo = novoShieldMax;
-        }
-
-        this.shieldAtual += bonusShield;
-        if (this.shieldAtual > this.shieldMaximo) {
-            this.shieldAtual = this.shieldMaximo;
-        }
-    }
 
     public void adicionarDesempenhoQuestao(float desempenho){
         this.desempenhoQuestoes.add(desempenho);
@@ -200,15 +187,33 @@ public class PlayerProva extends EntidadeBatalha {
         return shieldMaximo;
     }
 
+    public void setShieldMaximo(int shieldMaximo) {
+        this.shieldMaximo = shieldMaximo;
+    }
+
     public int getShieldAtual() {
         return shieldAtual;
+    }
+
+    public void setShieldAtual(int shieldAtual) {
+        this.shieldAtual = shieldAtual;
     }
 
     public float getDanoAtaque() {
         return danoAtaque;
     }
 
+    public void setDanoAtaque(float danoAtaque) {
+        this.danoAtaque = danoAtaque;
+    }
 
+    public float getConhecimentoArea() {
+        return conhecimentoArea;
+    }
+
+    public void setConhecimentoArea(float conhecimentoArea) {
+        this.conhecimentoArea = conhecimentoArea;
+    }
     public int getTurnosUsados() {
         return turnosUsados;
     }
