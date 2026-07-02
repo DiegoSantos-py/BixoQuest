@@ -12,6 +12,6 @@ src/main/resources/assets/audio/provas/matematica1.mp3 -> Undertale - Toby Fox :
 
 src/main/resources/assets/audio/provas/matematica1.mp3 -> Deltarune - Toby Fox : THE WORLD REVOLVING
 
-src/main/resources/assets/audio/provas/naturezas1.mp3 -> Undertale - Toby Fox : Alphys takes action
+src/main/resources/assets/audio/provas/naturezas1.mp3 -> Luke Neujahr : Alphys takes action
 
 src/main/resources/assets/audio/provas/software1.mp3 -> Deltarune - Toby Fox : Pandora Palace

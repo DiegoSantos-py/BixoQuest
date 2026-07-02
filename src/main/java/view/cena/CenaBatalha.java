@@ -41,8 +41,8 @@ public class CenaBatalha extends StackPane {
     private EstadoUI estadoUI = null;
 
     // Rastreamento de mudanças
-    private model.Batalha.Turno turnoAnterior = null;
-    private model.Batalha.Oponente oponenteAnterior = null;
+    private boolean eraTurnoPlayer = true;
+    private Object oponenteAnterior = null;
     private float baseOpX = -1;
     private float baseOpY = -1;
 
@@ -78,8 +78,10 @@ public class CenaBatalha extends StackPane {
         iniciarLoop();
         batalhaController.iniciarAudio();
 
-        maxHpOponente     = batalhaController.getEstadoAtual().getOponenteAtual().getHpMaximo();
-        maxTurnosOponente = batalhaController.getEstadoAtual().getOponenteAtual().getMaxTurnos();
+        if (batalhaController.getEstadoController() != null) {
+            maxHpOponente     = batalhaController.getEstadoController().getInimigoHpMaximo();
+            maxTurnosOponente = batalhaController.getEstadoController().getInimigoMaxTurnos();
+        }
     }
 
     // ─── LAYOUT ────────────────────────────────────────────────────────────────
@@ -91,12 +93,13 @@ public class CenaBatalha extends StackPane {
         VBox layoutPrincipal = hud.getLayoutSection();
         layoutPrincipal.getChildren().add(dynamicBox);
 
-        StackPane.setAlignment(hud.getHudShields(),    javafx.geometry.Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(hud.getPlayerHud(),     javafx.geometry.Pos.BOTTOM_CENTER);
+        StackPane.setMargin(hud.getPlayerHud(), new Insets(0, 0, 20, 0));
         StackPane.setAlignment(hud.getDebugText(),     javafx.geometry.Pos.BOTTOM_LEFT);
         StackPane.setMargin(hud.getDebugText(), new Insets(20));
         StackPane.setAlignment(hud.getSpriteInimigo(), javafx.geometry.Pos.TOP_CENTER);
 
-        this.getChildren().addAll(layoutPrincipal, hud.getHudShields(), hud.getDebugText(), hud.getSpriteInimigo());
+        this.getChildren().addAll(layoutPrincipal, hud.getPlayerHud(), hud.getDebugText(), hud.getSpriteInimigo());
     }
 
     // ─── CONTROLES ─────────────────────────────────────────────────────────────
@@ -145,26 +148,26 @@ public class CenaBatalha extends StackPane {
     // ─── UPDATE FRAME ──────────────────────────────────────────────────────────
 
     private void atualizarUI(float dt) {
-        if (batalhaController.getEstadoAtual() == null) return;
+        if (batalhaController.getEstadoController() == null) return;
 
-        if (batalhaController.getEstadoAtual().isFinalizado()) {
+        if (batalhaController.getEstadoController().isFinalizado()) {
             hud.atualizarTextosHUD(maxHpOponente, maxTurnosOponente);
             if (estadoUI != EstadoUI.FINALIZADA) mudarEstadoUI(EstadoUI.FINALIZADA);
             return;
         }
 
-        model.Batalha.Turno turnoAtual         = batalhaController.getEstadoAtual().getTurnoAtual();
-        model.Batalha.Oponente oponenteAtual   = batalhaController.getEstadoAtual().getOponenteAtual();
+        boolean isTurnoPlayer = batalhaController.getEstadoController().isTurnoPlayer();
+        Object oponenteAtual = batalhaController.getEstadoController().getInimigoIdentificador();
 
         if (oponenteAtual != oponenteAnterior) {
             oponenteAnterior = oponenteAtual;
             atualizarDadosIniciais();
-            if (turnoAtual == model.Batalha.Turno.TURNO_PLAYER) mudarEstadoUI(EstadoUI.MENU_PRINCIPAL);
+            if (isTurnoPlayer) mudarEstadoUI(EstadoUI.MENU_PRINCIPAL);
         }
 
-        if (turnoAtual != turnoAnterior && !bloquearTransicaoTurno) {
-            turnoAnterior = turnoAtual;
-            if (turnoAtual == model.Batalha.Turno.TURNO_PLAYER) mudarEstadoUI(EstadoUI.MENU_PRINCIPAL);
+        if (isTurnoPlayer != eraTurnoPlayer && !bloquearTransicaoTurno) {
+            eraTurnoPlayer = isTurnoPlayer;
+            if (isTurnoPlayer) mudarEstadoUI(EstadoUI.MENU_PRINCIPAL);
             else mudarEstadoUI(EstadoUI.INIMIGO_ATACANDO);
         }
 
@@ -172,15 +175,15 @@ public class CenaBatalha extends StackPane {
 
         // Sincroniza posição do sprite do oponente com a posição física
         if (oponenteAtual != null && baseOpX != -1) {
-            hud.getSpriteInimigo().setTranslateX(oponenteAtual.getX() - baseOpX);
-            hud.getSpriteInimigo().setTranslateY(oponenteAtual.getY() - baseOpY);
+            hud.getSpriteInimigo().setTranslateX(batalhaController.getEstadoController().getInimigoX() - baseOpX);
+            hud.getSpriteInimigo().setTranslateY(batalhaController.getEstadoController().getInimigoY() - baseOpY);
         }
 
         hud.atualizarHUDShields();
         hud.atualizarTextosHUD(maxHpOponente, maxTurnosOponente);
 
         if (estadoUI == EstadoUI.INIMIGO_ATACANDO && arenaPane != null) {
-            renderer.renderFrame(arenaPane, batalhaController.getEstadoAtual());
+            renderer.renderFrame(arenaPane, batalhaController.getEstadoController().getEstadoBatalha());
         }
     }
 
@@ -188,10 +191,10 @@ public class CenaBatalha extends StackPane {
         float[] base = hud.atualizarDadosIniciais();
         if (base != null) { baseOpX = base[0]; baseOpY = base[1]; }
 
-        if (batalhaController.getEstadoAtual() != null
-                && batalhaController.getEstadoAtual().getOponenteAtual() != null) {
-            maxHpOponente     = batalhaController.getEstadoAtual().getOponenteAtual().getHpMaximo();
-            maxTurnosOponente = batalhaController.getEstadoAtual().getOponenteAtual().getMaxTurnos();
+        if (batalhaController.getEstadoController() != null
+                && batalhaController.getEstadoController().getInimigoNome() != null && !batalhaController.getEstadoController().getInimigoNome().isEmpty()) {
+            maxHpOponente     = batalhaController.getEstadoController().getInimigoHpMaximo();
+            maxTurnosOponente = batalhaController.getEstadoController().getInimigoMaxTurnos();
         }
     }
 
@@ -232,7 +235,7 @@ public class CenaBatalha extends StackPane {
             case INIMIGO_ATACANDO:
                 dynamicBox.setBorder(Border.EMPTY);
                 dynamicBox.setPadding(Insets.EMPTY);
-                model.Ataque.Ataque atk = batalhaController.getEstadoAtual().getAtaqueAtual();
+                model.Ataque.Ataque atk = batalhaController.getEstadoController().getAtaqueAtual();
                 float boxH = atk.getMaxY() - atk.getMinY();
                 dynamicBox.setPrefHeight(boxH + 20);
                 arenaPane = renderer.criarArena(atk);

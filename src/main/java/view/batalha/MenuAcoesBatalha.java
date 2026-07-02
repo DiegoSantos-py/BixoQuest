@@ -4,9 +4,11 @@ import controller.BatalhaController;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import model.Player.AcaoBatalha;
 import view.util.FonteUtil;
 
@@ -27,12 +29,12 @@ public class MenuAcoesBatalha {
         grid.setHgap(40);
         grid.setVgap(20);
 
-        List<AcaoBatalha> acoes = controller.getAcoes();
+        List<AcaoBatalha> acoes = controller.getEstadoController().getAcoesBatalha();
         int col = 0, row = 0;
 
         for (int i = 0; i < acoes.size(); i++) {
             AcaoBatalha acao = acoes.get(i);
-            Button btn = criarBotaoTextoSimples(acao.getNome().toUpperCase());
+            Button btn = criarBotaoTextoSimples(acao);
             int indexFinal = i;
 
             btn.setOnAction(e -> {
@@ -67,28 +69,62 @@ public class MenuAcoesBatalha {
     }
 
     private String montarTextoFeedback(AcaoBatalha acao, boolean sucesso) {
-        StringBuilder sb = new StringBuilder("VOCÊ TENTOU \"")
+        StringBuilder textoFeedback = new StringBuilder("VOCÊ TENTOU \"")
                 .append(acao.getNome().toUpperCase()).append("\".\n\n");
         if (sucesso) {
-            sb.append("E CONSEGUIU! ATRIBUTOS MODIFICADOS:\n");
-            if (acao.getBonusDano() > 0)         sb.append("+ ").append(acao.getBonusDano()).append(" DANO\n");
-            if (acao.getBonusShield() > 0)       sb.append("+ ").append(acao.getBonusShield()).append(" ESCUDO\n");
-            if (acao.getBonusConhecimento() > 0)  sb.append("+ ").append(acao.getBonusConhecimento()).append(" CONHECIMENTO\n");
-            if (acao.getBonusNota() > 0)          sb.append("+ ").append(acao.getBonusNota()).append(" NOTA\n");
+            textoFeedback.append("E CONSEGUIU! ATRIBUTOS MODIFICADOS:\n");
+            if (acao.getBonusDano() > 0)         textoFeedback.append("+ ").append(acao.getBonusDano()).append(" DANO\n");
+            if (acao.getBonusShield() > 0)       textoFeedback.append("+ ").append(acao.getBonusShield()).append(" ESCUDO\n");
+            if (acao.getBonusConhecimento() > 0)  textoFeedback.append("+ ").append(acao.getBonusConhecimento()).append(" CONHECIMENTO\n");
+            if (acao.getBonusNota() > 0)          textoFeedback.append("+ ").append(acao.getBonusNota()).append(" NOTA\n");
         } else {
-            sb.append("MAS FALHOU... NADA ACONTECEU.");
+            textoFeedback.append("MAS FALHOU... NADA ACONTECEU.");
         }
-        return sb.toString();
+        return textoFeedback.toString();
     }
 
-    private Button criarBotaoTextoSimples(String texto) {
-        Button btn = new Button(texto);
+    private Button criarBotaoTextoSimples(AcaoBatalha acao) {
+        String textoBotao = acao.getNome().toUpperCase() + "\n" + "(" + (acao.getChanceAcerto()*100) + "% DE CHANCE DE ACERTO" + ")";
+        StringBuilder textoOnHover = new StringBuilder();
+
+        textoOnHover.append("ATRIBUTOS:\n");
+
+        if (acao.getBonusDano() > 0)
+            textoOnHover.append("+ ").append(acao.getBonusDano()).append(" DANO\n");
+
+        if (acao.getBonusShield() > 0)
+            textoOnHover.append("+ ").append(acao.getBonusShield()).append(" ESCUDO\n");
+
+        if (acao.getBonusConhecimento() > 0)
+            textoOnHover.append("+ ").append(acao.getBonusConhecimento()).append(" CONHECIMENTO\n");
+
+        if (acao.getBonusNota() > 0)
+            textoOnHover.append("+ ").append(acao.getBonusNota()).append(" NOTA\n");
+
+        if (textoOnHover.toString().equals("ATRIBUTOS:\n")) {
+            textoOnHover.append("SEM BÔNUS");
+        }
+
+        Button btn = new Button(textoBotao);
         btn.setFont(FonteUtil.pixel(20));
         btn.setTextFill(Color.WHITE);
         btn.setBackground(Background.EMPTY);
         btn.setBorder(Border.EMPTY);
-        btn.setOnMouseEntered(e -> btn.setTextFill(Color.web("#FF8C00")));
-        btn.setOnMouseExited(e -> btn.setTextFill(Color.WHITE));
+        btn.setOnMouseEntered(e -> {
+            btn.setTextFill(Color.web("#FF8C00"));
+            btn.setText(textoOnHover.toString());
+        });
+        btn.setOnMouseExited(e -> {
+            btn.setTextFill(Color.WHITE);
+            btn.setText(textoBotao);
+        });
+        btn.setAlignment(Pos.CENTER);
+        btn.setTextAlignment(TextAlignment.CENTER);
+        btn.setContentDisplay(ContentDisplay.CENTER);
+        btn.setMinSize(290, 100);
+        btn.setPrefSize(290, 100);
+        btn.setMaxSize(290, 100);
+
         return btn;
     }
 }

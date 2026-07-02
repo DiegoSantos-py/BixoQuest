@@ -20,13 +20,14 @@ import java.util.Objects;
 public class MinigameBatalha {
 
     private static final double CURSOR_MAX = 350.0;
-    private static final double CURSOR_VELOCIDADE = 600.0;
+    private static final double CURSOR_VELOCIDADE = 700.0;
 
     private final BatalhaController controller;
 
     private Rectangle cursor;
     private double cursorX = -CURSOR_MAX;
     private double cursorDir = 1;
+    private Text feedbackText;
 
     public MinigameBatalha(BatalhaController controller) {
         this.controller = controller;
@@ -71,26 +72,56 @@ public class MinigameBatalha {
         instrucao.setFill(Color.WHITE);
         instrucao.setFont(FonteUtil.pixel(16));
 
+        feedbackText = new Text();
+        feedbackText.setVisible(false);
+
         minigameBox.setOnMouseClicked(e -> finalizar());
 
-        container.getChildren().addAll(titulo, minigameBox, instrucao);
+        container.getChildren().addAll(titulo, minigameBox, instrucao, feedbackText);
         return container;
     }
 
-    /** Chamado a cada frame pelo game loop enquanto o minigame estiver ativo. */
     public void atualizar(float dt) {
-        if (cursor == null || cursorDir == 0) return;
+        if (cursor == null || cursorDir == 0)
+            return;
         cursorX += cursorDir * CURSOR_VELOCIDADE * dt;
-        if (cursorX >= CURSOR_MAX)       { cursorX = CURSOR_MAX;  cursorDir = -1; }
-        else if (cursorX <= -CURSOR_MAX) { cursorX = -CURSOR_MAX; cursorDir = 1; }
+        if (cursorX >= CURSOR_MAX) {
+            cursorX = CURSOR_MAX;
+            cursorDir = -1;
+        } else if (cursorX <= -CURSOR_MAX) {
+            cursorX = -CURSOR_MAX;
+            cursorDir = 1;
+        }
         cursor.setTranslateX(cursorX);
     }
 
     private void finalizar() {
-        if (cursorDir == 0) return; // evita duplo clique
+        if (cursorDir == 0)
+            return; // evita duplo clique
         cursorDir = 0; // congela cursor visualmente
 
         final float precisao = controller.calcularPrecisao(Math.abs(cursorX));
-        controller.registrarAtaquePlayer(precisao);
+        final float danoTexto = controller.getEstadoController().getPlayerDano() * precisao;
+        feedbackText.setText(String.format("×(%.2f)" + "(%.2f) DE DANO!", precisao, danoTexto).replace(",", "."));
+        feedbackText.setFont(FonteUtil.pixel(16));
+        feedbackText.setFill(Color.WHITE);
+
+        if (controller.isAtaqueSuperPerfeito(precisao)) {
+            feedbackText.setText("***Ataque Super Perfeito!***\n(wow)\n" + feedbackText.getText());
+            feedbackText.setFill(Color.RED);
+            feedbackText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        } else if (controller.isAtaquePerfeito(precisao)) {
+            feedbackText.setText("*Ataque Perfeito!*\n" + feedbackText.getText());
+            feedbackText.setFill(Color.YELLOW);
+            feedbackText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        }
+
+        feedbackText.setVisible(true);
+
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1));
+        pause.setOnFinished(e -> {
+            controller.registrarAtaquePlayer(precisao);
+        });
+        pause.play();
     }
 }

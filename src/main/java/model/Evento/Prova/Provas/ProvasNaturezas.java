@@ -5,7 +5,9 @@ import model.Disciplina.AreaConhecimento;
 import model.Evento.Prova.ProvaBatalha;
 import model.Evento.Prova.Questao.Questao;
 import model.Ataque.Ataques.Prova.Naturezas.AtaqueAtomo;
+import model.Ataque.Ataques.Prova.Naturezas.AtaqueCarroAviao;
 import model.Ataque.Ataques.Prova.Naturezas.AtaqueColisaoElastica;
+import model.Ataque.Ataques.Prova.Naturezas.AtaqueGravidade;
 import model.Player.AcaoBatalha;
 
 import java.util.ArrayList;
@@ -53,6 +55,44 @@ public class ProvasNaturezas {
                 AreaConhecimento.NAT, 11f,
                 new AtaqueColisaoElastica(null, null, 10f),
                 "É oq tem pra hj de fisica", "colisoes perfeitamente elasticas.."
+        ));
+
+        return prova;
+    }
+
+    public static ProvaBatalha criarNaturezas2() {
+        int nivel = 2;
+        ArrayList<AcaoBatalha> acoes = new ArrayList<>();
+        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 1, 0));
+        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 1, 0, 0));
+        acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 0.5f));
+        acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 0));
+
+        ProvaBatalha prova = new ProvaBatalha(
+                "Naturezas 2",
+                "sim",
+                AreaConhecimento.NAT,
+                nivel,
+                0,
+                acoes,
+                "naturezas.png",
+                "naturezas2.mp3" // Assumindo que tenha uma música naturezas2.mp3
+        );
+
+        prova.addQuestao(new Questao(
+                "A Queda da Maçã",
+                25f, AreaConhecimento.NAT,
+                10f,
+                new AtaqueGravidade(null, null, 10f),
+                "Uma força invisível te puxa...", "Cuidado com a gravidade!"
+        ));
+
+        prova.addQuestao(new Questao(
+                "Cinemática",
+                90f, AreaConhecimento.NAT,
+                10f,
+                new AtaqueCarroAviao(null, null, 10f),
+                "Formulas e vetores.", "transito de feira de santana."
         ));
 
         return prova;

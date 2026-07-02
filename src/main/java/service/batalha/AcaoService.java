@@ -14,7 +14,7 @@ public class AcaoService {
             player.setConhecimentoArea(player.getConhecimentoArea() + acao.getBonusConhecimento());
             
             // Lógica de Shield
-            int novoShieldMax = (int) Math.round(0.22f * player.getConhecimentoArea() - 1.8f);
+            int novoShieldMax = Math.max(1, Math.round(0.2f * player.getConhecimentoArea() + 1f));
             if (novoShieldMax > player.getShieldMaximo()) {
                 player.setShieldMaximo(novoShieldMax);
             }

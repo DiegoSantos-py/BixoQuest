@@ -21,11 +21,18 @@ import model.Player.AcaoBatalha;
 
 public class BatalhaService {
 
-    private final OponenteAnimalRepository oponenteAnimalRepository = new OponenteAnimalRepository();
-    private final OponenteService oponenteService = new OponenteService(oponenteAnimalRepository);
-    private final BatalhaLoopService loopService = new BatalhaLoopService();
-    private final BatalhaFinalizacaoService finalizacaoService = new BatalhaFinalizacaoService();
-    private final PlayerProvaService playerProvaService = new PlayerProvaService();
+    private final OponenteService oponenteService;
+    private final BatalhaLoopService loopService;
+    private final BatalhaFinalizacaoService finalizacaoService;
+    private final PlayerProvaService playerProvaService;
+
+    public BatalhaService(OponenteService oponenteService, BatalhaLoopService loopService,
+                          BatalhaFinalizacaoService finalizacaoService, PlayerProvaService playerProvaService) {
+        this.oponenteService = oponenteService;
+        this.loopService = loopService;
+        this.finalizacaoService = finalizacaoService;
+        this.playerProvaService = playerProvaService;
+    }
 
     // inicia a batalha animal
     public EstadoBatalha iniciarBatalha(Personagem personagem, Animal animal, NpcRepository npcRepository) {

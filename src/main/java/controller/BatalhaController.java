@@ -24,12 +24,15 @@ public class BatalhaController extends BaseController {
 
     private final BatalhaService batalhaService;
     private final NpcRepository npcRepository;
-    private final AudioService audioService = new AudioService();
+    private final AudioService audioService;
     private EstadoBatalha estadoAtual;
+    private final EstadoController estadoController;
 
-    public BatalhaController(BatalhaService batalhaService, NpcRepository npcRepository) {
+    public BatalhaController(BatalhaService batalhaService, NpcRepository npcRepository, AudioService audioService) {
         this.batalhaService = batalhaService;
         this.npcRepository = npcRepository;
+        this.audioService = audioService;
+        this.estadoController = new EstadoController(this);
     }
 
     public void iniciarBatalhaTeste(Animal animalBase) {
@@ -82,6 +85,10 @@ public class BatalhaController extends BaseController {
 
     public EstadoBatalha getEstadoAtual() {
         return estadoAtual;
+    }
+
+    public EstadoController getEstadoController() {
+        return estadoController;
     }
 
     public boolean isBatalhaAnimal() {
@@ -165,8 +172,27 @@ public class BatalhaController extends BaseController {
      * em um multiplicador de precisão entre 0.0 e 1.5.
      */
     public float calcularPrecisao(double distanciaDoCentro) {
+        // 6.0f radius (12px total width) guarantees exactly a 1-frame window 
+        // since the cursor moves ~11.66px per frame at 700 velocity & 60fps.
+        if (distanciaDoCentro <= 6.0f) {
+            return 3.0f;
+        }
         float precisao = (float) (1.5 - (distanciaDoCentro / 350.0) * 1.5);
         return Math.max(0f, precisao);
+    }
+
+    /**
+     * Define o que é um ataque perfeito com base na precisão.
+     */
+    public boolean isAtaquePerfeito(float precisao) {
+        return precisao >= 1.40f && precisao < 3.0f;
+    }
+
+    /**
+     * Define o que é um ataque super perfeito (cravado no meio).
+     */
+    public boolean isAtaqueSuperPerfeito(float precisao) {
+        return precisao >= 3.0f;
     }
 
     // --- FINALIZAÇÃO ---

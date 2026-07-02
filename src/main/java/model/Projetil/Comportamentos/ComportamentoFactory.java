@@ -18,7 +18,16 @@ public class ComportamentoFactory {
         comportamentoCache.put("SENOIDAL_X_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, true));
         comportamentoCache.put("SENOIDAL_Y_UP", new ProjetilSenoidal(200f, (float) Math.PI * 1.5f, false));
         comportamentoCache.put("SENOIDAL_Y_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, false));
+        comportamentoCache.put("GRAVIDADE", new ProjetilGravidade(-800f));
+        comportamentoCache.put("APONTA_VETOR", new ProjetilApontaParaVetor());
         despawnCache.put("EXPLOSIVO", new ProjetilExplosivo());
+        despawnCache.put("EXPLOSAO_NUCLEAR", new ProjetilExplosaoNuclear(
+                "fogo.png",
+                34, 24, // Tamanho do fogo
+                1, 0.5f, // Dano
+                7f, // Duração das labaredas voando
+                50 // 35 projéteis de fogo
+        ));
         despawnCache.put("SPAWN_ARRANHAO", new ProjetilSpawnAoMorrer(
                 "arranhao.png",
                 3, 650,

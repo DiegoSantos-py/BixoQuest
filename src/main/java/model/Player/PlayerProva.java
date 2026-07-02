@@ -7,8 +7,18 @@ import model.util.Vector2D;
 import model.Batalha.EntidadeBatalha;
 
 public class PlayerProva extends EntidadeBatalha {
-
     
+    public enum SoulMode { RED, BLUE }
+
+    // --- Atributos de Física/Soul Mode ---
+    private SoulMode soulMode = SoulMode.RED;
+    private boolean isGrounded = false;
+    private float yVelocity = 0f;
+    private boolean isJumping = false;
+    private float jumpTimer = 0f;
+    private static final float MAX_JUMP_TIME = 0.25f; // Segundos permitidos para segurar o pulo
+    private static final float GRAVITY = 800f;
+    private static final float JUMP_FORCE = -400f;
 
     // --- Atributos do jogador ---
     private int shieldAtual;    
@@ -40,9 +50,8 @@ public class PlayerProva extends EntidadeBatalha {
         this.conhecimentoArea = conhecimentoArea;
         this.todosAcertosPerfeitos = true;
 
-        this.shieldMaximo = Math.round(0.22f * this.conhecimentoArea - 1.8f);
-        //^^^ formula pra conhecimento 10 shield 1, 20 pra 3 shield 30->5
-        if (this.shieldMaximo <= 0) this.shieldMaximo = 3; // Mínimo de 3 escudos para não morrer instantaneamente
+        this.shieldMaximo = Math.max(1, Math.round(0.2f * this.conhecimentoArea + 1f));
+        //^^^ formula pra conhecimento 10 shield 3, 20 pra 5 shield 30->7
         this.shieldAtual = shieldMaximo;
         this.danoAtaque = this.conhecimentoArea / 4f + 1f ;
         this.desempenhoQuestaoAtual = 10f; //desempenho começa em 10 independemtnete da prova e vai caindo com dano
@@ -110,37 +119,65 @@ public class PlayerProva extends EntidadeBatalha {
     @Override
     public void atualizarPosicao(float deltaTime) {
 
-        float dx = 0;
-        float dy = 0;
-        //dx e dy sao as direcoes
-        //elas resetam a cada frame(pq se o jogador n tiver apertando nada ele n se mexe
-        //se ta se movemndo pra direita, ele ganha 1 em dx
-        //se esquerda,perde 1
-        //isso faz com q sla se tiver apertando pra ir pra direita e apetar pra esquerda o player n se mova enquanto vier apertando pra direita
-        //isso evita movimentos acidentais, oq é bom em jogos em q precisao é importante(como esse)
-        if(movendoDireita){
-            dx += 1;
-        }
-        if(movendoEsquerda){
-            dx += -1;
-        }
-        if(movendoCima){
-            dy += -1; // Na tela, para cima significa diminuir o Y
-        }
-        if(movendoBaixo){
-            dy += 1;  // E para baixo significa aumentar o Y
-        }
+        if (this.soulMode == SoulMode.RED) {
+            float dx = 0;
+            float dy = 0;
+            if (movendoDireita) dx += 1;
+            if (movendoEsquerda) dx += -1;
+            if (movendoCima) dy += -1;
+            if (movendoBaixo) dy += 1;
 
-        float magnitude =  (float)Math.sqrt(dx * dx + dy * dy);
+            float magnitude = (float) Math.sqrt(dx * dx + dy * dy);
+            if (magnitude > 0) {
+                dx /= magnitude;
+                dy /= magnitude;
+            }
+            this.velocidade.set(dx * VELOCIDADE, dy * VELOCIDADE);
+            
+        } else if (this.soulMode == SoulMode.BLUE) {
+            float dx = 0;
+            if (movendoDireita) dx += 1;
+            if (movendoEsquerda) dx += -1;
+            
+            // Pulo Inicial
+            if (movendoCima && isGrounded) {
+                isJumping = true;
+                jumpTimer = 0f;
+                isGrounded = false;
+            }
+            
+            // Pulo Sustentado (Tempo Limite)
+            if (isJumping && movendoCima && jumpTimer < MAX_JUMP_TIME) {
+                yVelocity = JUMP_FORCE;
+                jumpTimer += deltaTime;
+            } else {
+                // Mecânica de "Cut Jump": se soltar o botão no meio da subida, corta a inércia pela metade
+                if (isJumping && !movendoCima && yVelocity < 0) {
+                    yVelocity *= 0.5f;
+                }
+                isJumping = false;
+            }
+            
+            // Gravidade normal (só aplica se não estiver no meio do impulso do pulo)
+            if (!isGrounded && !isJumping) {
+                yVelocity += GRAVITY * deltaTime;
+            } else if (isGrounded) {
+                yVelocity = 0;
+            }
+            
+            // Allow fast falling
+            if (movendoBaixo && !isGrounded) {
+                yVelocity += (GRAVITY * 1.5f) * deltaTime;
+            }
 
-
-        if (magnitude > 0) {
-            dx /= magnitude;
-            dy /= magnitude;
+            // Velocidade Terminal
+            float maxFallSpeed = movendoBaixo ? (GRAVITY * 1.5f) : GRAVITY;
+            if (yVelocity > maxFallSpeed) {
+                yVelocity = maxFallSpeed;
+            }
+            
+            this.velocidade.set(dx * VELOCIDADE, yVelocity);
         }
-
-
-        this.velocidade.set(dx * VELOCIDADE, dy * VELOCIDADE);
 
         super.atualizarPosicao(deltaTime);
         if (this.tempoImunidadeRestante > 0) {
@@ -229,6 +266,27 @@ public class PlayerProva extends EntidadeBatalha {
 
     public boolean getLevouAlgumDano() {
         return levouAlgumDano;
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.isGrounded = grounded;
+    }
+
+    public boolean isGrounded() {
+        return isGrounded;
+    }
+
+    public SoulMode getSoulMode() {
+        return soulMode;
+    }
+
+    public void setSoulMode(SoulMode mode) {
+        this.soulMode = mode;
+        if (mode == SoulMode.BLUE) {
+            this.spriteDir = "/assets/batalha/player/playerAzul.png";
+        } else {
+            this.spriteDir = "/assets/batalha/player/player.png";
+        }
     }
 }
 

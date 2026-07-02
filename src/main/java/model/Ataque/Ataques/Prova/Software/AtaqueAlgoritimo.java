@@ -111,11 +111,11 @@ public class AtaqueAlgoritimo extends Ataque {
             }
             
             // Spawna todas as instrucoes SIMULTANEAMENTE e PARADAS na direita da tela
-            float instX = getMaxX() + 200;
+            float instX = getMaxX() + 230;
             float instY = getMinY() + 20;
             for (int i = 0; i < algoritmo.size(); i++) {
                 Instrucao inst = algoritmo.get(i);
-                spawnProjetil(instX, instY + (i * 35), 250f, 25f, 0, 0, 0, 0, 0f, 99f, inst.spritePath);
+                spawnProjetil(instX, instY + (i * 40), 250f, 25f, 0, 0, 0, 0, 0f, 99f, inst.spritePath);
             }
             
             // Spawna o highlight (cursor visual) para as instrucoes
@@ -123,7 +123,7 @@ public class AtaqueAlgoritimo extends Ataque {
         }
         
         if (highlight != null && instrucaoIndex < algoritmo.size()) {
-            float targetY = getMinY() + 20 + (instrucaoIndex * 35);
+            float targetY = getMinY() + 20 + (instrucaoIndex * 40);
             highlight.getHitbox().setCentro(getMaxX() + 200, targetY);
         }
 
@@ -164,7 +164,7 @@ public class AtaqueAlgoritimo extends Ataque {
         malha[l][c] = visual;
         
         // Hitbox invisível (dobro do tamanho do visual para refletir o sprite dobrado pela engine)
-        model.Projetil.Projetil hitbox = spawnProjetil(px, py, tamanhoQuadrado * 2f, tamanhoQuadrado * 2f, 0, 0, 0, 1, 1f, 99f, "");
+        model.Projetil.Projetil hitbox = spawnProjetil(px, py, tamanhoQuadrado * 2f, tamanhoQuadrado * 2f, 0, 0, 0, 1, 0.5f, 99f, "");
         malhaHitboxes[l][c] = hitbox;
     }
     

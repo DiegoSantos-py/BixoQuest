@@ -14,6 +14,8 @@ import view.util.FonteUtil;
 
 import java.util.Objects;
 
+import org.w3c.dom.css.RGBColor;
+
 /**
  * Componente com estado: gerencia todos os elementos fixos do HUD
  * (cabeçalho, barra de HP, escudos, texto de debug).
@@ -38,13 +40,18 @@ public class HUDBatalha {
     private Text textHpInimigo;
 
     // Overlays
+    private VBox playerHud;
     private HBox hudShields;
+    private Rectangle barraNotaFill;
+    private Text textPlayerName;
+    private Text textPlayerCon;
+    private Text textPlayerDano;
+    private Text textNotaValor;
     private Text textDebugHitbox;
 
     // Seção retornada ao CenaBatalha
     private VBox layoutSection;
 
-    // Estado dos escudos (evita rebuild desnecessário a cada frame)
     private int escudosAnteriores = -1;
 
     public HUDBatalha(BatalhaController controller) {
@@ -64,7 +71,7 @@ public class HUDBatalha {
         textNomeInimigo.setFont(FonteUtil.pixel(40));
         textNomeInimigo.setFill(Color.WHITE);
 
-        textDescricaoInimigo = new Text("ELE PARECE\nDESCONFIADO.");
+        textDescricaoInimigo = new Text("TEXTO PADRAO AQUI");
         textDescricaoInimigo.setFont(FonteUtil.pixel(24));
         textDescricaoInimigo.setFill(Color.WHITE);
         textDescricaoInimigo.setTextAlignment(TextAlignment.LEFT);
@@ -121,9 +128,58 @@ public class HUDBatalha {
         barraContainer.getChildren().addAll(textHpInimigo, barraBackground);
 
         // --- Overlays ---
+        playerHud = new VBox(5);
+        playerHud.setAlignment(Pos.BOTTOM_CENTER);
+        playerHud.setPickOnBounds(false);
+
         hudShields = new HBox(10);
-        hudShields.setAlignment(Pos.BOTTOM_RIGHT);
+        hudShields.setAlignment(Pos.CENTER);
         hudShields.setPickOnBounds(false);
+
+        HBox notaUILayout = new HBox(15);
+        notaUILayout.setAlignment(Pos.CENTER);
+        notaUILayout.setPickOnBounds(false);
+
+        HBox leftTextContainer = new HBox(10);
+        leftTextContainer.setAlignment(Pos.CENTER_RIGHT);
+
+        textPlayerName = new Text("NOME");
+        textPlayerName.setFont(FonteUtil.pixel(16));
+        textPlayerName.setFill(Color.WHITE);
+
+        textPlayerCon = new Text("CON: 0");
+        textPlayerCon.setFont(FonteUtil.pixel(16));
+        textPlayerCon.setFill(Color.WHITE);
+
+        Text divisor1 = new Text("|");
+        divisor1.setFont(FonteUtil.pixel(16));
+        divisor1.setFill(Color.WHITE);
+
+        leftTextContainer.getChildren().addAll(textPlayerName, divisor1, textPlayerCon);
+
+        StackPane barraNotaBackground = new StackPane();
+        barraNotaBackground.setPrefSize(250, 20);
+        barraNotaBackground.setBackground(new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        barraNotaBackground.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+
+        barraNotaFill = new Rectangle(0, 20, Color.web("#32CD32"));
+        StackPane.setAlignment(barraNotaFill, Pos.CENTER_LEFT);
+
+        textNotaValor = new Text("10.0");
+        textNotaValor.setFont(FonteUtil.pixel(14));
+        textNotaValor.setFill(Color.WHITE);
+        barraNotaBackground.getChildren().addAll(barraNotaFill, textNotaValor);
+
+        textPlayerDano = new Text("DANO: 0");
+        textPlayerDano.setFont(FonteUtil.pixel(16));
+        textPlayerDano.setFill(Color.WHITE);
+
+        Text divisor2 = new Text("|");
+        divisor2.setFont(FonteUtil.pixel(16));
+        divisor2.setFill(Color.WHITE);
+
+        notaUILayout.getChildren().addAll(leftTextContainer, barraNotaBackground, divisor2, textPlayerDano);
+        playerHud.getChildren().addAll(hudShields, notaUILayout);
 
         textDebugHitbox = new Text("HITBOX DEBUG: OFF");
         textDebugHitbox.setFont(FonteUtil.pixel(16));
@@ -139,7 +195,7 @@ public class HUDBatalha {
     // ─── Getters para CenaBatalha montar o StackPane ──────────────────────────
 
     public VBox getLayoutSection()       { return layoutSection; }
-    public HBox getHudShields()          { return hudShields; }
+    public VBox getPlayerHud()           { return playerHud; }
     public Text getDebugText()           { return textDebugHitbox; }
     public ImageView getSpriteInimigo()  { return spriteInimigo; }
 
@@ -150,15 +206,25 @@ public class HUDBatalha {
      * @return float[]{baseX, baseY} para rastreamento do delta de posição, ou null se sem oponente.
      */
     public float[] atualizarDadosIniciais() {
-        if (controller.getEstadoAtual() == null
-                || controller.getEstadoAtual().getOponenteAtual() == null) return null;
+        if (controller.getEstadoController() == null) return null;
 
-        model.Batalha.Oponente op = controller.getEstadoAtual().getOponenteAtual();
-        textNomeInimigo.setText(op.getNome().toUpperCase());
-        if (op.getDescricao() != null) textDescricaoInimigo.setText(op.getDescricao().toUpperCase());
+        textPlayerName.setText(controller.getEstadoController().getPlayerNome().toUpperCase());
+        
+        float con = controller.getEstadoController().getPlayerConhecimento();
+        textPlayerCon.setText(String.format("CON: %.1f", con).replace(",", "."));
+        float dano = controller.getEstadoController().getPlayerDano();
+        textPlayerDano.setText(String.format("DANO: %.1f", dano).replace(",", "."));
+
+        String inimigoNome = controller.getEstadoController().getInimigoNome();
+        if (inimigoNome == null || inimigoNome.isEmpty()) return null;
+
+        textNomeInimigo.setText(inimigoNome.toUpperCase());
+        
+        String desc = controller.getEstadoController().getInimigoDescricao();
+        if (desc != null) textDescricaoInimigo.setText(desc.toUpperCase());
 
         try {
-            String dir = op.getSpriteUrl();
+            String dir = controller.getEstadoController().getInimigoSprite();
             if (dir != null && !dir.isEmpty()) {
                 if (!dir.startsWith("/")) dir = "/" + dir;
                 spriteInimigo.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(dir))));
@@ -167,41 +233,51 @@ public class HUDBatalha {
             try {
                 spriteInimigo.setImage(new Image(Objects.requireNonNull(
                         getClass().getResourceAsStream("/assets/batalha/oponentes/animais/default.png"))));
+
             } catch (Exception ignored) {}
         }
 
-        return new float[]{op.getX(), op.getY()};
+        return new float[]{controller.getEstadoController().getInimigoX(), controller.getEstadoController().getInimigoY()};
     }
 
     // ─── Atualizações por frame ────────────────────────────────────────────────
 
     public void atualizarTextosHUD(float maxHpOponente, int maxTurnosOponente) {
-        if (controller.getEstadoAtual() == null) return;
+        if (controller.getEstadoController() == null) return;
 
         int maxTurnos = maxTurnosOponente;
-        if (controller.getEstadoAtual().getOponenteAtual() != null)
-            maxTurnos = controller.getEstadoAtual().getOponenteAtual().getMaxTurnos();
+        if (controller.getEstadoController().getInimigoNome() != null && !controller.getEstadoController().getInimigoNome().isEmpty())
+            maxTurnos = controller.getEstadoController().getInimigoMaxTurnos();
 
-        if (controller.isBatalhaAnimal()) {
-            int t = controller.getEstadoAtual().getPlayerProva().getTurnosUsados();
-            textTurno.setText("TURNOS:\n" + t + "/" + maxTurnos);
-        } else {
-            float nota = controller.getEstadoAtual().getPlayerProva().getDesempenhoQuestaoAtual();
-            int t     = controller.getEstadoAtual().getPlayerProva().getTurnosUsados();
-            textTurno.setText(String.format("NOTA: %.1f\nTURNOS: %d/%d", nota, t, maxTurnos));
-        }
+        int t = controller.getEstadoController().getPlayerTurnosUsados();
+        textTurno.setText("TURNOS:\n" + t + "/" + maxTurnos);
 
-        if (controller.getEstadoAtual().getOponenteAtual() != null) {
-            float hpAtual = controller.getEstadoAtual().getOponenteAtual().getHpAtual();
-            float hpMax   = controller.getEstadoAtual().getOponenteAtual().getHpMaximo();
+        // Atualiza os textos do jogador dinamicamente (para refletir bônus de ações)
+        float con = controller.getEstadoController().getPlayerConhecimento();
+        textPlayerCon.setText(String.format("CON: %.1f", con).replace(",", "."));
+        float dano = controller.getEstadoController().getPlayerDano();
+        textPlayerDano.setText(String.format("DANO: %.1f", dano).replace(",", "."));
+
+        // Atualiza a barra de nota (HP do jogador)
+        float nota = controller.getEstadoController().getPlayerNota();
+        float pctNota = Math.max(0f, Math.min(1f, nota / 10.0f));
+        barraNotaFill.setWidth(pctNota * 250f);
+        textNotaValor.setText(String.format("%.2f", nota).replace(",", "."));
+
+        Color cor = Color.rgb((int)(255 * (1 - pctNota)), (int)(255 * pctNota), 0);
+        barraNotaFill.setFill(cor);
+
+        if (controller.getEstadoController().getInimigoNome() != null && !controller.getEstadoController().getInimigoNome().isEmpty()) {
+            float hpAtual = controller.getEstadoController().getInimigoHpAtual();
+            float hpMax   = controller.getEstadoController().getInimigoHpMaximo();
             if (hpMax > 0) {
                 int pct = Math.max(0, Math.min(100, (int) ((1f - hpAtual / hpMax) * 100)));
-                textHpInimigo.setText(String.format("HP: %.0f/%.0f", hpAtual, hpMax));
+                textHpInimigo.setText(String.format("HP: %.2f/%.2f", hpAtual, hpMax));
                 String label = controller.isBatalhaAnimal() ? "% DOMADO" : "% CONCLUÍDO";
                 textProgresso.setText(pct + label);
                 barraProgressoFill.setWidth((pct / 100f) * 800f);
             }
-        } else if (controller.getEstadoAtual().isFinalizado() && controller.getEstadoAtual().isVitoria()) {
+        } else if (controller.getEstadoController().isFinalizado() && controller.getEstadoController().isVitoria()) {
             textHpInimigo.setText("HP: 0/" + (int) maxHpOponente);
             String label = controller.isBatalhaAnimal() ? "% DOMADO" : "% CONCLUÍDO";
             textProgresso.setText("100" + label);
@@ -210,10 +286,10 @@ public class HUDBatalha {
     }
 
     public void atualizarHUDShields() {
-        if (controller.getEstadoAtual() == null) return;
+        if (controller.getEstadoController() == null) return;
 
-        int atual = controller.getEstadoAtual().getPlayerProva().getShieldAtual();
-        int max   = controller.getEstadoAtual().getPlayerProva().getShieldMaximo();
+        int atual = controller.getEstadoController().getPlayerShieldAtual();
+        int max   = controller.getEstadoController().getPlayerShieldMaximo();
         if (atual == escudosAnteriores) return;
         escudosAnteriores = atual;
 

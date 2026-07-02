@@ -10,11 +10,17 @@ import service.MapaService;
 import service.NpcService;
 import service.PersonagemService;
 import view.controleTelas.GerenciadorTelas;
+import service.AudioService;
 
 import controller.PersonagemController;
 import controller.BatalhaController;
 import javafx.stage.Stage;
 import service.batalha.BatalhaService;
+import repository.OponenteAnimalRepository;
+import service.batalha.OponenteService;
+import service.batalha.BatalhaLoopService;
+import service.batalha.BatalhaFinalizacaoService;
+import service.batalha.PlayerProvaService;
 
 public class BixoQuest extends Application {
 
@@ -46,8 +52,15 @@ public class BixoQuest extends Application {
         primaryStage.setTitle("BixoQuest");
         primaryStage.setFullScreen(true);
 
-        BatalhaService batalhaService = new BatalhaService();
-        BatalhaController batalhaController = new BatalhaController(batalhaService, npcRepository);
+        OponenteAnimalRepository oponenteAnimalRepository = new OponenteAnimalRepository();
+        OponenteService oponenteService = new OponenteService(oponenteAnimalRepository);
+        BatalhaLoopService loopService = new BatalhaLoopService();
+        BatalhaFinalizacaoService finalizacaoService = new BatalhaFinalizacaoService();
+        PlayerProvaService playerProvaService = new PlayerProvaService();
+
+        BatalhaService batalhaService = new BatalhaService(oponenteService, loopService, finalizacaoService, playerProvaService);
+        AudioService audioService = new AudioService();
+        BatalhaController batalhaController = new BatalhaController(batalhaService, npcRepository, audioService);
 
         GerenciadorTelas telas =
                 new GerenciadorTelas(primaryStage,

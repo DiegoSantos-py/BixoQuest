@@ -22,24 +22,29 @@ public class PlayerProvaService {
     }
 
     public void aplicarLimitesDeMovimento(PlayerProva player, Ataque ataque) {
-        if (player.getCentro().getX() > ataque.getMaxX()) {
-            player.getCentro().setX(ataque.getMaxX());
+        float RAIO = 22f;
+
+        if (player.getCentro().getX() > ataque.getMaxX() - RAIO) {
+            player.getCentro().setX(ataque.getMaxX() - RAIO);
             player.setMovendoDireita(false);
         }
 
-        if (player.getCentro().getX() < ataque.getMinX()) {
-            player.getCentro().setX(ataque.getMinX());
+        if (player.getCentro().getX() < ataque.getMinX() + RAIO) {
+            player.getCentro().setX(ataque.getMinX() + RAIO);
             player.setMovendoEsquerda(false);
         }
 
-        if (player.getCentro().getY() < ataque.getMinY()) {
-            player.getCentro().setY(ataque.getMinY());
+        if (player.getCentro().getY() < ataque.getMinY() + RAIO) {
+            player.getCentro().setY(ataque.getMinY() + RAIO);
             player.setMovendoBaixo(false);
         }
 
-        if (player.getCentro().getY() > ataque.getMaxY()) {
-            player.getCentro().setY(ataque.getMaxY());
+        if (player.getCentro().getY() >= ataque.getMaxY() - RAIO) {
+            player.getCentro().setY(ataque.getMaxY() - RAIO);
             player.setMovendoCima(false);
+            player.setGrounded(true);
+        } else {
+            player.setGrounded(false);
         }
     }
 
