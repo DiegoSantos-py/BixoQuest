@@ -19,6 +19,7 @@ public class ComportamentoFactory {
         comportamentoCache.put("SENOIDAL_Y_UP", new ProjetilSenoidal(200f, (float) Math.PI * 1.5f, false));
         comportamentoCache.put("SENOIDAL_Y_DOWN", new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, false));
         comportamentoCache.put("GRAVIDADE", new ProjetilGravidade(-800f));
+        comportamentoCache.put("GRAVIDADE_FRACA", new ProjetilGravidade(-100f));
         comportamentoCache.put("APONTA_VETOR", new ProjetilApontaParaVetor());
         despawnCache.put("EXPLOSIVO", new ProjetilExplosivo());
         despawnCache.put("EXPLOSAO_NUCLEAR", new ProjetilExplosaoNuclear(

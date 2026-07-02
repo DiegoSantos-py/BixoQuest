@@ -32,12 +32,17 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
         float cx = projetil.getHitbox().getCentro().getX();
         float cy = projetil.getHitbox().getCentro().getY();
         
-        float step = (float) (Math.PI * 2) / numProjeteis;
+        // Queremos atirar apenas para cima (de 180 graus até 360/0 graus)
+        // No JavaFX, Y cresce para baixo. Então 180 (PI) é esquerda, 270 (1.5 PI) é cima, 360 (2 PI) é direita.
+        float startAngle = (float) Math.PI;
+        float endAngle = (float) (Math.PI * 2);
+        float step = (endAngle - startAngle) / (numProjeteis - 1);
 
         for (int i = 0; i < numProjeteis; i++) {
-            float angulo = i * step;
-            float velocidadeAleatoria = 70f + MathUtils.randomFloatInRange(0, 300f);
-            factory.spawn(
+            float angulo = startAngle + (i * step);
+            float velocidadeAleatoria = 100f + MathUtils.randomFloatInRange(0, 200f);
+            
+            Projetil fogo = factory.spawn(
                 cx, cy, 
                 tamanhoX, tamanhoY, 
                 velocidadeAleatoria, 
@@ -45,6 +50,11 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
                 angulo, 
                 danoShield, danoNota, duracao, spriteDir
             );
+            
+            if (fogo != null) {
+                fogo.addComportamento(ComportamentoFactory.getAI("GRAVIDADE_FRACA"));
+                fogo.addComportamento(ComportamentoFactory.getAI("APONTA_VETOR"));
+            }
         }
     }
 }
