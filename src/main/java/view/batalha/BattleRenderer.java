@@ -33,6 +33,12 @@ public class BattleRenderer {
         return renderHitbox;
     }
 
+    private boolean playerInvulneravel = false;
+
+    public void setPlayerInvulneravel(boolean playerInvulneravel) {
+        this.playerInvulneravel = playerInvulneravel;
+    }
+
     /**
      * Redesenha a arena inteira a partir do estado atual.
      * Remove todos os filhos dinâmicos (índice > 4, preservando fundo + bordas)
@@ -62,8 +68,16 @@ public class BattleRenderer {
         float spriteLY = p.getY() - minY - visualH / 2;
 
         ImageView pSprite = criarSprite(p, visualW, visualH, spriteLX, spriteLY);
-        arenaPane.getChildren().add(
-                pSprite != null ? pSprite : buildRect(spriteLX, spriteLY, visualW, visualH, Color.RED));
+        javafx.scene.Node playerNode = pSprite != null ? pSprite : buildRect(spriteLX, spriteLY, visualW, visualH, Color.RED);
+
+        if (this.playerInvulneravel) {
+            // Blink effect: toggle visibility every 100ms
+            if ((System.currentTimeMillis() / 50) % 2 == 0) {
+                playerNode.setVisible(false);
+            }
+        }
+
+        arenaPane.getChildren().add(playerNode);
 
         if (renderHitbox) {
             float hitboxLX = p.getX() - minX - pW / 2;

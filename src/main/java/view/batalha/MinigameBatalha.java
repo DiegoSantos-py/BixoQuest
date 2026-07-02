@@ -75,7 +75,7 @@ public class MinigameBatalha {
         feedbackText = new Text();
         feedbackText.setVisible(false);
 
-        minigameBox.setOnMouseClicked(e -> finalizar());
+        minigameBox.setOnMousePressed(e -> finalizar());
 
         container.getChildren().addAll(titulo, minigameBox, instrucao, feedbackText);
         return container;

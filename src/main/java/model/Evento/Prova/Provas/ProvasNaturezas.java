@@ -18,10 +18,10 @@ public class ProvasNaturezas {
         int nivel = 1;
         ArrayList<AcaoBatalha> acoes = new ArrayList<>();
         // favor nao botar mais de 4 acoes em prol da UI
-        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 1, 0));
-        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 1, 0, 0));
-        acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 0.5f));
-        acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 0));
+        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 0.25f, 1));
+        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.25f, 0, 1, 0, 1));
+        acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 2.25f));
+        acoes.add(new AcaoBatalha("RELER A QUESTÃO",          1.0f, 0, 0, 0, 0.75F));
 
         ProvaBatalha prova = new ProvaBatalha(
                 "Naturezas 1",
@@ -63,10 +63,10 @@ public class ProvasNaturezas {
     public static ProvaBatalha criarNaturezas2() {
         int nivel = 2;
         ArrayList<AcaoBatalha> acoes = new ArrayList<>();
-        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 1, 0));
-        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 1, 0, 0));
-        acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 0.5f));
-        acoes.add(new AcaoBatalha("DESISTIR",          1.0f, 0, 0, 0, 0));
+        acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 0.25f, 3f));
+        acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.25f, 0, 1, 0, 4f));
+        acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 4.5f));
+        acoes.add(new AcaoBatalha("RELER A QUESTÃO",          1.0f, 0, 0, 0, 1.5F));
 
         ProvaBatalha prova = new ProvaBatalha(
                 "Naturezas 2",
@@ -89,7 +89,7 @@ public class ProvasNaturezas {
 
         prova.addQuestao(new Questao(
                 "Cinemática",
-                90f, AreaConhecimento.NAT,
+                60f, AreaConhecimento.NAT,
                 10f,
                 new AtaqueCarroAviao(null, null, 10f),
                 "Formulas e vetores.", "transito de feira de santana."

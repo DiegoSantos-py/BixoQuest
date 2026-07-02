@@ -116,6 +116,10 @@ public class PlayerProva extends EntidadeBatalha {
         tempoImunidadeRestante = TEMPO_IMUNIDADE; 
     }
 
+    public boolean isInvulneravel() {
+        return this.tempoImunidadeRestante > 0;
+    }
+
     @Override
     public void atualizarPosicao(float deltaTime) {
 

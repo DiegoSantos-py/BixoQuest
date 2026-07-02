@@ -96,7 +96,7 @@ public class BatalhaLoopService {
     public void atacarOponenteAtual(EstadoBatalha estado, float multiplicadorPrecisao) {
         Oponente oponenteAtual = estado.getOponenteAtual();
         if (oponenteAtual != null && !oponenteAtual.isDerrotado()) {
-            if(multiplicadorPrecisao < 1.25){
+            if(multiplicadorPrecisao < 2.0f){
                 estado.getPlayerProva().setTodosAcertosPerfeitos(false);
             }
             float danoCausado = estado.getPlayerProva().getDanoAtaque() * multiplicadorPrecisao;

@@ -183,6 +183,7 @@ public class CenaBatalha extends StackPane {
         hud.atualizarTextosHUD(maxHpOponente, maxTurnosOponente);
 
         if (estadoUI == EstadoUI.INIMIGO_ATACANDO && arenaPane != null) {
+            renderer.setPlayerInvulneravel(batalhaController.isPlayerInvulneravel());
             renderer.renderFrame(arenaPane, batalhaController.getEstadoController().getEstadoBatalha());
         }
     }

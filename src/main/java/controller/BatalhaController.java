@@ -95,6 +95,13 @@ public class BatalhaController extends BaseController {
         return estadoAtual != null && estadoAtual.isBatalhaAnimal();
     }
 
+    public boolean isPlayerInvulneravel() {
+        if (estadoAtual != null && estadoAtual.getPlayerProva() != null) {
+            return estadoAtual.getPlayerProva().isInvulneravel();
+        }
+        return false;
+    }
+
     public List<AcaoBatalha> getAcoes() {
         if (estadoAtual == null)
             return new ArrayList<>();
@@ -178,14 +185,20 @@ public class BatalhaController extends BaseController {
             return 3.0f;
         }
         float precisao = (float) (1.5 - (distanciaDoCentro / 350.0) * 1.5);
-        return Math.max(0f, precisao);
+        precisao = Math.max(0f, precisao);
+        
+        if (precisao >= 1.40f) {
+            return precisao * 1.5f; // Bônus multiplicativo por acertar a zona amarela!
+        }
+        
+        return precisao;
     }
 
     /**
      * Define o que é um ataque perfeito com base na precisão.
      */
     public boolean isAtaquePerfeito(float precisao) {
-        return precisao >= 1.40f && precisao < 3.0f;
+        return precisao >= 2.10f && precisao < 3.0f;
     }
 
     /**
