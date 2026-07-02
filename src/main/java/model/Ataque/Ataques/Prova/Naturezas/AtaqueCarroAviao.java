@@ -13,8 +13,8 @@ public class AtaqueCarroAviao extends Ataque {
     private float timerCarro = 0;
     private float timerAviao = 0;
     
-    private final float SPAWN_DELAY_CARRO = 1f;
-    private final float SPAWN_DELAY_AVIAO = 0.7f;
+    private final float SPAWN_DELAY_CARRO = 1.1f;
+    private final float SPAWN_DELAY_AVIAO = 0.8f;
     
     private final float FASE_1_DURACAO = 20f;
 
