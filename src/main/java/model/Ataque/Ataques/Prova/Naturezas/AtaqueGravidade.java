@@ -4,7 +4,7 @@ import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
 import model.Projetil.ComportamentoAoColidirComPlayer;
-import model.Projetil.Comportamentos.ComportamentoFactory;
+import model.Projetil.Comportamentos.ProjetilGravidade;
 import model.Projetil.Projetil;
 import model.util.MathUtils;
 import model.util.Vector2D;
@@ -12,11 +12,13 @@ import model.util.Vector2D;
 public class AtaqueGravidade extends Ataque {
 
     private boolean projetilSpawnado = false;
-    private float duracaoAtaque = 5f; // Duração do ataque teste
+    private float duracaoAtaque = 5f;
     
     private float timerCarro = 0;
     private final float SPAWN_DELAY_CARRO = 1.0f;
     private boolean segundoTurno = false;
+
+    private final ProjetilGravidade gravidade = new ProjetilGravidade(-800f);
 
 
 
@@ -50,9 +52,7 @@ public class AtaqueGravidade extends Ataque {
             );
 
             if (p != null) {
-                // Adiciona o comportamento de transformar em Alma Azul ao colidir!
-
-                p.addComportamento(ComportamentoFactory.getAI("GRAVIDADE"));
+                p.addComportamento(gravidade);
                 p.addComportamentoColisao(new ComportamentoAoColidirComPlayer() {
                     @Override
                     public void aoColidirComPlayer(Projetil projetil, PlayerProva playerTarget) {

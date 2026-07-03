@@ -4,8 +4,8 @@ import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
-import model.Projetil.Comportamentos.ProjetilQueSegue;
-import model.Projetil.Comportamentos.ComportamentoFactory;
+import model.Projetil.Comportamentos.ProjetilQuePreve;
+import model.Projetil.Comportamentos.ProjetilSpawnAoMorrer;
 
 public class AtaqueRetaTangente extends Ataque {
 
@@ -13,6 +13,9 @@ public class AtaqueRetaTangente extends Ataque {
     private int projeteisSpawnados = 0;
     private boolean pontoSpawnado = false;
     private Projetil pontoHoming = null;
+
+    private final ProjetilQuePreve preditivo = new ProjetilQuePreve(125f, 6.0f, 1.2f);
+    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
 
     private float attackDuration = 10f;
 
@@ -38,7 +41,7 @@ public class AtaqueRetaTangente extends Ataque {
                     "ponto.png"); // Placeholder para o projétil ponto
 
             if (pontoHoming != null) {
-                pontoHoming.addComportamento(ComportamentoFactory.getAI("PREDITIVO"));
+                pontoHoming.addComportamento(preditivo);
             }
             pontoSpawnado = true;
         }
@@ -69,10 +72,7 @@ public class AtaqueRetaTangente extends Ataque {
                     "arranhaoPrevia.png");
 
             if (previa != null) {
-                // Ao desaparecer a prévia, spawna o arranhão real
-                previa.addComportamentoDespawn(
-                        ComportamentoFactory.getDespawn("SPAWN_ARRANHAO")
-                );
+                previa.addComportamentoDespawn(spawnArranhao);
                 
                 projeteisSpawnados++;
                 timer = 0;

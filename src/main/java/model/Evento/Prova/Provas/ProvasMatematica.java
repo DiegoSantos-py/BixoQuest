@@ -10,6 +10,8 @@ import model.Ataque.Ataques.Prova.Matematica.AtaqueIntegral;
 import model.Ataque.Ataques.Prova.Matematica.AtaqueVetores;
 import model.Ataque.Ataques.Prova.Matematica.AtaqueGradiente;
 import model.Ataque.Ataques.Prova.Matematica.AtaqueIntegral2;
+import model.Ataque.Ataques.Prova.Matematica.AtaqueIntegral3;
+import model.Ataque.Ataques.Prova.Matematica.AtaqueEstatistica;
 import model.Player.AcaoBatalha;
 
 import java.util.ArrayList;
@@ -20,10 +22,10 @@ public class ProvasMatematica {
                 int nivel = 1;
                 ArrayList<AcaoBatalha> acoes = new ArrayList<>();
                 // favor nao botar mais de 4 acoes em prol da UI
-                acoes.add(new AcaoBatalha("USAR CALCULADORA", 0.9f, 2, 0, 1, 0));
-                acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0, 0, 0, 0));
-                acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 0.5f));
-                acoes.add(new AcaoBatalha("DESISTIR", 1.0f, 0, 0, 0, 0));
+                acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 0.25f, 1));
+                acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.25f, 0, 1, 0, 1));
+                acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 2.25f));
+                acoes.add(new AcaoBatalha("RELER A QUESTÃO",          1.0f, 0, 0, 0, 0.75f));
 
                 ProvaBatalha prova = new ProvaBatalha(
                                 "Matematica 1",
@@ -62,10 +64,10 @@ public class ProvasMatematica {
                 int nivel = 2;
                 ArrayList<AcaoBatalha> acoes = new ArrayList<>();
                 // favor nao botar mais de 4 acoes em prol da UI
-                acoes.add(new AcaoBatalha("USAR CALCULADORA", 0.9f, 0.5f, 0, 0, 0));
-                acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.2f, 0.5f, 0, 0.2f, 0.2f));
-                acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 0.5f));
-                acoes.add(new AcaoBatalha("DESISTIR", 1.0f, 0, 0, 0, 0));
+                acoes.add(new AcaoBatalha("USAR CALCULADORA",  0.9f, 2, 0, 0.25f, 3f));
+                acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.25f, 0, 1, 0, 4f));
+                acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 4.5f));
+                acoes.add(new AcaoBatalha("RELER A QUESTÃO",          1.0f, 0, 0, 0, 1.5f));
 
                 ProvaBatalha prova = new ProvaBatalha(
                                 "Matematica 2",
@@ -92,6 +94,37 @@ public class ProvasMatematica {
                                 "Integrais duplas", 37f, AreaConhecimento.MAT, 16f,
                                 new AtaqueIntegral2(null, null, 16f),
                                 "NÃO É MAIS SO UMA INTEGRAL.", "Voce tenta lembrar das regras de integração..."));
+                return prova;
+        }
+
+        public static ProvaBatalha criarMatematicaNivel3() {
+                int nivel = 3;
+                ArrayList<AcaoBatalha> acoes = new ArrayList<>();
+                acoes.add(new AcaoBatalha("USAR CALCULADORA CIENTIFICA", 0.9f, 2, 0, 0.25f, 5f));
+                acoes.add(new AcaoBatalha("CHUTAR A RESPOSTA", 0.25f, 0, 1, 0, 6f));
+                acoes.add(new AcaoBatalha("TENTAR COLAR DO COLEGA", 0.35f, 1, 1, 0, 6.5f));
+                acoes.add(new AcaoBatalha("RELER A QUESTÃO",          1.0f, 0, 0, 0, 2.5f));
+
+                ProvaBatalha prova = new ProvaBatalha(
+                                "Matematica 3",
+                                "O pesadelo final",
+                                AreaConhecimento.MAT,
+                                nivel,
+                                0,
+                                acoes,
+                                "matematica.png",
+                                "matematica3.mp3");
+
+                prova.addQuestao(new Questao(
+                                "Integrais triplas", 45f, AreaConhecimento.MAT, 12f,
+                                new AtaqueIntegral3(null, null, 12f),
+                                "A dimensao extra", "Voce se perde no espaço tridimensional..."));
+                                
+                prova.addQuestao(new Questao(
+                                "Gráficos e Estatística", 50f, AreaConhecimento.MAT, 14f,
+                                new AtaqueEstatistica(null, null, 14f),
+                                "A margem de erro não te salva", "Gráficos de barras mortais!"));
+
                 return prova;
         }
 

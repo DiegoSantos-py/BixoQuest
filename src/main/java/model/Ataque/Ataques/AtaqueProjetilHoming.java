@@ -4,7 +4,6 @@ package model.Ataque.Ataques;
 import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
-import model.Projetil.Comportamentos.ComportamentoFactory;
 import model.Projetil.Comportamentos.ProjetilQueSegue;
 import model.Projetil.Projetil;
 
@@ -12,6 +11,8 @@ public class AtaqueProjetilHoming extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
+
+    private final ProjetilQueSegue homing = new ProjetilQueSegue(125f, 4.5f);
 
     public AtaqueProjetilHoming(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
@@ -35,7 +36,7 @@ public class AtaqueProjetilHoming extends Ataque {
                     anguloParaPlayer, 1, 0f, 7.5f, "mordida.png");
 
             if (p != null) {
-                p.addComportamento(ComportamentoFactory.getAI("HOMING"));
+                p.addComportamento(homing);
             }
 
             projeteisSpawnados++;

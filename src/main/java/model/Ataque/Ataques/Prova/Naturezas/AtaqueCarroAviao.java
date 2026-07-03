@@ -3,7 +3,9 @@ package model.Ataque.Ataques.Prova.Naturezas;
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
-import model.Projetil.Comportamentos.ComportamentoFactory;
+import model.Projetil.Comportamentos.ProjetilApontaParaVetor;
+import model.Projetil.Comportamentos.ProjetilExplosaoNuclear;
+import model.Projetil.Comportamentos.ProjetilGravidade;
 import model.Projetil.Projetil;
 import model.util.MathUtils;
 import model.util.Vector2D;
@@ -17,8 +19,13 @@ public class AtaqueCarroAviao extends Ataque {
     private final float SPAWN_DELAY_AVIAO = 1f - (dificuldade/100);
     
     private final float FASE_1_DURACAO = 20f;
-
     private final float FASE_2_DURACAO = 30f;
+
+    private final ProjetilGravidade gravidade = new ProjetilGravidade(-800f);
+    private final ProjetilApontaParaVetor apontaVetor = new ProjetilApontaParaVetor();
+    private final ProjetilExplosaoNuclear explosaoNuclear = new ProjetilExplosaoNuclear(
+            "fogo.png", 34, 24, 1, 0.5f, 7f, 50,
+            new ProjetilGravidade(-100f), new ProjetilApontaParaVetor());
 
     private boolean bombardeiroSpawnado = false;
     private Projetil bombardeiro = null;
@@ -154,9 +161,9 @@ public class AtaqueCarroAviao extends Ataque {
         );
         
         if (bomba != null) {
-            bomba.addComportamento(ComportamentoFactory.getAI("GRAVIDADE"));
-            bomba.addComportamento(ComportamentoFactory.getAI("APONTA_VETOR"));
-            bomba.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSAO_NUCLEAR"));
+            bomba.addComportamento(gravidade);
+            bomba.addComportamento(apontaVetor);
+            bomba.addComportamentoDespawn(explosaoNuclear);
         }
     }
 

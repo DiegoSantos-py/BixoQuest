@@ -1,6 +1,7 @@
 package model.Projetil.Comportamentos;
 
 import model.Projetil.ComportamentoAoDespawnar;
+import model.Projetil.ComportamentoProjetil;
 import model.Projetil.Projetil;
 import model.Projetil.ProjetilFactory;
 import model.util.MathUtils;
@@ -14,8 +15,12 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
     private float danoNota;
     private float duracao;
     private int numProjeteis;
+    private final ComportamentoProjetil comportamentoGravidade;
+    private final ComportamentoProjetil comportamentoAponta;
 
-    public ProjetilExplosaoNuclear(String spriteDir, float tamanhoX, float tamanhoY, int danoShield, float danoNota, float duracao, int numProjeteis) {
+    public ProjetilExplosaoNuclear(String spriteDir, float tamanhoX, float tamanhoY,
+            int danoShield, float danoNota, float duracao, int numProjeteis,
+            ComportamentoProjetil comportamentoGravidade, ComportamentoProjetil comportamentoAponta) {
         this.spriteDir = spriteDir;
         this.tamanhoX = tamanhoX;
         this.tamanhoY = tamanhoY;
@@ -23,6 +28,8 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
         this.danoNota = danoNota;
         this.duracao = duracao;
         this.numProjeteis = numProjeteis;
+        this.comportamentoGravidade = comportamentoGravidade;
+        this.comportamentoAponta = comportamentoAponta;
     }
 
     @Override
@@ -52,8 +59,8 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
             );
             
             if (fogo != null) {
-                fogo.addComportamento(ComportamentoFactory.getAI("GRAVIDADE_FRACA"));
-                fogo.addComportamento(ComportamentoFactory.getAI("APONTA_VETOR"));
+                fogo.addComportamento(comportamentoGravidade);
+                fogo.addComportamento(comportamentoAponta);
             }
         }
     }

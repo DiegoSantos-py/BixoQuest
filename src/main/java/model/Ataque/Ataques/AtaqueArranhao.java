@@ -4,7 +4,7 @@ import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
-
+import model.Projetil.Comportamentos.ProjetilSpawnAoMorrer;
 import java.util.Random;
 
 public class AtaqueArranhao extends Ataque {
@@ -12,6 +12,8 @@ public class AtaqueArranhao extends Ataque {
     private float timer = 0;
     private int projeteisSpawnados = 0;
     private Random random;
+
+    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
 
     public AtaqueArranhao(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -48,10 +50,7 @@ public class AtaqueArranhao extends Ataque {
                     "arranhaoPrevia.png");
 
             if (previa != null) {
-                // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight Pattern)
-                previa.addComportamentoDespawn(
-                        model.Projetil.Comportamentos.ComportamentoFactory.getDespawn("SPAWN_ARRANHAO")
-                );
+                previa.addComportamentoDespawn(spawnArranhao);
                 
                 projeteisSpawnados++;
                 timer = 0;

@@ -3,12 +3,19 @@ package model.Ataque.Ataques.Prova.Matematica;
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
+import model.Projetil.ComportamentoProjetil;
+import model.Projetil.Comportamentos.ProjetilSenoidal;
 import model.util.MathUtils;
 
 public class AtaqueAmplitudeMaxima extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
+
+    private final ProjetilSenoidal senoidalXUp   = new ProjetilSenoidal( 200f, (float) Math.PI * 1.5f, true);
+    private final ProjetilSenoidal senoidalXDown  = new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, true);
+    private final ProjetilSenoidal senoidalYUp    = new ProjetilSenoidal( 200f, (float) Math.PI * 1.5f, false);
+    private final ProjetilSenoidal senoidalYDown  = new ProjetilSenoidal(-200f, (float) Math.PI * 1.5f, false);
 
     public AtaqueAmplitudeMaxima(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
@@ -30,7 +37,7 @@ public class AtaqueAmplitudeMaxima extends Ataque {
             float MultipladorAleatorio = MathUtils.randomFloatInRange(1f,1.5f);
             float angulo = 0f;
             float spawn1X = 0f, spawn1Y = 0f;
-            String comp = "";
+            ComportamentoProjetil comp = null;
 
             float midX = (getMinX() + getMaxX()) / 2f;
             float midY = (getMinY() + getMaxY()) / 2f;
@@ -41,29 +48,29 @@ public class AtaqueAmplitudeMaxima extends Ataque {
                 case 1: // Esquerda
                     spawn1X = getMinX(); spawn1Y = midY;
                     angulo = 0f; // Para a direita
-                    comp = goesUp ? "SENOIDAL_X_UP" : "SENOIDAL_X_DOWN";
+                    comp = goesUp ? senoidalXUp : senoidalXDown;
                     break;
                 case 2: // Cima
                     spawn1X = midX; spawn1Y = getMinY();
                     angulo = (float) (Math.PI / 2); // Para baixo
-                    comp = goesUp ? "SENOIDAL_Y_UP" : "SENOIDAL_Y_DOWN";
+                    comp = goesUp ? senoidalYUp : senoidalYDown;
                     break;
                 case 3: // Direita
                     spawn1X = getMaxX(); spawn1Y = midY;
                     angulo = (float) Math.PI; // Para a esquerda
-                    comp = goesUp ? "SENOIDAL_X_UP" : "SENOIDAL_X_DOWN";
+                    comp = goesUp ? senoidalXUp : senoidalXDown;
                     break;
                 case 4: // Baixo
                     spawn1X = midX; spawn1Y = getMaxY();
                     angulo = (float) (-Math.PI / 2); // Para cima
-                    comp = goesUp ? "SENOIDAL_Y_UP" : "SENOIDAL_Y_DOWN";
+                    comp = goesUp ? senoidalYUp : senoidalYDown;
                     break;
             }
 
             // Spawna o projetil
             model.Projetil.Projetil p1 = spawnProjetil(spawn1X, spawn1Y, 40, 40, velocidade * MultipladorAleatorio, angulo, angulo, 1, 0.5f, 2.5f, "latido.png");
             if (p1 != null) {
-                p1.addComportamento(model.Projetil.Comportamentos.ComportamentoFactory.getAI(comp));
+                p1.addComportamento(comp);
             }
             
             projeteisSpawnados += 1;

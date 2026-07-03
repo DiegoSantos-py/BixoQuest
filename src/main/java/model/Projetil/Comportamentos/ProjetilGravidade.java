@@ -15,7 +15,7 @@ public class ProjetilGravidade implements ComportamentoProjetil {
     @Override
     public void executar(Projetil projetil, float dt) {
         float vy = projetil.getVelocidade().getY();
-        
+
         // Aplica a aceleração no eixo Y (gravidade)
         projetil.getVelocidade().setY(vy - forcaGravidade * dt);
 

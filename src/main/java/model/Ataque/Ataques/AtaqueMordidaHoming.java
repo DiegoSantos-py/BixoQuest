@@ -6,13 +6,17 @@ import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
-import model.Projetil.Comportamentos.ComportamentoFactory;
+import model.Projetil.Comportamentos.ProjetilQueSegue;
+import model.Projetil.Comportamentos.ProjetilExplosivo;
 
 public class AtaqueMordidaHoming extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
     private Random random;
+
+    private final ProjetilQueSegue homing = new ProjetilQueSegue(125f, 4.5f);
+    private final ProjetilExplosivo explosivo = new ProjetilExplosivo("osso.png", 8, 15, 15, 150f, 1, 0.1f, 10f);
 
     public AtaqueMordidaHoming(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -50,8 +54,8 @@ public class AtaqueMordidaHoming extends Ataque {
                     "mordida.png");
 
             if (p != null) {
-                p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));
-                p.addComportamento(ComportamentoFactory.getAI("HOMING"));
+                p.addComportamentoDespawn(explosivo);
+                p.addComportamento(homing);
             }
 
             projeteisSpawnados++;

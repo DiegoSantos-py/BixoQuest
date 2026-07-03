@@ -7,13 +7,14 @@ import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.Comportamentos.ProjetilExplosivo;
 import model.Projetil.Projetil;
-import model.Projetil.Comportamentos.ComportamentoFactory;
 
 public class AtaqueMordida extends Ataque {
 
     private float timer = 0;
     private int projeteisSpawnados = 0;
     private Random random;
+
+    private final ProjetilExplosivo explosivo = new ProjetilExplosivo("osso.png", 8, 15, 15, 150f, 1, 0.1f, 10f);
 
     public AtaqueMordida(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 80);
@@ -51,7 +52,7 @@ public class AtaqueMordida extends Ataque {
                     "mordida.png");
 
             if (p != null) {
-                p.addComportamentoDespawn(ComportamentoFactory.getDespawn("EXPLOSIVO"));
+                p.addComportamentoDespawn(explosivo);
             }
 
             projeteisSpawnados++;

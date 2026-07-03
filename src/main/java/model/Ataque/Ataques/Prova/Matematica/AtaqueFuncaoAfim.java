@@ -4,7 +4,7 @@ import model.Batalha.EntidadeBatalha;
 import model.Ataque.Ataque;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
-
+import model.Projetil.Comportamentos.ProjetilSpawnAoMorrer;
 import java.util.Random;
 
 public class AtaqueFuncaoAfim extends Ataque {
@@ -13,6 +13,8 @@ public class AtaqueFuncaoAfim extends Ataque {
     private int projeteisSpawnados = 0;
     private boolean eixosSpawnados = false;
     private Random random;
+
+    private final ProjetilSpawnAoMorrer spawnFuncao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
 
     public AtaqueFuncaoAfim(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -55,10 +57,7 @@ public class AtaqueFuncaoAfim extends Ataque {
                     "arranhaoPrevia.png");
 
             if (previa != null) {
-                // Ao desaparecer a prévia, spawna o arranhão real via Factory (Flyweight
-                // Pattern)
-                previa.addComportamentoDespawn(
-                        model.Projetil.Comportamentos.ComportamentoFactory.getDespawn("SPAWN_FUNCAO"));
+                previa.addComportamentoDespawn(spawnFuncao);
 
                 projeteisSpawnados++;
                 timer = 0;

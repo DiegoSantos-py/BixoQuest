@@ -21,6 +21,7 @@ public class ProvaFactory {
             case MAT_03: return criarMatematica(3);
             case NAT_01: return criarNatureza(1);
             case NAT_02: return criarNatureza(2);
+            case NAT_03: return criarNatureza(3);
             case SOFT_01: return criarSoftware(1);
             
             case SOFT_02: return criarSoftware(2);
@@ -41,8 +42,7 @@ public class ProvaFactory {
             case 2:
                return ProvasMatematica.criarMatematicaNivel2();
             case 3:
-                // return criarMatematicaNivel3();
-                throw new IllegalArgumentException("Nivel 3 de matematica em construcao.");
+                return ProvasMatematica.criarMatematicaNivel3();
             default:
                 throw new IllegalArgumentException("Nivel de matematica nao implementado: " + nivel);
         }
@@ -55,7 +55,7 @@ public class ProvaFactory {
             case 2:
                 return ProvasNaturezas.criarNaturezas2();
             case 3:
-                throw new IllegalArgumentException("Nivel 3 de naturezas em construcao.");
+                return ProvasNaturezas.criarNaturezas3();
             default:
                 throw new IllegalArgumentException("Niveis so vao de 1 a 3.");
         }
@@ -89,4 +89,11 @@ public class ProvaFactory {
         }
     }
 
+    public static ProvaBatalha criarTCC(){
+        throw new IllegalArgumentException("TCC em construcao.");
+    }
+
+    public static ProvaBatalha criarEstagio(){
+        throw new IllegalArgumentException("Estagio em construcao.");
+    }
 }
