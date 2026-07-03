@@ -1,13 +1,11 @@
 package view.controleTelas;
 
-import controller.GameController;
-import controller.MapaController;
-import controller.NpcController;
-import controller.PersonagemController;
+import controller.*;
 import javafx.scene.Parent;
 import view.InicioJogoView;
 import view.animacao.AnimacaoFimView;
 import view.animacao.AnimacaoInicioView;
+import view.cena.CenaBatalha;
 import view.construtores.ConstrutorCenaJogo;
 import view.construtores.DiretorCena;
 import view.menu.*;
@@ -21,6 +19,7 @@ public class ControllerTelas {
     private final PersonagemController personagemController;
     private final MapaController mapaController;
     private final GameController gameController;
+    private final BatalhaController batalhaController;
     private final DiretorCena diretorCena;
 
     private CenaJogo cenaAtual;
@@ -30,12 +29,15 @@ public class ControllerTelas {
     public ControllerTelas(
             GerenciadorTelas gerenciador,
             PersonagemController personagemController,
-            MapaController mapaController, GameController gameController
+            MapaController mapaController,
+            GameController gameController,
+            BatalhaController batalhaController
     ) {
         this.gerenciador           = gerenciador;
         this.personagemController  = personagemController;
         this.mapaController        = mapaController;
         this.gameController        = gameController;
+        this.batalhaController     = batalhaController;
         this.diretorCena           = new DiretorCena();
     }
 
@@ -45,6 +47,7 @@ public class ControllerTelas {
                 personagemController,
                 () -> gerenciador.mostrarMenuPersonagens(),
                 () -> gerenciador.mostrarConfiguracoes(),
+                () -> gerenciador.mostrarSeletorBatalha(),
                 () -> System.exit(0)
         );
     }
@@ -65,6 +68,27 @@ public class ControllerTelas {
                 sessao -> gerenciador.mostrarAnimacaoInicio(sessao),
                 () -> gerenciador.mostrarMenuPersonagens()
         );
+    }
+
+    public Parent criarSeletorBatalha() {
+        return new MenuSeletorBatalha(
+                batalhaController,
+                () -> gerenciador.mostrarTelaBatalha(), // aoIniciarBatalha
+                () -> gerenciador.mostrarMenuInicial()  // aoVoltar
+        );
+    }
+
+    public Parent criarCenaMenuMorte(String texto) {
+        // TODO: Implementar MenuMorte
+        javafx.scene.layout.StackPane placeholder = new javafx.scene.layout.StackPane();
+        javafx.scene.control.Label label = new javafx.scene.control.Label("MENU MORTE: " + texto);
+        label.setTextFill(javafx.scene.paint.Color.RED);
+        placeholder.getChildren().add(label);
+        return placeholder;
+    }
+
+    public Parent criarTelaBatalha() {
+        return new CenaBatalha(batalhaController, () -> gerenciador.mostrarSeletorBatalha());
     }
 
     public Parent criarAnimacaoInicio(int sessaoAtual) {

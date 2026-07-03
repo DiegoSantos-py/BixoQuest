@@ -1,5 +1,6 @@
 package view.controleTelas;
 
+import controller.BatalhaController;
 import controller.GameController;
 import controller.MapaController;
 import controller.PersonagemController;
@@ -18,14 +19,16 @@ public class GerenciadorTelas {
             Stage stage,
             PersonagemController personagemController,
             MapaController mapaController,
-            GameController gameController
+            GameController gameController,
+            BatalhaController batalhaController
     ) {
         this.stage = stage;
         this.controllerTelas = new ControllerTelas(
                 this,
                 personagemController,
                 mapaController,
-                gameController
+                gameController,
+                batalhaController
         );
     }
 
@@ -54,6 +57,12 @@ public class GerenciadorTelas {
     public void mostrarMenuPersonagens() {
         trocarRoot(controllerTelas.criarMenuPersonagens());
     }
+
+    public void mostrarSeletorBatalha() {trocarRoot(controllerTelas.criarSeletorBatalha());}
+
+    public void mostrarMenuMorte(String texto) {trocarRoot(controllerTelas.criarCenaMenuMorte(texto));}
+
+    public void mostrarTelaBatalha() {trocarRoot(controllerTelas.criarTelaBatalha());}
 
     public void mostrarCriacaoPersonagem(int slotId) {
         trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));

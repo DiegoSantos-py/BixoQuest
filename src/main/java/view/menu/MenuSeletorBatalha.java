@@ -48,7 +48,7 @@ public class MenuSeletorBatalha extends StackPane {
 
         Text titulo = new Text("Selecione o Oponente para Batalha");
         titulo.setFont(FonteUtil.pixel(48));
-        titulo.setFill(Color.WHITE);
+        titulo.setFill(Color.BLACK);
 
         HBox tabs = new HBox(20);
         tabs.setAlignment(Pos.CENTER);
@@ -109,7 +109,7 @@ public class MenuSeletorBatalha extends StackPane {
 
         if (animais == null || animais.isEmpty()) {
             Text vazio = new Text("Nenhum animal disponível no repositório.");
-            vazio.setFill(Color.WHITE);
+            vazio.setFill(Color.BLACK);
             vazio.setFont(FonteUtil.pixel(20));
             botoes.getChildren().add(vazio);
         } else {
@@ -150,7 +150,7 @@ public class MenuSeletorBatalha extends StackPane {
 
     private void estilizarBotao(Button botao) {
         botao.setFont(FonteUtil.pixel(24));
-        botao.setTextFill(Color.WHITE);
+        botao.setTextFill(Color.BLACK);
 
         botao.setBackground(Background.EMPTY);
         botao.setBorder(Border.EMPTY);
