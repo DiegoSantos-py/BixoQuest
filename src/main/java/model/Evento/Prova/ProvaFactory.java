@@ -14,7 +14,7 @@ public class ProvaFactory {
      * Cria uma ProvaBatalha completa a partir do ID e nivel da disciplina.
      * As questoes chegam com Ataque de owner=null — injetado por Oponente.adicionarAtaque.
      */
-    public static ProvaBatalha criar(ProvaIDs id, int nivelDisciplina) {
+    public static ProvaBatalha criar(ProvaIDs id) {
         switch (id) {
             case MAT_01: return criarMatematica(1);
             case MAT_02: return criarMatematica(2);

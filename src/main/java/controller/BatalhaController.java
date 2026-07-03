@@ -56,8 +56,17 @@ public class BatalhaController extends BaseController {
                 personagemBase.atualizarConhecimento(area, bonusConhecimento);
             }
         }
-        ProvaBatalha prova = ProvaFactory.criar(provaId, 1);
+        ProvaBatalha prova = ProvaFactory.criar(provaId);
         this.estadoAtual = batalhaService.iniciarBatalha(personagemBase, prova, new ResultadoProvaRepository());
+    }
+    
+    public void iniciarBatalhaAnimal(Animal animal, Personagem personagem) {
+        this.estadoAtual = batalhaService.iniciarBatalha(personagem, animal, this.npcRepository);
+    }
+
+    public void iniciarProva(ProvaIDs provaId, Personagem personagem) {
+        ProvaBatalha prova = ProvaFactory.criar(provaId);
+        this.estadoAtual = batalhaService.iniciarBatalha(personagem, prova, new ResultadoProvaRepository());
     }
 
     public void iniciarBatalhaAtim() {
