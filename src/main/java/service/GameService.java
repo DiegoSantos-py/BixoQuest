@@ -2,14 +2,14 @@ package service;
 
 import exception.PersistenciaException;
 import model.Disciplina.Disciplina;
-import model.Local.TipoLocal;
-import model.Local.Local;
+import model.Evento.Evento;
 import model.Personagem;
 import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GameService {
 
@@ -17,6 +17,7 @@ public class GameService {
     private final SemestreService semestreService;
     private final PersonagemService personagemService;
     private final InicializacaoService inicializacaoService;
+    private final EventoService eventoService;
     private final LocalRepository localRepo;
     private final SemestreRepository semestreRepo;
     private final DisciplinaRepository disciplinaRepo;
@@ -33,6 +34,7 @@ public class GameService {
                        SemestreService semestreService,
                        PersonagemService personagemService,
                        InicializacaoService inicializacaoService,
+                       EventoService eventoService,
                        LocalRepository localRepo,
                        SemestreRepository semestreRepo,
                        DisciplinaRepository disciplinaRepo,
@@ -44,6 +46,7 @@ public class GameService {
         this.semestreService = semestreService;
         this.personagemService = personagemService;
         this.inicializacaoService = inicializacaoService;
+        this.eventoService = eventoService;
 
         this.localRepo = localRepo;
         this.semestreRepo = semestreRepo;
@@ -173,6 +176,24 @@ public class GameService {
         }
     }
 
+    public Optional<Evento> processarZona(String nomeZona) {
+        if (diaAtual == null) return Optional.empty();
+
+        Evento evento = diaAtual.getEventosObrigatorios().get(nomeZona);
+        if (evento == null) {
+            evento = diaAtual.getEventosAleatorios().get(nomeZona);
+        }
+        if (evento == null) return Optional.empty(); // não há evento nessa zona — cai no fallback de navegação
+
+        Personagem personagemObj = personagemRepo.buscarPorId(personagem);
+
+        if (!eventoService.podeExecutar(evento, personagemObj, semestre, diaAtual, diaService)) {
+            return Optional.empty(); // existe evento, mas requisitos não atendidos
+        }
+
+        eventoService.executarEvento(evento, personagemObj, diaAtual, diaService);
+        return Optional.of(evento); // evento executado — View decide o que exibir
+    }
 
     /**
      * Salva o estado de todos os repositórios exceto localRepo.
@@ -186,7 +207,6 @@ public class GameService {
         eventoRepo.salvar();
         npcRepo.salvar();
     }
-
 
     public Semestre getSemestre() { return semestre; }
     public int getDiaAtual() { return semestre.getDiaAtual(); }

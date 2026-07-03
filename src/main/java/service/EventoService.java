@@ -8,6 +8,7 @@ import model.Evento.Evento;
 import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
+import model.Tempo.Semestre;
 import repository.EventoRepository;
 
 import java.util.Map;
@@ -43,7 +44,6 @@ public class EventoService {
                               int efeitoTempo,
                               int tempoRequisito,
                               Evento eventoRequisito,
-                              double energiaMinima,
                               double custoDinheiro,
                               boolean repetivel,
                               ZonaInterativa zona) throws PersistenciaException {
@@ -62,8 +62,7 @@ public class EventoService {
                 efeitoDinheiro,
                 efeitoTempo,
                 tempoRequisito,
-                eventoRequisito,
-                energiaMinima
+                eventoRequisito
         );
 
         evento.setNome(nome);
@@ -91,11 +90,12 @@ public class EventoService {
 
     // Lógica de negócio
 
-    public boolean podeExecutar(Evento evento, Personagem personagem, Dia diaAtual, DiaService diaService) {
+    public boolean podeExecutar(Evento evento, Personagem personagem, Semestre semestre,
+                                Dia diaAtual, DiaService diaService) {
         if (evento.isStatus() && !evento.isRepetivel()) {
             return false;
         }
-        if (personagem.getEnergia() < evento.getEnergiaMinima()) {
+        if (!atendeRequisitosAtributo(evento, personagem)) {
             return false;
         }
         if (personagem.getDinheiro() < evento.getCustaDinheiro()) {
@@ -104,13 +104,47 @@ public class EventoService {
         if (evento.getEventoRequisito() != null && !evento.getEventoRequisito().isStatus()) {
             return false;
         }
-
-        long tempoRestanteMin = diaService.getTempoRestante(diaAtual) / 60;
-        if (tempoRestanteMin < evento.getEfeitoTempo()) {
+        if (!atendeRequisitoDisciplina(evento, semestre)) {
             return false;
         }
 
+        long tempoRestanteMin = diaService.getTempoRestante(diaAtual) / 60;
+        return tempoRestanteMin >= evento.getEfeitoTempo();
+    }
+
+    private boolean atendeRequisitosAtributo(Evento evento, Personagem personagem) {
+        Map<String, Double> requisitos = evento.getRequisitosAtributo();
+        if (requisitos == null || requisitos.isEmpty()) return true;
+
+        for (Map.Entry<String, Double> req : requisitos.entrySet()) {
+            if (valorAtributoAtual(personagem, req.getKey()) < req.getValue()) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    private double valorAtributoAtual(Personagem personagem, String nomeAtributo) {
+        return switch (nomeAtributo.toUpperCase()) {
+            case "ENERGIA" -> personagem.getEnergia();
+            case "MOTIVACAO" -> personagem.getMotivacao();
+            case "SAUDE" -> personagem.getSaude();
+            case "DINHEIRO" -> personagem.getDinheiro();
+            default -> throw new IllegalArgumentException("Atributo desconhecido: " + nomeAtributo);
+        };
+    }
+
+    private boolean atendeRequisitoDisciplina(Evento evento, Semestre semestre) {
+        String nomeReq = evento.getDisciplinaRequisitoNome();
+        if (nomeReq == null || nomeReq.isBlank()) return true;
+
+        if (semestre == null) return false;
+
+        return semestre.getDisciplinas().stream().anyMatch(d ->
+                d.getNome().equals(nomeReq) &&
+                        (evento.getDisciplinaRequisitoCodigo() <= 0
+                                || d.getCodigo() == evento.getDisciplinaRequisitoCodigo())
+        );
     }
 
     public void executarEvento(Evento evento,

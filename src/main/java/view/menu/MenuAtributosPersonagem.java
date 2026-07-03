@@ -65,6 +65,7 @@ public class MenuAtributosPersonagem extends StackPane {
 
         VBox painel = new VBox(30);
         painel.setAlignment(Pos.CENTER);
+        painel.setTranslateY(10);
 
         Label titulo = new Label("ATRIBUTOS");
         titulo.setFont(FonteUtil.pixel(36));

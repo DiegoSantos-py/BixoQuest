@@ -2,12 +2,14 @@ package controller;
 
 import exception.PersistenciaException;
 import model.Disciplina.Disciplina;
+import model.Evento.Evento;
 import model.Personagem;
 import model.Tempo.Semestre;
 import service.GameService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class GameController extends BaseController {
 
@@ -63,6 +65,10 @@ public class GameController extends BaseController {
             return Collections.emptyList();
         }
         return service.obterDisciplinasDisponiveis();
+    }
+
+    public Optional<Evento> processarZona(String nomeZona) {
+        return service.processarZona(nomeZona);
     }
 
     /**

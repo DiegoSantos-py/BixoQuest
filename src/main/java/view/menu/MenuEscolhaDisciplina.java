@@ -1,15 +1,13 @@
 package view.menu;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import model.Disciplina.Disciplina;
@@ -26,16 +24,84 @@ public class MenuEscolhaDisciplina extends StackPane {
 
     private final Consumer<List<Disciplina>> onConfirmar;
 
-    private final VBox painelOpcoes;
-    private final List<CheckBox> checkBoxes = new ArrayList<>();
+    private final GridPane painelOpcoes;
+    private final List<ItemDisciplina> itens = new ArrayList<>();
     private final List<Disciplina> disciplinasAtuais = new ArrayList<>();
 
     private Text aviso;
 
+    private static class ItemDisciplina {
+
+        private final StackPane view;
+        private final Rectangle fundo;
+        private final Disciplina disciplina;
+
+        private boolean selecionado;
+        private boolean desabilitado;
+
+        ItemDisciplina(Disciplina disciplina) {
+
+            this.disciplina = disciplina;
+
+            fundo = new Rectangle(260, 90);
+            fundo.setArcWidth(20);
+            fundo.setArcHeight(20);
+            fundo.setFill(Color.rgb(255,255,255,0.85));
+            fundo.setStroke(Color.DARKGRAY);
+            fundo.setStrokeWidth(3);
+
+            Text texto = new Text(
+                    disciplina.getNome() + "\nCódigo: " + (int) disciplina.getCodigo());
+
+            texto.setFont(FonteUtil.pixel(26));
+            texto.setFill(Color.BLACK);
+
+            view = new StackPane(fundo, texto);
+        }
+
+        public StackPane getView() {
+            return view;
+        }
+
+        public Disciplina getDisciplina() {
+            return disciplina;
+        }
+
+        public boolean isSelecionado() {
+            return selecionado;
+        }
+
+        public void setSelecionado(boolean valor) {
+            selecionado = valor;
+
+            fundo.setStrokeWidth(3);
+
+            if (valor) {
+                fundo.setStroke(Color.GOLD);
+            } else {
+                fundo.setStroke(Color.DARKGRAY);
+            }
+        }
+
+        public void setDesabilitado(boolean valor) {
+            desabilitado = valor;
+
+            if (!selecionado) {
+                view.setOpacity(valor ? 0.35 : 1.0);
+            }
+        }
+
+        public boolean isDesabilitado() {
+            return desabilitado;
+        }
+    }
+
     public MenuEscolhaDisciplina(Consumer<List<Disciplina>> onConfirmar) {
         this.onConfirmar = onConfirmar;
 
-        painelOpcoes = new VBox(15);
+        painelOpcoes = new GridPane();
+        painelOpcoes.setHgap(20);
+        painelOpcoes.setVgap(20);
         painelOpcoes.setAlignment(Pos.CENTER);
 
         montarTela();
@@ -47,30 +113,25 @@ public class MenuEscolhaDisciplina extends StackPane {
     private void montarTela() {
 
         ImageView backgroundView =
-                AnimacaoFramesUtil.criarImagem("/menuPrincipal/BackgroundMenu.png");
+                AnimacaoFramesUtil.criarImagem("/assets/background/backgroud_matricula.png");
 
-        VBox conteudo = new VBox(35);
+        VBox conteudo = new VBox(20);
         conteudo.setAlignment(Pos.CENTER);
-        conteudo.setTranslateY(-120);
+        conteudo.setTranslateY(35);
+        conteudo.setTranslateX(115);
 
         Text titulo = new Text("Escolha suas disciplinas");
-        titulo.setFont(FonteUtil.pixel(36));
-        titulo.setFill(Color.WHITE);
+        titulo.setFont(FonteUtil.pixel(44));
+        titulo.setFill(Color.BLACK);
 
         aviso = new Text("Escolha até " + MAX_DISCIPLINAS + " disciplinas");
-        aviso.setFont(FonteUtil.pixel(18));
-        aviso.setFill(Color.LIGHTGRAY);
+        aviso.setFont(FonteUtil.pixel(26));
+        aviso.setFill(Color.BLACK);
 
         StackPane painelCentral = new StackPane();
-        painelCentral.setPrefSize(800, 500);
-
-        ScrollPane scroll = new ScrollPane(painelOpcoes);
-        scroll.setFitToWidth(true);
-        scroll.setPrefSize(800, 500);
-        scroll.setBackground(Background.EMPTY);
-        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-
-        painelCentral.getChildren().add(scroll);
+        painelCentral.setPrefSize(600, 500);
+        painelCentral.getChildren().add(painelOpcoes);
+        painelCentral.setTranslateY(-50);
 
         Button btnConfirmar = new Button("Confirmar");
         estilizarBotao(btnConfirmar);
@@ -94,23 +155,45 @@ public class MenuEscolhaDisciplina extends StackPane {
 
         getChildren().addAll(backgroundView, conteudo);
 
-        StackPane.setMargin(conteudo, new Insets(50, 0, 0, 0));
+        StackPane.setMargin(conteudo, new Insets(40, 0, 0, 0));
     }
 
     public void abrir(List<Disciplina> opcoes) {
 
         painelOpcoes.getChildren().clear();
-        checkBoxes.clear();
         disciplinasAtuais.clear();
         disciplinasAtuais.addAll(opcoes);
 
         aviso.setText("Escolha até " + MAX_DISCIPLINAS + " disciplinas");
-        aviso.setFill(Color.LIGHTGRAY);
+        aviso.setFill(Color.BLACK);
 
-        for (Disciplina disciplina : opcoes) {
-            CheckBox checkBox = criarCheckBox(disciplina);
-            checkBoxes.add(checkBox);
-            painelOpcoes.getChildren().add(checkBox);
+        itens.clear();
+
+        for (int i = 0; i < opcoes.size(); i++) {
+
+            Disciplina disciplina = opcoes.get(i);
+
+            ItemDisciplina item = new ItemDisciplina(disciplina);
+
+            item.getView().setOnMouseClicked(e -> {
+
+                if (item.isDesabilitado())
+                    return;
+
+                item.setSelecionado(!item.isSelecionado());
+
+                atualizarEstadoItens();
+            });
+
+            itens.add(item);
+
+            int coluna = i % 4;
+            int linha = i / 4;
+
+            painelOpcoes.add(item.getView(), coluna, linha);
+
+            GridPane.setHalignment(item.getView(), HPos.CENTER);
+            GridPane.setValignment(item.getView(), VPos.CENTER);
         }
 
         setVisible(true);
@@ -118,55 +201,46 @@ public class MenuEscolhaDisciplina extends StackPane {
         toFront();
     }
 
-    private CheckBox criarCheckBox(Disciplina disciplina) {
-        String label = disciplina.getNome() + " " + (int) disciplina.getCodigo();
-
-        CheckBox checkBox = new CheckBox(label);
-        checkBox.setFont(FonteUtil.pixel(20));
-        checkBox.setTextFill(Color.WHITE);
-        checkBox.setUserData(disciplina);
-
-        checkBox.selectedProperty().addListener((obs, foiMarcado, marcado) -> {
-            atualizarEstadoCheckBoxes();
-        });
-
-        return checkBox;
-    }
-
     /**
      * Desabilita checkboxes não marcados quando o limite máximo já foi atingido,
      * dando feedback visual imediato sem precisar esperar a confirmação.
      */
-    private void atualizarEstadoCheckBoxes() {
-        long marcados = checkBoxes.stream().filter(CheckBox::isSelected).count();
+    private void atualizarEstadoItens() {
 
-        boolean limiteAtingido = marcados >= MAX_DISCIPLINAS;
+        long selecionados = itens.stream()
+                .filter(ItemDisciplina::isSelecionado)
+                .count();
 
-        for (CheckBox cb : checkBoxes) {
-            if (!cb.isSelected()) {
-                cb.setDisable(limiteAtingido);
-            }
+        boolean limite = selecionados >= MAX_DISCIPLINAS;
+
+        for (ItemDisciplina item : itens) {
+
+            if (!item.isSelecionado())
+                item.setDesabilitado(limite);
+            else
+                item.setDesabilitado(false);
         }
 
-        if (limiteAtingido) {
+        if (limite) {
             aviso.setText("Limite de " + MAX_DISCIPLINAS + " disciplinas atingido");
-            aviso.setFill(Color.LIGHTGRAY);
         } else {
             aviso.setText("Escolha até " + MAX_DISCIPLINAS + " disciplinas");
-            aviso.setFill(Color.LIGHTGRAY);
         }
+
+        aviso.setFill(Color.BLACK);
     }
 
     private List<Disciplina> obterSelecionadas() {
-        List<Disciplina> selecionadas = new ArrayList<>();
 
-        for (CheckBox cb : checkBoxes) {
-            if (cb.isSelected()) {
-                selecionadas.add((Disciplina) cb.getUserData());
-            }
+        List<Disciplina> lista = new ArrayList<>();
+
+        for (ItemDisciplina item : itens) {
+
+            if (item.isSelecionado())
+                lista.add(item.getDisciplina());
         }
 
-        return selecionadas;
+        return lista;
     }
 
     public void fechar() {
@@ -175,13 +249,44 @@ public class MenuEscolhaDisciplina extends StackPane {
     }
 
     private void estilizarBotao(Button botao) {
-        botao.setFont(FonteUtil.pixel(24));
-        botao.setTextFill(Color.WHITE);
-
+        botao.setFont(FonteUtil.pixel(32));
+        botao.setTextFill(Color.BLACK);
+        botao.setTranslateY(-140);
         botao.setBackground(Background.EMPTY);
         botao.setBorder(Border.EMPTY);
 
+        botao.setBorder(new Border(
+                new BorderStroke(
+                        Color.TRANSPARENT,
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(8),
+                        new BorderWidths(3)
+                )
+        ));
+
         botao.setPrefWidth(250);
         botao.setFocusTraversable(false);
+
+        botao.setOnMouseEntered(e ->
+                botao.setBorder(new Border(
+                        new BorderStroke(
+                                Color.GOLD,
+                                BorderStrokeStyle.SOLID,
+                                new CornerRadii(8),
+                                new BorderWidths(3)
+                        )
+                ))
+        );
+
+        botao.setOnMouseExited(e ->
+                botao.setBorder(new Border(
+                        new BorderStroke(
+                                Color.TRANSPARENT,
+                                BorderStrokeStyle.SOLID,
+                                new CornerRadii(8),
+                                new BorderWidths(3)
+                        )
+                ))
+        );
     }
 }

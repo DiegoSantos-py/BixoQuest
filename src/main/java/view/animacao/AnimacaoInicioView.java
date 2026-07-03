@@ -57,7 +57,7 @@ public class AnimacaoInicioView extends StackPane {
 
     private StackPane montarTelaInicioDia() {
         ImageView backgroundView =
-                AnimacaoFramesUtil.criarImagem("/assets/background/Background.png");
+                AnimacaoFramesUtil.criarImagem("/assets/background/background.png");
 
         VBox inicioItens = new VBox();
         inicioItens.setAlignment(Pos.CENTER);

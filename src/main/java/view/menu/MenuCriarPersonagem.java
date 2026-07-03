@@ -39,7 +39,7 @@ public class MenuCriarPersonagem extends StackPane {
 
         Image backgroundImage = new Image(
                 Objects.requireNonNull(
-                        getClass().getResourceAsStream("/assets/background/Background.png")
+                        getClass().getResourceAsStream("/assets/background/background.png")
                 )
         );
 

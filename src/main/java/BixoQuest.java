@@ -43,6 +43,7 @@ public class BixoQuest extends Application {
                 semestreService,
                 personagemService,
                 inicializacaoService,
+                eventoService,
                 localRepository,
                 semestreRepository,
                 disciplinaRepository,

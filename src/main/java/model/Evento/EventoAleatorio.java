@@ -26,12 +26,11 @@ public class EventoAleatorio extends Evento {
                            int efeitoTempo,
                            int tempoRequisito,
                            Evento eventoRequisito,
-                           double energiaMinima,
                            double chanceAtivacao) {
 
         super(efeitoEnergia, efeitoConhecimento, efeitoMotivacao,
                 efeitoSaude, efeitoDinheiro, efeitoTempo,
-                tempoRequisito, eventoRequisito, energiaMinima);
+                tempoRequisito, eventoRequisito);
 
         this.chanceAtivacao = chanceAtivacao;
     }

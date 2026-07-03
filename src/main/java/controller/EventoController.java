@@ -42,14 +42,13 @@ public class EventoController extends BaseController {
                                         int efeitoTempo,
                                         int tempoRequisito,
                                         Evento eventoRequisito,
-                                        double energiaMinima,
                                         double custoDinheiro,
                                         boolean repetivel,
                                         ZonaInterativa zona) {
         try {
             Evento evento = service.criarEvento(nome, descricao, efeitoEnergia, efeitoConhecimento,
                     efeitoMotivacao, efeitoSaude, efeitoDinheiro, efeitoTempo, tempoRequisito,
-                    eventoRequisito, energiaMinima, custoDinheiro, repetivel, zona);
+                    eventoRequisito, custoDinheiro, repetivel, zona);
             exibirSucesso("Evento criado com sucesso.");
             return Optional.of(evento);
         } catch (EventoInvalidoException e) {

@@ -40,7 +40,9 @@ public class Evento {
     private Evento eventoRequisito;
     private String eventoRequisitoNome;
 
-    private double energiaMinima;
+    private Map<String, Double> requisitosAtributo = new HashMap<>();
+    private String disciplinaRequisitoNome; // null/blank = sem requisito de disciplina
+    private float disciplinaRequisitoCodigo; // 0 = qualquer nível dessa disciplina
     private double custaDinheiro;
     private boolean repetivel;
     private ZonaInterativa zona;
@@ -54,14 +56,13 @@ public class Evento {
 
     public Evento(double efeitoEnergia, Map<AreaConhecimento, Double> efeitoConhecimento, double efeitoMotivacao,
                   double efeitoSaude, double efeitoDinheiro, int efeitoTempo,
-                  int tempoRequisito, Evento eventoRequisito, double energiaMinima) {
+                  int tempoRequisito, Evento eventoRequisito) {
         this.efeitoEnergia = efeitoEnergia;
         this.efeitoMotivacao = efeitoMotivacao;
         this.efeitoSaude = efeitoSaude;
         this.efeitoDinheiro = efeitoDinheiro;
         this.efeitoTempo = efeitoTempo;
         this.tempoRequisito = tempoRequisito;
-        this.energiaMinima = energiaMinima;
         setEfeitoConhecimento(efeitoConhecimento); // usa setter para sincronizar
         setEventoRequisito(eventoRequisito);        // usa setter para sincronizar
     }
@@ -73,6 +74,20 @@ public class Evento {
     public Map<String, Double> getEfeitoConhecimentoNomes() {
         return efeitoConhecimentoNomes;
     }
+
+    public Map<String, Double> getRequisitosAtributo() {
+        return requisitosAtributo;
+    }
+
+    public void setRequisitosAtributo(Map<String, Double> requisitosAtributo) {
+        this.requisitosAtributo = requisitosAtributo != null ? requisitosAtributo : new HashMap<>();
+    }
+
+    public String getDisciplinaRequisitoNome() { return disciplinaRequisitoNome; }
+    public void setDisciplinaRequisitoNome(String nome) { this.disciplinaRequisitoNome = nome; }
+
+    public float getDisciplinaRequisitoCodigo() { return disciplinaRequisitoCodigo; }
+    public void setDisciplinaRequisitoCodigo(float codigo) { this.disciplinaRequisitoCodigo = codigo; }
 
     public void setEfeitoConhecimentoNomes(Map<String, Double> efeitoConhecimentoNomes) {
         this.efeitoConhecimentoNomes = efeitoConhecimentoNomes;
@@ -124,8 +139,6 @@ public class Evento {
     public void setEfeitoDinheiro(double efeitoDinheiro) { this.efeitoDinheiro = efeitoDinheiro; }
     public int getEfeitoTempo() { return efeitoTempo; }
     public void setEfeitoTempo(int i) { this.efeitoTempo = i; }
-    public double getEnergiaMinima() { return energiaMinima; }
-    public void setEnergiaMinima(int i) { this.energiaMinima = i; }
     public double getCustaDinheiro() { return custaDinheiro; }
     public void setCustaDinheiro(double custaDinheiro) { this.custaDinheiro = custaDinheiro; }
     public boolean isRepetivel() { return repetivel; }
