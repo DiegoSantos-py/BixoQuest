@@ -16,7 +16,7 @@ public class OponenteAnimalRepository {
     //esse repository serve pra pegar o animal e extrair os dados como diretorio do sprite, o textozinho q fica embaixo do nome e a o texto da caixa de batalha
     private Map<String, OponenteDados> oponentes;
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File ARQUIVO = new File("oponenteDados.json");
+    private static final File ARQUIVO = new File("gameFiles/oponenteDados.json");
 
     public OponenteAnimalRepository() {
         this.oponentes = new HashMap<>();

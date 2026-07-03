@@ -1,0 +1,196 @@
+{
+  "1" : [ {
+    "dias" : [ ],
+    "disciplinas" : [ {
+      "nome" : "TCC1",
+      "codigo" : 1.0,
+      "area" : "TCC"
+    } ],
+    "numeroSemestre" : 0,
+    "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ],
+  "2" : [ {
+    "dias" : [ {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "area" : "MAT"
+    }, {
+      "nome" : "Software",
+      "codigo" : 1.0,
+      "area" : "SOF"
+    }, {
+      "nome" : "Hardware",
+      "codigo" : 1.0,
+      "area" : "HAR"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 12,
+    "resultadosNomes" : { }
+  }, {
+    "dias" : [ {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 240.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "area" : "MAT"
+    }, {
+      "nome" : "Software",
+      "codigo" : 1.0,
+      "area" : "SOF"
+    }, {
+      "nome" : "Hardware",
+      "codigo" : 1.0,
+      "area" : "HAR"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 12,
+    "resultadosNomes" : { }
+  }, {
+    "dias" : [ {
+      "duracao" : 60.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "area" : "MAT"
+    } ],
+    "numeroSemestre" : 4,
+    "diaAtual" : 1,
+    "resultadosNomes" : { }
+  } ],
+  "3" : [ {
+    "dias" : [ ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "area" : "MAT"
+    } ],
+    "numeroSemestre" : 4,
+    "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ]
+}

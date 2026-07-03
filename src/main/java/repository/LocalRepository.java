@@ -34,7 +34,7 @@ public class LocalRepository {
     private static final ObjectMapper mapper = criarMapper();
 
     // Arquivo onde os locais serão salvos/carregados
-    private static final File ARQUIVO = new File("locais.json");
+    private static final File ARQUIVO = new File("gameFiles/locais.json");
 
     /**
       Cria o repositório inicializando o mapa de locais vazio.
@@ -113,7 +113,7 @@ public class LocalRepository {
 
     private void carregarElementos(Local local) {
         String nomeArquivo = normalizarNome(local.getNome()) + ".json";
-        File arquivo = new File("elementos/" + nomeArquivo);
+        File arquivo = new File("gameFiles/elementos/" + nomeArquivo);
 
         if (!arquivo.exists()) return;
 

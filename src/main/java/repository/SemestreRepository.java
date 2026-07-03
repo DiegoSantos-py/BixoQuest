@@ -34,7 +34,7 @@ public class SemestreRepository {
     private static final ObjectMapper mapper = criarMapper();
 
     // Arquivo onde os semestres serão salvos/carregados
-    private static final File ARQUIVO = new File("semestres.json");
+    private static final File ARQUIVO = new File("gameFiles/semestres.json");
 
     /**
      Cria o repositório inicializando o mapa de semestres vazio.

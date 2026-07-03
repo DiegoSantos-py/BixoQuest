@@ -32,7 +32,7 @@ public class PersonagemRepository {
     private static final ObjectMapper mapper = criarMapper();
 
     // Arquivo onde os personagens serão salvos/carregados
-    private static final File ARQUIVO = new File("personagens.json");
+    private static final File ARQUIVO = new File("gameFiles/personagens.json");
 
     /**
      Cria o repositório inicializando o mapa de personagens vazio.

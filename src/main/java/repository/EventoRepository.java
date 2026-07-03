@@ -30,7 +30,7 @@ public class EventoRepository {
     private static final ObjectMapper mapper = criarMapper();
 
     // Arquivo onde os eventos serão persistidos
-    private static final File ARQUIVO = new File("eventos.json");
+    private static final File ARQUIVO = new File("gameFiles/eventos.json");
 
     /**
       Inicializa o repositório com um mapa vazio.

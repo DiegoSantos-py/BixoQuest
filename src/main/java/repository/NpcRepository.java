@@ -36,7 +36,7 @@ public class NpcRepository {
     private static final ObjectMapper mapper = criarMapper();
 
     // Arquivo responsável por armazenar os NPCs persistidos
-    private static final File ARQUIVO = new File("npcs.json");
+    private static final File ARQUIVO = new File("gameFiles/npcs.json");
 
     /**
      Cria o repositório inicializando o mapa de NPCs vazio.

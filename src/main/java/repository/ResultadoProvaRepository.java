@@ -23,7 +23,7 @@ public class ResultadoProvaRepository {
     private Map<Integer, Map<Integer, List<ResultadoProva>>> resultadoProvaPorPlayer;
 
     private static final ObjectMapper mapper = criarMapper();
-    private static final File ARQUIVO = new File("resultadoProvas.json");
+    private static final File ARQUIVO = new File("gameFiles/resultadoProvas.json");
 
     public ResultadoProvaRepository() {
         this.resultadoProvaPorPlayer = new HashMap<>();

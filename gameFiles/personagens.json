@@ -43,7 +43,7 @@
   },
   "3" : {
     "personagemId" : 3,
-    "nome" : "test3",
+    "nome" : "c",
     "energia" : 40.0,
     "motivacao" : 40.0,
     "saude" : 40.0,

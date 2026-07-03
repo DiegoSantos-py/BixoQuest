@@ -19,7 +19,7 @@ public class DisciplinaRepository {
     private Map<String, List<Disciplina>> disciplinas;
 
     private static final ObjectMapper mapper = criarMapper();
-    private static final File ARQUIVO = new File("disciplinas.json");
+    private static final File ARQUIVO = new File("gameFiles/disciplinas.json");
 
     public DisciplinaRepository() {
         this.disciplinas = new HashMap<>();
