@@ -10,11 +10,12 @@ public abstract class EntidadeBatalha {
     protected Vector2D velocidade;
     protected float velocidadeAngular; // Rotação em radianos por segundo
     protected boolean ativo;
-
-    public EntidadeBatalha(Hitbox hitbox, Vector2D velocidade) {
+    protected String spriteDir;
+    public EntidadeBatalha(Hitbox hitbox, Vector2D velocidade, String spriteDir) {
         this.hitbox = hitbox;
         this.velocidade = velocidade;
-        this.velocidadeAngular = 0.0f; 
+        this.velocidadeAngular = 0.0f;
+        this.spriteDir = spriteDir;
         this.ativo = true;
     }
 
@@ -40,12 +41,27 @@ public abstract class EntidadeBatalha {
     public Hitbox getHitbox() {
         return hitbox;
     }
+
+
+    public String getSpriteUrl() {
+        return spriteDir;
+    }
+    public void setSpriteUrl(String spriteDir) {
+        this.spriteDir = spriteDir;
+    }
     public float getX(){
         return this.hitbox.getCentro().getX();
     }
     public float getY(){
         return this.hitbox.getCentro().getY();
     }
+    public void setX(float x){
+        this.hitbox.getCentro().setX(x);
+    }
+    public void setY(float y){
+        this.hitbox.getCentro().setY(y);
+    }
+
     public Vector2D getCentro() {
         return hitbox.getCentro();
     }
@@ -77,5 +93,6 @@ public abstract class EntidadeBatalha {
     public void desativar() {
         this.ativo = false;
         this.hitbox.desativar();
+        this.spriteDir = "Null";
     }
 }

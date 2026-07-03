@@ -5,28 +5,28 @@ public class AcaoBatalha {
     private String Nome;
     private float ChanceAcerto;
     
-    private int BonusDano;
+    private float BonusDano;
     private int BonusShield;
-    private int BonusConhecimento;
-    private float Dano;
+    private float BonusConhecimento;
+    private float BonusNota;
 
-    public AcaoBatalha(String nome, float chanceAcerto, int bonusDano, int bonusShield, int bonusConhecimento, float Dano) {
+    public AcaoBatalha(String nome, float chanceAcerto, float bonusDano, int bonusShield, float bonusConhecimento, float bonusNota) {
         this.Nome = nome;
         this.ChanceAcerto = chanceAcerto;
         this.BonusDano = bonusDano;
         this.BonusShield = bonusShield;
         this.BonusConhecimento = bonusConhecimento;
-        this.Dano = Dano;
-
+        this.BonusNota = bonusNota;
     }
+
+
     
     public String getNome() { return Nome; }
     public float getChanceAcerto() { return ChanceAcerto; }
-    public int getBonusDano() { return BonusDano; }
+    public float getBonusDano() { return BonusDano; }
     public int getBonusShield() { return BonusShield; }
-    public int getBonusConhecimento() { return BonusConhecimento; }
-    public float getDano() { return Dano; }
-    public void setDano(float dano) { Dano = dano; }
+    public float getBonusConhecimento() { return BonusConhecimento; }
+    public float getBonusNota() { return BonusNota; }
     public void setNome(String nome) { this.Nome = nome; }
     public void setChanceAcerto(float chanceAcerto) { this.ChanceAcerto = chanceAcerto; }
     public void setBonusDano(int bonusDano) { this.BonusDano = bonusDano; }

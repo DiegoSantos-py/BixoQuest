@@ -4,6 +4,7 @@ import controller.PersonagemController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -20,17 +21,20 @@ public class MenuInicial extends StackPane {
     private final PersonagemController personagemController;
     private final Runnable aoIniciarJogo;
     private final Runnable aoAbrirConfiguracoes;
+    private final Runnable aoAbrirSeletorBatalha;
     private final Runnable aoSair;
 
     public MenuInicial(
             PersonagemController personagemController,
             Runnable aoIniciarJogo,
             Runnable aoAbrirConfiguracoes,
+            Runnable aoAbrirSeletorBatalha,
             Runnable aoSair
     ) {
         this.personagemController = personagemController;
         this.aoIniciarJogo = aoIniciarJogo;
         this.aoAbrirConfiguracoes = aoAbrirConfiguracoes;
+        this.aoAbrirSeletorBatalha = aoAbrirSeletorBatalha;
         this.aoSair = aoSair;
 
         montarTela();
@@ -71,6 +75,22 @@ public class MenuInicial extends StackPane {
         getChildren().addAll(backgroundView, menuItems);
 
         StackPane.setMargin(menuItems, new Insets(50, 0, 0, 0));
+        
+        // F1 Keybind para Seletor de Batalha (Garante que vai pegar após o root carregar)
+        this.setFocusTraversable(true);
+        this.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.OPEN_BRACKET) {
+                aoAbrirSeletorBatalha.run();
+            }
+        });
+        
+        // Adicionando listener para garantir o foco quando clicado ou adicionado à cena
+        this.setOnMouseClicked(event -> this.requestFocus());
+        this.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                this.requestFocus();
+            }
+        });
     }
 
     private VBox criarBotoes() {

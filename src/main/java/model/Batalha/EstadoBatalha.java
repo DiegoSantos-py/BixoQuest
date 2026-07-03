@@ -1,8 +1,10 @@
 package model.Batalha;
 
 import java.util.Queue;
+import java.util.List;
 
 import model.Ataque.Ataque;
+import model.Player.AcaoBatalha;
 import model.Evento.Prova.ProvaBatalha;
 import model.Npc.Animal;
 import model.Npc.Npc;
@@ -26,13 +28,16 @@ public class EstadoBatalha {
     private Ataque ataqueAtual;
     private ProvaBatalha provaBatalha;
     private Animal animal;
+    private String musicaDir;
+    private List<AcaoBatalha> acoesBatalha;
 
-    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes, Animal animal, NpcRepository npcRepository) {
+    public EstadoBatalha(PlayerProva playerProva, Personagem personagem, Queue<Oponente> filaOponentes, Animal animal,
+            NpcRepository npcRepository, String musicaDir, List<AcaoBatalha> acoesBatalha) {
         if (playerProva == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("playerProva", "não pode ser nulo");
         }
 
-        if(npcRepository == null) {
+        if (npcRepository == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("npcRepository", "não deve ser nulo");
         }
 
@@ -56,14 +61,17 @@ public class EstadoBatalha {
         this.finalizado = false;
         this.vitoria = false;
         this.oponenteAtual = filaOponentes.poll();
+        this.musicaDir = (musicaDir != null ? musicaDir : "/assets/audio/fallback.mp3");
+        this.acoesBatalha = acoesBatalha;
     }
 
-    public EstadoBatalha(PlayerProva playerProva,Personagem personagem, Queue<Oponente> filaOponentes,
-                         ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository) {
+    public EstadoBatalha(PlayerProva playerProva, Personagem personagem, Queue<Oponente> filaOponentes,
+            ProvaBatalha provaBatalha, ResultadoProvaRepository resultadoProvaRepository,
+            List<AcaoBatalha> acoesBatalha) {
         if (playerProva == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("playerProva", "não pode ser nulo");
         }
-        if(resultadoProvaRepository == null) {
+        if (resultadoProvaRepository == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("resultadoProvaRepository", "nao deve ser nulo");
         }
         if (personagem == null) {
@@ -86,8 +94,9 @@ public class EstadoBatalha {
         this.finalizado = false;
         this.vitoria = false;
         this.oponenteAtual = filaOponentes.poll();
+        this.musicaDir = (provaBatalha.getMusicaDir() != null ? provaBatalha.getMusicaDir() : "/assets/audio/fallback.mp3");
+        this.acoesBatalha = acoesBatalha;
     }
- 
 
     public PlayerProva getPlayerProva() {
         return playerProva;
@@ -100,7 +109,7 @@ public class EstadoBatalha {
         this.playerProva = playerProva;
     }
 
-    public ProvaBatalha getProvaBatalha(){
+    public ProvaBatalha getProvaBatalha() {
         return provaBatalha;
     }
 
@@ -122,6 +131,7 @@ public class EstadoBatalha {
     public Personagem getPersonagem() {
         return personagem;
     }
+
     public Oponente getOponenteAtual() {
         return oponenteAtual;
     }
@@ -134,10 +144,10 @@ public class EstadoBatalha {
         return finalizado;
     }
 
-
     public void setFinalizado(boolean finalizado) {
         this.finalizado = finalizado;
     }
+
     public boolean isVitoria() {
         return vitoria;
     }
@@ -153,6 +163,7 @@ public class EstadoBatalha {
     public Turno getTurnoAtual() {
         return turnoAtual;
     }
+
     public void setTurnoAtual(Turno proxTurno) {
         if (proxTurno == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("turnoAtual", "não pode ser nulo");
@@ -160,26 +171,38 @@ public class EstadoBatalha {
         this.turnoAtual = proxTurno;
     }
 
-    public NpcRepository getNpcRepository(){
+    public NpcRepository getNpcRepository() {
         return this.npcRepository;
     }
-    public ResultadoProvaRepository getResultadoProvaRepository(){
+
+    public ResultadoProvaRepository getResultadoProvaRepository() {
         return this.resultadoProvaRepository;
     }
-    public boolean getInimigoAtacando(){
+
+    public boolean getInimigoAtacando() {
         return this.inimigoAtacando;
     }
 
     public void setInimigoAtacando(boolean inimigoAtacando) {
         this.inimigoAtacando = inimigoAtacando;
     }
-    public Ataque getAtaqueAtual(){
+
+    public Ataque getAtaqueAtual() {
         return this.ataqueAtual;
     }
-    public void setAtaqueAtual(Ataque ataqueAtual){
+
+    public void setAtaqueAtual(Ataque ataqueAtual) {
         if (ataqueAtual == null) {
             throw new exception.Batalha.EstadoBatalhaInvalidoException("ataqueAtual", "não pode ser nulo");
         }
         this.ataqueAtual = ataqueAtual;
+    }
+
+    public String getMusicaDir() {
+        return this.musicaDir;
+    }
+
+    public List<AcaoBatalha> getAcoesBatalha() {
+        return acoesBatalha;
     }
 }

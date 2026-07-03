@@ -8,7 +8,6 @@ import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
 import model.Projetil.Projetil;
 import model.Projetil.ProjetilFactory;
-import model.Projetil.ProjetilID;
 
 public abstract class Ataque {
     protected float tempoDecorrido = 0;
@@ -23,11 +22,8 @@ public abstract class Ataque {
     protected float minY;//os 4 lados da caixa q vai prender o player
 
     //(new Vector2D(960, 800)
-    public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxBasico, int maxHoming, int maxExplosivo) {
+    public Ataque(PlayerProva target, EntidadeBatalha owner,float dificuldade, int maxProjeteis) {
 
-        if(owner == null){
-            throw new AtaqueInvalidoException("owner","owner não pode ser nulo");
-        }
         if(dificuldade<0){
             throw new AtaqueInvalidoException("dificuldade", "dificuldade precisa ser maior que 0");
         }
@@ -39,7 +35,7 @@ public abstract class Ataque {
         this.maxY = 1000f;
         this.minX = 760f;
         this.minY = 600f;
-        this.factory = new ProjetilFactory(target, owner, maxBasico, maxHoming, maxExplosivo);
+        this.factory = new ProjetilFactory(target, owner, maxProjeteis);
     }
 
     public final void atualizar(float dt) {
@@ -47,17 +43,20 @@ public abstract class Ataque {
         if(this.target == null){
             throw new NullTargetException();
         }
+        if(this.owner == null){
+            throw new AtaqueInvalidoException("owner","nao pode ser nulo");
+        }
         tempoDecorrido += dt;
         logicaAtaque(dt);
         factory.atualizar(dt);  
     }
 
-    protected void spawnProjetil(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, 
-                                 float anguloSpawn, float anguloHitbox, ProjetilID id, 
-                                 int danoShield, float danoNota, float duracaoMaxima) {
+    protected Projetil spawnProjetil(float posX, float posY, float tamanhoX, float tamanhoY, float velocidade, 
+                                 float anguloSpawn, float anguloHitbox, 
+                                 int danoShield, float danoNota, float duracaoMaxima, String spriteDir) {
         
-        factory.spawn(posX, posY, tamanhoX, tamanhoY, velocidade, anguloSpawn, anguloHitbox, id, 
-                      danoShield, danoNota, duracaoMaxima);
+        return factory.spawn(posX, posY, tamanhoX, tamanhoY, velocidade, anguloSpawn, anguloHitbox, 
+                      danoShield, danoNota, duracaoMaxima, spriteDir);
     }
 
     protected abstract void logicaAtaque(float dt);
@@ -155,13 +154,16 @@ public abstract class Ataque {
         this.factory.setTarget(target);
     }
 
+    public void setOwner(EntidadeBatalha owner) {
+        this.owner = owner;
+        this.factory.setOwner(owner);
+    }
+
     public void reiniciarAtaque() {
         this.finalizado = false;
         this.tempoDecorrido = 0;
         //restarta o ataque e desliga todos os projeteis da pool de projeteis(pra eles n ficarem no ar parados)
-        for (Projetil p : factory.getAtivos()) {
-            p.desativar();
-        }
+        factory.desativarTodos();
     }
 
     public List<Projetil> getProjeteis() { 

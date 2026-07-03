@@ -47,8 +47,13 @@ public final class Vector2D {
     }   
     
     public float magnitude() {
-
         return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public float distancia(Vector2D other) {
+        float dx = this.x - other.x;
+        float dy = this.y - other.y;
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     public float produtoEscalar(Vector2D other) {

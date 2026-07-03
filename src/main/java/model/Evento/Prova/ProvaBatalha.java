@@ -4,6 +4,7 @@ import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
 import model.Evento.Prova.Questao.Questao;
 import model.Player.AcaoBatalha;
+import repository.SemestreRepository;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,14 +16,19 @@ public class ProvaBatalha extends Evento {
     private int quantidadeQuestoes;
     private LinkedList<Questao> questoes;
     private ArrayList<AcaoBatalha> acoesBatalha;
+    private String spriteDirProva;
+    private String musicaDir;
 
-    public ProvaBatalha(String nome, String descricao,AreaConhecimento areaConhecimento,  int nivelDisciplina, int quantidadeQuestoes, ArrayList<AcaoBatalha> acoesBatalha) {
+    public ProvaBatalha(String nome, String descricao,AreaConhecimento areaConhecimento,  int nivelDisciplina, int quantidadeQuestoes, ArrayList<AcaoBatalha> acoesBatalha, String spriteDirProva, String musicaDir ) {
         super(nome, descricao);
         this.areaConhecimento = areaConhecimento;
         this.nivelDisciplina = nivelDisciplina;
         this.quantidadeQuestoes = quantidadeQuestoes;
         this.questoes = new LinkedList<>();
         this.acoesBatalha = acoesBatalha; // favor nao botar mais de 4 ações em prol da UI
+        this.spriteDirProva = "/assets/batalha/oponentes/provas/" +  spriteDirProva;
+        this.musicaDir = "/assets/audio/provas/" + musicaDir;
+
     }
 
 
@@ -32,6 +38,16 @@ public class ProvaBatalha extends Evento {
         return nivelDisciplina;
     }
 
+    public String getSpriteDirProva() {
+        return spriteDirProva;
+    }
+
+    public String getMusicaDir() {
+        return musicaDir;
+    }
+    public void setSpriteDirProva(String spriteDirProva) {
+        this.spriteDirProva = spriteDirProva;
+    }
     public void setNivelDisciplina(int nivelDisciplina) {
         this.nivelDisciplina = nivelDisciplina;
     }

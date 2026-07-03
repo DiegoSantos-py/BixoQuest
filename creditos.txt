@@ -1,0 +1,17 @@
+src/main/resources/assets/batalha/player/player.png -> Undertale - Toby Fox
+
+src/main/resources/assets/audio/fallback.mp3 -> Undertale - Toby Fox : Dogsong
+
+src/main/resources/assets/audio/musicaAnimal1.mp3 -> Undertale - Toby Fox : Enemy Approaching
+
+src/main/resources/assets/audio/musicaAnimal2.mp3 -> Deltarune - Toby Fox : Rude Buster
+
+src/main/resources/assets/audio/musicaAnimal3.mp3 -> Undertale - Toby Fox : Bonetrousle
+
+src/main/resources/assets/audio/provas/matematica1.mp3 -> Undertale - Toby Fox : Dummy!
+
+src/main/resources/assets/audio/provas/matematica1.mp3 -> Deltarune - Toby Fox : THE WORLD REVOLVING
+
+src/main/resources/assets/audio/provas/naturezas1.mp3 -> Luke Neujahr : Alphys takes action
+
+src/main/resources/assets/audio/provas/software1.mp3 -> Deltarune - Toby Fox : Pandora Palace

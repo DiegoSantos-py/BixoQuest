@@ -1,0 +1,32 @@
+{
+  "Atim": {
+    "tipo": "animal",
+    "nome": "Atim",
+    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "cX": 10,
+    "cY": 15,
+    "falas": [
+      "Au au!",
+      "Atim parece amigável!"
+    ],
+    "interagido": false,
+    "indole": 10,
+    "domado": false,
+    "especie": "CACHORRO"
+  },
+  "azetona": {
+    "tipo": "animal",
+    "nome": "azetona",
+    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "cX": 20,
+    "cY": 25,
+    "falas": [
+      "Miau...",
+      "*Ronrona*"
+    ],
+    "interagido": false,
+    "indole": 40,
+    "domado": false,
+    "especie": "GATO"
+  }
+}

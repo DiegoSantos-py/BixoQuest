@@ -5,33 +5,39 @@ import java.util.List;
 
 import model.Ataque.Ataque;
 import model.Disciplina.AreaConhecimento;
+import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.MathUtils;
 import model.util.Vector2D;
 
 public class Oponente extends EntidadeBatalha {
     protected String nome;
+    protected String descricao;//a descricao do canto superior esquerdo
+    protected String textoCaixa; //o texto engraçado da caixa de dialogo da batalha
     protected boolean isDerrotado = false;
     protected AreaConhecimento areaConhecimento;
     protected float hpMaximo;
+    protected int maxTurnos = 15;
     protected float hpAtual;
    
     protected List<Ataque> ataquesDisponiveis = new ArrayList<>();
 
-
-    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo) {
-        super(hitbox, velocidade);
+    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaxio, String spriteDir, String descricao, String textoCaixa) {
+        super(hitbox, velocidade, spriteDir);
         this.nome = nome;
-        this.hpMaximo = hpMaximo;
         this.hpAtual = hpMaximo;
+        this.descricao = descricao;
+        this.textoCaixa = textoCaixa;
     }
 
-    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo, AreaConhecimento areaConhecimento) {
-        super(hitbox, velocidade);
+    public Oponente(Hitbox hitbox, Vector2D velocidade, String nome, float hpMaximo, AreaConhecimento areaConhecimento, String spriteDir,  String descricao, String textoCaixa) {
+        super(hitbox, velocidade, spriteDir);
         this.nome = nome;
         this.areaConhecimento = areaConhecimento;
         this.hpMaximo = hpMaximo;
         this.hpAtual = hpMaximo;
+        this.descricao = descricao;
+        this.textoCaixa = textoCaixa;
     }
 
 
@@ -41,6 +47,14 @@ public class Oponente extends EntidadeBatalha {
             this.hpAtual = 0;
             this.isDerrotado = true;
         }
+    }
+
+    public int getMaxTurnos() {
+        return this.maxTurnos;
+    }
+
+    public void setMaxTurnos(int maxTurnos) {
+        this.maxTurnos = maxTurnos;
     }
 
     public String getNome() {
@@ -57,6 +71,20 @@ public class Oponente extends EntidadeBatalha {
     public float getHpMaximo() {
         return hpMaximo;
     }
+
+    public String getDescricao() {
+        return descricao;
+    }
+    public String getTextoCaixa() {
+        return textoCaixa;
+    }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+    public void setTextoCaixa(String textoCaixa) {
+        this.textoCaixa = textoCaixa;
+    }
+
 
 
     public List<Ataque> getAtaquesDisponiveis() {
@@ -80,6 +108,7 @@ public class Oponente extends EntidadeBatalha {
         return isDerrotado;
     }
     public void adicionarAtaque(Ataque ataque) {
+        ataque.setOwner(this);
         this.ataquesDisponiveis.add(ataque);
     }
 }
