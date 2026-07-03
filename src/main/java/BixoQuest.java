@@ -27,13 +27,15 @@ public class BixoQuest extends Application {
         SemestreService semestreService = new SemestreService( semestreRepository, disciplinaRepository);
         NpcService npcService = new NpcService(npcRepository);
         MapaService mapaService = new MapaService(localRepository, npcService);
+        DisciplinaService disciplinaService = new DisciplinaService(disciplinaRepository);
         InicializacaoService inicializacaoService = new InicializacaoService(
                 localRepository,
                 disciplinaRepository,
                 eventoRepository,
                 npcRepository,
                 semestreRepository,
-                personagemRepository
+                personagemRepository,
+                disciplinaService
         );
 
         GameService gameService = new GameService(

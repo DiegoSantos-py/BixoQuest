@@ -1,12 +1,19 @@
 package view.cena;
 
+import controller.GameController;
 import controller.PersonagemController;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import model.Disciplina.Disciplina;
 import view.util.Borda;
+import view.util.FonteUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,6 +36,7 @@ public class CenaJogo {
     private final List<ZoneEntry> zones;
     private final ImageView playerView;
     private final Rectangle playerHitbox;
+    private Label labelTempoRestante;
     private final double playerHitboxOffsetX;
     private final double playerHitboxOffsetY;
     private final Consumer<Borda> onBordaAtingida;
@@ -44,8 +52,10 @@ public class CenaJogo {
     private GerenciadorMenus gerenciadorMenus;
 
     private final PersonagemController personagemController;
+    private final GameController gameController;
     private final int personagemId;
     private final Runnable onSairParaMenuPrincipal;
+    private final Runnable onFinalizar;
 
     public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
 
@@ -65,7 +75,10 @@ public class CenaJogo {
                     String spriteBase,
                     PersonagemController personagemController,
                     int personagemId,
-                    Runnable onSairParaMenuPrincipal) {
+                    Runnable onSairParaMenuPrincipal,
+                    GameController gameController,
+                    Runnable onFinalizar) {
+
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
@@ -83,6 +96,8 @@ public class CenaJogo {
         this.personagemController = personagemController;
         this.personagemId         = personagemId;
         this.onSairParaMenuPrincipal = onSairParaMenuPrincipal;
+        this.gameController = gameController;
+        this.onFinalizar = onFinalizar;
     }
 
     public Pane buildPane() {
@@ -108,6 +123,13 @@ public class CenaJogo {
         }
 
         raizCena = new StackPane(conteudoJogo);
+
+        labelTempoRestante = new Label();
+        labelTempoRestante.setFont(FonteUtil.pixel(32));
+        labelTempoRestante.setTextFill(Color.WHITE);
+        StackPane.setAlignment(labelTempoRestante, Pos.TOP_RIGHT);
+        StackPane.setMargin(labelTempoRestante, new Insets(20));
+        raizCena.getChildren().add(labelTempoRestante);
 
         gerenciadorEntrada = new GerenciadorEntrada(
                 this::abrirMenuAtributos,
@@ -139,22 +161,61 @@ public class CenaJogo {
                 sistemaMovimento.atualizar(gerenciadorEntrada.getTeclasPressionadas());
                 sistemaColisao.verificarZonas();
                 sistemaColisao.verificarNpcs();
+
+                atualizarLabelTempo();
+
+                gameController.atualizar();
+
+                if (gameController.precisaEscolherDisciplinas()) {
+                    gameLoop.stop(); // para o loop; será retomado ao confirmar a escolha
+                    abrirMenuEscolhaDisciplina();
+                }
+                else if (gameController.houveTransicaoDeDia()) {
+                    gameLoop.stop();
+                    onFinalizar.run();
+                }
             }
         };
         gameLoop.start();
+    }
+
+    private void atualizarLabelTempo() {
+        long segundosRestantes = gameController.getTempoRestanteSegundos();
+        long minutos = segundosRestantes / 60;
+        long segundos = segundosRestantes % 60;
+        labelTempoRestante.setText(String.format("%02d:%02d", minutos, segundos));
+    }
+
+    private void abrirMenuEscolhaDisciplina() {
+        List<Disciplina> opcoes = gameController.obterDisciplinasDisponiveis();
+        gerenciadorMenus.abrirEscolhaDisciplina(opcoes);
+    }
+
+    private void confirmarEscolhaDisciplina(List<Disciplina> selecionadas) {
+        boolean sucesso = gameController.confirmarEscolhaDisciplinas(selecionadas);
+        if (sucesso) {
+            gerenciadorMenus.fecharEscolhaDisciplina();
+            gameLoop.start(); // retoma o loop só se a escolha foi válida
+        }
+        // se falhou, o menu permanece aberto — a própria MenuEscolhaDisciplina
+        // deve exibir o erro (via GameController.exibirErro, já tratado no Controller)
     }
 
     private void inicializarMenus() {
         gerenciadorMenus = new GerenciadorMenus(
                 raizCena,
                 personagemController,
+                gameController,
                 personagemId,
                 onSairParaMenuPrincipal,
+                this::confirmarEscolhaDisciplina,
                 pausado -> {
                     if (pausado) {
                         if (gameLoop != null) gameLoop.stop();
+                        gameController.pausarDia();
                     } else {
                         if (gameLoop != null) gameLoop.start();
+                        gameController.retomarDia();
                     }
                 }
         );
@@ -170,11 +231,6 @@ public class CenaJogo {
         } else {
             gerenciadorMenus.abrirPause();
         }
-    }
-
-    // no listener de ESC ou botão de menu:
-    private void abrirMenuPause() {
-        gerenciadorMenus.abrirPause();
     }
 
     private void abrirMenuAtributos(){

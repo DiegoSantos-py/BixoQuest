@@ -4,6 +4,7 @@ import exception.Personagem.PersonagemDuplicadoException;
 import exception.Personagem.PersonagemInvalidoException;
 import exception.Personagem.PersonagemNaoEncontradoException;
 import exception.PersistenciaException;
+import model.Disciplina.AreaConhecimento;
 import model.Local.Local;
 import model.Personagem;
 import service.PersonagemService;
@@ -78,6 +79,10 @@ public class PersonagemController extends BaseController {
             tratarNaoEncontrado(e);
             return "/assets/Errors/ImageNotFound.png";
         }
+    }
+
+    public Map<AreaConhecimento, Double> getConhecimentos(int personagemId) {
+        return service.getConhecimentos(personagemId);// delega pro PersonagemService/Repository, análogo a getAtributos
     }
 
     public Map<String, Double> getAtributos(int personagemId) {

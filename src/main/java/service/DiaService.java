@@ -20,24 +20,60 @@ public class DiaService {
     private ScheduledExecutorService scheduler;
 
     // Indica se o dia já terminou
-    private boolean diaEncerrado = false;
+    private volatile boolean diaEncerrado = false;
+
+    // Novo: controla o estado de pausa
+    private volatile boolean pausado = false;
+    private Instant momentoPausa;
 
     public void iniciarDia(Dia dia) {
-
         diaEncerrado = false;
+        pausado = false;
+        momentoPausa = null;
 
-        // No início do dia, o personagem ainda não saiu do ponto
-        dia.setSaiuDoPonto(false);
+        dia.setInicio(Instant.now());
 
         if (scheduler != null && !scheduler.isShutdown()) {
             return;
         }
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(() -> atualizarDia(dia), 0, 1, TimeUnit.SECONDS);
+    }
 
-        // A cada 1 segundo, atualiza o estado do dia
-        scheduler.scheduleAtFixedRate(() -> atualizarDia(dia),
-                0, 1, TimeUnit.SECONDS);
+    /** Pausa a contagem do dia, parando o scheduler sem marcar o dia como encerrado. */
+    public synchronized void pausar() {
+        if (pausado || diaEncerrado) return;
+
+        pausado = true;
+        momentoPausa = Instant.now();
+
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdown();
+        }
+    }
+
+    /**
+     * Retoma a contagem do dia, descontando o tempo em que ficou pausado
+     * e reiniciando o scheduler.
+     */
+    public synchronized void retomar(Dia dia) {
+        if (!pausado) return;
+
+        Duration tempoPausado = Duration.between(momentoPausa, Instant.now());
+        dia.setInicio(dia.getInicio().plus(tempoPausado));
+
+        pausado = false;
+        momentoPausa = null;
+
+        if (diaEncerrado) return; // não reinicia scheduler se o dia já tiver terminado nesse meio-tempo
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(() -> atualizarDia(dia), 0, 1, TimeUnit.SECONDS);
+    }
+
+    public boolean isPausado() {
+        return pausado;
     }
 
     private synchronized void atualizarDia(Dia dia) {
@@ -48,23 +84,6 @@ public class DiaService {
         if (getTempoRestanteSegundos(dia) <= 0) {
             diaEncerrado = true;
             pararTempo();
-        }
-    }
-
-    public void verificarRetornoAoPonto(Dia dia, Personagem personagem) {
-
-        if (diaEncerrado) return;
-
-        // Verifica se o personagem está no ponto de ônibus
-        boolean estaNoPonto =
-                personagem.getLocalAtual().getTipo() == TipoLocal.PONTO_ONIBUS;
-
-        if (!estaNoPonto) {
-            dia.setSaiuDoPonto(true);
-        }
-
-        if (dia.isSaiuDoPonto() && estaNoPonto) {
-            encerrarDia(dia);
         }
     }
 

@@ -63,6 +63,7 @@ public class GerenciadorTelas {
         trocarRoot(controllerTelas.criarAnimacaoInicio(sessaoAtual));
     }
 
+    public void mostrarAnimacaoFim() {trocarRoot(controllerTelas.criarAnimacaoFim());}
 
     public void mostrarCenaPorNome(String nome) {
         if (nome == null) return;

@@ -1,5 +1,6 @@
 package view.construtores;
 
+import controller.GameController;
 import controller.PersonagemController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,8 +35,10 @@ public class ConstrutorCenaJogo implements Construtor {
     private String spriteBase;
 
     private PersonagemController personagemController;
+    private GameController gameController;
     private int personagemId;
     private Runnable onSairParaMenuPrincipal;
+    private Runnable onFinalizar;
 
     @Override
     public void setPersonagem(PersonagemController personagemController, int personagemId) {
@@ -116,25 +119,29 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+    @Override
     public void setOnBordaAtingida(Consumer<Borda> onBordaAtingida) {
         this.onBordaAtingida = onBordaAtingida;
     }
 
     @Override
+    public void setOnFinalizar(Runnable onFinalizar) {
+        this.onFinalizar = onFinalizar;
+    }
+
+    @Override
     public CenaJogo getResult() {
-        return new CenaJogo(background,
-                elements, elementHitboxes,
-                npcs, npcHitboxes,
-                zones,
+        return new CenaJogo(background, elements, elementHitboxes,
+                npcs, npcHitboxes, zones,
                 playerView, playerHitbox,
                 playerHitboxOffsetX, playerHitboxOffsetY,
-                onBordaAtingida,
-                npcNomes,
-                onNpcAtingido,
-                spriteBase,
-                personagemController,
-                personagemId,
-                onSairParaMenuPrincipal
+                onBordaAtingida, npcNomes, onNpcAtingido, spriteBase,
+                personagemController, personagemId, onSairParaMenuPrincipal,
+                gameController, onFinalizar
         );
     }
 

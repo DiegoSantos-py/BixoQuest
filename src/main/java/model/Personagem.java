@@ -90,8 +90,8 @@ public class Personagem {
         conhecimentosNomes.put(area.name(), conhecimentos.get(area));// sincroniza
     }
 
-    public double getConhecimentoPorDisciplina(Disciplina disciplina) {
-        return conhecimentos.get(disciplina.getArea());
+    public Map<AreaConhecimento, Double> getConhecimentos() {
+        return conhecimentos;
     }
 
     // restante inalterado

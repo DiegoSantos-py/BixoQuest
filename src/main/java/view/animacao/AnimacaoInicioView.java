@@ -1,9 +1,6 @@
 package view.animacao;
 
 import controller.GameController;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,7 +10,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import view.util.FonteUtil;
 
 import java.util.List;
@@ -24,49 +20,53 @@ public class AnimacaoInicioView extends StackPane {
     private final Runnable aoFinalizar;
     private final GameController gameController;
     private final List<Node> frames;
-    private int indiceAtual = 0;
 
     public AnimacaoInicioView(
             Runnable aoFinalizar,
             GameController gameController,
             int sessaoAtual
     ) {
-        this.aoFinalizar = aoFinalizar;
+        this.aoFinalizar = () -> {
+            if (!gameController.precisaEscolherDisciplinas()) {
+                gameController.iniciarProximoDia();
+            }
+            // Se precisar escolher disciplinas, quem inicia o dia é
+            // confirmarEscolhaDisciplinas(), chamado após a escolha.
+            aoFinalizar.run();
+        };
+
         this.gameController = gameController;
 
-        gameController.iniciarJogo(sessaoAtual); // inicializa antes de montar a tela
+        // Apenas carrega/retoma o estado do jogo.
+        gameController.iniciarJogo(sessaoAtual);
 
         this.frames = List.of(
-                criarImagem("/animacao/Animacao_inicio1.png"),
-                criarImagem("/animacao/Animacao_inicio2.png"),
-                montarTelaInicioDia()             // gameController já está atribuído
+                AnimacaoFramesUtil.criarImagem("/animacao/Animacao_inicio1.png"),
+                AnimacaoFramesUtil.criarImagem("/animacao/Animacao_inicio2.png"),
+                montarTelaInicioDia()
         );
 
         getChildren().add(frames.get(0));
-        iniciarAnimacao();
-    }
 
-    private ImageView criarImagem (String sprite){
-        Image backgroundImage = new Image(
-                Objects.requireNonNull(
-                        getClass().getResourceAsStream(sprite)
-                )
+        AnimacaoFramesUtil.iniciarAnimacao(
+                this,
+                frames,
+                this.aoFinalizar
         );
-        ImageView backgroundView = new ImageView(backgroundImage);
-        backgroundView.setFitWidth(1920);
-        backgroundView.setFitHeight(1080);
-        return backgroundView;
     }
 
     private StackPane montarTelaInicioDia() {
-        ImageView backgroundView = criarImagem("/assets/background/Background.png");
+        ImageView backgroundView =
+                AnimacaoFramesUtil.criarImagem("/assets/background/Background.png");
 
         VBox inicioItens = new VBox();
         inicioItens.setAlignment(Pos.CENTER);
 
         Image bg = new Image(
                 Objects.requireNonNull(
-                        getClass().getResourceAsStream("/menuPersonagens/background_botao.png")
+                        getClass().getResourceAsStream(
+                                "/menuPersonagens/background_botao.png"
+                        )
                 )
         );
 
@@ -74,15 +74,17 @@ public class AnimacaoInicioView extends StackPane {
         bgView.setFitWidth(600);
         bgView.setPreserveRatio(true);
 
+        String labelDia = gameController.precisaEscolherDisciplinas()
+                ? "Novo semestre"
+                : "Dia " + gameController.getDiaAtual();
 
-        Text bg_texto = new Text("Dia " + Integer.toString(gameController.getDiaAtual()));
+        Text bgTexto = new Text(labelDia);
+        bgTexto.setFont(FonteUtil.pixel(40));
+        bgTexto.setFill(Color.WHITE);
 
-        bg_texto.setFont(FonteUtil.pixel(40));
-        bg_texto.setFill(Color.WHITE);
-
-        StackPane bgComTexto = new StackPane(bgView, bg_texto);
+        StackPane bgComTexto = new StackPane(bgView, bgTexto);
         bgComTexto.setAlignment(Pos.CENTER);
-        bg_texto.setTranslateY(-10);
+        bgTexto.setTranslateY(-10);
 
         Text texto = new Text("Carregando...");
         texto.setFill(Color.WHITE);
@@ -93,49 +95,13 @@ public class AnimacaoInicioView extends StackPane {
         StackPane tela = new StackPane();
         StackPane.setAlignment(texto, Pos.BOTTOM_CENTER);
         StackPane.setMargin(texto, new Insets(0, 0, 100, 0));
-        tela.getChildren().addAll(backgroundView, inicioItens, texto);
+
+        tela.getChildren().addAll(
+                backgroundView,
+                inicioItens,
+                texto
+        );
 
         return tela;
-    }
-
-    private void iniciarAnimacao() {
-        PauseTransition espera = new PauseTransition(Duration.seconds(3));
-
-        espera.setOnFinished(event -> trocarImagem());
-
-        espera.play();
-    }
-
-    private void trocarImagem() {
-        int proximoIndice = indiceAtual + 1;
-
-        if (proximoIndice >= frames.size()) {
-            aoFinalizar.run();
-            return;
-        }
-
-        Node atual = frames.get(indiceAtual);
-        Node proximo = frames.get(proximoIndice);
-
-        proximo.setOpacity(0);
-        getChildren().add(proximo); // adiciona o próximo
-
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), atual);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), proximo);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        ParallelTransition crossFade = new ParallelTransition(fadeOut, fadeIn);
-
-        crossFade.setOnFinished(event -> {
-            getChildren().remove(atual); // remove o anterior
-            indiceAtual = proximoIndice;
-            iniciarAnimacao();
-        });
-
-        crossFade.play();
     }
 }

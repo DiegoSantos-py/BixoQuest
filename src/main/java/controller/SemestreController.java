@@ -41,19 +41,6 @@ public class SemestreController extends BaseController {
         }
     }
 
-    // Lógica de negócio
-    /** Retorna Optional vazio se semestre for inválido ou falhar ao salvar */
-    public Optional<Semestre> encerrarSemestre(Personagem personagem, Semestre semestre) {
-        try {
-            return Optional.of(service.encerrarSemestre(personagem, semestre));
-        } catch (SemestreInvalidoException e) {
-            tratarInvalido(e);
-            return Optional.empty();
-        } catch (PersistenciaException e) {
-            tratarErroPersistencia(e);
-            return Optional.empty();
-        }
-    }
 
     /** Exibe erro se semestre ou disciplina forem inválidos */
     public void definirResultadoDisciplina(Semestre semestre,

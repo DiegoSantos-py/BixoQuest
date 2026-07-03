@@ -6,6 +6,7 @@ import controller.NpcController;
 import controller.PersonagemController;
 import javafx.scene.Parent;
 import view.InicioJogoView;
+import view.animacao.AnimacaoFimView;
 import view.animacao.AnimacaoInicioView;
 import view.construtores.ConstrutorCenaJogo;
 import view.construtores.DiretorCena;
@@ -75,6 +76,12 @@ public class ControllerTelas {
         );
     }
 
+    public Parent criarAnimacaoFim() {
+        return new AnimacaoFimView(
+                () -> gerenciador.mostrarAnimacaoInicio(sessaoAtual)
+        );
+    }
+
     public Parent criarInicio() {
         return new InicioJogoView(
                 () -> gerenciador.mostrarMenuInicial()
@@ -94,8 +101,10 @@ public class ControllerTelas {
                     .ifPresent(nome -> gerenciador.mostrarCenaPorNome(nome));
         });
 
-        construtor.setPersonagem(personagemController, sessaoAtual); // ajuste conforme seu id real
-        construtor.setOnSairParaMenuPrincipal(() -> gerenciador.mostrarMenuInicial()); // ajuste ao seu GerenciadorTelas
+        construtor.setPersonagem(personagemController, sessaoAtual);
+        construtor.setGameController(gameController);
+        construtor.setOnSairParaMenuPrincipal(gerenciador::mostrarMenuInicial);
+        construtor.setOnFinalizar(gerenciador::mostrarAnimacaoFim);
 
         diretorCena.construirCena(construtor, mapaController,
                 onZona,

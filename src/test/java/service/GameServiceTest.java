@@ -52,7 +52,7 @@ class GameServiceTest {
 
         inicializacaoService = new InicializacaoService(
                 localRepo, disciplinaRepo, eventoRepo,
-                npcRepo, semestreRepo, personagemRepo
+                npcRepo, semestreRepo, personagemRepo, disciplinaService
         );
 
         gameService = new GameService(

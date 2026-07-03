@@ -58,17 +58,6 @@ public class DisciplinaService {
         disciplinaRepo.salvar();
     }
 
-    public void criarTodasDisciplinas() throws PersistenciaException{
-        criarDisciplinasPorNivel("Matematica", 4,AreaConhecimento.MAT);
-        criarDisciplinasPorNivel("Natureza", 4, AreaConhecimento.NAT);
-        criarDisciplinasPorNivel("Software", 4, AreaConhecimento.SOF);
-        criarDisciplinasPorNivel("Hardware", 4, AreaConhecimento.HAR);
-        criarDisciplinasPorNivel("Complementar",1,AreaConhecimento.COM);
-        criarDisciplinasPorNivel("Humanistica",1,AreaConhecimento.HUM);
-        criarDisciplinasPorNivel("Estagio",1,AreaConhecimento.EST);
-        criarDisciplinasPorNivel("tfc", 1, AreaConhecimento.TFC);
-        criarDisciplinasPorNivel("tcc", 1, AreaConhecimento.TCC);
-    }
     // Leitura
     /**lança DisciplinaNaoEncontradaException se não houver disciplinas com o nome */
     public List<Disciplina> buscarPorNome(String nome) {

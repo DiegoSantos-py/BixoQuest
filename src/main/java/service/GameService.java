@@ -24,6 +24,7 @@ public class GameService {
     private final NpcRepository npcRepo;
     private final PersonagemRepository personagemRepo;
 
+    private boolean diaTransicionado;
     private Semestre semestre;
     private Dia diaAtual;
     private int personagem;
@@ -60,32 +61,74 @@ public class GameService {
      */
     public void iniciarJogo(int personagem) throws PersistenciaException {
         this.personagem = personagem;
-
-        // Carrega e reconstrói todos os objetos do jogo
         inicializacaoService.inicializar();
 
-        //  Verifica se o personagem já tem semestres salvos
-        List<Semestre> semestresExistentes;
-        try {
-            semestresExistentes = semestreRepo.getSemestresPorJogador(personagem);
-        } catch (Exception e) {
-            semestresExistentes = null;
+        List<Semestre> semestresExistentes = semestreRepo.getSemestresPorJogador(personagem);
+
+        if (!semestresExistentes.isEmpty()) {
+            Semestre ultimo = semestresExistentes.get(semestresExistentes.size() - 1);
+
+            if (!semestreService.terminouSemestre(ultimo)) {
+                this.semestre = ultimo;
+                diaAtual = semestreService.avancarDia(semestre);
+                return;
+            }
         }
 
-        if (semestresExistentes != null && !semestresExistentes.isEmpty()) {
-            // Retoma sessão anterior — usa o último semestre
-            this.semestre = semestresExistentes.get(semestresExistentes.size() - 1);
-        } else {
-            // Novo jogo — cria primeiro semestre
-            this.semestre = semestreService.iniciarPrimeiroSemestre(personagem);
-        }
-
-        //  Avança para o próximo dia
-        diaAtual = semestreService.avancarDia(semestre);
-
-        //  Inicia o dia
-        diaService.iniciarDia(diaAtual);
+        this.semestre = null;
     }
+
+    /** Indica se o jogador precisa escolher disciplinas antes de continuar */
+    public boolean precisaEscolherDisciplinas() {
+        return semestre == null;
+    }
+
+    /** Disciplinas disponíveis pro jogador escolher no próximo semestre */
+    public List<Disciplina> obterDisciplinasDisponiveis() {
+        return semestreService.getDisciplinasDisponiveis(personagem);
+    }
+
+    /** Chamado pelo Controller depois que o jogador escolheu as disciplinas na View */
+    public void confirmarEscolhaDisciplinas(List<Disciplina> disciplinasEscolhidas) throws PersistenciaException {
+        this.semestre = semestreService.iniciarSemestreComEscolha(personagem, disciplinasEscolhidas);
+
+        semestreRepo.adicionarSemestre(personagem, semestre);
+        semestreRepo.salvar();
+
+        resetarConhecimentosParaNovoSemestre(disciplinasEscolhidas);
+
+        diaAtual = semestreService.avancarDia(semestre);
+        iniciarProximoDia();
+    }
+
+    private void resetarConhecimentosParaNovoSemestre(List<Disciplina> disciplinasEscolhidas) throws PersistenciaException {
+        Personagem p = personagemRepo.buscarPorId(personagem);
+        for (Disciplina d : disciplinasEscolhidas) {
+            p.getConhecimentos().put(d.getArea(), 10.0);
+        }
+        personagemRepo.salvar();
+    }
+
+    public boolean encerrarJogo() {
+        List<Semestre> semestresJogador = semestreRepo.getSemestresPorJogador(personagem);
+        // try/catch removido — lista vazia já resolve naturalmente pra false no loop abaixo
+
+        for (List<Disciplina> lista : disciplinaRepo.carregarDisciplinas().values()) {
+            for (Disciplina dSistema : lista) {
+                boolean aprovado = false;
+                for (Semestre s : semestresJogador) {
+                    if (s.foiAprovado(dSistema)) {
+                        aprovado = true;
+                        break;
+                    }
+                }
+                if (!aprovado) return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * Atualiza o estado do jogo a cada ciclo.
@@ -93,56 +136,43 @@ public class GameService {
      * lança PersistenciaException se ocorrer falha ao salvar
      */
     public void atualizar() throws PersistenciaException {
+        diaTransicionado = false;
+
+        if (semestre == null) return;
         if (!diaService.isDiaEncerrado()) return;
 
         diaService.encerrarDia(diaAtual);
-
-        // Salva o estado de todos os repositórios ao fim do dia
         salvarEstado();
 
         if (!semestreService.terminouSemestre(semestre)) {
-            // Avança para o próximo dia
-            diaAtual = semestreService.avancarDia(semestre);
-
-            diaService.iniciarDia(diaAtual);
+            diaAtual = semestreService.avancarDia(semestre); // só cria/avança o Dia, não inicia o timer
+            diaTransicionado = true;
         } else {
-            // Encerra o semestre e inicia o próximo
-            semestre = semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
+            semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
+            this.semestre = null;
+            diaTransicionado = true;
         }
     }
 
-    /**
-     * Verifica se o jogador concluiu o jogo aprovando em todas as disciplinas.
-     * Percorre todos os semestres do jogador pelo SemestreRepository.
-     */
-    public boolean encerrarJogo() {
-        List<Semestre> semestresJogador;
-        try {
-            semestresJogador = semestreRepo.getSemestresPorJogador(personagem);
-        } catch (Exception e) {
-            return false;
-        }
-
-        // Percorre todas as disciplinas do jogo
-        for (List<Disciplina> lista : disciplinaRepo.carregarDisciplinas().values()) {
-            for (Disciplina dSistema : lista) {
-                boolean aprovado = false;
-
-                // Verifica se o jogador foi aprovado em algum semestre
-                for (Semestre s : semestresJogador) {
-                    if (s.foiAprovado(dSistema)) {
-                        aprovado = true;
-                        break;
-                    }
-                }
-
-                // Se falhou em qualquer disciplina — não concluiu o jogo
-                if (!aprovado) return false;
-            }
-        }
-
-        return true;
+    /** Chamado pelo runnable da cena "fim do dia", ao voltar pro jogo */
+    public void iniciarProximoDia() {
+        diaService.iniciarDia(diaAtual);
     }
+
+    public boolean houveTransicaoDeDia() {
+        return diaTransicionado;
+    }
+
+    public void pausarDia() {
+        diaService.pausar();
+    }
+
+    public void retomarDia() {
+        if (diaAtual != null) {
+            diaService.retomar(diaAtual);
+        }
+    }
+
 
     /**
      * Salva o estado de todos os repositórios exceto localRepo.
@@ -162,4 +192,9 @@ public class GameService {
     public int getDiaAtual() { return semestre.getDiaAtual(); }
     public Personagem getPersonagem() { return personagemRepo.buscarPorId(personagem); }
     public void setPersonagem(int personagem) { this.personagem = personagem; }
+
+    public long getTempoRestanteSegundos() {
+        if (diaAtual == null) return 0;
+        return diaService.getTempoRestante(diaAtual);
+    }
 }

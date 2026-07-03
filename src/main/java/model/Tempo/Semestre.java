@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Semestre {
-    private static final int MAX_DIAS = 20;
+    private static final int MAX_DIAS = 12;
     private List<Dia> dias;
     private List<Disciplina> disciplinas;
     @JsonIgnore

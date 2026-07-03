@@ -1,5 +1,6 @@
 package view.construtores;
 
+import controller.GameController;
 import controller.PersonagemController;
 import view.cena.CenaJogo;
 import view.util.Borda;
@@ -33,10 +34,11 @@ public interface Construtor {
 
     void setOnBordaAtingida(Consumer<Borda> onBordaAtingida);
     void setOnNpcAtingido(Consumer<String> onNpcAtingido);
+    void setOnFinalizar(Runnable onFinalizar);
 
     void setPersonagem(PersonagemController personagemController, int personagemId);
     void setOnSairParaMenuPrincipal(Runnable onSairParaMenuPrincipal);
-
+    void setGameController(GameController gameController);
 
     CenaJogo getResult();
 }

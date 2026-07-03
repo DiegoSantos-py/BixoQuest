@@ -1,6 +1,7 @@
 package service;
 
 import exception.PersistenciaException;
+import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
 import model.Local.Local;
@@ -21,19 +22,22 @@ public class InicializacaoService {
     private final NpcRepository npcRepo;
     private final SemestreRepository semestreRepo;
     private final PersonagemRepository personagemRepo;
+    private final DisciplinaService disciplinaService;
 
     public InicializacaoService(LocalRepository localRepo,
                                 DisciplinaRepository disciplinaRepo,
                                 EventoRepository eventoRepo,
                                 NpcRepository npcRepo,
                                 SemestreRepository semestreRepo,
-                                PersonagemRepository personagemRepo) {
+                                PersonagemRepository personagemRepo,
+                                DisciplinaService disciplinaService) {
         this.localRepo = localRepo;
         this.disciplinaRepo = disciplinaRepo;
         this.eventoRepo = eventoRepo;
         this.npcRepo = npcRepo;
         this.semestreRepo = semestreRepo;
         this.personagemRepo = personagemRepo;
+        this.disciplinaService = disciplinaService;
     }
 
     /**
@@ -109,5 +113,21 @@ public class InicializacaoService {
                 }
             }
         }
+        inicializarCatalogoDisciplinas(disciplinaService);
+    }
+
+    public void inicializarCatalogoDisciplinas(DisciplinaService disciplinaService) throws PersistenciaException {
+        disciplinaService.carregar();
+
+        if (!disciplinaService.carregarDisciplinas().isEmpty()) {
+            return; // catálogo já existe, não recriar
+        }
+
+        disciplinaService.criarDisciplinasPorNivel("Matemática", 3, AreaConhecimento.MAT);
+        disciplinaService.criarDisciplinasPorNivel("Naturezas", 3, AreaConhecimento.NAT);
+        disciplinaService.criarDisciplinasPorNivel("Software", 3, AreaConhecimento.SOF);
+        disciplinaService.criarDisciplinasPorNivel("Hardware", 3, AreaConhecimento.HAR);
+        disciplinaService.criarDisciplinasPorNivel("TCC", 1, AreaConhecimento.TCC);
+        disciplinaService.criarDisciplinasPorNivel("Estágio", 1, AreaConhecimento.EST);
     }
 }

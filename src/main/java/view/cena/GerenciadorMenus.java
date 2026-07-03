@@ -1,23 +1,30 @@
 package view.cena;
 
+import controller.GameController;
 import controller.PersonagemController;
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
+import model.Disciplina.Disciplina;
 import view.menu.MenuAtributosPersonagem;
+import view.menu.MenuEscolhaDisciplina;
 import view.menu.MenuPause;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class GerenciadorMenus {
     private final StackPane raizCena;
     private final MenuPause menuPause;
     private final MenuAtributosPersonagem menuAtributos;
+    private final MenuEscolhaDisciplina menuEscolhaDisciplina;
     private final Consumer<Boolean> onPausarJogo;
 
     public GerenciadorMenus(StackPane raizCena,
                             PersonagemController personagemController,
+                            GameController gameController,
                             int personagemId,
                             Runnable onSairParaMenuPrincipal,
+                            Consumer<List<Disciplina>> onConfirmarEscolhaDisciplina,
                             Consumer<Boolean> onPausarJogo) {
         this.raizCena = raizCena;
         this.onPausarJogo = onPausarJogo;
@@ -27,13 +34,27 @@ public class GerenciadorMenus {
                 onSairParaMenuPrincipal
         );
 
+        this.menuEscolhaDisciplina = new MenuEscolhaDisciplina(
+                onConfirmarEscolhaDisciplina);
+
         this.menuAtributos = new MenuAtributosPersonagem(
                 personagemController,
                 personagemId,
+                gameController,
                 this::fecharAtributos
         );
 
-        raizCena.getChildren().addAll(menuPause, menuAtributos);
+        raizCena.getChildren().addAll(menuPause, menuAtributos, menuEscolhaDisciplina);
+    }
+
+    /** Centraliza a notificação de pausa/retomada, garantindo que o foco
+     * de teclado sempre volte ao raizCena quando o jogo é retomado. */
+    private void notificarPausa(boolean pausado) {
+        onPausarJogo.accept(pausado);
+
+        if (!pausado) {
+            Platform.runLater(raizCena::requestFocus);
+        }
     }
 
     public boolean pauseAberto() {
@@ -42,28 +63,35 @@ public class GerenciadorMenus {
 
     public void abrirPause() {
         menuPause.abrir();
-        onPausarJogo.accept(true);
+        notificarPausa(true);
     }
 
     public void fecharPause() {
         menuPause.fechar();
-
-        onPausarJogo.accept(false);
-
-        Platform.runLater(() -> {
-            raizCena.requestFocus();
-        });
+        notificarPausa(false);
     }
+
     public boolean atributosAberto() {
         return menuAtributos.isVisible();
     }
+
     public void abrirAtributos() {
         menuAtributos.abrir();
-        onPausarJogo.accept(true);
+        notificarPausa(true);
     }
 
     public void fecharAtributos() {
         menuAtributos.fechar();
-        onPausarJogo.accept(false);
+        notificarPausa(false);
+    }
+
+    public void abrirEscolhaDisciplina(List<Disciplina> opcoes) {
+        menuEscolhaDisciplina.abrir(opcoes);
+        notificarPausa(true);
+    }
+
+    public void fecharEscolhaDisciplina() {
+        menuEscolhaDisciplina.fechar();
+        notificarPausa(false);
     }
 }

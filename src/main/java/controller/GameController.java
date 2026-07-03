@@ -1,10 +1,13 @@
 package controller;
 
 import exception.PersistenciaException;
+import model.Disciplina.Disciplina;
 import model.Personagem;
-import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import service.GameService;
+
+import java.util.Collections;
+import java.util.List;
 
 public class GameController extends BaseController {
 
@@ -40,6 +43,64 @@ public class GameController extends BaseController {
         return service.encerrarJogo();
     }
 
+    // Escolha de disciplinas / início de semestre
+
+    /**
+     * Indica se o jogo está aguardando o jogador escolher as disciplinas
+     * do próximo semestre. A View deve checar isso após iniciarJogo() e
+     * após cada atualizar(), já que um semestre pode terminar no meio do jogo.
+     */
+    public boolean precisaEscolherDisciplinas() {
+        return service.precisaEscolherDisciplinas();
+    }
+
+    /**
+     * Disciplinas que o jogador pode escolher no próximo semestre.
+     * Retorna lista vazia se não houver escolha pendente.
+     */
+    public List<Disciplina> obterDisciplinasDisponiveis() {
+        if (!service.precisaEscolherDisciplinas()) {
+            return Collections.emptyList();
+        }
+        return service.obterDisciplinasDisponiveis();
+    }
+
+    /**
+     * Confirma a escolha do jogador e inicia o semestre com as disciplinas selecionadas.
+     * Exibe erro se a escolha for inválida (excede o limite, disciplina indisponível,
+     * TCC sem elegibilidade) ou se ocorrer falha ao persistir.
+     */
+    public boolean confirmarEscolhaDisciplinas(List<Disciplina> disciplinasEscolhidas) {
+        try {
+            service.confirmarEscolhaDisciplinas(disciplinasEscolhidas);
+            exibirSucesso("Semestre iniciado com sucesso.");
+            return true;
+        } catch (PersistenciaException e) {
+            tratarErroPersistencia(e);
+            return false;
+        } catch (RuntimeException e) {
+            // captura SemestreInvalidoException, DisciplinaInvalidaException, etc.
+            exibirErro(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean houveTransicaoDeDia() {
+        return service.houveTransicaoDeDia();
+    }
+
+    public void iniciarProximoDia() {
+        service.iniciarProximoDia();
+    }
+
+    public void pausarDia() {
+        service.pausarDia();
+    }
+
+    public void retomarDia() {
+        service.retomarDia();
+    }
+
     // Leitura
     public Semestre getSemestre() {
         return service.getSemestre();
@@ -51,6 +112,10 @@ public class GameController extends BaseController {
 
     public Personagem getPersonagem() {
         return service.getPersonagem();
+    }
+
+    public long getTempoRestanteSegundos() {
+        return service.getTempoRestanteSegundos();
     }
 
     // Exibição

@@ -1,0 +1,64 @@
+{
+  "Matemática" : [ {
+    "nome" : "Matemática",
+    "codigo" : 1.0,
+    "area" : "MAT"
+  }, {
+    "nome" : "Matemática",
+    "codigo" : 2.0,
+    "area" : "MAT"
+  }, {
+    "nome" : "Matemática",
+    "codigo" : 3.0,
+    "area" : "MAT"
+  } ],
+  "TCC" : [ {
+    "nome" : "TCC",
+    "codigo" : 1.0,
+    "area" : "TCC"
+  } ],
+  "Estágio" : [ {
+    "nome" : "Estágio",
+    "codigo" : 1.0,
+    "area" : "EST"
+  } ],
+  "Software" : [ {
+    "nome" : "Software",
+    "codigo" : 1.0,
+    "area" : "SOF"
+  }, {
+    "nome" : "Software",
+    "codigo" : 2.0,
+    "area" : "SOF"
+  }, {
+    "nome" : "Software",
+    "codigo" : 3.0,
+    "area" : "SOF"
+  } ],
+  "Hardware" : [ {
+    "nome" : "Hardware",
+    "codigo" : 1.0,
+    "area" : "HAR"
+  }, {
+    "nome" : "Hardware",
+    "codigo" : 2.0,
+    "area" : "HAR"
+  }, {
+    "nome" : "Hardware",
+    "codigo" : 3.0,
+    "area" : "HAR"
+  } ],
+  "Naturezas" : [ {
+    "nome" : "Naturezas",
+    "codigo" : 1.0,
+    "area" : "NAT"
+  }, {
+    "nome" : "Naturezas",
+    "codigo" : 2.0,
+    "area" : "NAT"
+  }, {
+    "nome" : "Naturezas",
+    "codigo" : 3.0,
+    "area" : "NAT"
+  } ]
+}

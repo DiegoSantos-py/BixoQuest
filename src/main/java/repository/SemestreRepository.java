@@ -156,10 +156,9 @@ public class SemestreRepository {
         List<Semestre> lista =
                 semestresPorJogador.get(jogadorId);
 
-        if (lista == null || lista.isEmpty()) {
-            throw new SemestreNaoEncontradoException(
-                    jogadorId
-            );}
+        if (lista == null) {
+            return Collections.emptyList();
+        }
 
         // Retorna lista protegida contra modificações externas
         return Collections.unmodifiableList(lista);

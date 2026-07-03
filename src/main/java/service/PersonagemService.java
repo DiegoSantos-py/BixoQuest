@@ -4,6 +4,7 @@ import exception.Personagem.PersonagemDuplicadoException;
 import exception.Personagem.PersonagemInvalidoException;
 import exception.Personagem.PersonagemNaoEncontradoException;
 import exception.PersistenciaException;
+import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
 import model.Local.Area;
@@ -15,10 +16,7 @@ import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.PersonagemRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PersonagemService {
 
@@ -131,79 +129,6 @@ public class PersonagemService {
         return personagem;
     }
 
-    public void atualizarPersonagem(Personagem p,
-                                    Direcao direcao,
-                                    Dia diaAtual,
-                                    DiaService diaService){
-
-        mover(p, direcao, diaAtual, diaService);
-
-
-        Local local = p.getLocalAtual();
-        for(ZonaInterativa z: local.getZonaInterativasDisponiveis()){
-            for(Evento e: diaAtual.getEventosObrigatorios().values())
-                if (z.contemCoordenada(p.getcX(), p.getcY())){
-                    eventoService.executarEvento(e ,p, diaAtual, diaService);
-                }
-            for(Evento e: diaAtual.getEventosAleatorios().values())
-                if (z.contemCoordenada(p.getcX(), p.getcY())){
-                    eventoService.executarEvento(e ,p, diaAtual, diaService);
-                }
-        }
-    }
-
-    public void mover(Personagem p,
-                      Direcao direcao,
-                      Dia diaAtual,
-                      DiaService diaService) {
-
-        int novoX = p.getcX();
-        int novoY = p.getcY();
-
-        switch (direcao) {
-            case CIMA: novoY--; break;
-            case BAIXO: novoY++; break;
-            case ESQUERDA: novoX--; break;
-            case DIREITA: novoX++; break;
-        }
-
-        Local localAtual = p.getLocalAtual();
-
-        if (localAtual.getArea().contemCoordenada(novoX, novoY)) {
-            p.setcX(novoX);
-            p.setcY(novoY);
-        } else {
-            Local vizinho = localAtual.getVizinho(direcao);
-
-            if (vizinho != null) {
-                p.setLocalAtual(vizinho);
-                ajustarPosicaoAoEntrar(p, vizinho, direcao);
-            }
-        }
-
-        diaService.verificarRetornoAoPonto(diaAtual, p);
-    }
-
-    private void ajustarPosicaoAoEntrar(Personagem p, Local novoLocal, Direcao direcao) {
-
-        model.Local.Area area = novoLocal.getArea();
-
-        switch (direcao) {
-            case CIMA:
-                p.setcY(area.getMinY());
-                break;
-            case BAIXO:
-                p.setcY(area.getMaxY());
-                break;
-            case ESQUERDA:
-                p.setcX(area.getMaxX());
-                break;
-            case DIREITA:
-                p.setcX(area.getMinX());
-                break;
-        }
-    }
-
     public double calcularDesempenhoGeral(Personagem personagem) {
 
         int totalAprovadas = 0;
@@ -241,5 +166,14 @@ public class PersonagemService {
         atributos.put("dinheiro", p.getDinheiro());
 
         return atributos;
+    }
+
+    public Map<AreaConhecimento, Double> getConhecimentos(int personagemId){
+        Personagem p = buscarPorId(personagemId);
+
+        Map<AreaConhecimento, Double> conhecimentos = new HashMap<>();
+        conhecimentos = p.getConhecimentos();
+
+        return conhecimentos;
     }
 }
