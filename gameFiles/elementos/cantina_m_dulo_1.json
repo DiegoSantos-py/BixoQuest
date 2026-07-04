@@ -1,3 +1,51 @@
 [{
-
-}]
+  "sprite": "/assets/cantina.png",
+  "largura": 500,
+  "x": 450,
+  "y": 200,
+  "hitboxOffsetX": 15,
+  "hitboxOffsetY": 70,
+  "hitboxLargura": 470,
+  "hitboxAltura": 160
+},
+  {
+    "sprite": "/assets/banco_cantina.png",
+    "largura": 500,
+    "x": 400,
+    "y": 600,
+    "hitboxOffsetX": 140,
+    "hitboxOffsetY": 110,
+    "hitboxLargura": 220,
+    "hitboxAltura": 80
+  },
+  {
+    "sprite": "/assets/banco_cantina.png",
+    "largura": 500,
+    "x": 1000,
+    "y": 600,
+    "hitboxOffsetX": 140,
+    "hitboxOffsetY": 110,
+    "hitboxLargura": 220,
+    "hitboxAltura": 80
+  },
+  {
+    "sprite": "/assets/banco_cantina.png",
+    "largura": 500,
+    "x": 1000,
+    "y": 400,
+    "hitboxOffsetX": 140,
+    "hitboxOffsetY": 110,
+    "hitboxLargura": 220,
+    "hitboxAltura": 80
+  },
+  {
+    "sprite": "/assets/arvore.png",
+    "largura": 700,
+    "x": 1400,
+    "y": 600,
+    "hitboxOffsetX": 285,
+    "hitboxOffsetY": 120,
+    "hitboxLargura": 100,
+    "hitboxAltura": 220
+  }
+]

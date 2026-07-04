@@ -12,7 +12,7 @@
     "efeitoSaude" : 0.0,
     "efeitoDinheiro" : 0.0,
     "efeitoTempo" : 2,
-    "tempoRequisito" : 0,
+    "tempoRequisito" : 2,
     "eventoRequisitoNome" : null,
     "requisitosAtributo" : {
       "ENERGIA" : 15.0
@@ -42,7 +42,7 @@
   },
   "Estudar Hardware" : {
     "tipo" : "evento",
-    "status" : false,
+    "status" : true,
     "nome" : "Estudar Hardware",
     "descricao" : "Reforça o conteúdo de Hardware.",
     "efeitoConhecimentoNomes" : {
@@ -83,7 +83,7 @@
   },
   "Estudar Naturezas" : {
     "tipo" : "evento",
-    "status" : false,
+    "status" : true,
     "nome" : "Estudar Naturezas",
     "descricao" : "Reforça o conteúdo de Naturezas.",
     "efeitoConhecimentoNomes" : {
@@ -94,7 +94,7 @@
     "efeitoSaude" : 0.0,
     "efeitoDinheiro" : 0.0,
     "efeitoTempo" : 2,
-    "tempoRequisito" : 0,
+    "tempoRequisito" : 2,
     "eventoRequisitoNome" : null,
     "requisitosAtributo" : {
       "ENERGIA" : 15.0
@@ -124,7 +124,7 @@
   },
   "Estudar TCC" : {
     "tipo" : "evento",
-    "status" : false,
+    "status" : true,
     "nome" : "Estudar TCC",
     "descricao" : "Reforça o conteúdo de TCC.",
     "efeitoConhecimentoNomes" : {
@@ -135,7 +135,7 @@
     "efeitoSaude" : 0.0,
     "efeitoDinheiro" : 0.0,
     "efeitoTempo" : 2,
-    "tempoRequisito" : 0,
+    "tempoRequisito" : 2,
     "eventoRequisitoNome" : null,
     "requisitosAtributo" : {
       "ENERGIA" : 15.0
@@ -165,7 +165,7 @@
   },
   "Estudar Estágio" : {
     "tipo" : "evento",
-    "status" : false,
+    "status" : true,
     "nome" : "Estudar Estágio",
     "descricao" : "Reforça o conteúdo de Estágio.",
     "efeitoConhecimentoNomes" : {
@@ -206,7 +206,7 @@
   },
   "Estudar Software" : {
     "tipo" : "evento",
-    "status" : false,
+    "status" : true,
     "nome" : "Estudar Software",
     "descricao" : "Reforça o conteúdo de Software.",
     "efeitoConhecimentoNomes" : {
@@ -217,7 +217,7 @@
     "efeitoSaude" : 0.0,
     "efeitoDinheiro" : 0.0,
     "efeitoTempo" : 2,
-    "tempoRequisito" : 0,
+    "tempoRequisito" : 2,
     "eventoRequisitoNome" : null,
     "requisitosAtributo" : {
       "ENERGIA" : 15.0
@@ -234,6 +234,85 @@
         "minY": 0
       },
       "nome": "Sala matemática",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "SOF" : 10.0
+    }
+  },
+  "Reclamar no colegiado" : {
+    "tipo" : "evento",
+    "status" : true,
+    "nome" : "Reclamar no colegiado",
+    "descricao" : "Reclamando no colegiado sobre professores com didática ruim",
+    "efeitoConhecimentoNomes" : {
+    },
+    "efeitoEnergia" : 5.0,
+    "efeitoMotivacao" : 15.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 1,
+    "tempoRequisito" : 1,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+    },
+    "disciplinaRequisitoNome" : "",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Colegiado zona",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+    }
+  },
+  "Estudar no laboratório" : {
+    "tipo" : "evento",
+    "status" : true,
+    "nome" : "Estudar no laboratório",
+    "descricao" : "Reforça o conteúdo de Software.",
+    "efeitoConhecimentoNomes" : {
+      "SOF" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 2,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Software",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Laboratório zona",
       "sprite": null,
       "spriteLargura": 0,
       "spriteAltura": 0,

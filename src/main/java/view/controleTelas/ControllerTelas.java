@@ -113,7 +113,7 @@ public class ControllerTelas {
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarCenaPorNome("Sala módulo 1"),
+                () -> gerenciador.mostrarCenaPorNome("Cantina módulo 1"),
                 gameController,
                 sessaoAtual
         );
@@ -153,9 +153,18 @@ public class ControllerTelas {
             ResultadoZona resultado = gameController.processarZona(nomeZona);
 
             switch (resultado.getStatus()) {
-                case SEM_EVENTO -> onZona.accept(nomeZona);
-                case EXECUTADO -> cenaAtual.abrirFeedbackEvento(resultado.getEvento());
-                case REQUISITO_NAO_ATENDIDO -> cenaAtual.exibirFeedbackMotivo(resultado.getMotivo());
+                case SEM_EVENTO -> {
+                    onZona.accept(nomeZona);
+                    System.out.println("sem evento");
+                }
+                case EXECUTADO -> {
+                    cenaAtual.abrirFeedbackEvento(resultado.getEvento());
+                    System.out.println("executado");
+                }
+                case REQUISITO_NAO_ATENDIDO -> {
+                    cenaAtual.exibirFeedbackMotivo(resultado.getMotivo());
+                    System.out.println("requisito nao atendido");
+                }
                 case PROVA_BATALHA -> {
                     cenaAtual.parar();              // para o AnimationTimer da CenaJogo atual
                     gameController.pausarDia();     // pausa o cronômetro do dia (mesmo mecanismo dos menus)
@@ -183,9 +192,9 @@ public class ControllerTelas {
 
     private double[] calcularPosicaoInicial(Borda borda) {
         return switch (borda) {
-            case NORTE -> new double[]{700, 800};
-            case SUL   -> new double[]{700, 150};
-            case LESTE -> new double[]{50,  500};
+            case NORTE -> new double[]{600, 800};
+            case SUL   -> new double[]{700, -90};
+            case LESTE -> new double[]{-90,  400};
             case OESTE -> new double[]{1700, 500};
             case null  -> new double[]{700, 700};
         };

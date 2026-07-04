@@ -4,7 +4,7 @@
     "vizinhosNomes" : {
       "BAIXO" : "Sala módulo 5"
     },
-    "spriteDir" : "/assets/background/background_cantina.png",
+    "spriteDir" : "/assets/background/background_colegiado.png",
     "area" : {
       "maxX" : 500,
       "minX" : -500,
@@ -14,7 +14,20 @@
     "tipo" : "COLEGIADO",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Colegiado zona",
+      "sprite": null,
+      "spriteLargura": 400,
+      "spriteAltura": 200,
+      "spriteX": 1100,
+      "spriteY": 800,
+      "area": {
+        "minX": 850,
+        "maxX": 1050,
+        "minY": 600,
+        "maxY": 700
+      }
+    } ]
   },
   "Ponto de ônibus 1" : {
     "nome" : "Ponto de ônibus 1",
@@ -123,7 +136,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    }  ]
   },
   "Cantina módulo 3" : {
     "nome" : "Cantina módulo 3",
@@ -143,7 +169,22 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [
+      {
+        "nome": "Cantina zona",
+        "sprite": null,
+        "spriteLargura": 800,
+        "spriteAltura": 400,
+        "spriteX": 450,
+        "spriteY": 350,
+        "area": {
+          "minX": 520,
+          "maxX": 850,
+          "minY": 350,
+          "maxY": 450
+        }
+      }
+    ]
   },
   "Cantina módulo 2" : {
     "nome" : "Cantina módulo 2",
@@ -163,7 +204,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [ {
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    }]
   },
   "Laboratório" : {
     "nome" : "Laboratório",
@@ -180,7 +234,20 @@
     "tipo" : "LABORATORIO",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Laboratório zona",
+      "sprite": null,
+      "spriteLargura": 400,
+      "spriteAltura": 200,
+      "spriteX": 1100,
+      "spriteY": 800,
+      "area": {
+        "minX": 800,
+        "maxX": 1000,
+        "minY": 750,
+        "maxY": 815
+      }
+    } ]
   },
   "Cantina módulo 5" : {
     "nome" : "Cantina módulo 5",
@@ -200,7 +267,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    } ]
   },
   "Cantina módulo 4" : {
     "nome" : "Cantina módulo 4",
@@ -220,7 +300,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    } ]
   },
   "Cantina módulo 7" : {
     "nome" : "Cantina módulo 7",
@@ -239,7 +332,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    } ]
   },
   "Cantina módulo 6" : {
     "nome" : "Cantina módulo 6",
@@ -259,7 +365,20 @@
     "tipo" : "CANTINA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Cantina zona",
+      "sprite": null,
+      "spriteLargura": 800,
+      "spriteAltura": 400,
+      "spriteX": 450,
+      "spriteY": 350,
+      "area": {
+        "minX": 520,
+        "maxX": 850,
+        "minY": 350,
+        "maxY": 450
+      }
+    } ]
   },
   "Sala módulo 3" : {
     "nome" : "Sala módulo 3",

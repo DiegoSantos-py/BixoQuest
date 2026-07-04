@@ -2,12 +2,12 @@
   {
     "sprite": "/assets/arvore.png",
     "largura": 700,
-    "x": 50,
-    "y": 150,
+    "x": 1400,
+    "y": 600,
     "hitboxOffsetX": 285,
-    "hitboxOffsetY": 190,
+    "hitboxOffsetY": 120,
     "hitboxLargura": 100,
-    "hitboxAltura": 150
+    "hitboxAltura": 220
   },
   {
     "sprite": "/assets/arbusto_sem_flor.png",
