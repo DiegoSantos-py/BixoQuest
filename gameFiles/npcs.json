@@ -1,32 +1,36 @@
 {
-  "Atim": {
-    "tipo": "animal",
-    "nome": "Atim",
-    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
-    "cX": 10,
-    "cY": 15,
-    "falas": [
-      "Au au!",
-      "Atim parece amigável!"
-    ],
-    "interagido": false,
-    "indole": 10,
-    "domado": false,
-    "especie": "CACHORRO"
+  "Atim" : {
+    "tipo" : "animal",
+    "nome" : "Atim",
+    "cX" : 10,
+    "cY" : 15,
+    "largura" : 0,
+    "hitboxOffsetX" : 0,
+    "hitboxOffsetY" : 0,
+    "hitboxLargura" : 0,
+    "hitboxAltura" : 0,
+    "falas" : [ "Au au!", "Atim parece amigável!" ],
+    "spriteDir" : "assets/batalha/oponentes/animais/atim.png",
+    "indole" : 10,
+    "domado" : false,
+    "especie" : "CACHORRO",
+    "interagido" : false
   },
-  "azetona": {
-    "tipo": "animal",
-    "nome": "azetona",
-    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
-    "cX": 20,
-    "cY": 25,
-    "falas": [
-      "Miau...",
-      "*Ronrona*"
-    ],
-    "interagido": false,
-    "indole": 40,
-    "domado": false,
-    "especie": "GATO"
+  "azetona" : {
+    "tipo" : "animal",
+    "nome" : "azetona",
+    "cX" : 20,
+    "cY" : 25,
+    "largura" : 0,
+    "hitboxOffsetX" : 0,
+    "hitboxOffsetY" : 0,
+    "hitboxLargura" : 0,
+    "hitboxAltura" : 0,
+    "falas" : [ "Miau...", "*Ronrona*" ],
+    "spriteDir" : "assets/batalha/oponentes/animais/azetona.png",
+    "indole" : 40,
+    "domado" : false,
+    "especie" : "GATO",
+    "interagido" : false
   }
 }

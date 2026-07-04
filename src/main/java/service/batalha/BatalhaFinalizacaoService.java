@@ -11,23 +11,17 @@ import model.Player.PlayerProva;
 
 public class BatalhaFinalizacaoService {
 
-    public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva) {
+    public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva, int semestreNumero) {
         Personagem personagem = estado.getPersonagem();
-        int totalSemestres = personagem.getSemestres().size();
-        int semestreNumero = personagem.getSemestres().get(totalSemestres - 1).getNumeroSemestre();
-        estado.getResultadoProvaRepository().adicionarResultadoProva(personagem.getPersonagemId(), semestreNumero,
-                resultadoProva);
-        // PEGA O PERSONAGEM, O TOTAL DE SEMESTRES Q ELE FEZ, O ULTIMO SEMESTRER Q ELE
-        // POSSUI(O ATUAL), E O NUMERO DESSE SEMESTRE, E PASSSA PRO REPOSITORIO ADICONAR
-        // A
-        // LISTA DE RESULTADOS
+        estado.getResultadoProvaRepository().adicionarResultadoProva(
+                personagem.getPersonagemId(), semestreNumero, resultadoProva);
     }
 
     public void salvarAnimalNoRepositorio(EstadoBatalha estado, Animal animal) {
         estado.getNpcRepository().atualizarNpc(animal);
     }
 
-    public void finalizarBatalha(EstadoBatalha estado, ProvaBatalha provaBatalha) {
+    public void finalizarBatalha(EstadoBatalha estado, ProvaBatalha provaBatalha, int semestreNumero) {
         PlayerProva playerProva = estado.getPlayerProva();
         ArrayList<Float> desempenho = playerProva.getDesempenhoQuestoes();
         // se for prova, finaliza a batalha gerando o resultado, o qual será salvo
@@ -35,6 +29,7 @@ public class BatalhaFinalizacaoService {
         float notaFinal = calcularNotaFinal(desempenho, playerProva);
         // calcula a nota final baseado noq o player conseguiu tipo desempenho
         // individual em cada questão + bonuses
+
         ResultadoProva resultadoProva = new ResultadoProva(
                 estado.getPersonagem(), provaBatalha.getNome(),
                 notaFinal,
@@ -42,7 +37,8 @@ public class BatalhaFinalizacaoService {
                 playerProva.getTodosAcertosPerfeitos(),
                 playerProva.getLevouAlgumDano(),
                 playerProva.getPerdeuNota());
-        salvarResultadoProvaNoRepositorio(estado, resultadoProva);
+
+        salvarResultadoProvaNoRepositorio(estado, resultadoProva, semestreNumero);
         // retorna o resultado pro controller salvar ele na memoria pra dps salvar de
         // vez no fim do dia
     }

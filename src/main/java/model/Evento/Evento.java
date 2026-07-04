@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import model.Disciplina.AreaConhecimento;
 import model.Local.ZonaInterativa;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @JsonTypeInfo(
@@ -46,6 +48,7 @@ public class Evento {
     private double custaDinheiro;
     private boolean repetivel;
     private ZonaInterativa zona;
+    private List<String> imagensAnimacao = new ArrayList<>();
 
     public Evento() {}
 
@@ -151,6 +154,11 @@ public class Evento {
     public void setZona(ZonaInterativa zona) { this.zona = zona; }
     public int getTempoRequisito() { return tempoRequisito; }
     public void setTempoRequisito(int tempoRequisito) { this.tempoRequisito = tempoRequisito; }
+
+    public List<String> getImagensAnimacao() { return imagensAnimacao; }
+    public void setImagensAnimacao(List<String> imagensAnimacao) {
+        this.imagensAnimacao = imagensAnimacao != null ? imagensAnimacao : new ArrayList<>();
+    }
 
     @Override
     public String toString() {

@@ -50,30 +50,5 @@ public class DiretorCena {
         construtor.setPlayer(spriteBase, 350, playerX, playerY, 150, 150, 48, 96);
     }
 
-    public void construirCenaEntradaModulo(Construtor construtor,
-                                           MapaController mapaController,
-                                           NpcController npcController,
-                                           double playerX,
-                                           double playerY,
-                                           String spriteBase){
-    construtor.setBackground("/assets/background/background_entrada_modulo.png", 1920,1080);
 
-    construtor.addElement("/assets/placa_modulo_2.png", 500, 600, 500, 140,100, 150, 75);
-
-    construtor.setPlayer(spriteBase, 350, playerX, playerY,
-                150, 150, 48, 96);
-    }
-
-    public void construirCenaCantina(Construtor construtor,
-                                     MapaController mapaController,
-                                     NpcController npcController,
-                                     double playerX,
-                                     double playerY,
-                                     String spriteBase){
-    construtor.setBackground("/assets/background/background_cantina.png", 1920, 1080);
-
-        construtor.setPlayer(spriteBase, 350, playerX, playerY,
-                150, 150, 48, 96);
-
-    }
 }

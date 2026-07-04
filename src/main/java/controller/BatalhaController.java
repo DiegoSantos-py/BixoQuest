@@ -218,10 +218,8 @@ public class BatalhaController extends BaseController {
     }
 
     // --- FINALIZAÇÃO ---
-    public void finalizarBatalha() {
-        {
-            batalhaService.finalizarBatalha(estadoAtual);
-        }
+    public void finalizarBatalha(int semestreNumero) {
+        batalhaService.finalizarBatalha(estadoAtual, semestreNumero);
     }
 
     @Override

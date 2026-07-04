@@ -5,6 +5,8 @@ import exception.Evento.EventoNaoEncontradoException;
 import exception.PersistenciaException;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
+import model.Evento.Prova.ProvaBatalha;
+import model.Evento.ResultadoZona;
 import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
@@ -90,26 +92,52 @@ public class EventoService {
 
     // Lógica de negócio
 
-    public boolean podeExecutar(Evento evento, Personagem personagem, Semestre semestre,
-                                Dia diaAtual, DiaService diaService) {
+    public ResultadoZona podeExecutar(Evento evento, Personagem personagem, Semestre semestre,
+                                      Dia diaAtual, DiaService diaService) {
         if (evento.isStatus() && !evento.isRepetivel()) {
-            return false;
+            return ResultadoZona.requisitoNaoAtendido("Este evento já foi concluído");
         }
-        if (!atendeRequisitosAtributo(evento, personagem)) {
-            return false;
+
+        String motivoAtributo = motivoRequisitoAtributoNaoAtendido(evento, personagem);
+        if (motivoAtributo != null) {
+            return ResultadoZona.requisitoNaoAtendido(motivoAtributo);
         }
+
         if (personagem.getDinheiro() < evento.getCustaDinheiro()) {
-            return false;
+            return ResultadoZona.requisitoNaoAtendido("Dinheiro insuficiente");
         }
+
         if (evento.getEventoRequisito() != null && !evento.getEventoRequisito().isStatus()) {
-            return false;
+            return ResultadoZona.requisitoNaoAtendido("Requisito anterior não concluído");
         }
+
         if (!atendeRequisitoDisciplina(evento, semestre)) {
-            return false;
+            return ResultadoZona.requisitoNaoAtendido(
+                    "Você precisa estar cursando " + evento.getDisciplinaRequisitoNome());
+        }
+
+        if (evento instanceof ProvaBatalha && !semestre.estaEmPeriodoDeProvas()) {
+            return ResultadoZona.requisitoNaoAtendido("As provas só podem ser feitas nos últimos dias do semestre");
         }
 
         long tempoRestanteMin = diaService.getTempoRestante(diaAtual) / 60;
-        return tempoRestanteMin >= evento.getEfeitoTempo();
+        if (tempoRestanteMin < evento.getEfeitoTempo()) {
+            return ResultadoZona.requisitoNaoAtendido("Tempo insuficiente no dia");
+        }
+
+        return null; // pode executar
+    }
+
+    private String motivoRequisitoAtributoNaoAtendido(Evento evento, Personagem personagem) {
+        Map<String, Double> requisitos = evento.getRequisitosAtributo();
+        if (requisitos == null || requisitos.isEmpty()) return null;
+
+        for (Map.Entry<String, Double> req : requisitos.entrySet()) {
+            if (valorAtributoAtual(personagem, req.getKey()) < req.getValue()) {
+                return "Você precisa de pelo menos " + req.getValue() + " de " + req.getKey().toLowerCase();
+            }
+        }
+        return null;
     }
 
     private boolean atendeRequisitosAtributo(Evento evento, Personagem personagem) {
@@ -137,7 +165,6 @@ public class EventoService {
     private boolean atendeRequisitoDisciplina(Evento evento, Semestre semestre) {
         String nomeReq = evento.getDisciplinaRequisitoNome();
         if (nomeReq == null || nomeReq.isBlank()) return true;
-
         if (semestre == null) return false;
 
         return semestre.getDisciplinas().stream().anyMatch(d ->

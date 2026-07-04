@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class Semestre {
     private static final int MAX_DIAS = 12;
+    private static final int DIAS_PROVA = 3;
     private List<Dia> dias;
     private List<Disciplina> disciplinas;
     @JsonIgnore
@@ -60,6 +61,12 @@ public class Semestre {
         return dias.size() >= MAX_DIAS;
     }
 
+    /** Retorna true se o dia atual está dentro da janela final de provas (últimos 3 dias). */
+    public boolean estaEmPeriodoDeProvas() {
+        int diaAtualNumero = dias.size(); // dia que está prestes a começar/em andamento
+        return diaAtualNumero > (MAX_DIAS - DIAS_PROVA);
+    }
+
     public void adicionarDia(Dia dia){
         dias.add(dia);
         this.diaAtual = dias.size();
@@ -100,4 +107,7 @@ public class Semestre {
     }
 
 
+    public void setNumeroSemestre(int numero) {
+        this.numeroSemestre = numero;
+    }
 }

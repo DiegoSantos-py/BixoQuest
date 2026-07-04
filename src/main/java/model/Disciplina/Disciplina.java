@@ -2,13 +2,15 @@ package model.Disciplina;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import model.Evento.Prova.ProvaBatalha;
+import model.Evento.Prova.ProvaFactory;
+import model.Evento.Prova.ProvaIDs;
 
 import java.util.Objects;
 
 public class Disciplina {
     private String nome;
     private float codigo;
-    private ProvaBatalha prova; //Classe relacionada ao evento de batalha
+    private ProvaIDs provaId; //Classe relacionada ao evento de batalha
     private AreaConhecimento area;
 
     public AreaConhecimento getArea() {
@@ -35,13 +37,12 @@ public class Disciplina {
         this.codigo = codigo;
     }
 
+    public ProvaIDs getProvaId() { return provaId; }
+    public void setProvaId(ProvaIDs provaId) { this.provaId = provaId; }
+
     @JsonIgnore
     public ProvaBatalha getProva() {
-        return prova;
-    }
-
-    public void setProva(ProvaBatalha prova) {
-        this.prova = prova;
+        return provaId != null ? ProvaFactory.criar(provaId) : null;
     }
 
     // Duas disciplina são iguais se tem mesmo nome e código

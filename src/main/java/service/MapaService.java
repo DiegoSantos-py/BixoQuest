@@ -10,6 +10,7 @@ import repository.LocalRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MapaService {
@@ -233,5 +234,16 @@ public class MapaService {
             case ESQUERDA -> Direcao.DIREITA;
             case DIREITA  -> Direcao.ESQUERDA;
         };
+    }
+
+    public Optional<ZonaInterativa> buscarZonaPorNome(String nomeZona) {
+        for (Local local : carregarLocais().values()) {
+            for (ZonaInterativa zona : local.getZonaInterativasDisponiveis()) {
+                if (zona.getNome().equals(nomeZona)) {
+                    return Optional.of(zona);
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -2,63 +2,77 @@
   "Matemática" : [ {
     "nome" : "Matemática",
     "codigo" : 1.0,
+    "provaId" : "MAT_01",
     "area" : "MAT"
   }, {
     "nome" : "Matemática",
     "codigo" : 2.0,
+    "provaId" : "MAT_02",
     "area" : "MAT"
   }, {
     "nome" : "Matemática",
     "codigo" : 3.0,
+    "provaId" : "MAT_03",
     "area" : "MAT"
   } ],
   "TCC" : [ {
     "nome" : "TCC",
     "codigo" : 1.0,
+    "provaId" : "TCC",
     "area" : "TCC"
   } ],
   "Estágio" : [ {
     "nome" : "Estágio",
     "codigo" : 1.0,
+    "provaId" : "ESTAGIO",
     "area" : "EST"
-  } ],
-  "Software" : [ {
-    "nome" : "Software",
-    "codigo" : 1.0,
-    "area" : "SOF"
-  }, {
-    "nome" : "Software",
-    "codigo" : 2.0,
-    "area" : "SOF"
-  }, {
-    "nome" : "Software",
-    "codigo" : 3.0,
-    "area" : "SOF"
   } ],
   "Hardware" : [ {
     "nome" : "Hardware",
     "codigo" : 1.0,
+    "provaId" : "HARD_01",
     "area" : "HAR"
   }, {
     "nome" : "Hardware",
     "codigo" : 2.0,
+    "provaId" : "HARD_02",
     "area" : "HAR"
   }, {
     "nome" : "Hardware",
     "codigo" : 3.0,
+    "provaId" : "HARD_03",
     "area" : "HAR"
+  } ],
+  "Software" : [ {
+    "nome" : "Software",
+    "codigo" : 1.0,
+    "provaId" : "SOFT_01",
+    "area" : "SOF"
+  }, {
+    "nome" : "Software",
+    "codigo" : 2.0,
+    "provaId" : "SOFT_02",
+    "area" : "SOF"
+  }, {
+    "nome" : "Software",
+    "codigo" : 3.0,
+    "provaId" : "SOFT_03",
+    "area" : "SOF"
   } ],
   "Naturezas" : [ {
     "nome" : "Naturezas",
     "codigo" : 1.0,
+    "provaId" : "NAT_01",
     "area" : "NAT"
   }, {
     "nome" : "Naturezas",
     "codigo" : 2.0,
+    "provaId" : "NAT_02",
     "area" : "NAT"
   }, {
     "nome" : "Naturezas",
     "codigo" : 3.0,
+    "provaId" : "NAT_03",
     "area" : "NAT"
   } ]
 }

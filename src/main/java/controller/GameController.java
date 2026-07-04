@@ -3,6 +3,8 @@ package controller;
 import exception.PersistenciaException;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
+import model.Evento.Prova.ProvaIDs;
+import model.Evento.ResultadoZona;
 import model.Personagem;
 import model.Tempo.Semestre;
 import service.GameService;
@@ -67,10 +69,6 @@ public class GameController extends BaseController {
         return service.obterDisciplinasDisponiveis();
     }
 
-    public Optional<Evento> processarZona(String nomeZona) {
-        return service.processarZona(nomeZona);
-    }
-
     /**
      * Confirma a escolha do jogador e inicia o semestre com as disciplinas selecionadas.
      * Exibe erro se a escolha for inválida (excede o limite, disciplina indisponível,
@@ -88,6 +86,30 @@ public class GameController extends BaseController {
             // captura SemestreInvalidoException, DisciplinaInvalidaException, etc.
             exibirErro(e.getMessage());
             return false;
+        }
+    }
+
+    public ResultadoZona processarZona(String nomeZona) {
+        return service.processarZona(nomeZona);
+    }
+
+    public void confirmarResultadoProva(ProvaIDs provaId, boolean aprovado) {
+        try {
+            service.confirmarResultadoProva(provaId, aprovado);
+        } catch (PersistenciaException e) {
+            tratarErroPersistencia(e);
+        }
+    }
+
+    public void consumirTempoProva(int minutos) {
+        service.consumirTempoProva(minutos);
+    }
+
+    public void debugForcarFimDeSemestre() {
+        try {
+            service.debugForcarFimDeSemestre();
+        } catch (PersistenciaException e) {
+            tratarErroPersistencia(e);
         }
     }
 

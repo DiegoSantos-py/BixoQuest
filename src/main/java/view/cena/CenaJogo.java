@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -17,6 +19,15 @@ import view.util.FonteUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.util.Duration;
+import model.Evento.Evento;
 
 /**
  * Produto final do ConstrutorCenaJogo.
@@ -42,6 +53,8 @@ public class CenaJogo {
     private final Consumer<Borda> onBordaAtingida;
     private final String spriteBase;
 
+    private StackPane containerFeedback;
+    private Label toastAtual;
 
     private AnimationTimer gameLoop;
     private SistemaMovimento sistemaMovimento;
@@ -131,6 +144,12 @@ public class CenaJogo {
         StackPane.setMargin(labelTempoRestante, new Insets(20));
         raizCena.getChildren().add(labelTempoRestante);
 
+        containerFeedback = new StackPane();
+        containerFeedback.setMouseTransparent(true);
+        StackPane.setAlignment(containerFeedback, Pos.TOP_CENTER);
+        StackPane.setMargin(containerFeedback, new Insets(80, 0, 0, 0));
+        raizCena.getChildren().add(containerFeedback);
+
         gerenciadorEntrada = new GerenciadorEntrada(
                 this::abrirMenuAtributos,
                 this::alternarMenuPause);
@@ -138,6 +157,16 @@ public class CenaJogo {
 
         inicializarMenus();
         iniciarGameLoop();
+
+        raizCena.sceneProperty().addListener((obs, old, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+                    if (e.getCode() == KeyCode.F9) {
+                        gameController.debugForcarFimDeSemestre();
+                    }
+                });
+            }
+        });
 
         return raizCena; // retorna o StackPane
     }
@@ -240,5 +269,44 @@ public class CenaJogo {
     public void parar() {
         if (gameLoop != null)
             gameLoop.stop();
+    }
+
+    public void abrirFeedbackEvento(Evento evento) {
+        gerenciadorMenus.abrirFeedbackEvento(evento);
+    }
+
+    public void exibirFeedbackMotivo(String motivo) {
+        exibirToast(motivo, Color.web("#e74c3c"));
+    }
+
+    private void exibirToast(String texto, Color corFundo) {
+        if (toastAtual != null) {
+            containerFeedback.getChildren().remove(toastAtual);
+        }
+
+        Label label = new Label(texto);
+        label.setFont(FonteUtil.pixel(20));
+        label.setTextFill(Color.WHITE);
+        label.setPadding(new Insets(12, 24, 12, 24));
+        label.setBackground(new Background(new BackgroundFill(corFundo, new CornerRadii(8), Insets.EMPTY)));
+
+        containerFeedback.getChildren().add(label);
+        toastAtual = label;
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), label);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        PauseTransition espera = new PauseTransition(Duration.seconds(2.5));
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(400), label);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            containerFeedback.getChildren().remove(label);
+            if (toastAtual == label) toastAtual = null;
+        });
+
+        new SequentialTransition(fadeIn, espera, fadeOut).play();
     }
 }

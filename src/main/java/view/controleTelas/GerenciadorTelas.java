@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
+import model.Evento.Prova.ProvaIDs;
 
 public class GerenciadorTelas {
 
@@ -64,6 +65,10 @@ public class GerenciadorTelas {
 
     public void mostrarTelaBatalha() {trocarRoot(controllerTelas.criarTelaBatalha());}
 
+    public void mostrarTelaBatalha(ProvaIDs provaId, String nomeLocalRetorno) {
+        trocarRoot(controllerTelas.criarTelaBatalha(provaId, nomeLocalRetorno));
+    }
+
     public void mostrarCriacaoPersonagem(int slotId) {
         trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));
     }
@@ -93,4 +98,5 @@ public class GerenciadorTelas {
     public void mostrarConfiguracoes() {
 
     }
+
 }

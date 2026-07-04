@@ -126,6 +126,17 @@ public class MapaController extends BaseController {
         }
     }
 
+    public Optional<ZonaInterativa> buscarZonaPorNome(String nomeZona) {
+        for (Local local : service.carregarLocais().values()) {
+            for (ZonaInterativa zona : local.getZonaInterativasDisponiveis()) {
+                if (zona.getNome().equals(nomeZona)) {
+                    return Optional.of(zona);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
 
     // Exibição
     @Override

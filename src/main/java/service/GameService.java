@@ -1,14 +1,23 @@
 package service;
 
 import exception.PersistenciaException;
+import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
+import model.Evento.EventoAleatorio;
+import model.Evento.Prova.ProvaBatalha;
+import model.Evento.Prova.ProvaFactory;
+import model.Evento.Prova.ProvaIDs;
+import model.Evento.ResultadoZona;
+import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameService {
@@ -24,6 +33,7 @@ public class GameService {
     private final EventoRepository eventoRepo;
     private final NpcRepository npcRepo;
     private final PersonagemRepository personagemRepo;
+    private final MapaService mapaService;
 
     private boolean diaTransicionado;
     private Semestre semestre;
@@ -35,6 +45,7 @@ public class GameService {
                        PersonagemService personagemService,
                        InicializacaoService inicializacaoService,
                        EventoService eventoService,
+                       MapaService mapaService,
                        LocalRepository localRepo,
                        SemestreRepository semestreRepo,
                        DisciplinaRepository disciplinaRepo,
@@ -47,6 +58,7 @@ public class GameService {
         this.personagemService = personagemService;
         this.inicializacaoService = inicializacaoService;
         this.eventoService = eventoService;
+        this.mapaService = mapaService;
 
         this.localRepo = localRepo;
         this.semestreRepo = semestreRepo;
@@ -93,15 +105,19 @@ public class GameService {
 
     /** Chamado pelo Controller depois que o jogador escolheu as disciplinas na View */
     public void confirmarEscolhaDisciplinas(List<Disciplina> disciplinasEscolhidas) throws PersistenciaException {
-        this.semestre = semestreService.iniciarSemestreComEscolha(personagem, disciplinasEscolhidas);
+        Personagem p = personagemRepo.buscarPorId(personagem);
+
+        this.semestre = semestreService.iniciarSemestreComEscolha(personagem, disciplinasEscolhidas, p);
+
+        for (Disciplina d : disciplinasEscolhidas) {
+            p.getConhecimentos().put(d.getArea(), 0.0);
+        }
+        personagemRepo.salvar();
 
         semestreRepo.adicionarSemestre(personagem, semestre);
         semestreRepo.salvar();
 
-        resetarConhecimentosParaNovoSemestre(disciplinasEscolhidas);
-
         diaAtual = semestreService.avancarDia(semestre);
-        iniciarProximoDia();
     }
 
     private void resetarConhecimentosParaNovoSemestre(List<Disciplina> disciplinasEscolhidas) throws PersistenciaException {
@@ -159,7 +175,17 @@ public class GameService {
 
     /** Chamado pelo runnable da cena "fim do dia", ao voltar pro jogo */
     public void iniciarProximoDia() {
+        List<Evento> obrigatorios = montarEventosObrigatoriosDoDia();
+        List<EventoAleatorio> aleatorios = List.of(); // eventos aleatórios ainda não modelados nesse fluxo
+
+        diaService.gerarEventosDoDia(diaAtual, obrigatorios, aleatorios);
         diaService.iniciarDia(diaAtual);
+    }
+
+    public void consumirTempoProva(int minutos) {
+        if (diaAtual == null) return;
+        long restante = diaService.getTempoRestante(diaAtual) / 60;
+        diaService.consumirTempoEvento(diaAtual, (int) Math.min(minutos, restante));
     }
 
     public boolean houveTransicaoDeDia() {
@@ -176,25 +202,119 @@ public class GameService {
         }
     }
 
-    public Optional<Evento> processarZona(String nomeZona) {
-        if (diaAtual == null) return Optional.empty();
+    public ResultadoZona processarZona(String nomeZona) {
+        if (diaAtual == null) return ResultadoZona.semEvento();
 
         Evento evento = diaAtual.getEventosObrigatorios().get(nomeZona);
         if (evento == null) {
             evento = diaAtual.getEventosAleatorios().get(nomeZona);
         }
-        if (evento == null) return Optional.empty(); // não há evento nessa zona — cai no fallback de navegação
+        if (evento == null) return ResultadoZona.semEvento();
 
         Personagem personagemObj = personagemRepo.buscarPorId(personagem);
 
-        if (!eventoService.podeExecutar(evento, personagemObj, semestre, diaAtual, diaService)) {
-            return Optional.empty(); // existe evento, mas requisitos não atendidos
+        if (evento instanceof ProvaBatalha prova) {
+            ResultadoZona bloqueio = eventoService.podeExecutar(evento, personagemObj, semestre, diaAtual, diaService);
+            if (bloqueio != null) return bloqueio;
+
+            ProvaIDs provaId = resolverProvaId(prova);
+            if (provaId == null) return ResultadoZona.requisitoNaoAtendido("Prova não configurada corretamente");
+
+            return ResultadoZona.provaBatalha(prova, provaId);
         }
 
+        ResultadoZona bloqueio = eventoService.podeExecutar(evento, personagemObj, semestre, diaAtual, diaService);
+        if (bloqueio != null) return bloqueio;
+
         eventoService.executarEvento(evento, personagemObj, diaAtual, diaService);
-        return Optional.of(evento); // evento executado — View decide o que exibir
+        return ResultadoZona.executado(evento);
     }
 
+    private ProvaIDs resolverProvaId(ProvaBatalha prova) {
+        if (semestre == null) return null;
+
+        return semestre.getDisciplinas().stream()
+                .filter(d -> d.getArea() == prova.getAreaConhecimento()
+                        && d.getCodigo() == prova.getNivelDisciplina())
+                .map(Disciplina::getProvaId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    // GameService
+    public void confirmarResultadoProva(ProvaIDs provaId, boolean aprovado) throws PersistenciaException {
+        Disciplina disciplina = semestre.getDisciplinas().stream()
+                .filter(d -> d.getProvaId() == provaId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Disciplina não encontrada para prova: " + provaId));
+
+        semestreService.definirResultadoDisciplina(semestre, disciplina, aprovado);
+        semestreRepo.salvar();
+    }
+
+    private static final Map<String, AreaConhecimento> ZONA_PARA_AREA = Map.of(
+            "Sala matemática", AreaConhecimento.MAT,
+            "Sala software", AreaConhecimento.SOF,
+            "Sala naturezas", AreaConhecimento.NAT,
+            "Sala hardware", AreaConhecimento.HAR,
+            "Sala tcc", AreaConhecimento.TCC,
+            "Sala estágio", AreaConhecimento.EST
+    );
+
+    private static final Map<String, String> ZONA_PARA_NOME_EVENTO_ESTUDO = Map.of(
+            "Sala matemática", "Estudar Matemática",
+            "Sala software", "Estudar Software",
+            "Sala naturezas", "Estudar Naturezas",
+            "Sala hardware", "Estudar Hardware",
+            "Sala tcc", "Estudar TCC",
+            "Sala estágio", "Estudar Estágio"
+    );
+
+    private List<Evento> montarEventosObrigatoriosDoDia() {
+        List<Evento> eventos = new ArrayList<>();
+
+        if (semestre == null) return eventos;
+
+        boolean periodoDeProvas = semestre.estaEmPeriodoDeProvas();
+
+        for (Map.Entry<String, AreaConhecimento> entry : ZONA_PARA_AREA.entrySet()) {
+            String nomeZona = entry.getKey();
+            AreaConhecimento area = entry.getValue();
+
+            semestre.getDisciplinas().stream()
+                    .filter(d -> d.getArea() == area)
+                    .findFirst()
+                    .ifPresent(disciplina -> {
+                        if (periodoDeProvas) {
+                            if (disciplina.getProvaId() == null) return;
+                            ProvaBatalha prova = ProvaFactory.criar(disciplina.getProvaId());
+                            prova.setDisciplinaRequisitoNome(disciplina.getNome());
+                            prova.setDisciplinaRequisitoCodigo(disciplina.getCodigo());
+                            eventos.add(prova);
+                        } else {
+                            String nomeEventoEstudo = ZONA_PARA_NOME_EVENTO_ESTUDO.get(nomeZona);
+                            Evento eventoEstudo = eventoService.buscarPorNome(nomeEventoEstudo);
+                            eventos.add(eventoEstudo);
+                        }
+                    });
+        }
+
+        return eventos;
+    }
+
+    public void debugForcarFimDeSemestre() throws PersistenciaException {
+        if (semestre == null || diaAtual == null) return;
+
+        while (!semestreService.terminouSemestre(semestre)) {
+            diaService.encerrarDia(diaAtual);
+            diaAtual = semestreService.avancarDia(semestre);
+        }
+
+        // dispara o mesmo caminho que atualizar() usaria ao detectar fim de semestre
+        semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
+        this.semestre = null;
+        diaTransicionado = true; // reaproveita o flag existente, se CenaJogo estiver checando isso
+    }
     /**
      * Salva o estado de todos os repositórios exceto localRepo.
      * Chamado ao fim de cada dia.

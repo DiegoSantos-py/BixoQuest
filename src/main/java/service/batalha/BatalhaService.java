@@ -82,20 +82,20 @@ public class BatalhaService {
         loopService.atacarOponenteAtual(estado, multiplicadorPrecisao);
     }
 
-    public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva) {
-        finalizacaoService.salvarResultadoProvaNoRepositorio(estado, resultadoProva);
+    public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva, int semestreNumero) {
+        finalizacaoService.salvarResultadoProvaNoRepositorio(estado, resultadoProva, semestreNumero);
     }
 
     public void salvarAnimalNoRepositorio(EstadoBatalha estado, Animal animal) {
         finalizacaoService.salvarAnimalNoRepositorio(estado, animal);
     }
 
-    public void finalizarBatalha(EstadoBatalha estado) {
+    public void finalizarBatalha(EstadoBatalha estado, int semestreNumero) {
         if (estado.getAnimal() != null) {
             finalizacaoService.finalizarBatalha(estado, estado.getAnimal());
         }
         if (estado.getProvaBatalha() != null) {
-            finalizacaoService.finalizarBatalha(estado, estado.getProvaBatalha());
+            finalizacaoService.finalizarBatalha(estado, estado.getProvaBatalha(), semestreNumero);
         }
     }
 }

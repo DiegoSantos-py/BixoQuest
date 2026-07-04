@@ -2,6 +2,8 @@ package view.controleTelas;
 
 import controller.*;
 import javafx.scene.Parent;
+import model.Evento.Prova.ProvaIDs;
+import model.Evento.ResultadoZona;
 import view.InicioJogoView;
 import view.animacao.AnimacaoFimView;
 import view.animacao.AnimacaoInicioView;
@@ -21,6 +23,8 @@ public class ControllerTelas {
     private final GameController gameController;
     private final BatalhaController batalhaController;
     private final DiretorCena diretorCena;
+
+    private static final int TEMPO_PROVA_MINUTOS = 5;
 
     private CenaJogo cenaAtual;
     private Borda ultimaBorda;
@@ -88,7 +92,22 @@ public class ControllerTelas {
     }
 
     public Parent criarTelaBatalha() {
-        return new CenaBatalha(batalhaController, () -> gerenciador.mostrarSeletorBatalha());
+        int semestreNumero = gameController.getSemestre().getNumeroSemestre();
+        return new CenaBatalha(batalhaController, () -> gerenciador.mostrarSeletorBatalha(), semestreNumero);
+    }
+
+    public Parent criarTelaBatalha(ProvaIDs provaId, String nomeLocalRetorno) {
+        batalhaController.iniciarProva(provaId, gameController.getPersonagem());
+
+        int semestreNumero = gameController.getSemestre().getNumeroSemestre();
+
+        return new CenaBatalha(batalhaController, () -> {
+            boolean aprovado = batalhaController.getEstadoAtual().isVitoria();
+            gameController.confirmarResultadoProva(provaId, aprovado);
+            gameController.consumirTempoProva(TEMPO_PROVA_MINUTOS);
+            gameController.retomarDia();
+            gerenciador.mostrarCenaPorNome(nomeLocalRetorno);
+        }, semestreNumero);
     }
 
     public Parent criarAnimacaoInicio(int sessaoAtual) {
@@ -130,8 +149,23 @@ public class ControllerTelas {
         construtor.setOnSairParaMenuPrincipal(gerenciador::mostrarMenuInicial);
         construtor.setOnFinalizar(gerenciador::mostrarAnimacaoFim);
 
+        Consumer<String> onZonaComEvento = nomeZona -> {
+            ResultadoZona resultado = gameController.processarZona(nomeZona);
+
+            switch (resultado.getStatus()) {
+                case SEM_EVENTO -> onZona.accept(nomeZona);
+                case EXECUTADO -> cenaAtual.abrirFeedbackEvento(resultado.getEvento());
+                case REQUISITO_NAO_ATENDIDO -> cenaAtual.exibirFeedbackMotivo(resultado.getMotivo());
+                case PROVA_BATALHA -> {
+                    cenaAtual.parar();              // para o AnimationTimer da CenaJogo atual
+                    gameController.pausarDia();     // pausa o cronômetro do dia (mesmo mecanismo dos menus)
+                    gerenciador.mostrarTelaBatalha(resultado.getProvaId(), nomeLocal);
+                }
+            }
+        };
+
         diretorCena.construirCena(construtor, mapaController,
-                onZona,
+                onZonaComEvento,
                 nome -> System.out.println("NPC: " + nome),
                 pos[0], pos[1], spriteBase, nomeLocal);
 
@@ -156,4 +190,5 @@ public class ControllerTelas {
             case null  -> new double[]{700, 700};
         };
     }
+
 }

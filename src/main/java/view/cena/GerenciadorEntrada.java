@@ -21,7 +21,6 @@ public class GerenciadorEntrada {
         pane.setFocusTraversable(true);
 
         pane.setOnKeyPressed(e -> {
-            System.out.println("Pressionou: " + e.getCode());
             teclasPressionadas.add(e.getCode());
             if (e.getCode() == KeyCode.TAB) {
                 if (onPressionarTAB != null) onPressionarTAB.run();

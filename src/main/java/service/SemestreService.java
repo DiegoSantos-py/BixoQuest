@@ -49,11 +49,14 @@ public class SemestreService {
 
     // Lógica de negócio
 
-    public Semestre criarSemestre() {
-        return new Semestre();
+    public Semestre criarSemestre(Personagem personagem) {
+        Semestre semestre = new Semestre();
+        int numero = personagem.getSemestres().size() + 1; // próximo número, baseado no histórico já encerrado
+        semestre.setNumeroSemestre(numero);
+        return semestre;
     }
 
-    public Semestre iniciarSemestreComEscolha(int jogadorId, List<Disciplina> disciplinasEscolhidas) {
+    public Semestre iniciarSemestreComEscolha(int jogadorId, List<Disciplina> disciplinasEscolhidas, Personagem personagem) {
         if (disciplinasEscolhidas == null || disciplinasEscolhidas.isEmpty()) {
             throw new SemestreInvalidoException("disciplinas", "é necessário escolher ao menos uma disciplina");
         }
@@ -74,7 +77,7 @@ public class SemestreService {
             }
         }
 
-        Semestre semestre = criarSemestre();
+        Semestre semestre = criarSemestre(personagem);
         semestre.setDisciplinas(disciplinasEscolhidas);
         return semestre;
     }

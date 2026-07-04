@@ -18,6 +18,7 @@ public class CenaBatalha extends StackPane {
 
     private final BatalhaController batalhaController;
     private final Runnable aoVoltar;
+    private int semestreNumero;
 
     // Componentes
     private final HUDBatalha hud;
@@ -57,9 +58,10 @@ public class CenaBatalha extends StackPane {
     // Arena persistente para renderização do ataque inimigo
     private Pane arenaPane;
 
-    public CenaBatalha(BatalhaController batalhaController, Runnable aoVoltar) {
+    public CenaBatalha(BatalhaController batalhaController, Runnable aoVoltar, int semestreNumero) {
         this.batalhaController = batalhaController;
         this.aoVoltar = aoVoltar;
+        this.semestreNumero = semestreNumero;
 
         hud           = new HUDBatalha(batalhaController);
         minigame      = new MinigameBatalha(batalhaController);
@@ -247,7 +249,7 @@ public class CenaBatalha extends StackPane {
                 batalhaController.pararAudio();
                 Runnable sair = () -> {
                     parar();
-                    batalhaController.finalizarBatalha();
+                    batalhaController.finalizarBatalha(semestreNumero);
                     if (aoVoltar != null) aoVoltar.run();
                 };
                 if (batalhaController.isBatalhaAnimal()) {
