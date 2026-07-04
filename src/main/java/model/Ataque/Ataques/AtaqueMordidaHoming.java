@@ -79,8 +79,5 @@ public class AtaqueMordidaHoming extends Ataque {
         this.projeteisSpawnados = 0;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Mordida";
-    }
+
 }

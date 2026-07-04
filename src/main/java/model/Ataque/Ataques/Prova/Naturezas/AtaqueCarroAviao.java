@@ -167,10 +167,7 @@ public class AtaqueCarroAviao extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Cinemática Veículos";
-    }
+
 
     @Override
     public void reiniciarAtaque() {

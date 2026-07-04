@@ -163,8 +163,8 @@ public class BattleRenderer {
             iv.setFitHeight(altura);
             iv.setLayoutX(localX);
             iv.setLayoutY(localY);
-            iv.setScaleX(2);
-            iv.setScaleY(2);
+            iv.setScaleX(entidade.getMultiplicadorSprite());
+            iv.setScaleY(entidade.getMultiplicadorSprite());
 
             double graus = Math.toDegrees(entidade.getHitbox().getAnguloRotacao());
             if (graus != 0) iv.setRotate(graus);

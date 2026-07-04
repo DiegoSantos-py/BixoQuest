@@ -38,13 +38,22 @@ public class MenuAcoesBatalha {
             int indexFinal = i;
 
             btn.setOnAction(e -> {
+                float danoOld = acao.getBonusDano();
+                int shieldOld = acao.getBonusShield();
+                float conhecimentoOld = acao.getBonusConhecimento();
+                float notaOld = acao.getBonusNota();
+                
                 boolean sucesso = controller.executarAcao(indexFinal);
-                onFeedbackPronto.accept(montarTextoFeedback(acao, sucesso));
+                
+                onFeedbackPronto.accept(montarTextoFeedback(acao.getNome(), danoOld, shieldOld, conhecimentoOld, notaOld, sucesso));
             });
 
             grid.add(btn, col, row);
             col++;
-            if (col > 1) { col = 0; row++; }
+            if (col > 1) {
+                col = 0;
+                row++;
+            }
         }
 
         return grid;
@@ -68,15 +77,15 @@ public class MenuAcoesBatalha {
         return container;
     }
 
-    private String montarTextoFeedback(AcaoBatalha acao, boolean sucesso) {
+    private String montarTextoFeedback(String acaoNome, float bonusDano, int bonusShield, float bonusConhecimento, float bonusNota, boolean sucesso) {
         StringBuilder textoFeedback = new StringBuilder("VOCÊ TENTOU \"")
-                .append(acao.getNome().toUpperCase()).append("\".\n\n");
+                .append(acaoNome.toUpperCase()).append("\".\n\n");
         if (sucesso) {
             textoFeedback.append("E CONSEGUIU! ATRIBUTOS MODIFICADOS:\n");
-            if (acao.getBonusDano() > 0)         textoFeedback.append("+ ").append(acao.getBonusDano()).append(" DANO\n");
-            if (acao.getBonusShield() > 0)       textoFeedback.append("+ ").append(acao.getBonusShield()).append(" ESCUDO\n");
-            if (acao.getBonusConhecimento() > 0)  textoFeedback.append("+ ").append(acao.getBonusConhecimento()).append(" CONHECIMENTO\n");
-            if (acao.getBonusNota() > 0)          textoFeedback.append("+ ").append(acao.getBonusNota()).append(" NOTA\n");
+            if (bonusDano > 0)         textoFeedback.append("+ ").append(bonusDano).append(" DANO\n");
+            if (bonusShield > 0)       textoFeedback.append("+ ").append(bonusShield).append(" ESCUDO\n");
+            if (bonusConhecimento > 0)  textoFeedback.append("+ ").append(bonusConhecimento).append(" CONHECIMENTO\n");
+            if (bonusNota > 0)          textoFeedback.append("+ ").append(bonusNota).append(" NOTA\n");
         } else {
             textoFeedback.append("MAS FALHOU... NADA ACONTECEU.");
         }
@@ -84,7 +93,8 @@ public class MenuAcoesBatalha {
     }
 
     private Button criarBotaoTextoSimples(AcaoBatalha acao) {
-        String textoBotao = acao.getNome().toUpperCase() + "\n" + "(" + (acao.getChanceAcerto()*100) + "% DE CHANCE DE ACERTO" + ")";
+        String textoBotao = acao.getNome().toUpperCase() + "\n" + "(" + (acao.getChanceAcerto() * 100)
+                + "% DE CHANCE DE ACERTO" + ")";
         StringBuilder textoOnHover = new StringBuilder();
 
         textoOnHover.append("ATRIBUTOS:\n");

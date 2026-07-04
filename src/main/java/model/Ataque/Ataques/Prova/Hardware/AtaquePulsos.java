@@ -112,10 +112,7 @@ public class AtaquePulsos extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Pulsos";
-    }
+
 
     @Override
     public void reiniciarAtaque() {

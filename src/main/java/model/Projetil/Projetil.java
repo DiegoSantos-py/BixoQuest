@@ -193,6 +193,7 @@ public class Projetil extends EntidadeBatalha {
         this.comportamentosDespawn.clear();
         this.comportamentosAoColidir.clear();
         this.persistente = false;
+        this.multiplicadorSprite = 2.0f;
         this.spriteDir = "/assets/batalha/projeteis/" + spriteDir;
         this.ativar();
     }
@@ -281,5 +282,9 @@ public class Projetil extends EntidadeBatalha {
 
     public ProjetilFactory getFactory() {
         return factory;
+    }
+
+    public float getDuracaoMaxima() {
+        return duracaoMaxima;
     }
 }

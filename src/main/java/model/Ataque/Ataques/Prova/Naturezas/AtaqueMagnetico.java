@@ -93,8 +93,5 @@ public class AtaqueMagnetico extends Ataque {
         this.timerFerro = 0;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Magnético";
-    }
+
 }

@@ -15,7 +15,7 @@ public class AtaqueRetaTangente extends Ataque {
     private Projetil pontoHoming = null;
 
     private final ProjetilQuePreve preditivo = new ProjetilQuePreve(125f, 6.0f, 1.2f);
-    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
+    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 6, 650, 1, 0.75f, 0.2f, 1f);
 
     private float attackDuration = 10f;
 
@@ -97,8 +97,5 @@ public class AtaqueRetaTangente extends Ataque {
         this.pontoHoming = null;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Reta Tangente";
-    }
+
 }

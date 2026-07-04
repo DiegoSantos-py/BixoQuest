@@ -149,6 +149,7 @@ public class BatalhaController extends BaseController {
             case S: p.setMovendoBaixo(true); break;
             case A: p.setMovendoEsquerda(true); break;
             case D: p.setMovendoDireita(true); break;
+            case SPACE: p.setAtirando(true); break;
             default: break;
         }
     }
@@ -162,6 +163,7 @@ public class BatalhaController extends BaseController {
             case S: p.setMovendoBaixo(false); break;
             case A: p.setMovendoEsquerda(false); break;
             case D: p.setMovendoDireita(false); break;
+            case SPACE: p.setAtirando(false); break;
             default: break;
         }
     }

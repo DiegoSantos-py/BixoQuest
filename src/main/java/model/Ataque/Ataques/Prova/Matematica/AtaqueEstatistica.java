@@ -121,8 +121,5 @@ public class AtaqueEstatistica extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Estatistica";
-    }
+
 }

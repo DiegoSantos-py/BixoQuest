@@ -11,6 +11,7 @@ public abstract class EntidadeBatalha {
     protected float velocidadeAngular; // Rotação em radianos por segundo
     protected boolean ativo;
     protected String spriteDir;
+    protected float multiplicadorSprite = 2.0f;
     public EntidadeBatalha(Hitbox hitbox, Vector2D velocidade, String spriteDir) {
         this.hitbox = hitbox;
         this.velocidade = velocidade;
@@ -80,6 +81,14 @@ public abstract class EntidadeBatalha {
 
     public void setVelocidadeAngular(float velocidadeAngular) {
         this.velocidadeAngular = velocidadeAngular;
+    }
+
+    public float getMultiplicadorSprite() {
+        return multiplicadorSprite;
+    }
+
+    public void setMultiplicadorSprite(float multiplicadorSprite) {
+        this.multiplicadorSprite = multiplicadorSprite;
     }
 
     public boolean isAtivo() {

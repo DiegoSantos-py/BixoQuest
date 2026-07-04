@@ -9,6 +9,7 @@ import model.Ataque.Ataques.Prova.Naturezas.AtaqueAtomo;
 import model.Ataque.Ataques.Prova.Naturezas.AtaqueCarroAviao;
 import model.Ataque.Ataques.Prova.Naturezas.AtaqueColisaoElastica;
 import model.Ataque.Ataques.Prova.Naturezas.AtaqueGravidade;
+import model.Ataque.Ataques.Prova.Naturezas.AtaqueAtomosGravidade;
 import model.Player.AcaoBatalha;
 
 import java.util.ArrayList;
@@ -124,6 +125,14 @@ public class ProvasNaturezas {
                 15f,
                 new AtaqueMagnetico(null, null, 15f),
                 "Um campo magnético fortíssimo atrai tudo de metal...", "Você precisa desviar dos projéteis sendo puxados!"
+        ));
+
+        prova.addQuestao(new Questao(
+                "Estrutura Atômica e Gravidade",
+                40f, AreaConhecimento.NAT,
+                15f,
+                new AtaqueAtomosGravidade(null, null, 15f),
+                "Átomos instáveis sob efeito da gravidade!", "Pule os carros e desvie dos elétrons!"
         ));
 
         return prova;

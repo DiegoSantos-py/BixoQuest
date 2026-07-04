@@ -169,4 +169,8 @@ public abstract class Ataque {
     public List<Projetil> getProjeteis() { 
         return factory.getAtivos(); 
     }
+
+    public ProjetilFactory getFactory() {
+        return factory;
+    }
 }

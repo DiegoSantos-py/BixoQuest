@@ -99,8 +99,5 @@ public class AtaqueVetores extends Ataque {
         this.owner.setY(originalPosY);
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Vetores";
-    }
+
 }

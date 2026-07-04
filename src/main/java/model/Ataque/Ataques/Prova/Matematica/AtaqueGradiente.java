@@ -74,8 +74,5 @@ public class AtaqueGradiente extends Ataque {
         this.anguloRotacao = 0;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Gradiente";
-    }
+
 }

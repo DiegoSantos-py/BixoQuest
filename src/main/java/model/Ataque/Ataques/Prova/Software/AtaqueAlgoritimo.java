@@ -204,8 +204,5 @@ public class AtaqueAlgoritimo extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Algoritimo";
-    }
+
 }

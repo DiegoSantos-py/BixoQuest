@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import model.util.Hitbox;
 import model.util.Vector2D;
 import model.Batalha.EntidadeBatalha;
+import model.Projetil.Projetil;
 
 public class PlayerProva extends EntidadeBatalha {
     
-    public enum SoulMode { RED, BLUE }
+    public enum SoulMode { RED, BLUE, YELLOW }
 
     // --- Atributos de Física/Soul Mode ---
     private SoulMode soulMode = SoulMode.RED;
@@ -26,8 +27,8 @@ public class PlayerProva extends EntidadeBatalha {
     private float desempenhoQuestaoAtual;
     private float danoAtaque;
     private float conhecimentoArea;
-    private float TEMPO_IMUNIDADE = 0.5f; // 0.5 segundos de invulnerabilidade após receber dano
-    private float VELOCIDADE = 200f;
+    private float TEMPO_IMUNIDADE = 0.75f; // 0.5 segundos de invulnerabilidade após receber dano
+    private float VELOCIDADE = 225f;
     private float tempoImunidadeRestante;
     // --- Estatística de desempenho ---
     private ArrayList<Float> desempenhoQuestoes;
@@ -39,6 +40,13 @@ public class PlayerProva extends EntidadeBatalha {
     private boolean movendoEsquerda;
     private boolean movendoBaixo;
     private boolean movendoDireita;
+
+    // --- Yellow Soul ---
+    private model.Projetil.ProjetilFactory factoryAtual = null;
+    private boolean atirando = false;
+    private float cooldownTiro = 0f;
+    private final model.Projetil.Comportamentos.ProjetilEliminaColisao ELIMINA_COLISAO =
+            new model.Projetil.Comportamentos.ProjetilEliminaColisao();
 
 
 
@@ -155,32 +163,56 @@ public class PlayerProva extends EntidadeBatalha {
                 yVelocity = JUMP_FORCE;
                 jumpTimer += deltaTime;
             } else {
-                // Mecânica de "Cut Jump": se soltar o botão no meio da subida, corta a inércia pela metade
                 if (isJumping && !movendoCima && yVelocity < 0) {
                     yVelocity *= 0.5f;
                 }
                 isJumping = false;
             }
             
-            // Gravidade normal (só aplica se não estiver no meio do impulso do pulo)
             if (!isGrounded && !isJumping) {
                 yVelocity += GRAVITY * deltaTime;
             } else if (isGrounded) {
                 yVelocity = 0;
             }
             
-            // Allow fast falling
             if (movendoBaixo && !isGrounded) {
                 yVelocity += (GRAVITY * 1.5f) * deltaTime;
             }
 
-            // Velocidade Terminal
             float maxFallSpeed = movendoBaixo ? (GRAVITY * 1.5f) : GRAVITY;
             if (yVelocity > maxFallSpeed) {
                 yVelocity = maxFallSpeed;
             }
             
             this.velocidade.set(dx * VELOCIDADE, yVelocity);
+        } else if (this.soulMode == SoulMode.YELLOW) {
+            float dx = 0;
+            float dy = 0;
+            if (movendoDireita)  dx += 1;
+            if (movendoEsquerda) dx -= 1;
+            if (movendoCima)     dy -= 1;
+            if (movendoBaixo)    dy += 1;
+
+            float magnitude = (float) Math.sqrt(dx * dx + dy * dy);
+            if (magnitude > 0) { dx /= magnitude; dy /= magnitude; }
+            this.velocidade.set(dx * VELOCIDADE, dy * VELOCIDADE);
+
+            cooldownTiro -= deltaTime;
+            if (atirando && cooldownTiro <= 0f && factoryAtual != null) {
+                    Projetil bala = factoryAtual.spawn(
+                        getX(), getY(),
+                        12, 13,
+                        600f,
+                        -(float) Math.PI / 2f,
+                        0, 0,
+                        0f, 2f,"tiroAmarelo.png"
+                );
+                if (bala != null) {
+                    bala.addComportamento(ELIMINA_COLISAO);
+                }
+                cooldownTiro = 0.25f;
+            }
+
         }
 
         super.atualizarPosicao(deltaTime);
@@ -221,6 +253,14 @@ public class PlayerProva extends EntidadeBatalha {
 
     public void setMovendoDireita(boolean movendoDireita) {
         this.movendoDireita = movendoDireita;
+    }
+
+    public void setAtirando(boolean atirando) {
+        this.atirando = atirando;
+    }
+
+    public void setFactoryAtual(model.Projetil.ProjetilFactory factory) {
+        this.factoryAtual = factory;
     }
 
 
@@ -288,6 +328,8 @@ public class PlayerProva extends EntidadeBatalha {
         this.soulMode = mode;
         if (mode == SoulMode.BLUE) {
             this.spriteDir = "/assets/batalha/player/playerAzul.png";
+        } else if (mode == SoulMode.YELLOW) {
+            this.spriteDir = "/assets/batalha/player/playerAmarelo.png";
         } else {
             this.spriteDir = "/assets/batalha/player/player.png";
         }

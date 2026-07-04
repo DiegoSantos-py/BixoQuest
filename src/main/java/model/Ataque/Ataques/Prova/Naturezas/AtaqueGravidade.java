@@ -106,10 +106,7 @@ public class AtaqueGravidade extends Ataque {
         );
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Gravidade";
-    }
+
 
     @Override
     public void reiniciarAtaque() {

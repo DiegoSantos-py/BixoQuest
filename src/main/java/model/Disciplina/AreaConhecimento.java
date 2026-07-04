@@ -4,9 +4,7 @@ public enum AreaConhecimento {
     MAT,
     HAR,
     SOF,
-    COM,
-    HUM,
+    ESTAGIO,
     NAT,
-    TFC,
     ANI
 }

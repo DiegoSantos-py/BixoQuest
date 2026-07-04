@@ -13,18 +13,19 @@ public class BatalhaFinalizacaoService {
 
     public void salvarResultadoProvaNoRepositorio(EstadoBatalha estado, ResultadoProva resultadoProva) {
         Personagem personagem = estado.getPersonagem();
-        int totalSemestres = personagem.getSemestres().size();
-        int semestreNumero = personagem.getSemestres().get(totalSemestres - 1).getNumeroSemestre();
-        estado.getResultadoProvaRepository().adicionarResultadoProva(personagem.getPersonagemId(), semestreNumero,
-                resultadoProva);
-        // PEGA O PERSONAGEM, O TOTAL DE SEMESTRES Q ELE FEZ, O ULTIMO SEMESTRER Q ELE
-        // POSSUI(O ATUAL), E O NUMERO DESSE SEMESTRE, E PASSSA PRO REPOSITORIO ADICONAR
-        // A
-        // LISTA DE RESULTADOS
+        if (personagem != null && personagem.getSemestres() != null && !personagem.getSemestres().isEmpty()) {
+            int totalSemestres = personagem.getSemestres().size();
+            int semestreNumero = personagem.getSemestres().get(totalSemestres - 1).getNumeroSemestre();
+            if (estado.getResultadoProvaRepository() != null) {
+                estado.getResultadoProvaRepository().adicionarResultadoProva(personagem.getPersonagemId(), semestreNumero, resultadoProva);
+            }
+        }
     }
 
     public void salvarAnimalNoRepositorio(EstadoBatalha estado, Animal animal) {
-        estado.getNpcRepository().atualizarNpc(animal);
+        if (estado.getNpcRepository() != null) {
+            estado.getNpcRepository().atualizarNpc(animal);
+        }
     }
 
     public void finalizarBatalha(EstadoBatalha estado, ProvaBatalha provaBatalha) {

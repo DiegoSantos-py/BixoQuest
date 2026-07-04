@@ -119,8 +119,5 @@ public class AtaqueColisaoElastica extends Ataque {
         this.tempoFimAtaque = 0;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Colisão Elástica";
-    }
+
 }

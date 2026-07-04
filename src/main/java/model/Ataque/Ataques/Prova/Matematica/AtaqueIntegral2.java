@@ -196,8 +196,5 @@ public class AtaqueIntegral2 extends Ataque {
         this.integralHitbox2 = null;
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Integral 2";
-    }
+
 }

@@ -14,7 +14,7 @@ public class AtaqueFuncaoAfim extends Ataque {
     private boolean eixosSpawnados = false;
     private Random random;
 
-    private final ProjetilSpawnAoMorrer spawnFuncao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
+    private final ProjetilSpawnAoMorrer spawnFuncao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f,1f);
 
     public AtaqueFuncaoAfim(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -69,10 +69,7 @@ public class AtaqueFuncaoAfim extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Arranhao";
-    }
+
 
     @Override
     public void reiniciarAtaque() {
