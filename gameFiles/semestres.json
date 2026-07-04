@@ -1,6 +1,11 @@
 {
   "1" : [ {
-    "dias" : [ ],
+    "dias" : [ {
+      "duracao" : 300.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
     "disciplinas" : [ {
       "nome" : "Matemática",
       "codigo" : 1.0,
@@ -8,7 +13,7 @@
       "area" : "MAT"
     } ],
     "numeroSemestre" : 1,
-    "diaAtual" : 0,
+    "diaAtual" : 1,
     "resultadosNomes" : { }
   } ]
 }

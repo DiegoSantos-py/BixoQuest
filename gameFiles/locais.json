@@ -277,7 +277,34 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : []
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Sala naturezas",
+      "sprite": null,
+      "spriteLargura": 600,
+      "spriteAltura": 800,
+      "spriteX": 0,
+      "spriteY": 0,
+      "area": {
+        "minX": 730,
+        "maxX": 865,
+        "minY": 0,
+        "maxY": 380
+      }
+    },
+      {
+        "nome": "Sala naturezas",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      }]
   },
   "Entrada módulo 7" : {
     "nome" : "Entrada módulo 7",
@@ -312,7 +339,34 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Sala matemática",
+      "sprite": null,
+      "spriteLargura": 600,
+      "spriteAltura": 800,
+      "spriteX": 0,
+      "spriteY": 0,
+      "area": {
+        "minX": 730,
+        "maxX": 865,
+        "minY": 0,
+        "maxY": 380
+      }
+    },
+      {
+        "nome": "Sala matemática",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      } ]
   },
   "Sala módulo 1" : {
     "nome" : "Sala módulo 1",
@@ -394,7 +448,34 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Sala software",
+      "sprite": null,
+      "spriteLargura": 600,
+      "spriteAltura": 800,
+      "spriteX": 0,
+      "spriteY": 0,
+      "area": {
+        "minX": 730,
+        "maxX": 865,
+        "minY": 0,
+        "maxY": 380
+      }
+    },
+      {
+        "nome": "Sala software",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      } ]
   },
   "Entrada módulo 6" : {
     "nome" : "Entrada módulo 6",
@@ -431,7 +512,34 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Sala estágio",
+      "sprite": null,
+      "spriteLargura": 600,
+      "spriteAltura": 800,
+      "spriteX": 0,
+      "spriteY": 0,
+      "area": {
+        "minX": 730,
+        "maxX": 865,
+        "minY": 0,
+        "maxY": 380
+      }
+    },
+      {
+        "nome": "Sala estágio",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      } ]
   },
   "Sala módulo 5" : {
     "nome" : "Sala módulo 5",
@@ -449,7 +557,36 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [
+      {
+        "nome": "Sala hardware",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 730,
+          "maxX": 865,
+          "minY": 0,
+          "maxY": 380
+        }
+      },
+      {
+        "nome": "Sala hardware",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      }
+    ]
   },
   "Sala módulo 6" : {
     "nome" : "Sala módulo 6",
@@ -466,7 +603,34 @@
     "tipo" : "SALA",
     "elementos" : [ ],
     "nomesNpcs" : [ ],
-    "zonaInterativasDisponiveis" : [ ]
+    "zonaInterativasDisponiveis" : [{
+      "nome": "Sala tcc",
+      "sprite": null,
+      "spriteLargura": 600,
+      "spriteAltura": 800,
+      "spriteX": 0,
+      "spriteY": 0,
+      "area": {
+        "minX": 730,
+        "maxX": 865,
+        "minY": 0,
+        "maxY": 380
+      }
+    },
+      {
+        "nome": "Sala tcc",
+        "sprite": null,
+        "spriteLargura": 600,
+        "spriteAltura": 800,
+        "spriteX": 0,
+        "spriteY": 0,
+        "area": {
+          "minX": 1430,
+          "maxX": 1565,
+          "minY": 0,
+          "maxY": 380
+        }
+      } ]
   },
   "Entrada módulo 3" : {
     "nome" : "Entrada módulo 3",

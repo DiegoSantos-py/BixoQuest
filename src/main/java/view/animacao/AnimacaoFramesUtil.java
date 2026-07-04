@@ -97,14 +97,14 @@ public final class AnimacaoFramesUtil {
         container.getChildren().add(proximo);
 
         FadeTransition fadeOut = new FadeTransition(
-                Duration.seconds(1),
+                Duration.seconds(0.5),
                 atual
         );
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
 
         FadeTransition fadeIn = new FadeTransition(
-                Duration.seconds(1),
+                Duration.seconds(0.5),
                 proximo
         );
         fadeIn.setFromValue(0);

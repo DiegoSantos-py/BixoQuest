@@ -1,129 +1,248 @@
 {
-  "Estudar Matemática": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar Matemática",
-    "descricao": "Reforça o conteúdo de Matemática.",
-    "efeitoConhecimentoNomes": { "MAT": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala matemática", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "Matemática",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar Matemática" : {
+    "tipo" : "evento",
+    "status" : true,
+    "nome" : "Estudar Matemática",
+    "descricao" : "Reforça o conteúdo de Matemática.",
+    "efeitoConhecimentoNomes" : {
+      "MAT" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Matemática",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala matemática",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "MAT" : 10.0
+    }
   },
-
-  "Estudar Software": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar Software",
-    "descricao": "Reforça o conteúdo de Software.",
-    "efeitoConhecimentoNomes": { "SOF": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala software", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "Software",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar Hardware" : {
+    "tipo" : "evento",
+    "status" : false,
+    "nome" : "Estudar Hardware",
+    "descricao" : "Reforça o conteúdo de Hardware.",
+    "efeitoConhecimentoNomes" : {
+      "HAR" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Hardware",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala hardware",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "HAR" : 10.0
+    }
   },
-  "Estudar Naturezas": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar Naturezas",
-    "descricao": "Reforça o conteúdo de Naturezas.",
-    "efeitoConhecimentoNomes": { "NAT": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala naturezas", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "Naturezas",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar Naturezas" : {
+    "tipo" : "evento",
+    "status" : false,
+    "nome" : "Estudar Naturezas",
+    "descricao" : "Reforça o conteúdo de Naturezas.",
+    "efeitoConhecimentoNomes" : {
+      "NAT" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Naturezas",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala naturezas",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "NAT" : 10.0
+    }
   },
-  "Estudar Hardware": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar Hardware",
-    "descricao": "Reforça o conteúdo de Hardware.",
-    "efeitoConhecimentoNomes": { "HAR": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala hardware", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "Hardware",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar TCC" : {
+    "tipo" : "evento",
+    "status" : false,
+    "nome" : "Estudar TCC",
+    "descricao" : "Reforça o conteúdo de TCC.",
+    "efeitoConhecimentoNomes" : {
+      "TCC" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "TCC",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala tcc",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "TCC" : 10.0
+    }
   },
-  "Estudar TCC": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar TCC",
-    "descricao": "Reforça o conteúdo de TCC.",
-    "efeitoConhecimentoNomes": { "TCC": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala tcc", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "TCC",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar Estágio" : {
+    "tipo" : "evento",
+    "status" : false,
+    "nome" : "Estudar Estágio",
+    "descricao" : "Reforça o conteúdo de Estágio.",
+    "efeitoConhecimentoNomes" : {
+      "EST" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Estágio",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala estágio",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "EST" : 10.0
+    }
   },
-  "Estudar Estágio": {
-    "tipo": "evento",
-    "status": false,
-    "nome": "Estudar Estágio",
-    "descricao": "Reforça o conteúdo de Estágio.",
-    "efeitoConhecimentoNomes": { "EST": 10.0 },
-    "efeitoEnergia": -10.0,
-    "efeitoMotivacao": 0.0,
-    "efeitoSaude": 0.0,
-    "efeitoDinheiro": 0.0,
-    "efeitoTempo": 2,
-    "tempoRequisito": 0,
-    "eventoRequisitoNome": null,
-    "requisitosAtributo": { "ENERGIA": 15.0 },
-    "custaDinheiro": 0.0,
-    "repetivel": true,
-    "zona": { "nome": "Sala estágio", "area": { "minX": 0, "maxX": 0, "minY": 0, "maxY": 0 } },
-    "disciplinaRequisitoNome": "Estágio",
-    "disciplinaRequisitoCodigo": 0.0,
-    "imagensAnimacao": ["/animacao/eventos/blank.png","/animacao/eventos/estudar_1.png"]
+  "Estudar Software" : {
+    "tipo" : "evento",
+    "status" : false,
+    "nome" : "Estudar Software",
+    "descricao" : "Reforça o conteúdo de Software.",
+    "efeitoConhecimentoNomes" : {
+      "SOF" : 10.0
+    },
+    "efeitoEnergia" : -10.0,
+    "efeitoMotivacao" : 0.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : 0.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : {
+      "ENERGIA" : 15.0
+    },
+    "disciplinaRequisitoNome" : "Software",
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona": {
+      "area": {
+        "maxX": 0,
+        "minX": 0,
+        "maxY": 0,
+        "minY": 0
+      },
+      "nome": "Sala matemática",
+      "sprite": null,
+      "spriteLargura": 0,
+      "spriteAltura": 0,
+      "spriteX": 0,
+      "spriteY": 0
+    },
+    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "efeitosConhecimento" : {
+      "SOF" : 10.0
+    }
   }
 }

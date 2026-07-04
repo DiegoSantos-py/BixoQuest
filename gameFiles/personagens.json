@@ -2,14 +2,14 @@
   "1" : {
     "personagemId" : 1,
     "nome" : "teste1",
-    "energia" : 40.0,
+    "energia" : 20.0,
     "motivacao" : 40.0,
     "saude" : 40.0,
     "dinheiro" : 40.0,
     "localAtualNome" : null,
     "conhecimentosNomes" : {
       "NAT" : 10.0,
-      "MAT" : 10.0,
+      "MAT" : 30.0,
       "TCC" : 10.0,
       "EST" : 10.0,
       "HAR" : 10.0,

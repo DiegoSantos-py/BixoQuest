@@ -15,10 +15,7 @@ import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class GameService {
 
@@ -209,7 +206,13 @@ public class GameService {
         if (evento == null) {
             evento = diaAtual.getEventosAleatorios().get(nomeZona);
         }
-        if (evento == null) return ResultadoZona.semEvento();
+
+        if (evento == null) {
+            if (ZONA_PARA_AREA.containsKey(nomeZona)) {
+                return ResultadoZona.requisitoNaoAtendido("Você não está cursando essa disciplina");
+            }
+            return ResultadoZona.semEvento();
+        }
 
         Personagem personagemObj = personagemRepo.buscarPorId(personagem);
 
@@ -268,6 +271,11 @@ public class GameService {
             "Sala hardware", "Estudar Hardware",
             "Sala tcc", "Estudar TCC",
             "Sala estágio", "Estudar Estágio"
+    );
+
+    private static final Set<String> ZONAS_RESERVADAS_DISCIPLINA = Set.of(
+            "Sala matemática", "Sala software", "Sala naturezas",
+            "Sala hardware", "Sala tcc", "Sala estágio"
     );
 
     private List<Evento> montarEventosObrigatoriosDoDia() {

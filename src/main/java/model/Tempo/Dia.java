@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Dia {
-    private static final int MAX_DURACAO = 20;
+    private static final int MAX_DURACAO = 5;
     private Duration duracao;
     @JsonIgnore
     private Instant inicio;

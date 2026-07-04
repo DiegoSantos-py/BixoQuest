@@ -1,3 +1,22 @@
-[{
-
-}]
+[
+  {
+    "sprite": null,
+    "largura": 500,
+    "x": 410,
+    "y": 0,
+    "hitboxOffsetX": 0,
+    "hitboxOffsetY": 0,
+    "hitboxLargura": 1600,
+    "hitboxAltura": 330
+  },
+  {
+    "sprite": "/assets/placa_estagio.png",
+    "largura": 230,
+    "x": 1030,
+    "y": 100,
+    "hitboxOffsetX": 0,
+    "hitboxOffsetY": 0,
+    "hitboxLargura": 0,
+    "hitboxAltura": 0
+  }
+]
