@@ -1,4 +1,11 @@
 [
   {
-
+    "sprite": null,
+    "largura": 500,
+    "x": 300,
+    "y": 0,
+    "hitboxOffsetX": 0,
+    "hitboxOffsetY": 0,
+    "hitboxLargura": 0,
+    "hitboxAltura": 0
   }]

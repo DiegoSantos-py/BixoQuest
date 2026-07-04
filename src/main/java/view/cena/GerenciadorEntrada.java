@@ -37,6 +37,10 @@ public class GerenciadorEntrada {
         });
     }
 
+    public void limparTeclas() {
+        teclasPressionadas.clear();
+    }
+
     public Set<KeyCode> getTeclasPressionadas() {
         return teclasPressionadas;
     }

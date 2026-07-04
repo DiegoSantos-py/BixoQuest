@@ -70,8 +70,8 @@ public class MenuFeedbackEvento extends StackPane {
         List<Node> frames = evento.getImagensAnimacao().stream()
                 .map(AnimacaoFramesUtil::criarImagem)
                 .map(iv -> { // redimensiona pro tamanho do container, em vez do fitWidth/Height fixo de 1920x1080
-                    iv.setFitWidth(700);
-                    iv.setFitHeight(400);
+                    iv.setFitWidth(1100);
+                    iv.setFitHeight(700);
                     return (Node) iv;
                 })
                 .toList();

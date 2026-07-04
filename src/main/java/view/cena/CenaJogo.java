@@ -242,6 +242,7 @@ public class CenaJogo {
                     if (pausado) {
                         if (gameLoop != null) gameLoop.stop();
                         gameController.pausarDia();
+                        gerenciadorEntrada.limparTeclas(); // evita tecla presa ao pausar
                     } else {
                         if (gameLoop != null) gameLoop.start();
                         gameController.retomarDia();

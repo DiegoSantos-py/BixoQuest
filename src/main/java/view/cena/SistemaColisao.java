@@ -2,16 +2,24 @@ package view.cena;
 
 import javafx.scene.shape.Rectangle;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class SistemaColisao {
+
+    private static final long COOLDOWN_NANOS = 1_500_000_000L;
 
     private final Rectangle playerHitbox;
     private final List<CenaJogo.ZoneEntry> zones;
     private final List<Rectangle> npcHitboxes;
     private final List<String> npcNomes;
     private final Consumer<String> onNpcAtingido;
+    private final Set<CenaJogo.ZoneEntry> zonasAtualmenteColidindo = new HashSet<>(); // por instância, não por nome
+    private final Map<String, Long> ultimoDisparo = new HashMap<>(); // cooldown ainda por nome, ok manter
 
     public SistemaColisao(Rectangle playerHitbox,
                           List<CenaJogo.ZoneEntry> zones,
@@ -26,11 +34,26 @@ public class SistemaColisao {
     }
 
     public void verificarZonas() {
+        long agora = System.nanoTime();
+
         zones.forEach(zone -> {
             boolean colidindo = playerHitbox.getBoundsInParent()
                     .intersects(zone.hitbox().getBoundsInParent());
-            if (colidindo) {
-                zone.onEnter().accept(zone.id());
+
+            boolean jaEstavaColidindo = zonasAtualmenteColidindo.contains(zone); // por instância
+
+            if (colidindo && !jaEstavaColidindo) {
+                Long ultimo = ultimoDisparo.get(zone.id());
+                boolean emCooldown = ultimo != null && (agora - ultimo) < COOLDOWN_NANOS;
+
+                zonasAtualmenteColidindo.add(zone);
+
+                if (!emCooldown) {
+                    ultimoDisparo.put(zone.id(), agora);
+                    zone.onEnter().accept(zone.id());
+                }
+            } else if (!colidindo) {
+                zonasAtualmenteColidindo.remove(zone); // remove só essa instância específica
             }
         });
     }
