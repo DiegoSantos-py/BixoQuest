@@ -630,7 +630,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor estágio" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Sala estágio",
       "sprite": null,

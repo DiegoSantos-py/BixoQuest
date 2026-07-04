@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "e45ca7c3-5ec6-4db7-a834-a747e53f5ec0",
+        "name": "Crie um personagem masculino 2D",
+        "prompt": "Crie um personagem masculino 2D estilo sprite para jogo universit\u00e1rio, representando um estudante de Engenharia de Computa\u00e7\u00e3o da UEFS (19\u201324 anos).  Apar\u00eancia: postura aberta e confiante, express\u00e3o comunicativa.  Cabelo: curto e organizado.  Roupas: camisa casual simples, cal\u00e7a jeans e t\u00eanis.  Elementos acad\u00eamicos: prancheta, notebook ou pasta universit\u00e1ria.  Personalidade visual: costuma organizar grupos, dividir tarefas e incentivar colegas em trabalhos acad\u00eamicos.  Estilo: sprite 2D para RPG universit\u00e1rio.",
+        "size": {
+          "width": 92,
+          "height": 92
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-05-23T16:21:22.570467+00:00"
+      },
+      "folder": "Crie_um_personagem_masculino_2D",
+      "frames": {
+        "rotations": {
+          "south": "Crie_um_personagem_masculino_2D/rotations/south.png",
+          "south-east": "Crie_um_personagem_masculino_2D/rotations/south-east.png",
+          "east": "Crie_um_personagem_masculino_2D/rotations/east.png",
+          "north-east": "Crie_um_personagem_masculino_2D/rotations/north-east.png",
+          "north": "Crie_um_personagem_masculino_2D/rotations/north.png",
+          "north-west": "Crie_um_personagem_masculino_2D/rotations/north-west.png",
+          "west": "Crie_um_personagem_masculino_2D/rotations/west.png",
+          "south-west": "Crie_um_personagem_masculino_2D/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-05-23T16:28:09.009417"
+}

@@ -113,7 +113,7 @@ public class ControllerTelas {
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarCenaPorNome("Cantina módulo 1"),
+                () -> gerenciador.mostrarCenaPorNome("Sala módulo 7"),
                 gameController,
                 sessaoAtual
         );

@@ -1,0 +1,36 @@
+{
+  "group_id": null,
+  "states": [
+    {
+      "character": {
+        "id": "0b0c0d88-0bfe-417b-a491-c09d27ae77be",
+        "name": "Crie uma personagem feminina 2D",
+        "prompt": "Crie uma personagem feminina 2D estilo sprite para jogo universit\u00e1rio, representando uma estudante de Engenharia de Computa\u00e7\u00e3o da UEFS (18\u201323 anos).  Apar\u00eancia: express\u00e3o calma e observadora, postura levemente reservada.  Cabelo: m\u00e9dio ou curto, estilo simples.  Roupas: roupas confort\u00e1veis e discretas.  Elementos acad\u00eamicos: segurando um caderno e carregando mochila simples.  Personalidade visual: prefere ouvir antes de falar, mas costuma ter boas ideias e ajudar colegas quando necess\u00e1rio.  Estilo: arte 2D consistente com jogo universit\u00e1rio.",
+        "size": {
+          "width": 88,
+          "height": 88
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-05-23T16:20:32.226716+00:00"
+      },
+      "folder": "Crie_uma_personagem_feminina_2D",
+      "frames": {
+        "rotations": {
+          "south": "Crie_uma_personagem_feminina_2D/rotations/south.png",
+          "south-east": "Crie_uma_personagem_feminina_2D/rotations/south-east.png",
+          "east": "Crie_uma_personagem_feminina_2D/rotations/east.png",
+          "north-east": "Crie_uma_personagem_feminina_2D/rotations/north-east.png",
+          "north": "Crie_uma_personagem_feminina_2D/rotations/north.png",
+          "north-west": "Crie_uma_personagem_feminina_2D/rotations/north-west.png",
+          "west": "Crie_uma_personagem_feminina_2D/rotations/west.png",
+          "south-west": "Crie_uma_personagem_feminina_2D/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.0",
+  "export_date": "2026-05-23T16:26:11.521639"
+}
