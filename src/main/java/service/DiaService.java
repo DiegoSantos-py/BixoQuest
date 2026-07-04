@@ -169,22 +169,12 @@ public class DiaService {
     }
 
     private void adicionarEventosAleatorios(Dia dia, List<EventoAleatorio> eventos) {
-
         for (EventoAleatorio ea : eventos) {
-
-            // Se o evento aleatório não deve ativar, ignora
-            if (!ea.deveAtivar()) {
-                continue;
-            }
-
-
+            // deveAtivar() já foi decidido antes, em GameService.montarEventosAleatoriosDoDia()
             ZonaInterativa zona = ea.getZona();
-
-            // Não permite evento aleatório sem zona definida
             if (zona == null) {
                 throw new IllegalArgumentException("Evento sem zona definida: " + ea.getNome());
             }
-
             dia.getEventosAleatorios().put(zona.getNome(), ea);
         }
     }

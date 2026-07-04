@@ -1,22 +1,5 @@
 {
   "1" : [ {
-    "dias" : [ {
-      "duracao" : 300.000000000,
-      "eventosObrigatoriosNomes" : [ ],
-      "eventosAleatoriosNomes" : [ ],
-      "saiuDoPonto" : false
-    } ],
-    "disciplinas" : [ {
-      "nome" : "Matemática",
-      "codigo" : 1.0,
-      "provaId" : "MAT_01",
-      "area" : "MAT"
-    } ],
-    "numeroSemestre" : 1,
-    "diaAtual" : 1,
-    "resultadosNomes" : { }
-  } ],
-  "2" : [ {
     "dias" : [ ],
     "disciplinas" : [ {
       "nome" : "Hardware",

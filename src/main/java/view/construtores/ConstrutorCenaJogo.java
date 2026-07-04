@@ -77,7 +77,7 @@ public class ConstrutorCenaJogo implements Construtor {
         npcs.add(carregarImagem(imagePath, largura, x, y));
         Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
-        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 255, 0, 0.3));
+        hitbox.setFill(javafx.scene.paint.Color.rgb(0, 0, 255, 0.3));
         npcHitboxes.add(hitbox);
     }
 

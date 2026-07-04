@@ -13,7 +13,7 @@
     },
     "tipo" : "COLEGIADO",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Maeli" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Colegiado zona",
       "sprite": null,
@@ -135,7 +135,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 4" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -203,7 +203,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 2" ],
     "zonaInterativasDisponiveis" : [ {
       "nome": "Cantina zona",
       "sprite": null,
@@ -233,7 +233,7 @@
     },
     "tipo" : "LABORATORIO",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 8" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Laboratório zona",
       "sprite": null,
@@ -299,7 +299,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 4" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -331,7 +331,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 7" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -364,7 +364,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 5" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -395,7 +395,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" :["professor naturezas" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Sala naturezas",
       "sprite": null,
@@ -440,7 +440,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 6" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Sala módulo 4" : {
@@ -457,7 +457,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor matemática módulo 4" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Sala matemática",
       "sprite": null,
@@ -501,7 +501,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor matemática módulo 1" ],
     "zonaInterativasDisponiveis" : [
       {
         "nome": "Sala matemática",
@@ -549,7 +549,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 5" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Sala módulo 2" : {
@@ -566,7 +566,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor software" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Sala software",
       "sprite": null,
@@ -613,7 +613,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 3" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Sala módulo 7" : {
@@ -675,7 +675,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor hardware" ],
     "zonaInterativasDisponiveis" : [
       {
         "nome": "Sala hardware",
@@ -721,7 +721,7 @@
     },
     "tipo" : "SALA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["professor tcc" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Sala tcc",
       "sprite": null,
@@ -767,7 +767,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 3" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Entrada módulo 4" : {
@@ -787,7 +787,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 2" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Entrada módulo 1" : {
@@ -805,7 +805,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Colega 1" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Entrada módulo 2" : {
@@ -825,7 +825,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Animal 1" ],
     "zonaInterativasDisponiveis" : [ ]
   }
 }

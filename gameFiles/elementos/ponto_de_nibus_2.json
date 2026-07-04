@@ -2,8 +2,8 @@
   {
     "sprite": "/assets/arvore.png",
     "largura": 700,
-    "x": 1400,
-    "y": 600,
+    "x": 100,
+    "y": 300,
     "hitboxOffsetX": 285,
     "hitboxOffsetY": 120,
     "hitboxLargura": 100,

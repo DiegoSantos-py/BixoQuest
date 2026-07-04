@@ -285,6 +285,7 @@ public class GameService {
 
         boolean periodoDeProvas = semestre.estaEmPeriodoDeProvas();
 
+        // 1. Eventos dinâmicos: provas/estudo, resolvidos por disciplina cursada
         for (Map.Entry<String, AreaConhecimento> entry : ZONA_PARA_AREA.entrySet()) {
             String nomeZona = entry.getKey();
             AreaConhecimento area = entry.getValue();
@@ -307,7 +308,41 @@ public class GameService {
                     });
         }
 
+        // 2. Eventos fixos do catálogo geral, associados às suas próprias zonas
+        for (Evento evento : eventoService.carregarEventos().values()) {
+            if (evento instanceof EventoAleatorio) continue; // aleatórios vão em outra lista
+            if (evento.getZona() == null) continue;
+            if (ZONA_PARA_AREA.containsKey(evento.getZona().getNome())) continue; // evita duplicar as 6 zonas reservadas
+
+            eventos.add(evento);
+        }
+
         return eventos;
+    }
+
+    private List<EventoAleatorio> montarEventosAleatoriosDoDia() {
+        Map<String, List<EventoAleatorio>> candidatosPorZona = new HashMap<>();
+
+        for (Evento evento : eventoService.carregarEventos().values()) {
+            if (!(evento instanceof EventoAleatorio aleatorio)) continue;
+            if (evento.getZona() == null) continue;
+            if (ZONA_PARA_AREA.containsKey(evento.getZona().getNome())) continue; // zonas de disciplina não usam aleatórios
+
+            candidatosPorZona
+                    .computeIfAbsent(evento.getZona().getNome(), k -> new ArrayList<>())
+                    .add(aleatorio);
+        }
+
+        List<EventoAleatorio> selecionados = new ArrayList<>();
+
+        for (List<EventoAleatorio> candidatos : candidatosPorZona.values()) {
+            candidatos.stream()
+                    .filter(EventoAleatorio::deveAtivar)
+                    .findFirst()
+                    .ifPresent(selecionados::add);
+        }
+
+        return selecionados;
     }
 
     public void debugForcarFimDeSemestre() throws PersistenciaException {

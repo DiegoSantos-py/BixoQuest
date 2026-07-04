@@ -62,6 +62,7 @@ public class SistemaColisao {
         for (int i = 0; i < npcHitboxes.size(); i++) {
             if (playerHitbox.getBoundsInParent()
                     .intersects(npcHitboxes.get(i).getBoundsInParent())) {
+                System.out.println("npc atingido");
                 if (onNpcAtingido != null)
                     onNpcAtingido.accept(npcNomes.get(i));
             }
