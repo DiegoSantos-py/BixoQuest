@@ -56,6 +56,9 @@ src/main/resources/assets/audio/provas/hardware3.mp3 -> Undertale - Toby Fox : P
 
 
 
-src/main/resources/assets/audio/provas/naturezas3.mp3 -> Deltarune - Toby Fox : Hammer of Justice  (Unfinished)
+src/main/resources/assets/audio/provas/naturezas3.mp3 -> Deltarune - Toby Fox : Hammer of Justice
 
+
+
+src/main/resources/assets/audio/provas/tcc.mp3 -> Undertale - Toby Fox : Hopes and Dreams
 
