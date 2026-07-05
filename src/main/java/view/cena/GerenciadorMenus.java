@@ -6,51 +6,43 @@ import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import model.Disciplina.Disciplina;
 import model.Evento.Evento;
-import view.menu.MenuAtributosPersonagem;
-import view.menu.MenuEscolhaDisciplina;
-import view.menu.MenuFeedbackEvento;
-import view.menu.MenuPause;
+import model.Npc.Npc;
+import view.menu.*;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class GerenciadorMenus {
-    private final StackPane raizCena;
     private final MenuPause menuPause;
     private final MenuAtributosPersonagem menuAtributos;
     private final MenuEscolhaDisciplina menuEscolhaDisciplina;
     private final MenuFeedbackEvento menuFeedbackEvento;
+    private final DialogoNpc dialogoNpc; // novo
     private final Consumer<Boolean> onPausarJogo;
+    private final StackPane raizCena;
+    private final String spriteBase;
 
     public GerenciadorMenus(StackPane raizCena,
                             PersonagemController personagemController,
                             GameController gameController,
                             int personagemId,
+                            String spriteBase,
                             Runnable onSairParaMenuPrincipal,
                             Consumer<List<Disciplina>> onConfirmarEscolhaDisciplina,
+                            Consumer<Npc> onDialogoFinalizado, // novo
                             Consumer<Boolean> onPausarJogo) {
-        this.raizCena = raizCena;
         this.onPausarJogo = onPausarJogo;
 
-        this.menuPause = new MenuPause(
-                this::fecharPause,
-                onSairParaMenuPrincipal
+        this.raizCena = raizCena;
+        this.menuPause = new MenuPause(this::fecharPause, onSairParaMenuPrincipal);
+        this.menuAtributos = new MenuAtributosPersonagem(personagemController, personagemId, gameController, this::fecharAtributos);
+        this.menuEscolhaDisciplina = new MenuEscolhaDisciplina(onConfirmarEscolhaDisciplina);
+        this.menuFeedbackEvento = new MenuFeedbackEvento(this::fecharFeedbackEvento);
+        this.dialogoNpc = new DialogoNpc(onDialogoFinalizado); // recebe o callback direto, sem indireção interna
+        this.spriteBase = spriteBase;
+        raizCena.getChildren().addAll(
+                menuPause, menuAtributos, menuEscolhaDisciplina, menuFeedbackEvento, dialogoNpc
         );
-
-        this.menuEscolhaDisciplina = new MenuEscolhaDisciplina(
-                onConfirmarEscolhaDisciplina);
-
-        this.menuAtributos = new MenuAtributosPersonagem(
-                personagemController,
-                personagemId,
-                gameController,
-                this::fecharAtributos
-        );
-
-        this.menuFeedbackEvento = new MenuFeedbackEvento(
-                this::fecharFeedbackEvento);
-
-        raizCena.getChildren().addAll(menuPause, menuAtributos, menuEscolhaDisciplina, menuFeedbackEvento);
     }
 
     /** Centraliza a notificação de pausa/retomada, garantindo que o foco
@@ -102,11 +94,20 @@ public class GerenciadorMenus {
     }
 
     public void abrirFeedbackEvento(Evento evento) {
-        menuFeedbackEvento.abrir(evento);
+        menuFeedbackEvento.abrir(evento, spriteBase);
         notificarPausa(true);
     }
 
     public void fecharFeedbackEvento() {
         notificarPausa(false);
+    }
+
+    public boolean dialogoAberto() {
+        return dialogoNpc.isVisible();
+    }
+
+    public void abrirDialogo(Npc npc) {
+        dialogoNpc.abrir(npc);
+        // sem notificarPausa — jogo continua rodando, só o movimento é travado externamente
     }
 }

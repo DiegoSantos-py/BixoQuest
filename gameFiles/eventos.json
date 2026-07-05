@@ -35,7 +35,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "MAT" : 10.0
     }
@@ -76,7 +76,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "HAR" : 10.0
     }
@@ -117,7 +117,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "NAT" : 10.0
     }
@@ -158,10 +158,46 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "TCC" : 10.0
     }
+  },
+  "Comer na cantina" : {
+    "tipo" : "aleatorio",
+    "status" : false,
+    "nome" : "Comer na cantina",
+    "descricao" : "Você foi comer na cantina",
+    "efeitoConhecimentoNomes" : { },
+    "efeitoEnergia" : -5.0,
+    "efeitoMotivacao" : -10.0,
+    "efeitoSaude" : 0.0,
+    "efeitoDinheiro" : -10.0,
+    "efeitoTempo" : 2,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : { },
+    "disciplinaRequisitoNome" : null,
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona" : {
+      "area" : {
+        "maxX" : 0,
+        "minX" : 0,
+        "maxY" : 0,
+        "minY" : 0
+      },
+      "nome" : "Cantina zona",
+      "sprite" : null,
+      "spriteLargura" : 0,
+      "spriteAltura" : 0,
+      "spriteX" : 0,
+      "spriteY" : 0
+    },
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/comer_1.png" ],
+    "chanceAtivacao" : 0.9,
+    "efeitosConhecimento" : { }
   },
   "Estudar no laboratório" : {
     "tipo" : "evento",
@@ -199,7 +235,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/laboratorio_1.png" ],
     "efeitosConhecimento" : {
       "SOF" : 10.0
     }
@@ -236,7 +272,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/reclamar_1.png" ],
     "efeitosConhecimento" : { }
   },
   "Estudar Estágio" : {
@@ -275,10 +311,46 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "EST" : 10.0
     }
+  },
+  "Fila gigante" : {
+    "tipo" : "aleatorio",
+    "status" : false,
+    "nome" : "Comer na cantina",
+    "descricao" : "Você foi comer na cantina",
+    "efeitoConhecimentoNomes" : { },
+    "efeitoEnergia" : -50.0,
+    "efeitoMotivacao" : -50.0,
+    "efeitoSaude" : -50.0,
+    "efeitoDinheiro" : -10.0,
+    "efeitoTempo" : 5,
+    "tempoRequisito" : 0,
+    "eventoRequisitoNome" : null,
+    "requisitosAtributo" : { },
+    "disciplinaRequisitoNome" : null,
+    "disciplinaRequisitoCodigo" : 0.0,
+    "custaDinheiro" : 0.0,
+    "repetivel" : true,
+    "zona" : {
+      "area" : {
+        "maxX" : 0,
+        "minX" : 0,
+        "maxY" : 0,
+        "minY" : 0
+      },
+      "nome" : "Cantina zona",
+      "sprite" : null,
+      "spriteLargura" : 0,
+      "spriteAltura" : 0,
+      "spriteX" : 0,
+      "spriteY" : 0
+    },
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/fila_gigante_1.png" ],
+    "chanceAtivacao" : 0.9,
+    "efeitosConhecimento" : { }
   },
   "Estudar Software" : {
     "tipo" : "evento",
@@ -316,7 +388,7 @@
       "spriteX" : 0,
       "spriteY" : 0
     },
-    "imagensAnimacao" : [ "/animacao/eventos/blank.png", "/animacao/eventos/estudar_1.png" ],
+    "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
       "SOF" : 10.0
     }

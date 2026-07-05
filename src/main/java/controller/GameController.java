@@ -146,6 +146,10 @@ public class GameController extends BaseController {
         return service.getTempoRestanteSegundos();
     }
 
+    public void forcarFimDeDia() {
+        service.forcarFimDeDia();
+    }
+
     // Exibição
     @Override
     protected void exibirErro(String mensagem) {

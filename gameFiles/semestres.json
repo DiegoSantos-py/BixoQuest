@@ -2,6 +2,11 @@
   "1" : [ {
     "dias" : [ ],
     "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "provaId" : "MAT_01",
+      "area" : "MAT"
+    }, {
       "nome" : "Hardware",
       "codigo" : 1.0,
       "provaId" : "HARD_01",
@@ -11,14 +16,36 @@
       "codigo" : 1.0,
       "provaId" : "SOFT_01",
       "area" : "SOF"
-    }, {
-      "nome" : "Naturezas",
-      "codigo" : 1.0,
-      "provaId" : "NAT_01",
-      "area" : "NAT"
     } ],
     "numeroSemestre" : 1,
     "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ],
+  "2" : [ {
+    "dias" : [ {
+      "duracao" : 300.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "provaId" : "MAT_01",
+      "area" : "MAT"
+    }, {
+      "nome" : "Hardware",
+      "codigo" : 1.0,
+      "provaId" : "HARD_01",
+      "area" : "HAR"
+    }, {
+      "nome" : "Software",
+      "codigo" : 1.0,
+      "provaId" : "SOFT_01",
+      "area" : "SOF"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 1,
     "resultadosNomes" : { }
   } ]
 }

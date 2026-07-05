@@ -1,5 +1,7 @@
 package model.Local;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ZonaInterativa {
     protected Area area;
     private String nome;
@@ -46,12 +48,16 @@ public class ZonaInterativa {
 
     public void setSprite(String sprite) { this.sprite = sprite; }
 
+    @JsonIgnore
     public int getX() { return area.getMinX(); }
 
+    @JsonIgnore
     public int getY() { return area.getMinY(); }
 
+    @JsonIgnore
     public int getLargura() { return area.getMaxX() - area.getMinX(); }
 
+    @JsonIgnore
     public int getAltura() { return area.getMaxY() - area.getMinY(); }
 
     public int getSpriteLargura() { return spriteLargura; }

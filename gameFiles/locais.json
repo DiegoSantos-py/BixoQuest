@@ -73,7 +73,7 @@
     },
     "tipo" : "PONTO_ONIBUS",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : [],
     "zonaInterativasDisponiveis" : [{
       "nome": "Banco de ônibus",
       "sprite": "/assets/ponto_de_onibus.png",
@@ -135,7 +135,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 4" ],
+    "nomesNpcs" : ["Mingau" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -364,7 +364,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 5" ],
+    "nomesNpcs" : ["Simba" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Cantina zona",
       "sprite": null,
@@ -440,7 +440,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 6" ],
+    "nomesNpcs" : ["Luna" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Sala módulo 4" : {
@@ -613,7 +613,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 3" ],
+    "nomesNpcs" : ["Toby" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Sala módulo 7" : {
@@ -787,7 +787,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 2" ],
+    "nomesNpcs" : ["Max" ],
     "zonaInterativasDisponiveis" : [ ]
   },
   "Entrada módulo 1" : {
@@ -825,7 +825,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Animal 1" ],
+    "nomesNpcs" : ["Thor" ],
     "zonaInterativasDisponiveis" : [ ]
   }
 }

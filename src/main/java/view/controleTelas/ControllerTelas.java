@@ -4,6 +4,7 @@ import controller.*;
 import javafx.scene.Parent;
 import model.Evento.Prova.ProvaIDs;
 import model.Evento.ResultadoZona;
+import model.Npc.Animal;
 import view.InicioJogoView;
 import view.animacao.AnimacaoFimView;
 import view.animacao.AnimacaoInicioView;
@@ -110,10 +111,22 @@ public class ControllerTelas {
         }, semestreNumero);
     }
 
+    public Parent criarTelaBatalhaAnimal(Animal animal, String nomeLocalRetorno) {
+        batalhaController.iniciarBatalhaAnimal(animal, gameController.getPersonagem());
+
+        int semestreNumero = gameController.getSemestre().getNumeroSemestre();
+
+        return new CenaBatalha(batalhaController, () -> {
+            gerenciador.mostrarCenaPorNome(nomeLocalRetorno);
+            // sem confirmarResultadoProva — batalha de animal não afeta disciplina,
+            // só finalizarBatalha() já cuida de domar o animal (via BatalhaFinalizacaoService)
+        }, semestreNumero);
+    }
+
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarCenaPorNome("Sala módulo 7"),
+                () -> gerenciador.mostrarCenaPorNome("Entrada módulo 4"),
                 gameController,
                 sessaoAtual
         );
@@ -173,9 +186,17 @@ public class ControllerTelas {
             }
         };
 
+        construtor.setOnDialogoFinalizado(npc -> {
+            if (npc instanceof Animal animal && !animal.isDomado()) {
+                gerenciador.mostrarTelaBatalhaAnimal(animal, nomeLocal);
+            } else {
+                npc.aoInteragir(gameController.getPersonagem());
+            }
+        });
+
         diretorCena.construirCena(construtor, mapaController,
                 onZonaComEvento,
-                nome -> System.out.println("NPC: " + nome),
+                nome -> System.out.println("NPC: " + nome), // pode remover, já não é mais usado
                 pos[0], pos[1], spriteBase, nomeLocal);
 
         cenaAtual = construtor.getResult();

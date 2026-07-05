@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import model.Disciplina.AreaConhecimento;
@@ -62,17 +63,17 @@ public class MenuFeedbackEvento extends StackPane {
         getChildren().addAll(overlay, conteudo);
     }
 
-    public void abrir(Evento evento) {
+    public void abrir(Evento evento, String spriteBase) {
         containerImagens.getChildren().clear();
         btnContinuar.setVisible(false);
         montarEfeitos(evento);
 
         List<Node> frames = evento.getImagensAnimacao().stream()
-                .map(AnimacaoFramesUtil::criarImagem)
-                .map(iv -> { // redimensiona pro tamanho do container, em vez do fitWidth/Height fixo de 1920x1080
-                    iv.setFitWidth(1100);
-                    iv.setFitHeight(700);
-                    return (Node) iv;
+                .map(caminho -> AnimacaoFramesUtil.criarImagem(spriteBase + caminho))
+                .map(iv -> {
+                    iv.setFitWidth(700);
+                    iv.setFitHeight(400);
+                    return (Node) iv; // cast explícito pra Node
                 })
                 .toList();
 
@@ -83,7 +84,7 @@ public class MenuFeedbackEvento extends StackPane {
             AnimacaoFramesUtil.iniciarAnimacao(
                     containerImagens,
                     frames,
-                    () -> btnContinuar.setVisible(true) // só libera o botão ao terminar a sequência
+                    () -> btnContinuar.setVisible(true)
             );
         }
 

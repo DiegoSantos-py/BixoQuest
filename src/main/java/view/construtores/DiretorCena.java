@@ -29,7 +29,7 @@ public class DiretorCena {
         );
 
         mapaController.getNpcsDoLocal(nomeLocal).forEach(npc ->
-                construtor.addNPC(npc.getSpriteDir(), npc.getNome(), npc.getLargura(),
+                construtor.addNPC(npc, npc.getLargura(),
                         npc.getcX(), npc.getcY(),
                         npc.getHitboxOffsetX(), npc.getHitboxOffsetY(),
                         npc.getHitboxLargura(), npc.getHitboxAltura())

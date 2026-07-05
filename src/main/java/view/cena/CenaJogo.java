@@ -14,9 +14,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.Disciplina.Disciplina;
+import model.Npc.Animal;
+import model.Npc.Npc;
 import view.util.Borda;
 import view.util.FonteUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -42,8 +45,7 @@ public class CenaJogo {
     private final List<Rectangle> elementHitboxes;
     private final List<ImageView> npcs;
     private final List<Rectangle> npcHitboxes;
-    private final List<String> npcNomes;
-    private final Consumer<String> onNpcAtingido;
+    private final List<Npc> npcObjetos;
     private final List<ZoneEntry> zones;
     private final ImageView playerView;
     private final Rectangle playerHitbox;
@@ -69,6 +71,7 @@ public class CenaJogo {
     private final int personagemId;
     private final Runnable onSairParaMenuPrincipal;
     private final Runnable onFinalizar;
+    private final Consumer<Npc> onDialogoFinalizado;
 
     public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
 
@@ -77,40 +80,40 @@ public class CenaJogo {
                     List<Rectangle> elementHitboxes,
                     List<ImageView> npcs,
                     List<Rectangle> npcHitboxes,
+                    List<Npc> npcObjetos,
                     List<ZoneEntry> zones,
                     ImageView playerView,
                     Rectangle playerHitbox,
                     double playerHitboxOffsetX,
                     double playerHitboxOffsetY,
                     Consumer<Borda> onBordaAtingida,
-                    List<String> npcNomes,
-                    Consumer<String> onNpcAtingido,
                     String spriteBase,
                     PersonagemController personagemController,
                     int personagemId,
                     Runnable onSairParaMenuPrincipal,
                     GameController gameController,
-                    Runnable onFinalizar) {
+                    Runnable onFinalizar,
+                    Consumer<Npc> onDialogoFinalizado) {
 
         this.background          = background;
         this.elements            = elements;
         this.elementHitboxes     = elementHitboxes;
         this.npcs                = npcs;
         this.npcHitboxes         = npcHitboxes;
+        this.npcObjetos          = npcObjetos;
         this.zones               = zones;
         this.playerView          = playerView;
         this.playerHitbox        = playerHitbox;
         this.playerHitboxOffsetX = playerHitboxOffsetX;
         this.playerHitboxOffsetY = playerHitboxOffsetY;
         this.onBordaAtingida     = onBordaAtingida;
-        this.npcNomes            = npcNomes;
-        this.onNpcAtingido       = onNpcAtingido;
         this.spriteBase          = spriteBase;
         this.personagemController = personagemController;
         this.personagemId         = personagemId;
         this.onSairParaMenuPrincipal = onSairParaMenuPrincipal;
         this.gameController = gameController;
         this.onFinalizar = onFinalizar;
+        this.onDialogoFinalizado = onDialogoFinalizado;
     }
 
     public Pane buildPane() {
@@ -152,7 +155,8 @@ public class CenaJogo {
 
         gerenciadorEntrada = new GerenciadorEntrada(
                 this::abrirMenuAtributos,
-                this::alternarMenuPause);
+                this::alternarMenuPause,
+                this::tentarInteragirComNpc );
         gerenciadorEntrada.configurar(raizCena); // foco/teclado no StackPane
 
         inicializarMenus();
@@ -177,19 +181,24 @@ public class CenaJogo {
         sistemaMovimento = new SistemaMovimento(
                 playerView, playerHitbox,
                 playerHitboxOffsetX, playerHitboxOffsetY,
-                elementHitboxes, npcHitboxes, onBordaAtingida, spriteBase
+                elementHitboxes, List.of(), onBordaAtingida, spriteBase // npcHitboxes removido, lista vazia no lugar
         );
 
-        sistemaColisao = new SistemaColisao(
-                playerHitbox, zones, npcHitboxes, npcNomes, onNpcAtingido
-        );
+        List<SistemaColisao.NpcEntry> npcEntries = new ArrayList<>();
+        for (int i = 0; i < npcObjetos.size(); i++) {
+            npcEntries.add(new SistemaColisao.NpcEntry(npcObjetos.get(i), npcHitboxes.get(i)));
+        }
+
+        sistemaColisao = new SistemaColisao(playerHitbox, zones, npcEntries);
 
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 sistemaMovimento.atualizar(gerenciadorEntrada.getTeclasPressionadas());
                 sistemaColisao.verificarZonas();
-                sistemaColisao.verificarNpcs();
+                sistemaColisao.atualizarProximidadeNpcs();
+
+                Npc npcParaInteragir = sistemaColisao.verificarInteracaoNpc(gerenciadorEntrada.getTeclasPressionadas());
 
                 atualizarLabelTempo();
 
@@ -236,8 +245,10 @@ public class CenaJogo {
                 personagemController,
                 gameController,
                 personagemId,
+                spriteBase, // novo parâmetro
                 onSairParaMenuPrincipal,
                 this::confirmarEscolhaDisciplina,
+                this::aoFinalizarDialogo,
                 pausado -> {
                     if (pausado) {
                         if (gameLoop != null) gameLoop.stop();
@@ -309,5 +320,24 @@ public class CenaJogo {
         });
 
         new SequentialTransition(fadeIn, espera, fadeOut).play();
+    }
+
+    private void abrirDialogoNpc(Npc npc) {
+        gerenciadorEntrada.travarMovimento(true); // novo método, ver abaixo
+        gerenciadorMenus.abrirDialogo(npc);
+    }
+
+    private void tentarInteragirComNpc() {
+        if (gerenciadorMenus.dialogoAberto()) return; // evita reabrir durante diálogo
+        Npc npc = sistemaColisao.getNpcProximo();
+        if (npc != null) {
+            gerenciadorEntrada.travarMovimento(true);
+            gerenciadorMenus.abrirDialogo(npc);
+        }
+    }
+
+    private void aoFinalizarDialogo(Npc npc) {
+        gerenciadorEntrada.travarMovimento(false);
+        onDialogoFinalizado.accept(npc); // Consumer<Npc> vindo de ControllerTelas
     }
 }

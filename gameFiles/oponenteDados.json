@@ -10,5 +10,41 @@
     "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
     "descricao": "ela nao sabe...",
     "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Thor": {
+    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Max": {
+    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Toby": {
+    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Mingau": {
+    "spriteDir": "assets/batalha/oponentes/animais/gato_estupidamente_gordo.png",
+    "descricao": "gato estupidamente, anormalmente, incrivelmente gordo",
+    "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Simba": {
+    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
+  },
+
+  "Luna": {
+    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "descricao": "ela nao sabe...",
+    "textoCaixa": "ela esta com mta raiva"
   }
 }

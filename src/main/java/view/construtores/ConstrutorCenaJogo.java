@@ -5,6 +5,7 @@ import controller.PersonagemController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import model.Npc.Npc;
 import view.cena.CenaJogo;
 import view.util.Borda;
 
@@ -22,8 +23,9 @@ public class ConstrutorCenaJogo implements Construtor {
     private ImageView background;
     private final List<ImageView> elements        = new ArrayList<>();
     private final List<Rectangle> elementHitboxes = new ArrayList<>();
-    private final List<ImageView> npcs            = new ArrayList<>();
-    private final List<Rectangle> npcHitboxes     = new ArrayList<>();
+    private final List<ImageView> npcs = new ArrayList<>();
+    private final List<Rectangle> npcHitboxes = new ArrayList<>();
+    private final List<Npc> npcObjetos = new ArrayList<>();
     private final List<CenaJogo.ZoneEntry> zones  = new ArrayList<>();
     private final List<String> npcNomes           = new ArrayList<>();
     private ImageView playerView;
@@ -39,6 +41,7 @@ public class ConstrutorCenaJogo implements Construtor {
     private int personagemId;
     private Runnable onSairParaMenuPrincipal;
     private Runnable onFinalizar;
+    private Consumer<Npc> onDialogoFinalizado;
 
     @Override
     public void setPersonagem(PersonagemController personagemController, int personagemId) {
@@ -70,11 +73,12 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
-    public void addNPC(String imagePath, String nome, double largura, double x, double y,
+    public void addNPC(Npc npc, double largura, double x, double y,
                        double hitboxOffsetX, double hitboxOffsetY,
                        double hitboxLargura, double hitboxAltura) {
-        npcNomes.add(nome);
-        npcs.add(carregarImagem(imagePath, largura, x, y));
+        System.out.println("[DEBUG] addNPC chamado para: " + npc.getNome());
+        npcObjetos.add(npc);
+        npcs.add(carregarImagem(npc.getSpriteDir(), largura, x, y));
         Rectangle hitbox = criarHitbox(x + hitboxOffsetX, y + hitboxOffsetY,
                 hitboxLargura, hitboxAltura);
         hitbox.setFill(javafx.scene.paint.Color.rgb(0, 0, 255, 0.3));
@@ -134,14 +138,23 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
+    public void setOnDialogoFinalizado(Consumer<Npc> onDialogoFinalizado) {
+        this.onDialogoFinalizado = onDialogoFinalizado;
+    }
+
+    @Override
     public CenaJogo getResult() {
-        return new CenaJogo(background, elements, elementHitboxes,
-                npcs, npcHitboxes, zones,
+        return new CenaJogo(background,
+                elements, elementHitboxes,
+                npcs, npcHitboxes, npcObjetos,
+                zones,
                 playerView, playerHitbox,
                 playerHitboxOffsetX, playerHitboxOffsetY,
-                onBordaAtingida, npcNomes, onNpcAtingido, spriteBase,
+                onBordaAtingida,
+                spriteBase,
                 personagemController, personagemId, onSairParaMenuPrincipal,
-                gameController, onFinalizar
+                gameController, onFinalizar,
+                onDialogoFinalizado
         );
     }
 

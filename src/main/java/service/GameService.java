@@ -107,7 +107,7 @@ public class GameService {
         this.semestre = semestreService.iniciarSemestreComEscolha(personagem, disciplinasEscolhidas, p);
 
         for (Disciplina d : disciplinasEscolhidas) {
-            p.getConhecimentos().put(d.getArea(), 0.0);
+            p.getConhecimentos().put(d.getArea(), 10.0);
         }
         personagemRepo.salvar();
 
@@ -172,11 +172,24 @@ public class GameService {
 
     /** Chamado pelo runnable da cena "fim do dia", ao voltar pro jogo */
     public void iniciarProximoDia() {
+        aplicarRotinaDeInicioDeDia();
+
         List<Evento> obrigatorios = montarEventosObrigatoriosDoDia();
-        List<EventoAleatorio> aleatorios = List.of(); // eventos aleatórios ainda não modelados nesse fluxo
+        List<EventoAleatorio> aleatorios = montarEventosAleatoriosDoDia();
 
         diaService.gerarEventosDoDia(diaAtual, obrigatorios, aleatorios);
         diaService.iniciarDia(diaAtual);
+    }
+
+    private void aplicarRotinaDeInicioDeDia() {
+        Personagem p = personagemRepo.buscarPorId(personagem);
+        p.setEnergia(100.0);
+        p.setDinheiro(p.getDinheiro() + 5.0);
+        try {
+            personagemRepo.salvar();
+        } catch (PersistenciaException e) {
+            // trate conforme o padrão do restante do GameService
+        }
     }
 
     public void consumirTempoProva(int minutos) {
@@ -379,5 +392,11 @@ public class GameService {
     public long getTempoRestanteSegundos() {
         if (diaAtual == null) return 0;
         return diaService.getTempoRestante(diaAtual);
+    }
+
+    public void forcarFimDeDia() {
+        if (diaAtual != null) {
+            diaService.encerrarDia(diaAtual); // marca diaEncerrado=true, para o scheduler
+        }
     }
 }

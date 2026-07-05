@@ -2,6 +2,7 @@ package view.construtores;
 
 import controller.GameController;
 import controller.PersonagemController;
+import model.Npc.Npc;
 import view.cena.CenaJogo;
 import view.util.Borda;
 
@@ -17,7 +18,7 @@ public interface Construtor {
                     double hitboxOffsetX, double hitboxOffsetY,
                     double hitboxLargura, double hitboxAltura);
 
-    void addNPC(String imagePath, String nome, double largura, double x, double y,
+    void addNPC(Npc npc, double largura, double x, double y,
                 double hitboxOffsetX, double hitboxOffsetY,
                 double hitboxLargura, double hitboxAltura);
 
@@ -35,6 +36,7 @@ public interface Construtor {
     void setOnBordaAtingida(Consumer<Borda> onBordaAtingida);
     void setOnNpcAtingido(Consumer<String> onNpcAtingido);
     void setOnFinalizar(Runnable onFinalizar);
+    void setOnDialogoFinalizado(Consumer<Npc> onDialogoFinalizado);
 
     void setPersonagem(PersonagemController personagemController, int personagemId);
     void setOnSairParaMenuPrincipal(Runnable onSairParaMenuPrincipal);

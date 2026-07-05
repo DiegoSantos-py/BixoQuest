@@ -16,6 +16,27 @@
       "SOF" : 10.0,
       "ANI" : 10.0
     },
+    "spriteDir" : "/Jogador/Jogador1/",
+    "cX" : 0,
+    "cY" : 0
+  },
+  "2" : {
+    "personagemId" : 2,
+    "nome" : "teste2",
+    "energia" : 100.0,
+    "motivacao" : 40.0,
+    "saude" : 40.0,
+    "dinheiro" : 50.0,
+    "localAtualNome" : null,
+    "conhecimentosNomes" : {
+      "NAT" : 10.0,
+      "MAT" : 10.0,
+      "TCC" : 10.0,
+      "EST" : 10.0,
+      "HAR" : 10.0,
+      "SOF" : 10.0,
+      "ANI" : 10.0
+    },
     "spriteDir" : "/Jogador/Jogador2/",
     "cX" : 0,
     "cY" : 0

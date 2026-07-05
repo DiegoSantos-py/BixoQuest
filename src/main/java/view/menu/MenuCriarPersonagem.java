@@ -124,7 +124,7 @@ public class MenuCriarPersonagem extends StackPane {
             //TODO: adicionar alerta caso criar e/ou salvar de errado
             personagemController.criarESalvarPersonagem(
                     nome,
-                    40.0,
+                    100.0,
                     40.0,
                     40.0,
                     40.0,

@@ -9,12 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import model.Evento.Prova.ProvaIDs;
+import model.Npc.Animal;
 
 public class GerenciadorTelas {
 
     private final Stage stage;
     private final ControllerTelas controllerTelas;
     private Scene scene;
+    private final GameController gameController;
 
     public GerenciadorTelas(
             Stage stage,
@@ -24,6 +26,7 @@ public class GerenciadorTelas {
             BatalhaController batalhaController
     ) {
         this.stage = stage;
+        this.gameController = gameController;
         this.controllerTelas = new ControllerTelas(
                 this,
                 personagemController,
@@ -69,6 +72,10 @@ public class GerenciadorTelas {
         trocarRoot(controllerTelas.criarTelaBatalha(provaId, nomeLocalRetorno));
     }
 
+    public void mostrarTelaBatalhaAnimal(Animal animal, String nomeLocalRetorno) {
+        trocarRoot(controllerTelas.criarTelaBatalhaAnimal(animal, nomeLocalRetorno));
+    }
+
     public void mostrarCriacaoPersonagem(int slotId) {
         trocarRoot(controllerTelas.criarCriacaoPersonagem(slotId));
     }
@@ -85,7 +92,7 @@ public class GerenciadorTelas {
         if (nome.startsWith("Ponto de ônibus")) {
             trocarRoot(controllerTelas.criarCena(nome, id -> {
                 switch (id) {
-                    case "Banco de ônibus" -> mostrarMenuInicial();
+                    case "Banco de ônibus" -> gameController.forcarFimDeDia();
                     default -> mostrarCenaPorNome(id);
                 }
             }));
