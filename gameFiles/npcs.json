@@ -43,7 +43,6 @@
     "falas" : [ "Au au!", "*Abana o rabo*", "*Late animado*", "*Cheira você com curiosidade*" ],
     "spriteDir" : "/npcs/animais/Animal 2/rotations/west.png",
     "indole" : 4,
-    "domado" : true,
     "especie" : "CACHORRO",
     "interagido" : false
   },
@@ -75,7 +74,6 @@
     "falas" : [ "Au au!", "Atim parece amigável", "*Corre em círculos*", "*Parece querer brincar*", "*Abana o rabo feliz*" ],
     "spriteDir" : "/npcs/animais/Animal 3/rotations/south.png",
     "indole" : 10,
-    "domado" : true,
     "especie" : "CACHORRO",
     "interagido" : false
   },
@@ -92,7 +90,6 @@
     "falas" : [ "Miau...", "*Ronrona satisfeito*", "*Se espreguiça lentamente*", "*Olha para você com curiosidade*" ],
     "spriteDir" : "/npcs/animais/Animal 4/rotations/south.png",
     "indole" : 100,
-    "domado" : false,
     "especie" : "GATO",
     "interagido" : false
   },
@@ -138,8 +135,7 @@
     "hitboxAltura" : 96,
     "falas" : [ "Au!", "*Corre feliz*", "*Late para chamar atenção*", "*Parece querer um carinho*" ],
     "spriteDir" : "/npcs/animais/Animal 1/rotations/south.png",
-    "indole" : 8,
-    "domado" : false,
+    "indole" : 9,
     "especie" : "CACHORRO",
     "interagido" : false
   },
@@ -156,7 +152,6 @@
     "falas" : [ "Miau...", "*Ronrona*", "*Esfrega na sua perna*", "*Boceja preguiçosamente*" ],
     "spriteDir" : "/npcs/animais/Animal 7/rotations/west.png",
     "indole" : 40,
-    "domado" : false,
     "especie" : "GATO",
     "interagido" : false
   },
@@ -173,7 +168,6 @@
     "falas" : [ "Miau!", "*Observa tudo em silêncio*", "*Ronrona baixinho*", "*Balança a cauda*" ],
     "spriteDir" : "/npcs/animais/Animal 5/rotations/south.png",
     "indole" : 10,
-    "domado" : false,
     "especie" : "GATO",
     "interagido" : false
   },
@@ -190,7 +184,6 @@
     "falas" : [ "Au au!", "*Corre atrás da própria cauda*", "*Olha para você esperando brincar*", "*Fareja o chão*" ],
     "spriteDir" : "/npcs/animais/Animal 3/rotations/south.png",
     "indole" : 7,
-    "domado" : false,
     "especie" : "CACHORRO",
     "interagido" : false
   },
@@ -222,7 +215,6 @@
     "falas" : [ "Miau...", "*Pisca lentamente para você*", "*Ronrona feliz*", "*Se deita ao sol*" ],
     "spriteDir" : "/npcs/animais/Animal 6/rotations/west.png",
     "indole" : 40,
-    "domado" : false,
     "especie" : "GATO",
     "interagido" : false
   },

@@ -7,8 +7,9 @@ import java.util.ArrayList;
 public class Animal extends Npc {
 
     private int indole;
-    private boolean domado;
     private Especie especie;
+    // campo "domado" removido
+
     public Animal() {}
 
     public Animal(String nome, String spriteDir, int cX, int cY, ArrayList<String> falas, Especie especie, int indole) {
@@ -20,13 +21,13 @@ public class Animal extends Npc {
     public Especie getEspecie() { return especie; }
     public int getIndole() { return indole; }
     public void setIndole(int indole) { this.indole = indole; }
-    public boolean isDomado() { return domado; }
-    public void setDomado(boolean domado) { this.domado = domado; }
+
+    // isDomado()/setDomado() removidos — a informação agora vive em Personagem
 
     @Override
     public String aoInteragir(Personagem player) {
-        if (domado) {
-            player.addMotivacao(indole / 5);
+        if (player.domouAnimal(getNome())) {
+            player.addMotivacao(Math.round(indole / 2.0f));
             return this.getFalas().get(1);
         }
         return this.getFalas().get(0);

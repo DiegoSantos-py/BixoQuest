@@ -188,7 +188,7 @@ public class ControllerTelas {
         };
 
         construtor.setOnDialogoFinalizado(npc -> {
-            if (npc instanceof Animal animal && !animal.isDomado()) {
+            if (npc instanceof Animal animal && !gameController.getPersonagem().domouAnimal(animal.getNome())) {
                 gerenciador.mostrarTelaBatalhaAnimal(animal, nomeLocal);
             } else {
                 npc.aoInteragir(gameController.getPersonagem());

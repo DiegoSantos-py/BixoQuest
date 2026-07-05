@@ -1129,7 +1129,12 @@
     "diaAtual" : 12,
     "resultadosNomes" : { }
   }, {
-    "dias" : [ ],
+    "dias" : [ {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
     "disciplinas" : [ {
       "nome" : "Matemática",
       "codigo" : 1.0,
@@ -1137,11 +1142,21 @@
       "area" : "MAT"
     } ],
     "numeroSemestre" : 1,
-    "diaAtual" : 0,
+    "diaAtual" : 1,
     "resultadosNomes" : { }
   } ],
   "3" : [ {
     "dias" : [ {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
       "duracao" : 1200.000000000,
       "eventosObrigatoriosNomes" : [ ],
       "eventosAleatoriosNomes" : [ ],
@@ -1154,7 +1169,7 @@
       "area" : "SOF"
     } ],
     "numeroSemestre" : 1,
-    "diaAtual" : 1,
+    "diaAtual" : 3,
     "resultadosNomes" : { }
   } ]
 }

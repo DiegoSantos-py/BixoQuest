@@ -129,7 +129,24 @@ public class Personagem {
     public boolean isJogoConcluido() { return jogoConcluido; }
     public void setJogoConcluido(boolean jogoConcluido) { this.jogoConcluido = jogoConcluido; }
 
+    private Set<String> animaisDomados = new HashSet<>();
 
+    public boolean domouAnimal(String nomeAnimal) {
+        return animaisDomados.contains(nomeAnimal);
+    }
+
+    public void domarAnimal(String nomeAnimal) {
+        animaisDomados.add(nomeAnimal);
+    }
+
+    public Set<String> getAnimaisDomados() {
+        return animaisDomados;
+    }
+
+    public void setAnimaisDomados(Set<String> animaisDomados) {
+        this.animaisDomados = animaisDomados != null ? animaisDomados : new HashSet<>();
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

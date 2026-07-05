@@ -44,7 +44,9 @@ public class BatalhaFinalizacaoService {
     }
 
     public void finalizarBatalha(EstadoBatalha estado, Animal animal) {
-        animal.setDomado(true);
+        if (estado.isVitoria()) {
+            estado.getPersonagem().domarAnimal(animal.getNome());
+        }
         salvarAnimalNoRepositorio(estado, animal);
         // atualmente no fim de batalha animal, ele so fica domado, pra q entao ele
         // possa regerenar motivacao ou energia ou qualquer coisa do player
