@@ -197,7 +197,7 @@ public class ConstrutorCenaJogo implements Construtor {
 
     private Rectangle criarHitbox(double x, double y, double largura, double altura) {
         Rectangle hitbox = new Rectangle(x, y, largura, altura);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         return hitbox;
     }
 }

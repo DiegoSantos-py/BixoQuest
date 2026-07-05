@@ -196,7 +196,8 @@
       "spriteY" : 0
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/comer_1.png" ],
-    "chanceAtivacao" : 0.8,
+    "chanceAtivacao" : 0.0,
+    "eventoPadrao" : true,
     "efeitosConhecimento" : { }
   },
   "Estudar no laboratório" : {
@@ -350,6 +351,7 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/fila_gigante_1.png" ],
     "chanceAtivacao" : 0.2,
+    "eventoPadrao" : false,
     "efeitosConhecimento" : { }
   },
   "Estudar Software" : {

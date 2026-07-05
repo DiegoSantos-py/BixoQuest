@@ -10,6 +10,10 @@ public class EventoAleatorio extends Evento {
     // Variáveis para implementar aleatoriedade
     private double chanceAtivacao; // ex: 0.3 = 30%
     private static final Random random = new Random();
+    private boolean eventoPadrao = false;
+
+    public boolean isEventoPadrao() { return eventoPadrao; }
+    public void setEventoPadrao(boolean eventoPadrao) { this.eventoPadrao = eventoPadrao; }
 
     public EventoAleatorio() {}
 

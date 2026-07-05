@@ -28,7 +28,7 @@
     "energia" : 100.0,
     "motivacao" : 40.0,
     "saude" : 40.0,
-    "dinheiro" : 140.0,
+    "dinheiro" : 160.0,
     "jogoConcluido" : false,
     "localAtualNome" : null,
     "conhecimentosNomes" : {
@@ -51,7 +51,7 @@
     "energia" : 100.0,
     "motivacao" : 32.0,
     "saude" : 40.0,
-    "dinheiro" : 80.0,
+    "dinheiro" : 90.0,
     "jogoConcluido" : false,
     "localAtualNome" : null,
     "conhecimentosNomes" : {

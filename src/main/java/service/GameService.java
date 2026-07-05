@@ -353,10 +353,20 @@ public class GameService {
         List<EventoAleatorio> selecionados = new ArrayList<>();
 
         for (List<EventoAleatorio> candidatos : candidatosPorZona.values()) {
-            candidatos.stream()
+            Optional<EventoAleatorio> escolhido = candidatos.stream()
+                    .filter(ea -> !ea.isEventoPadrao()) // fallback nunca compete no sorteio normal
                     .filter(EventoAleatorio::deveAtivar)
-                    .findFirst()
-                    .ifPresent(selecionados::add);
+                    .findFirst();
+
+            if (escolhido.isPresent()) {
+                selecionados.add(escolhido.get());
+            } else {
+                // nenhum candidato ativou — usa o evento padrão da zona, se existir
+                candidatos.stream()
+                        .filter(EventoAleatorio::isEventoPadrao)
+                        .findFirst()
+                        .ifPresent(selecionados::add);
+            }
         }
 
         return selecionados;

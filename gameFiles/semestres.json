@@ -1161,6 +1161,11 @@
       "eventosObrigatoriosNomes" : [ ],
       "eventosAleatoriosNomes" : [ ],
       "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
     } ],
     "disciplinas" : [ {
       "nome" : "Software",
@@ -1169,7 +1174,7 @@
       "area" : "SOF"
     } ],
     "numeroSemestre" : 1,
-    "diaAtual" : 3,
+    "diaAtual" : 4,
     "resultadosNomes" : { }
   } ]
 }
