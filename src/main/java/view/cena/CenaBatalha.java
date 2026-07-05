@@ -117,11 +117,25 @@ public class CenaBatalha extends StackPane {
                         hud.getDebugText().setVisible(true);
                         return;
                     }
+                    if (e.getCode() == javafx.scene.input.KeyCode.F7) {
+                        forcarFimDeBatalha(true);
+                        return;
+                    }
+                    if (e.getCode() == javafx.scene.input.KeyCode.F8) {
+                        forcarFimDeBatalha(false);
+                        return;
+                    }
                     batalhaController.onTeclaPressionada(e.getCode());
                 });
                 newScene.setOnKeyReleased(e -> batalhaController.onTeclaLiberada(e.getCode()));
             }
         });
+    }
+
+    private void forcarFimDeBatalha(boolean vitoria) {
+        if (batalhaController.getEstadoAtual() == null) return;
+        batalhaController.getEstadoAtual().setFinalizado(true);
+        batalhaController.getEstadoAtual().setVitoria(vitoria);
     }
 
     // ─── GAME LOOP ─────────────────────────────────────────────────────────────

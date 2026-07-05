@@ -127,7 +127,11 @@ public class ControllerTelas {
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarCenaPorNome("Ponto de ônibus 1"),
+                () -> {
+                    ultimaBorda = null; // início de dia — spawn na posição padrão
+                    gerenciador.mostrarCenaPorNome("Ponto de ônibus 1");
+                },
+                () -> gerenciador.mostrarCenaVitoria(),
                 gameController,
                 sessaoAtual
         );
@@ -135,7 +139,10 @@ public class ControllerTelas {
 
     public Parent criarAnimacaoFim() {
         return new AnimacaoFimView(
-                () -> gerenciador.mostrarAnimacaoInicio(sessaoAtual)
+                () -> {
+                    ultimaBorda = null; // início de dia — spawn na posição padrão
+                    gerenciador.mostrarAnimacaoInicio(sessaoAtual);
+                }
         );
     }
 

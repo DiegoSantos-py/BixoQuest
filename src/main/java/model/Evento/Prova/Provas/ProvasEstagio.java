@@ -19,7 +19,7 @@ public class ProvasEstagio {
         ProvaBatalha prova = new ProvaBatalha(
                 "Processo Seletivo",
                 "sim",
-                AreaConhecimento.ESTAGIO,
+                AreaConhecimento.EST,
                 1,
                 0,
                 acoes,
@@ -29,7 +29,7 @@ public class ProvasEstagio {
 
         prova.addQuestao(new Questao(
                 "Entrevista Google", 
-                50f, AreaConhecimento.ESTAGIO,
+                50f, AreaConhecimento.EST,
                 10f,
                 new AtaqueGoogle(null, null, 10f),
                 "voce encara o linkedin desesperançoso", "Você precisa achar um emprego!"
@@ -37,7 +37,7 @@ public class ProvasEstagio {
 
         prova.addQuestao(new Questao(
                 "Dinâmica de Grupo", 
-                50f, AreaConhecimento.ESTAGIO, 
+                50f, AreaConhecimento.EST,
                 10f,
                 new AtaquePalavras(null, null, 10f),
                 "Avaliando o seu perfil...", "Atire na palavra positiva!"

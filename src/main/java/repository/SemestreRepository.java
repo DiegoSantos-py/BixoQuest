@@ -164,6 +164,10 @@ public class SemestreRepository {
         return Collections.unmodifiableList(lista);
     }
 
+    public void removerSemestresDoJogador(int jogadorId) {
+        semestresPorJogador.remove(jogadorId);
+    }
+
     /**
      Retorna uma visão somente leitura do mapa de semestres.
      Isso impede alterações externas na estrutura interna

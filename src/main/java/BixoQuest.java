@@ -29,7 +29,7 @@ public class BixoQuest extends Application {
 
         // Serviços
         EventoService eventoService = new EventoService(eventoRepository);
-        PersonagemService personagemService = new PersonagemService(personagemRepository, eventoService);
+        PersonagemService personagemService = new PersonagemService(personagemRepository, eventoService, semestreRepository);
         DiaService diaService = new DiaService();
         SemestreService semestreService = new SemestreService( semestreRepository, disciplinaRepository);
         NpcService npcService = new NpcService(npcRepository);

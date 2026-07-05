@@ -23,10 +23,16 @@ public class AnimacaoInicioView extends StackPane {
 
     public AnimacaoInicioView(
             Runnable aoFinalizar,
+            Runnable aoConcluirJogo,
             GameController gameController,
             int sessaoAtual
     ) {
         this.aoFinalizar = () -> {
+            if (gameController.isJogoConcluido()) {
+                aoConcluirJogo.run();
+                return;
+            }
+
             if (!gameController.precisaEscolherDisciplinas()) {
                 gameController.iniciarProximoDia();
             }
@@ -74,7 +80,9 @@ public class AnimacaoInicioView extends StackPane {
         bgView.setFitWidth(600);
         bgView.setPreserveRatio(true);
 
-        String labelDia = gameController.precisaEscolherDisciplinas()
+        String labelDia = gameController.isJogoConcluido()
+                ? "Vitória!"
+                : gameController.precisaEscolherDisciplinas()
                 ? "Novo semestre"
                 : "Dia " + gameController.getDiaAtual();
 

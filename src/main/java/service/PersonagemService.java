@@ -15,17 +15,21 @@ import model.Personagem;
 import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import repository.PersonagemRepository;
+import repository.SemestreRepository;
 
 import java.util.*;
 
 public class PersonagemService {
 
     private final PersonagemRepository personagemRepo;
-    private EventoService eventoService;
+    private final EventoService eventoService;
+    private final SemestreRepository semestreRepo; // novo
 
-    public PersonagemService(PersonagemRepository personagemRepo, EventoService eventoService) {
+    public PersonagemService(PersonagemRepository personagemRepo, EventoService eventoService,
+                                 SemestreRepository semestreRepo) {
         this.personagemRepo = personagemRepo;
         this.eventoService = eventoService;
+        this.semestreRepo = semestreRepo;
     }
 
     // Inicialização
@@ -175,5 +179,13 @@ public class PersonagemService {
         conhecimentos = p.getConhecimentos();
 
         return conhecimentos;
+    }
+
+    public void deletarPersonagem(int personagemId) throws PersistenciaException {
+        personagemRepo.remover(personagemId);
+        personagemRepo.salvar();
+
+        semestreRepo.removerSemestresDoJogador(personagemId);
+        semestreRepo.salvar();
     }
 }

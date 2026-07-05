@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 public final class AnimacaoFramesUtil {
 
-    private AnimacaoFramesUtil() {
-    }
+    private static final Duration DURACAO_PADRAO = Duration.seconds(0.5);
+
 
     public static ImageView criarImagem(String sprite) {
         Image backgroundImage = new Image(
@@ -37,9 +37,19 @@ public final class AnimacaoFramesUtil {
             List<Node> frames,
             Runnable aoFinalizar
     ) {
+        iniciarAnimacao(container, frames, DURACAO_PADRAO, aoFinalizar);
+    }
+
+    public static void iniciarAnimacao(
+            StackPane container,
+            List<Node> frames,
+            Duration duracaoPorFrame,
+            Runnable aoFinalizar
+    ) {
         iniciarAnimacao(
                 container,
                 frames,
+                duracaoPorFrame,
                 indice -> aoFinalizar.run()
         );
     }
@@ -49,10 +59,20 @@ public final class AnimacaoFramesUtil {
             List<Node> frames,
             Consumer<Integer> aoFinalizar
     ) {
+        iniciarAnimacao(container, frames, DURACAO_PADRAO, aoFinalizar);
+    }
+
+    public static void iniciarAnimacao(
+            StackPane container,
+            List<Node> frames,
+            Duration duracaoPorFrame,
+            Consumer<Integer> aoFinalizar
+    ) {
         iniciarAnimacao(
                 container,
                 frames,
                 0,
+                duracaoPorFrame,
                 aoFinalizar
         );
     }
@@ -61,15 +81,17 @@ public final class AnimacaoFramesUtil {
             StackPane container,
             List<Node> frames,
             int indiceAtual,
+            Duration duracaoPorFrame,
             Consumer<Integer> aoFinalizar
     ) {
-        PauseTransition espera = new PauseTransition(Duration.seconds(3));
+        PauseTransition espera = new PauseTransition(duracaoPorFrame);
 
         espera.setOnFinished(event ->
                 trocarImagem(
                         container,
                         frames,
                         indiceAtual,
+                        duracaoPorFrame,
                         aoFinalizar
                 )
         );
@@ -81,6 +103,7 @@ public final class AnimacaoFramesUtil {
             StackPane container,
             List<Node> frames,
             int indiceAtual,
+            Duration duracaoPorFrame,
             Consumer<Integer> aoFinalizar
     ) {
         int proximoIndice = indiceAtual + 1;
@@ -96,34 +119,19 @@ public final class AnimacaoFramesUtil {
         proximo.setOpacity(0);
         container.getChildren().add(proximo);
 
-        FadeTransition fadeOut = new FadeTransition(
-                Duration.seconds(0.1),
-                atual
-        );
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), atual);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
 
-        FadeTransition fadeIn = new FadeTransition(
-                Duration.seconds(0.1),
-                proximo
-        );
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), proximo);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
 
-        ParallelTransition crossFade = new ParallelTransition(
-                fadeOut,
-                fadeIn
-        );
+        ParallelTransition crossFade = new ParallelTransition(fadeOut, fadeIn);
 
         crossFade.setOnFinished(event -> {
             container.getChildren().remove(atual);
-
-            iniciarAnimacao(
-                    container,
-                    frames,
-                    proximoIndice,
-                    aoFinalizar
-            );
+            iniciarAnimacao(container, frames, proximoIndice, duracaoPorFrame, aoFinalizar);
         });
 
         crossFade.play();

@@ -153,6 +153,12 @@ public class GameController extends BaseController {
     public boolean houveJogoConcluido() {
         return service.houveJogoConcluido();
     }
+
+    public boolean isJogoConcluido() {
+        Personagem p = service.getPersonagem();
+        return p != null && p.isJogoConcluido();
+    }
+
     // Exibição
     @Override
     protected void exibirErro(String mensagem) {

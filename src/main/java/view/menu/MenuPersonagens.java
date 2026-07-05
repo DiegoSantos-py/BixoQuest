@@ -1,6 +1,7 @@
 package view.menu;
 
 import controller.PersonagemController;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -12,7 +13,6 @@ import view.util.FonteUtil;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class MenuPersonagens extends StackPane {
 
@@ -20,6 +20,8 @@ public class MenuPersonagens extends StackPane {
     private final Runnable aoVoltar;
     private final AcaoSlot aoCarregarPersonagem;
     private final AcaoSlot aoCriarPersonagem;
+
+    private final DialogoConfirmacao dialogoConfirmacao = new DialogoConfirmacao();
 
     public MenuPersonagens(
             PersonagemController personagemController,
@@ -36,6 +38,8 @@ public class MenuPersonagens extends StackPane {
     }
 
     private void montarTela() {
+        getChildren().clear();
+
         Map<Integer, Personagem> personagens =
                 personagemController.carregarPersonagens();
 
@@ -54,7 +58,7 @@ public class MenuPersonagens extends StackPane {
 
         VBox menuItems = criarBotoesSlots(personagens);
 
-        getChildren().addAll(backgroundView, menuItems);
+        getChildren().addAll(backgroundView, menuItems, dialogoConfirmacao);
     }
 
     private VBox criarBotoesSlots(Map<Integer, Personagem> personagens) {
@@ -64,19 +68,35 @@ public class MenuPersonagens extends StackPane {
 
         for (int slotId = 1; slotId <= 3; slotId++) {
             Personagem personagem = personagens.get(slotId);
-            Button saveBotao = criarBotaoSlot(personagem, slotId);
-            if(slotId == 1) {
-                VBox.setMargin(saveBotao, new javafx.geometry.Insets(60, 0, 0, 0));
+            StackPane linhaSlot = criarLinhaSlot(personagem, slotId);
+            if (slotId == 1) {
+                VBox.setMargin(linhaSlot, new Insets(60, 0, 0, 0));
             }
-            menuItems.getChildren().add(saveBotao);
+            menuItems.getChildren().add(linhaSlot);
         }
 
         Button btnVoltar = criarBotaoVoltar();
-        VBox.setMargin(btnVoltar, new javafx.geometry.Insets(30, 0, 0, 0));
+        VBox.setMargin(btnVoltar, new Insets(30, 0, 0, 0));
 
         menuItems.getChildren().add(btnVoltar);
 
         return menuItems;
+    }
+
+    private StackPane criarLinhaSlot(Personagem personagem, int slotId) {
+        StackPane linha = new StackPane();
+
+        Button saveBotao = criarBotaoSlot(personagem, slotId);
+        linha.getChildren().add(saveBotao);
+
+        if (personagem != null) {
+            Button btnDeletar = criarBotaoDeletar(slotId, personagem.getNome());
+            StackPane.setAlignment(btnDeletar, Pos.CENTER_RIGHT);
+            StackPane.setMargin(btnDeletar, new Insets(0, 500, 0, 0)); // ajuste esse valor conforme necessário
+            linha.getChildren().add(btnDeletar);
+        }
+
+        return linha;
     }
 
     private Button criarBotaoSlot(Personagem personagem, int slotId) {
@@ -87,19 +107,42 @@ public class MenuPersonagens extends StackPane {
             saveBotao.setText(
                     "Slot " + slotId + " - Carregar: " + personagem.getNome()
             );
-
-            //Ao clicar nesse botão, recupera jogo de x personagem
             saveBotao.setOnAction(event -> aoCarregarPersonagem.executar(slotId));
-
         } else {
             saveBotao.setText(
                     "Slot " + slotId + " - Criar Personagem"
             );
-
             saveBotao.setOnAction(event -> aoCriarPersonagem.executar(slotId));
         }
 
         return saveBotao;
+    }
+
+    private Button criarBotaoDeletar(int slotId, String nomePersonagem) {
+        Button btnDeletar = new Button("Deletar");
+        btnDeletar.setFont(FonteUtil.pixel(18));
+        btnDeletar.setTextFill(Color.WHITE);
+        btnDeletar.setBackground(new Background(new BackgroundFill(
+                Color.web("#8B0000"), new CornerRadii(6), Insets.EMPTY)));
+        btnDeletar.setBorder(Border.EMPTY);
+        btnDeletar.setPrefSize(120, 60);
+        btnDeletar.setFocusTraversable(false);
+
+        btnDeletar.setOnAction(event -> confirmarEDeletar(slotId, nomePersonagem));
+
+        return btnDeletar;
+    }
+
+    private void confirmarEDeletar(int slotId, String nomePersonagem) {
+        dialogoConfirmacao.abrir(
+                "Tem certeza que deseja deletar \"" + nomePersonagem + "\"?\nEsta ação não pode ser desfeita.",
+                () -> {
+                    boolean sucesso = personagemController.deletarPersonagem(slotId);
+                    if (sucesso) {
+                        montarTela();
+                    }
+                }
+        );
     }
 
     private Button criarBotaoVoltar() {

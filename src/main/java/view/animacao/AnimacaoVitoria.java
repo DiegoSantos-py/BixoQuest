@@ -2,6 +2,7 @@ package view.animacao;
 
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class AnimacaoVitoria extends StackPane {
         AnimacaoFramesUtil.iniciarAnimacao(
                 this,
                 frames,
+                Duration.seconds(3), // ajuste conforme o tempo que você quer só pra vitória
                 this.aoFinalizar
         );
     }

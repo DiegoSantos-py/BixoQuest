@@ -159,14 +159,9 @@ public class GameService {
         if (!semestreService.terminouSemestre(semestre)) {
             diaAtual = semestreService.avancarDia(semestre);
             diaTransicionado = true;
-        } else {
-            semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
-            this.semestre = null;
-            diaTransicionado = true;
-
-            if (encerrarJogo()) {
-                concluirJogo();
-            }
+        }
+        else {
+            processarFimDeSemestre();
         }
     }
 
@@ -380,9 +375,17 @@ public class GameService {
             diaAtual = semestreService.avancarDia(semestre);
         }
 
+        processarFimDeSemestre();
+    }
+
+    private void processarFimDeSemestre() throws PersistenciaException {
         semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
         this.semestre = null;
         diaTransicionado = true;
+
+        if (encerrarJogo()) {
+            concluirJogo();
+        }
     }
     /**
      * Salva o estado de todos os repositórios exceto localRepo.

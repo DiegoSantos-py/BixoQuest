@@ -23,8 +23,8 @@ public class ProvasTCC {
         ProvaBatalha prova = new ProvaBatalha(
                 "Trabalho de Conclusão",
                 "A banca final está te aguardando!",
-                AreaConhecimento.ESTAGIO, 
-                4,
+                AreaConhecimento.TCC,
+                1,
                 0,
                 acoes,
                 "tcc.png",

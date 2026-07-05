@@ -7,6 +7,7 @@ import exception.PersistenciaException;
 import model.Disciplina.AreaConhecimento;
 import model.Local.Local;
 import model.Personagem;
+import repository.SemestreRepository;
 import service.PersonagemService;
 
 import java.util.Map;
@@ -95,6 +96,17 @@ public class PersonagemController extends BaseController {
 
     public Map<Integer, Personagem> carregarPersonagens() {
         return service.carregarPersonagens();
+    }
+
+    public boolean deletarPersonagem(int personagemId) {
+        try {
+            service.deletarPersonagem(personagemId);
+            exibirSucesso("Personagem removido.");
+            return true;
+        } catch (PersistenciaException e) {
+            tratarErroPersistencia(e);
+            return false;
+        }
     }
 
     // Exibição

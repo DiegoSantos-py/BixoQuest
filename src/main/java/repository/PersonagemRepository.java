@@ -123,6 +123,10 @@ public class PersonagemRepository {
         personagens.put(personagem.getPersonagemId(), personagem);
     }
 
+    public void remover(int personagemId) {
+        personagens.remove(personagemId);
+    }
+
     /**
      Busca um personagem pelo id informado.
 
