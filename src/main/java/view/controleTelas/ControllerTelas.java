@@ -8,6 +8,7 @@ import model.Npc.Animal;
 import view.InicioJogoView;
 import view.animacao.AnimacaoFimView;
 import view.animacao.AnimacaoInicioView;
+import view.animacao.AnimacaoVitoria;
 import view.cena.CenaBatalha;
 import view.construtores.ConstrutorCenaJogo;
 import view.construtores.DiretorCena;
@@ -126,7 +127,7 @@ public class ControllerTelas {
     public Parent criarAnimacaoInicio(int sessaoAtual) {
         this.sessaoAtual = sessaoAtual;
         return new AnimacaoInicioView(
-                () -> gerenciador.mostrarCenaPorNome("Entrada módulo 4"),
+                () -> gerenciador.mostrarCenaPorNome("Ponto de ônibus 1"),
                 gameController,
                 sessaoAtual
         );
@@ -194,6 +195,8 @@ public class ControllerTelas {
             }
         });
 
+        construtor.setOnVitoria(gerenciador::mostrarCenaVitoria);
+
         diretorCena.construirCena(construtor, mapaController,
                 onZonaComEvento,
                 nome -> System.out.println("NPC: " + nome), // pode remover, já não é mais usado
@@ -219,6 +222,10 @@ public class ControllerTelas {
             case OESTE -> new double[]{1700, 500};
             case null  -> new double[]{700, 700};
         };
+    }
+
+    public Parent criarAnimacaoVitoria() {
+        return new AnimacaoVitoria(() -> gerenciador.mostrarMenuInicial());
     }
 
 }

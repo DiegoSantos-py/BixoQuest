@@ -37,6 +37,7 @@ public interface Construtor {
     void setOnNpcAtingido(Consumer<String> onNpcAtingido);
     void setOnFinalizar(Runnable onFinalizar);
     void setOnDialogoFinalizado(Consumer<Npc> onDialogoFinalizado);
+    void setOnVitoria(Runnable onVitoria);
 
     void setPersonagem(PersonagemController personagemController, int personagemId);
     void setOnSairParaMenuPrincipal(Runnable onSairParaMenuPrincipal);

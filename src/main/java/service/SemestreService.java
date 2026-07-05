@@ -92,8 +92,8 @@ public class SemestreService {
             String nomeArea = entry.getKey();
             List<Disciplina> niveis = entry.getValue();
 
-            // TCC exige checagem especial de elegibilidade, tratado fora do loop principal
-            if (nomeArea.equals(NOME_TCC)) {
+            // TCC e Estágio exigem checagem especial de elegibilidade, tratados fora do loop principal
+            if (nomeArea.equals(NOME_TCC) || nomeArea.equals(NOME_ESTAGIO)) {
                 continue;
             }
 
@@ -119,6 +119,13 @@ public class SemestreService {
                     .ifPresent(disponiveis::add);
         }
 
+        if (elegivelParaEstagio(jogadorId, historico, catalogo)) {
+            catalogo.getOrDefault(NOME_ESTAGIO, List.of()).stream()
+                    .filter(d -> !foiAprovadaEmAlgumSemestre(historico, d))
+                    .findFirst()
+                    .ifPresent(disponiveis::add);
+        }
+
         return disponiveis;
     }
 
@@ -128,6 +135,28 @@ public class SemestreService {
      */
     private boolean elegivelParaTcc(int jogadorId, List<Semestre> historico,
                                     Map<String, List<Disciplina>> catalogo) {
+        for (Map.Entry<String, List<Disciplina>> entry : catalogo.entrySet()) {
+            String nomeArea = entry.getKey();
+
+            if (nomeArea.equals(NOME_ESTAGIO) || nomeArea.equals(NOME_TCC)) {
+                continue;
+            }
+
+            for (Disciplina d : entry.getValue()) {
+                if (!foiAprovadaEmAlgumSemestre(historico, d)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Estágio só é elegível se todas as disciplinas regulares do catálogo,
+     * exceto TCC, já tiverem sido aprovadas em algum semestre anterior.
+     */
+    private boolean elegivelParaEstagio(int jogadorId, List<Semestre> historico,
+                                        Map<String, List<Disciplina>> catalogo) {
         for (Map.Entry<String, List<Disciplina>> entry : catalogo.entrySet()) {
             String nomeArea = entry.getKey();
 

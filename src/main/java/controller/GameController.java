@@ -150,6 +150,9 @@ public class GameController extends BaseController {
         service.forcarFimDeDia();
     }
 
+    public boolean houveJogoConcluido() {
+        return service.houveJogoConcluido();
+    }
     // Exibição
     @Override
     protected void exibirErro(String mensagem) {

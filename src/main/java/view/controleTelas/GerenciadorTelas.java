@@ -106,4 +106,8 @@ public class GerenciadorTelas {
 
     }
 
+    public void mostrarCenaVitoria() {
+        trocarRoot(controllerTelas.criarAnimacaoVitoria());
+    }
+
 }

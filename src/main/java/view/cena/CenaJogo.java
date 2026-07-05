@@ -72,7 +72,7 @@ public class CenaJogo {
     private final Runnable onSairParaMenuPrincipal;
     private final Runnable onFinalizar;
     private final Consumer<Npc> onDialogoFinalizado;
-
+    private final Runnable onVitoria;
     public record ZoneEntry(String id, ImageView view, Rectangle hitbox, Consumer<String> onEnter) {}
 
     public CenaJogo(ImageView background,
@@ -93,7 +93,8 @@ public class CenaJogo {
                     Runnable onSairParaMenuPrincipal,
                     GameController gameController,
                     Runnable onFinalizar,
-                    Consumer<Npc> onDialogoFinalizado) {
+                    Consumer<Npc> onDialogoFinalizado,
+                    Runnable onVitoria) {
 
         this.background          = background;
         this.elements            = elements;
@@ -114,6 +115,7 @@ public class CenaJogo {
         this.gameController = gameController;
         this.onFinalizar = onFinalizar;
         this.onDialogoFinalizado = onDialogoFinalizado;
+        this.onVitoria = onVitoria;
     }
 
     public Pane buildPane() {
@@ -197,20 +199,21 @@ public class CenaJogo {
                 sistemaMovimento.atualizar(gerenciadorEntrada.getTeclasPressionadas());
                 sistemaColisao.verificarZonas();
                 sistemaColisao.atualizarProximidadeNpcs();
-
-                Npc npcParaInteragir = sistemaColisao.verificarInteracaoNpc(gerenciadorEntrada.getTeclasPressionadas());
-
                 atualizarLabelTempo();
 
                 gameController.atualizar();
 
-                if (gameController.precisaEscolherDisciplinas()) {
-                    gameLoop.stop(); // para o loop; será retomado ao confirmar a escolha
-                    abrirMenuEscolhaDisciplina();
+                if (gameController.houveJogoConcluido()) {
+                    gameLoop.stop();
+                    onVitoria.run();
                 }
                 else if (gameController.houveTransicaoDeDia()) {
                     gameLoop.stop();
                     onFinalizar.run();
+                }
+                else if (gameController.precisaEscolherDisciplinas()) {
+                    gameLoop.stop();
+                    abrirMenuEscolhaDisciplina();
                 }
             }
         };

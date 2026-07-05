@@ -5,7 +5,7 @@
     "nome" : "Estudar Matemática",
     "descricao" : "Reforça o conteúdo de Matemática.",
     "efeitoConhecimentoNomes" : {
-      "MAT" : 10.0
+      "MAT" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -37,7 +37,7 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "MAT" : 10.0
+      "MAT" : 0.3
     }
   },
   "Estudar Hardware" : {
@@ -46,7 +46,7 @@
     "nome" : "Estudar Hardware",
     "descricao" : "Reforça o conteúdo de Hardware.",
     "efeitoConhecimentoNomes" : {
-      "HAR" : 10.0
+      "HAR" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -78,7 +78,7 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "HAR" : 10.0
+      "HAR" : 0.3
     }
   },
   "Estudar Naturezas" : {
@@ -87,7 +87,7 @@
     "nome" : "Estudar Naturezas",
     "descricao" : "Reforça o conteúdo de Naturezas.",
     "efeitoConhecimentoNomes" : {
-      "NAT" : 10.0
+      "NAT" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -119,7 +119,7 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "NAT" : 10.0
+      "NAT" : 0.3
     }
   },
   "Estudar TCC" : {
@@ -128,7 +128,7 @@
     "nome" : "Estudar TCC",
     "descricao" : "Reforça o conteúdo de TCC.",
     "efeitoConhecimentoNomes" : {
-      "TCC" : 10.0
+      "TCC" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -160,12 +160,12 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "TCC" : 10.0
+      "TCC" : 0.3
     }
   },
   "Comer na cantina" : {
     "tipo" : "aleatorio",
-    "status" : false,
+    "status" : true,
     "nome" : "Comer na cantina",
     "descricao" : "Você foi comer na cantina",
     "efeitoConhecimentoNomes" : { },
@@ -179,7 +179,7 @@
     "requisitosAtributo" : { },
     "disciplinaRequisitoNome" : null,
     "disciplinaRequisitoCodigo" : 0.0,
-    "custaDinheiro" : 0.0,
+    "custaDinheiro" : 10.0,
     "repetivel" : true,
     "zona" : {
       "area" : {
@@ -196,7 +196,7 @@
       "spriteY" : 0
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/comer_1.png" ],
-    "chanceAtivacao" : 0.9,
+    "chanceAtivacao" : 0.8,
     "efeitosConhecimento" : { }
   },
   "Estudar no laboratório" : {
@@ -281,7 +281,7 @@
     "nome" : "Estudar Estágio",
     "descricao" : "Reforça o conteúdo de Estágio.",
     "efeitoConhecimentoNomes" : {
-      "EST" : 10.0
+      "EST" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -313,13 +313,13 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "EST" : 10.0
+      "EST" : 0.3
     }
   },
   "Fila gigante" : {
     "tipo" : "aleatorio",
-    "status" : false,
-    "nome" : "Comer na cantina",
+    "status" : true,
+    "nome" : "Fila gigante",
     "descricao" : "Você foi comer na cantina",
     "efeitoConhecimentoNomes" : { },
     "efeitoEnergia" : -50.0,
@@ -332,7 +332,7 @@
     "requisitosAtributo" : { },
     "disciplinaRequisitoNome" : null,
     "disciplinaRequisitoCodigo" : 0.0,
-    "custaDinheiro" : 0.0,
+    "custaDinheiro" : 10.0,
     "repetivel" : true,
     "zona" : {
       "area" : {
@@ -349,7 +349,7 @@
       "spriteY" : 0
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/fila_gigante_1.png" ],
-    "chanceAtivacao" : 0.9,
+    "chanceAtivacao" : 0.2,
     "efeitosConhecimento" : { }
   },
   "Estudar Software" : {
@@ -358,7 +358,7 @@
     "nome" : "Estudar Software",
     "descricao" : "Reforça o conteúdo de Software.",
     "efeitoConhecimentoNomes" : {
-      "SOF" : 10.0
+      "SOF" : 0.3
     },
     "efeitoEnergia" : -10.0,
     "efeitoMotivacao" : 0.0,
@@ -390,7 +390,7 @@
     },
     "imagensAnimacao" : [ "eventos/blank.png", "eventos/estudar_1.png" ],
     "efeitosConhecimento" : {
-      "SOF" : 10.0
+      "SOF" : 0.3
     }
   }
 }

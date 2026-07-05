@@ -32,7 +32,6 @@ public class GameService {
     private final PersonagemRepository personagemRepo;
     private final MapaService mapaService;
 
-    private boolean diaTransicionado;
     private Semestre semestre;
     private Dia diaAtual;
     private int personagem;
@@ -106,15 +105,14 @@ public class GameService {
 
         this.semestre = semestreService.iniciarSemestreComEscolha(personagem, disciplinasEscolhidas, p);
 
-        for (Disciplina d : disciplinasEscolhidas) {
-            p.getConhecimentos().put(d.getArea(), 10.0);
-        }
         personagemRepo.salvar();
 
         semestreRepo.adicionarSemestre(personagem, semestre);
         semestreRepo.salvar();
 
         diaAtual = semestreService.avancarDia(semestre);
+
+        iniciarProximoDia(); // reaproveita: aplica rotina de energia/dinheiro, monta eventos, inicia o DiaService
     }
 
     private void resetarConhecimentosParaNovoSemestre(List<Disciplina> disciplinasEscolhidas) throws PersistenciaException {
@@ -152,8 +150,6 @@ public class GameService {
      * lança PersistenciaException se ocorrer falha ao salvar
      */
     public void atualizar() throws PersistenciaException {
-        diaTransicionado = false;
-
         if (semestre == null) return;
         if (!diaService.isDiaEncerrado()) return;
 
@@ -161,12 +157,16 @@ public class GameService {
         salvarEstado();
 
         if (!semestreService.terminouSemestre(semestre)) {
-            diaAtual = semestreService.avancarDia(semestre); // só cria/avança o Dia, não inicia o timer
+            diaAtual = semestreService.avancarDia(semestre);
             diaTransicionado = true;
         } else {
             semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
             this.semestre = null;
             diaTransicionado = true;
+
+            if (encerrarJogo()) {
+                concluirJogo();
+            }
         }
     }
 
@@ -198,8 +198,12 @@ public class GameService {
         diaService.consumirTempoEvento(diaAtual, (int) Math.min(minutos, restante));
     }
 
+    private boolean diaTransicionado = false;
+
     public boolean houveTransicaoDeDia() {
-        return diaTransicionado;
+        boolean valor = diaTransicionado;
+        diaTransicionado = false; // consome a flag ao ler — só é true uma vez
+        return valor;
     }
 
     public void pausarDia() {
@@ -298,7 +302,6 @@ public class GameService {
 
         boolean periodoDeProvas = semestre.estaEmPeriodoDeProvas();
 
-        // 1. Eventos dinâmicos: provas/estudo, resolvidos por disciplina cursada
         for (Map.Entry<String, AreaConhecimento> entry : ZONA_PARA_AREA.entrySet()) {
             String nomeZona = entry.getKey();
             AreaConhecimento area = entry.getValue();
@@ -310,6 +313,7 @@ public class GameService {
                         if (periodoDeProvas) {
                             if (disciplina.getProvaId() == null) return;
                             ProvaBatalha prova = ProvaFactory.criar(disciplina.getProvaId());
+                            mapaService.buscarZonaPorNome(nomeZona).ifPresent(prova::setZona); // <- reintroduzido
                             prova.setDisciplinaRequisitoNome(disciplina.getNome());
                             prova.setDisciplinaRequisitoCodigo(disciplina.getCodigo());
                             eventos.add(prova);
@@ -366,10 +370,9 @@ public class GameService {
             diaAtual = semestreService.avancarDia(semestre);
         }
 
-        // dispara o mesmo caminho que atualizar() usaria ao detectar fim de semestre
         semestreService.encerrarSemestre(personagemRepo.buscarPorId(personagem), semestre);
         this.semestre = null;
-        diaTransicionado = true; // reaproveita o flag existente, se CenaJogo estiver checando isso
+        diaTransicionado = true;
     }
     /**
      * Salva o estado de todos os repositórios exceto localRepo.
@@ -398,5 +401,21 @@ public class GameService {
         if (diaAtual != null) {
             diaService.encerrarDia(diaAtual); // marca diaEncerrado=true, para o scheduler
         }
+    }
+
+    private boolean jogoConcluidoNestaAtualizacao = false;
+
+    private void concluirJogo() throws PersistenciaException {
+        Personagem p = personagemRepo.buscarPorId(personagem);
+        if (p.isJogoConcluido()) return; // já foi mostrado antes, não repete
+        p.setJogoConcluido(true);
+        personagemRepo.salvar();
+        jogoConcluidoNestaAtualizacao = true;
+    }
+
+    public boolean houveJogoConcluido() {
+        boolean valor = jogoConcluidoNestaAtualizacao;
+        jogoConcluidoNestaAtualizacao = false;
+        return valor;
     }
 }

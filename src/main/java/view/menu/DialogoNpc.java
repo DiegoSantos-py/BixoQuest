@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import model.Npc.Npc;
 import view.util.FonteUtil;
 
@@ -23,6 +24,14 @@ public class DialogoNpc extends StackPane {
     private int indiceFala;
     private Label textoLabel;
 
+    // Dimensões da área de texto DENTRO da imagem de fundo — ajuste conforme o design real
+    private static final double CAIXA_LARGURA = 1200;
+    private static final double CAIXA_ALTURA = 500;
+    private static final double TEXTO_LARGURA = 400;   // largura útil da "bolha" de texto na imagem
+    private static final double TEXTO_ALTURA = 300;    // altura útil da "bolha" de texto na imagem
+    private static final double TEXTO_OFFSET_X = 40;  // deslocamento até a área de texto na imagem
+    private static final double TEXTO_OFFSET_Y = 120;
+
     public DialogoNpc(Consumer<Npc> aoFinalizar) {
         this.aoFinalizar = aoFinalizar;
         montarTela();
@@ -33,18 +42,30 @@ public class DialogoNpc extends StackPane {
     private void montarTela() {
         ImageView caixaFundo = new ImageView(
                 new Image(Objects.requireNonNull(
-                        getClass().getResourceAsStream("/menuPersonagens/background_botao.png")
+                        getClass().getResourceAsStream("/menuPersonagens/background_interacao_npcs.png")
                 ))
         );
-        caixaFundo.setFitWidth(1200);
-        caixaFundo.setFitHeight(250);
+        caixaFundo.setFitWidth(CAIXA_LARGURA);
+        caixaFundo.setFitHeight(CAIXA_ALTURA);
         caixaFundo.setPreserveRatio(false);
+        caixaFundo.setTranslateY(50);
 
         textoLabel = new Label();
-        textoLabel.setFont(FonteUtil.pixel(22));
+        textoLabel.setFont(FonteUtil.pixel(32)); // reduzido de 48 — texto grande demais estoura mais fácil
         textoLabel.setTextFill(Color.WHITE);
         textoLabel.setWrapText(true);
-        textoLabel.setMaxWidth(1000);
+        textoLabel.setAlignment(Pos.TOP_LEFT);
+
+        // Área fixa de texto — o Label nunca cresce além disso
+        textoLabel.setMinSize(TEXTO_LARGURA, TEXTO_ALTURA);
+        textoLabel.setMaxSize(TEXTO_LARGURA, TEXTO_ALTURA);
+        textoLabel.setPrefSize(TEXTO_LARGURA, TEXTO_ALTURA);
+        textoLabel.setTranslateX(TEXTO_OFFSET_X);
+        textoLabel.setTranslateY(TEXTO_OFFSET_Y);
+
+        // Clip garante que nada vaze visualmente, mesmo se o texto for maior que a área
+        Rectangle clip = new Rectangle(TEXTO_LARGURA, TEXTO_ALTURA);
+        textoLabel.setClip(clip);
 
         StackPane.setAlignment(caixaFundo, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(textoLabel, Pos.BOTTOM_CENTER);

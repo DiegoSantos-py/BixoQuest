@@ -16,6 +16,8 @@ public class Personagem {
     private double saude;
     private double dinheiro;
 
+    private boolean jogoConcluido = false;
+
     @JsonIgnore
     private Local localAtual;
     private String localAtualNome;
@@ -123,6 +125,10 @@ public class Personagem {
     public void adicionarSemestre(Semestre semestre) { this.semestres.add(semestre); }
     public String getLocalAtualNome() { return localAtualNome; }
     public void setLocalAtualNome(String nome) { this.localAtualNome = nome; }
+
+    public boolean isJogoConcluido() { return jogoConcluido; }
+    public void setJogoConcluido(boolean jogoConcluido) { this.jogoConcluido = jogoConcluido; }
+
 
     @Override
     public boolean equals(Object o) {

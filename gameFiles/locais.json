@@ -233,7 +233,7 @@
     },
     "tipo" : "LABORATORIO",
     "elementos" : [ ],
-    "nomesNpcs" : ["Colega 8" ],
+    "nomesNpcs" : ["Colega 8", "Azetona" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Laboratório zona",
       "sprite": null,
@@ -825,7 +825,7 @@
     },
     "tipo" : "ENTRADA",
     "elementos" : [ ],
-    "nomesNpcs" : ["Thor" ],
+    "nomesNpcs" : ["Thor", "Atim" ],
     "zonaInterativasDisponiveis" : [ ]
   }
 }

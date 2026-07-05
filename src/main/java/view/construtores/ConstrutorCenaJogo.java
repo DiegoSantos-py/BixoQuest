@@ -35,6 +35,8 @@ public class ConstrutorCenaJogo implements Construtor {
     private Consumer<Borda> onBordaAtingida;
     private Consumer<String> onNpcAtingido;
     private String spriteBase;
+    private Runnable onVitoria;
+
 
     private PersonagemController personagemController;
     private GameController gameController;
@@ -143,6 +145,11 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     @Override
+    public void setOnVitoria(Runnable onVitoria) {
+        this.onVitoria = onVitoria;
+    }
+
+    @Override
     public CenaJogo getResult() {
         return new CenaJogo(background,
                 elements, elementHitboxes,
@@ -154,7 +161,8 @@ public class ConstrutorCenaJogo implements Construtor {
                 spriteBase,
                 personagemController, personagemId, onSairParaMenuPrincipal,
                 gameController, onFinalizar,
-                onDialogoFinalizado
+                onDialogoFinalizado,
+                onVitoria // novo
         );
     }
 
