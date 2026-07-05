@@ -232,7 +232,7 @@ class SemestreServiceTest {
         Disciplina historia1 = new Disciplina();
         historia1.setNome("Historia");
         historia1.setCodigo(1);
-        historia1.setArea(AreaConhecimento.HUM);
+        historia1.setArea(AreaConhecimento.SOF); //alguem tem q ver isso ai
 
         disciplinaRepo.adicionar(historia1);
 

@@ -13,7 +13,7 @@ public class AtaqueArranhao extends Ataque {
     private int projeteisSpawnados = 0;
     private Random random;
 
-    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f);
+    private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 6, 1300, 1, 0f, 0.2f,1f);
 
     public AtaqueArranhao(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -42,7 +42,7 @@ public class AtaqueArranhao extends Ataque {
             // Spawna a PRÉVIA (3 pixels de largura, 600 de comprimento, sem dano)
             Projetil previa = spawnProjetil(
                     posX, posY,
-                    3, 600, 
+                    3, 1300, 
                     0f, 0f, 
                     anguloAleatorio,
                     0, 0f, // Nenhum dano
@@ -50,6 +50,7 @@ public class AtaqueArranhao extends Ataque {
                     "arranhaoPrevia.png");
 
             if (previa != null) {
+                previa.setMultiplicadorSprite(1f);
                 previa.addComportamentoDespawn(spawnArranhao);
                 
                 projeteisSpawnados++;
@@ -62,10 +63,7 @@ public class AtaqueArranhao extends Ataque {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Arranhao";
-    }
+
 
     @Override
     public void reiniciarAtaque() {

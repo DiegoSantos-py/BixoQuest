@@ -18,7 +18,9 @@ public class BatalhaFinalizacaoService {
     }
 
     public void salvarAnimalNoRepositorio(EstadoBatalha estado, Animal animal) {
-        estado.getNpcRepository().atualizarNpc(animal);
+        if (estado.getNpcRepository() != null) {
+            estado.getNpcRepository().atualizarNpc(animal);
+        }
     }
 
     public void finalizarBatalha(EstadoBatalha estado, ProvaBatalha provaBatalha, int semestreNumero) {

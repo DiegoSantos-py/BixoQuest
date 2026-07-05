@@ -38,13 +38,11 @@ public class ProjetilExplosaoNuclear implements ComportamentoAoDespawnar {
         
         float cx = projetil.getHitbox().getCentro().getX();
         float cy = projetil.getHitbox().getCentro().getY();
-        
-        // Queremos atirar apenas para cima (de 180 graus até 360/0 graus)
-        // No JavaFX, Y cresce para baixo. Então 180 (PI) é esquerda, 270 (1.5 PI) é cima, 360 (2 PI) é direita.
+
         float startAngle = (float) Math.PI;
         float endAngle = (float) (Math.PI * 2);
         float step = (endAngle - startAngle) / (numProjeteis - 1);
-
+        //atira de 180 a 360 pq o javafx é misreavel e ranndomiza a velociadd de saida
         for (int i = 0; i < numProjeteis; i++) {
             float angulo = startAngle + (i * step);
             float velocidadeAleatoria = 100f + MathUtils.randomFloatInRange(0, 200f);

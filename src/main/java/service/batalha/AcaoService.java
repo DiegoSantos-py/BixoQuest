@@ -33,10 +33,16 @@ public class AcaoService {
                 }
                 player.setDesempenhoQuestaoAtual(novaNota);
             }
-            
+            acao.setChanceAcerto(acao.getChanceAcerto() * 0.75f);
+            acao.setBonusDano(acao.getBonusDano() * 0.9f);
+            acao.setBonusConhecimento(acao.getBonusConhecimento() * 0.9f);
+            acao.setBonusNota(acao.getBonusNota() * 0.9f); //a acao fica 10% mais fraca por iteracao
             return true;
         }
-        //se der errado retorna falso
+        //se der errado aumenta a chance de acerto em 10%
+        float novaChance = acao.getChanceAcerto() * 1.1f;
+        if(novaChance > 1f) novaChance = 1f;
+        acao.setChanceAcerto(novaChance);
         return false;
     }
 

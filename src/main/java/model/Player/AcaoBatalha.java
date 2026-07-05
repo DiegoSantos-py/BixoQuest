@@ -26,10 +26,18 @@ public class AcaoBatalha {
     public float getBonusDano() { return BonusDano; }
     public int getBonusShield() { return BonusShield; }
     public float getBonusConhecimento() { return BonusConhecimento; }
-    public float getBonusNota() { return BonusNota; }
+    public float getBonusNota() {
+        return BonusNota;
+    }
+
+    public void setBonusNota(float BonusNota) {
+        this.BonusNota = BonusNota;
+    }
     public void setNome(String nome) { this.Nome = nome; }
     public void setChanceAcerto(float chanceAcerto) { this.ChanceAcerto = chanceAcerto; }
-    public void setBonusDano(int bonusDano) { this.BonusDano = bonusDano; }
+    public void setBonusDano(float bonusDano) { this.BonusDano = bonusDano; }
     public void setBonusShield(int bonusShield) { this.BonusShield = bonusShield; }
-    public void setBonusConhecimento(int bonusConhecimento) { this.BonusConhecimento = bonusConhecimento; }
+    public void setBonusConhecimento(float bonusConhecimento) { this.BonusConhecimento = bonusConhecimento; }
+
+
 }

@@ -12,14 +12,16 @@ public class ProjetilSpawnAoMorrer implements ComportamentoAoDespawnar {
     private int danoShield;
     private float danoNota;
     private float duracao;
+    private float spriteMult;
 
-    public ProjetilSpawnAoMorrer(String spriteDir, float tamanhoX, float tamanhoY, int danoShield, float danoNota, float duracao) {
+    public ProjetilSpawnAoMorrer(String spriteDir, float tamanhoX, float tamanhoY, int danoShield, float danoNota, float duracao, float spriteMult) {
         this.spriteDir = spriteDir;
         this.tamanhoX = tamanhoX;
         this.tamanhoY = tamanhoY;
         this.danoShield = danoShield;
         this.danoNota = danoNota;
         this.duracao = duracao;
+        this.spriteMult = spriteMult;
     }
 
     @Override
@@ -31,6 +33,8 @@ public class ProjetilSpawnAoMorrer implements ComportamentoAoDespawnar {
         float angulo = projetil.getHitbox().getAnguloRotacao();
         
         // Spawn o projétil real exatamente na mesma posição e rotação, parado
-        factory.spawn(cx, cy, tamanhoX, tamanhoY, 0f, angulo, angulo, danoShield, danoNota, duracao, spriteDir);
+        Projetil p = factory.spawn(cx, cy, tamanhoX, tamanhoY, 0f, angulo, angulo, danoShield, danoNota, duracao, spriteDir);
+        p.setMultiplicadorSprite(spriteMult);
+
     }
 }

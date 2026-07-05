@@ -12,6 +12,7 @@ import model.Player.AcaoBatalha;
 import model.util.Hitbox;
 import model.util.Vector2D;
 import repository.OponenteAnimalRepository;
+import model.Ataque.Ataque;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,9 +94,10 @@ public class OponenteService {
                 questao.getAreaConhecimento(),
                 spriteDirProva, questao.getDescricao(), questao.getTextoCaixa());
         oponenteQuestao.setMaxTurnos(30);
-        // cada questão tem(até o momento) 1 ataque atribuido a ela, e o oponente recebe
-        // esse ataque
-        oponenteQuestao.adicionarAtaque(questao.getAtaque());
+        // cada questão pode ter 1 ou múltiplos ataques atribuídos a ela, e o oponente recebe todos eles
+        for (Ataque ataque : questao.getAtaques()) {
+            oponenteQuestao.adicionarAtaque(ataque);
+        }
 
         return oponenteQuestao;
     }

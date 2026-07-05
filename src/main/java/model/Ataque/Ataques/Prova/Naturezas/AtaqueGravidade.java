@@ -11,11 +11,11 @@ import model.util.Vector2D;
 
 public class AtaqueGravidade extends Ataque {
 
-    private boolean projetilSpawnado = false;
+    private boolean projetilGerado = false;
     private float duracaoAtaque = 5f;
     
     private float timerCarro = 0;
-    private final float SPAWN_DELAY_CARRO = 1.0f;
+    private final float ATRASO_GERACAO_CARRO = 1.0f;
     private boolean segundoTurno = false;
 
     private final ProjetilGravidade gravidade = new ProjetilGravidade(-800f);
@@ -34,55 +34,50 @@ public class AtaqueGravidade extends Ataque {
     @Override
     protected void logicaAtaque(float dt) {
         
-        if (!projetilSpawnado && target != null) {
-            // Spawna o projétil exatamente no centro do player
+        if (!projetilGerado && target != null) {
+            // Spawna o projétil exatamente acima do player
             float posX = target.getCentro().getX();
             float posY = owner.getCentro().getY();
 
-            // Usando "apple.png" (ou qualquer sprite que faça sentido para gravidade)
             Projetil p = spawnProjetil(
                 posX, posY,
                 40, 40,
-                0, // Velocidade 0 (já spawna nele)
+                0,
                 0, 
                 0, 
                 0, 0f, // 0 dano
                 duracaoAtaque, 
-                "maca.png" // Usando maça de Isaac Newton como referência :)
+                "maca.png"
             );
 
             if (p != null) {
                 p.addComportamento(gravidade);
-                p.addComportamentoColisao(new ComportamentoAoColidirComPlayer() {
-                    @Override
-                    public void aoColidirComPlayer(Projetil projetil, PlayerProva playerTarget) {
-                        float direcao = MathUtils.randomFloatInRange(-2f,2f);
-                        int direcaoUnitario = (direcao >= 0) ? 1  : -1;
-                        playerTarget.setSoulMode(PlayerProva.SoulMode.BLUE);
-                        projetil.setVelocidade(
-                                projetil.getVelocidade().
-                                        add(
-                                                new Vector2D(
-                                                        50f * direcao + direcaoUnitario * 10f,
-                                                        (float) (projetil.getVelocidade().getY()*(-1.8)))));
-                        projetil.setVelocidadeAngular(  (float)(direcao * Math.PI));
-
-                        // Volta o tamanho da caixa ao normal para o próximo ataque
-                    }
+                p.addComportamentoColisao((projetil, playerTarget) -> {
+                    float direcao = MathUtils.randomFloatInRange(-2f,2f);
+                    int direcaoUnitario = (direcao >= 0) ? 1  : -1;
+                    playerTarget.setSoulMode(PlayerProva.SoulMode.BLUE);
+                    projetil.setVelocidade(
+                            projetil.getVelocidade().
+                                    add(
+                                            new Vector2D(
+                                                    50f * direcao + direcaoUnitario * 10f,
+                                                    (float) (projetil.getVelocidade().getY()*(-1.8)))));
+                    projetil.setVelocidadeAngular(  (float)(direcao * Math.PI));// quica pra uma direcao aleatória
 
                 });
             }       
 
 
-            projetilSpawnado = true;
+            projetilGerado = true; //define q atirou a maca pra n spawnar dnv
         }
         
-        if (projetilSpawnado && segundoTurno) {
+        if (projetilGerado && segundoTurno) {
             timerCarro += dt;
-            if (timerCarro >= SPAWN_DELAY_CARRO) {
+            if (timerCarro >= ATRASO_GERACAO_CARRO) {
                 timerCarro = 0;
                 spawnCarro();
             }
+            //spawna os carros
         }
 
         if (tempoDecorrido >= duracaoAtaque) {
@@ -92,13 +87,13 @@ public class AtaqueGravidade extends Ataque {
     
     private void spawnCarro() {
         boolean vemDaEsquerda = MathUtils.randomFloatInRange(0, 1) > 0.5f;
-        float startY = maxY - 20; // Apenas no chão
-        float startX = vemDaEsquerda ? minX - 100 : maxX + 100;
+        float inicioY = maxY - 20; // Apenas no chão
+        float inicioX = vemDaEsquerda ? minX - 100 : maxX + 100;
         float angulo = vemDaEsquerda ? 0 : (float) Math.PI;
         String sprite = vemDaEsquerda ? "carro.png" : "carroEsq.png";
 
         spawnProjetil(
-            startX, startY,
+            inicioX, inicioY,
             80, 40,
             250f, angulo, 0f,
             1, 0.5f,
@@ -106,10 +101,7 @@ public class AtaqueGravidade extends Ataque {
         );
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Gravidade";
-    }
+
 
     @Override
     public void reiniciarAtaque() {

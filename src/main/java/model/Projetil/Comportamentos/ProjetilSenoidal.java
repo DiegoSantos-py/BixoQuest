@@ -22,11 +22,9 @@ public class ProjetilSenoidal implements ComportamentoProjetil {
         float tempo = projetil.getTempoDeVida();
         Vector2D vel = projetil.getVelocidade();
 
-        // A derivada de posicao(t) = A * sin(f * t) é vel(t) = A * f * cos(f * t)
-        // Isso integra perfeitamente de volta para uma onda senoidal sem precisar
-        // rastrear a posicao original!
-        float velPerpendicular = (float) (amplitude * frequencia * Math.cos(frequencia * tempo)) * 0.8f;
 
+        float velPerpendicular = (float) (amplitude * frequencia * Math.cos(frequencia * tempo)) * 0.8f;
+        //magica fornecida pelo claude
         if (moveHorizontal) {
             // Se a velocidade principal for em X, a onda sobe e desce em Y
             vel.setY(velPerpendicular);
@@ -35,7 +33,7 @@ public class ProjetilSenoidal implements ComportamentoProjetil {
             vel.setX(velPerpendicular);
         }
 
-        // Atualiza o ângulo do projétil para apontar na direção exata da sua curva senoidal!
+        // Atualiza o ângulo do projétil para apontar na direção da curva
         projetil.getHitbox().setAnguloRad((float) Math.atan2(vel.getY(), vel.getX()));
     }
 }

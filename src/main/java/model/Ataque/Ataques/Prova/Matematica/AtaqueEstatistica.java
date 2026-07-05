@@ -6,7 +6,7 @@ import model.Player.PlayerProva;
 
 public class AtaqueEstatistica extends Ataque {
 
-    private float cronometro = 0;
+    private float timer = 0;
     private boolean ataqueIniciado = false;
     private float duracaoAtaque = 12f;
     private float velocidade = 250f;
@@ -26,24 +26,23 @@ public class AtaqueEstatistica extends Ataque {
             this.velocidade = 180f * (1 + (dificuldade / 15f));
         }
 
-        cronometro += dt;
+        timer += dt;
 
-        float intervalo = 1.5f / (dificuldade / 10f);
-        if (cronometro >= intervalo) {
+        float intervalo = 1.5f / (dificuldade / 20f);
+        if (timer >= intervalo) {
             float larguraBase = 30f;
-            float tamanhoVao = 50f; // Espaço físico entre o chão e o teto
-            float alturaMaximaChaoVisual = 180f; // Pulo máximo é ~200px
+            float tamanhoVao = 50f; // Espaço físico entre a bara de baixo e de cima
+            float alturaMaximaChaoVisual = 160f; // Pulo máximo é ~200px
             float alturaMinimaChaoVisual = 30f; 
 
             // Calcula as alturas visuais na tela
             float alturaVisualChao = alturaMinimaChaoVisual + (float) Math.random() * (alturaMaximaChaoVisual - alturaMinimaChaoVisual);
             float alturaVisualTeto = 400f - tamanhoVao - alturaVisualChao;
 
-            // O projétil usa metade da altura visual como parâmetro (pois o renderer multiplica por 2)
             float parametroAlturaChao = alturaVisualChao / 2f;
             float parametroAlturaTeto = alturaVisualTeto / 2f;
             float margem = 20f;
-            // --- BARRA DO CHÃO ---
+            // barra do chao
             // Visual
             spawnProjetil(
                     this.maxX + 50f, 
@@ -56,7 +55,7 @@ public class AtaqueEstatistica extends Ataque {
                     duracaoAtaque, 
                     "quadrado.png"
             );
-            // Hitbox (com margem de segurança configurável)
+            // Hitbox
             spawnProjetil(
                     this.maxX + 50f, 
                     1000f - parametroAlturaChao + (margem / 2f), 
@@ -69,7 +68,7 @@ public class AtaqueEstatistica extends Ataque {
                     ""
             );
 
-            // --- BARRA DO TETO ---
+            // teto
             // Visual
             spawnProjetil(
                     this.maxX + 50f, 
@@ -95,7 +94,7 @@ public class AtaqueEstatistica extends Ataque {
                     ""
             );
 
-            cronometro = 0;
+            timer = 0;
         }
 
         if (this.tempoDecorrido >= duracaoAtaque) {
@@ -114,15 +113,12 @@ public class AtaqueEstatistica extends Ataque {
     @Override
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
-        this.cronometro = 0;
+        this.timer = 0;
         this.ataqueIniciado = false;
         if (this.target != null) {
             this.target.setSoulMode(PlayerProva.SoulMode.RED);
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Estatistica";
-    }
+
 }

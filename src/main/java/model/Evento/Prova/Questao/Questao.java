@@ -1,5 +1,9 @@
 package model.Evento.Prova.Questao;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import model.Ataque.Ataque;
 import model.Disciplina.AreaConhecimento;
 
@@ -9,7 +13,7 @@ public class Questao {
     private String textoCaixa;
     private AreaConhecimento areaConhecimento;
     private float dificuldade; // escala com nivel da prova
-    private Ataque ataque;
+    private List<Ataque> ataques;
     private float hp;
 
     public Questao(String nome, float hp, AreaConhecimento areaConhecimento, float dificuldade, Ataque ataque,
@@ -18,10 +22,20 @@ public class Questao {
         this.hp = hp;
         this.areaConhecimento = areaConhecimento;
         this.dificuldade = dificuldade;
-        this.ataque = ataque;
+        this.ataques = new ArrayList<>();
+        if (ataque != null) this.ataques.add(ataque);
         this.descricao = descricao;
         this.textoCaixa = textoCaixa;
+    }
 
+    public Questao(String nome, float hp, AreaConhecimento areaConhecimento, float dificuldade, String descricao, String textoCaixa, Ataque... ataquesMultiplos) {
+        this.nome = nome;
+        this.hp = hp;
+        this.areaConhecimento = areaConhecimento;
+        this.dificuldade = dificuldade;
+        this.ataques = new ArrayList<>(Arrays.asList(ataquesMultiplos));
+        this.descricao = descricao;
+        this.textoCaixa = textoCaixa;
     }
 
     public float getHp() {
@@ -64,11 +78,7 @@ public class Questao {
         this.dificuldade = dificuldade;
     }
 
-    public Ataque getAtaque() {
-        return ataque;
-    }
-
-    public void setAtaque(Ataque ataque) {
-        this.ataque = ataque;
+    public List<Ataque> getAtaques() {
+        return ataques;
     }
 }

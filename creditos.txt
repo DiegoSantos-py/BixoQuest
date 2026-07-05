@@ -1,5 +1,14 @@
 src/main/resources/assets/batalha/player/player.png -> Undertale - Toby Fox
+src/main/resources/assets/batalha/player/playerAzul.png -> Undertale -  Toby Fox
+src/main/resources/assets/batalha/player/playerAmarelo.png -> Undertale - Toby Fox
 
+src/main/resources/assets/batalha/projeteis/tiroAmarelo.png -> Undertale - Toby Fox
+
+src/main/resources/assets/batalha/projeteis/maca.png -> ChuckCassadyJR - Reddit
+src/main/resources/assets/batalha/barraAtaque.png -> Undertale - Toby Fox
+
+
+src/main/resources/assets/batalha/projeteis/ferro.png -> Minecraft - Microsoft
 src/main/resources/assets/audio/fallback.mp3 -> Undertale - Toby Fox : Dogsong
 
 src/main/resources/assets/audio/musicaAnimal1.mp3 -> Undertale - Toby Fox : Enemy Approaching
@@ -10,8 +19,46 @@ src/main/resources/assets/audio/musicaAnimal3.mp3 -> Undertale - Toby Fox : Bone
 
 src/main/resources/assets/audio/provas/matematica1.mp3 -> Undertale - Toby Fox : Dummy!
 
-src/main/resources/assets/audio/provas/matematica1.mp3 -> Deltarune - Toby Fox : THE WORLD REVOLVING
+src/main/resources/assets/audio/provas/matematica2.mp3 -> Deltarune - Toby Fox : THE WORLD REVOLVING
 
 src/main/resources/assets/audio/provas/naturezas1.mp3 -> Luke Neujahr : Alphys takes action
 
 src/main/resources/assets/audio/provas/software1.mp3 -> Deltarune - Toby Fox : Pandora Palace
+
+
+
+src/main/resources/assets/audio/provas/naturezas2.mp3 -> Undertale - Toby Fox : Spider Dance
+
+
+
+src/main/resources/assets/audio/provas/matematica3.mp3 -> Undertale - Toby Fox : Battle Against A True Hero
+
+
+
+src/main/resources/assets/audio/provas/matematica3.mp3 -> Undertale - Toby Fox : Battle Against A True Hero
+
+
+
+src/main/resources/assets/audio/provas/software2.mp3 -> Deltarune - Toby Fox : Attack of the killer queen
+
+
+src/main/resources/assets/audio/provas/software3.mp3 -> Deltarune - Toby Fox : It's TV time!
+
+
+src/main/resources/assets/audio/provas/hardware1.mp3 -> Undertale - Toby Fox : Metal Crusher
+
+
+src/main/resources/assets/audio/provas/hardware2.mp3 -> Undertale - Toby Fox : Death By Glamour
+
+
+src/main/resources/assets/audio/provas/hardware3.mp3 -> Undertale - Toby Fox : Power of NEO!  (Unfinished)
+
+
+
+
+src/main/resources/assets/audio/provas/naturezas3.mp3 -> Deltarune - Toby Fox : Hammer of Justice
+
+
+
+src/main/resources/assets/audio/provas/tcc.mp3 -> Undertale - Toby Fox : Hopes and Dreams
+

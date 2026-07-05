@@ -3,30 +3,38 @@ package model.Ataque.Ataques.Prova.Software;
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
+import model.Projetil.Projetil;
+import model.util.MathUtils;
+
 import java.util.ArrayList;
 
 public class AtaqueAlgoritimo extends Ataque {
 
+    // Temporizador principal que controla os delays do algoritmo
     private float timer = 0;
-    private int instrucaoIndex = 0;
+    // O ponteiro (Program Counter) que aponta para a instrução atual
+    private int indiceInstrucao = 0;
+    // A lista de comandos que formam o script do ataque (a "lógica" gerada)
     private final ArrayList<Instrucao> algoritmo = new ArrayList<>();
     
-    // Matrix of projectiles
-    private model.Projetil.Projetil[][] previas = new model.Projetil.Projetil[3][3];
-    private model.Projetil.Projetil[][] malha = new model.Projetil.Projetil[3][3];
-    private model.Projetil.Projetil[][] malhaHitboxes = new model.Projetil.Projetil[3][3];
-    private boolean[][] ativos = new boolean[3][3];
+    // Matrizes 3x3 que representam a grid do ataque
+    private Projetil[][] previas = new Projetil[3][3]; // Indicadores visuais inofensivos (onde as células estão)
+    private Projetil[][] malha = new Projetil[3][3]; // Visuais de perigo ativo (quadrados iluminados)
+    private boolean[][] ativos = new boolean[3][3]; // Mapa lógico de quais células estão ligadas no momento
     
-    private float cellWidth;
-    private float cellHeight;
-    private float offsetX;
-    private float offsetY;
+    // Variáveis para calcular posições na tela (tamanho e ancoragem da grid)
+    private float larguraCelula;
+
+    private float alturaCelula;
+    private float deslocamentoX;
+    private float deslocamentoY;
     
+    // O tamanho do sprite de cada célula
     private float tamanhoQuadrado = 65f;
     
-    // To show instructions visually
+    // Elementos visuais que mostram o script de comandos à direita
     private float instrucaoY = 0;
-    private model.Projetil.Projetil highlight;
+    private Projetil destaque; // O cursor amarelo (highlight) que indica qual linha do código está rodando
 
     private enum TipoInstrucao {
         ESPERAR, ATIVAR, DESATIVAR, ENCERRAR
@@ -53,64 +61,86 @@ public class AtaqueAlgoritimo extends Ataque {
         gerarAlgoritmo();
     }
 
-    private void gerarAlgoritmo() {
-        algoritmo.clear();
-        algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1.0f, -1, -1, "esperarSegundos1.png"));
+    /**
+     * Gera aleatoriamente o script da batalha baseado na dificuldade.
+     * Tenta alternar entre ativar e desativar casas para forçar o player a se mover.
+     */
+    private void gerarAlgoritmo() { 
         
-        int qtdInstrucoes = model.util.MathUtils.randomIntInRange(5, 8);
+        algoritmo.clear();
+        // Inicia com um tempinho de folga pro player se localizar e ler as primeiras linhas
+        algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1f, -1, -1, "esperarSegundos1.png"));
+        
+        int qtdInstrucoes = MathUtils.randomIntInRange(5 , 8 );
         boolean[][] estadoTemp = new boolean[3][3];
         
         for (int i = 0; i < qtdInstrucoes; i++) {
-            // Find possible activations and deactivations
+
             ArrayList<int[]> inativos = new ArrayList<>();
             ArrayList<int[]> ativosTemp = new ArrayList<>();
-            for (int l = 0; l < 3; l++) {
-                for (int c = 0; c < 3; c++) {
-                    if (estadoTemp[l][c]) ativosTemp.add(new int[]{l, c});
-                    else inativos.add(new int[]{l, c});
+            for (int linha = 0; linha < 3; linha++) {
+                for (int coluna = 0; coluna < 3; coluna++) {
+                    if (estadoTemp[linha][coluna]) ativosTemp.add(new int[]{linha, coluna});
+                    else inativos.add(new int[]{linha, coluna});
                 }
             }
             
-            // Choose action
-            boolean querAtivar = !inativos.isEmpty() && (ativosTemp.isEmpty() || Math.random() > 0.4);
-            
+            // Lógica para decidir se vamos ligar ou desligar um quadrado
+            boolean temEspacoParaAtivar = !inativos.isEmpty();
+            boolean gridTotalmenteApagada = ativosTemp.isEmpty();
+            boolean ativado = Math.random() > 0.4; // 60% de chance de ativar
+
+            boolean querAtivar = false;
+
+            if (temEspacoParaAtivar) {
+                if (gridTotalmenteApagada) {
+                    // Se a grid não tem nenhum ativo, somos obrigados a ativar um
+                    querAtivar = true;
+                } else {
+                    // Se já tem algum aceso, usamos a sorte (60% ativa, 40% desativa)
+                    querAtivar = ativado;
+                }
+            }
             if (querAtivar) {
-                int[] escolhido = inativos.get(model.util.MathUtils.randomIntInRange(0, inativos.size() - 1));
+                // Seleciona um quadrado aleatório apagado para acender
+                int[] escolhido = inativos.get(MathUtils.randomIntInRange(0, inativos.size() - 1));
                 estadoTemp[escolhido[0]][escolhido[1]] = true;
                 algoritmo.add(new Instrucao(TipoInstrucao.ATIVAR, 0, escolhido[0], escolhido[1], "ativarQuadrado" + escolhido[0] + escolhido[1] + ".png"));
             } else if (!ativosTemp.isEmpty()) {
-                int[] escolhido = ativosTemp.get(model.util.MathUtils.randomIntInRange(0, ativosTemp.size() - 1));
+                // Seleciona um quadrado aleatório aceso para apagar
+                int[] escolhido = ativosTemp.get(MathUtils.randomIntInRange(0, ativosTemp.size() - 1));
                 estadoTemp[escolhido[0]][escolhido[1]] = false;
                 algoritmo.add(new Instrucao(TipoInstrucao.DESATIVAR, 0, escolhido[0], escolhido[1], "desativarQuadrado" + escolhido[0] + escolhido[1] + ".png"));
             }
             
-            // Always wait 1s between instructions to make it easier
-            algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1.0f, -1, -1, "esperarSegundos1.png"));
+            // Pausa (Delay) após cada comando, escala com a dificuldade
+            algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1f, -1, -1, "esperarSegundos1.png"));
         }
         
-        algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1.0f, -1, -1, "esperarSegundos1.png"));
+        algoritmo.add(new Instrucao(TipoInstrucao.ESPERAR, 1f, -1, -1, "esperarSegundos1.png"));
         algoritmo.add(new Instrucao(TipoInstrucao.ENCERRAR, 0, -1, -1, "encerrar.png"));
     }
 
     @Override
     protected void logicaAtaque(float dt) {
-        if (cellWidth == 0) {
-            cellWidth = (getMaxX() - getMinX()) / 3f;
-            cellHeight = (getMaxY() - getMinY()) / 3f;
-            offsetX = getMinX();
-            offsetY = getMinY();
+        // Inicialização "lazy" executada apenas no primeiro frame do ataque
+        if (larguraCelula == 0) {
+            larguraCelula = (getMaxX() - getMinX()) / 3f;
+            alturaCelula = (getMaxY() - getMinY()) / 3f;
+            deslocamentoX = getMinX();
+            deslocamentoY = getMinY();
             
-            // Spawns the matrix of safe "previa" squares
-            for (int l = 0; l < 3; l++) {
-                for (int c = 0; c < 3; c++) {
-                    float px = offsetX + c * cellWidth + (cellWidth / 2f);
-                    float py = offsetY + l * cellHeight + (cellHeight / 2f);
-                    // Previa is a safe visual indicator (0 damage).
-                    previas[l][c] = spawnProjetil(px, py, tamanhoQuadrado, tamanhoQuadrado, 0, 0, 0, 0, 0f, 99f, "quadradoPrevia.png");
+            // Desenha o "fundo" da grid: projéteis inofensivos que mostram o mapa 3x3
+            for (int linha = 0; linha < 3; linha++) {
+                for (int coluna = 0; coluna < 3; coluna++) {
+                    float px = deslocamentoX + coluna * larguraCelula + (larguraCelula / 2f);
+                    float py = deslocamentoY + linha * alturaCelula + (alturaCelula / 2f);
+                    // Projétil seguro (dano 0), apenas demarca a posição visualmente
+                    previas[linha][coluna] = spawnProjetil(px, py, tamanhoQuadrado, tamanhoQuadrado, 0, 0, 0, 0, 0f, 99f, "quadradoPrevia.png");
                 }
             }
             
-            // Spawna todas as instrucoes SIMULTANEAMENTE e PARADAS na direita da tela
+            // Instancia o script na tela (à direita da arena) para o player ler!
             float instX = getMaxX() + 230;
             float instY = getMinY() + 20;
             for (int i = 0; i < algoritmo.size(); i++) {
@@ -118,64 +148,60 @@ public class AtaqueAlgoritimo extends Ataque {
                 spawnProjetil(instX, instY + (i * 40), 250f, 25f, 0, 0, 0, 0, 0f, 99f, inst.spritePath);
             }
             
-            // Spawna o highlight (cursor visual) para as instrucoes
-            highlight = spawnProjetil(instX, instY, 260f,15f, 0, 0, 0, 0, 0f, 99f, "highlight.png");
+            // O cursor (highlight) que acompanha a leitura de linha em linha
+            destaque = spawnProjetil(instX, instY, 260f,15f, 0, 0, 0, 0, 0f, 99f, "highlight.png");
         }
         
-        if (highlight != null && instrucaoIndex < algoritmo.size()) {
-            float targetY = getMinY() + 20 + (instrucaoIndex * 40);
-            highlight.getHitbox().setCentro(getMaxX() + 200, targetY);
+        // Desloca o cursor Y de acordo com a instrução atual
+        if (destaque != null && indiceInstrucao < algoritmo.size()) {
+            float targetY = getMinY() + 20 + (indiceInstrucao * 40);
+            destaque.getHitbox().setCentro(getMaxX() + 200, targetY);
         }
 
-        if (instrucaoIndex >= algoritmo.size()) return;
+        if (indiceInstrucao >= algoritmo.size()) return;
         
-        Instrucao inst = algoritmo.get(instrucaoIndex);
+        // Engine de Interpretação: executa a lógica do array sequencialmente
+        Instrucao inst = algoritmo.get(indiceInstrucao);
         
-        // Se for uma instrucao de tempo, segura o processador
+        // Comandos de delay travam o avanço até o timer estourar
         if (inst.tipo == TipoInstrucao.ESPERAR) {
             timer += dt;
             if (timer >= inst.tempo) {
                 timer = 0;
-                instrucaoIndex++;
+                indiceInstrucao++;
             }
             return;
         }
         
-        // Senao, executa instantaneamente
+        // Os demais comandos são processados imediatamente, avançando pra próxima linha de código
         if (inst.tipo == TipoInstrucao.ATIVAR) {
             ativos[inst.linha][inst.coluna] = true;
             spawnQuadrado(inst.linha, inst.coluna);
-            instrucaoIndex++;
+            indiceInstrucao++;
         } else if (inst.tipo == TipoInstrucao.DESATIVAR) {
             ativos[inst.linha][inst.coluna] = false;
             removerQuadrado(inst.linha, inst.coluna);
-            instrucaoIndex++;
+            indiceInstrucao++;
         } else if (inst.tipo == TipoInstrucao.ENCERRAR) {
             this.encerrarAtaque();
         }
     }
     
-    private void spawnQuadrado(int l, int c) {
-        float px = offsetX + c * cellWidth + (cellWidth / 2f);
-        float py = offsetY + l * cellHeight + (cellHeight / 2f);
+    private void spawnQuadrado(int linha, int coluna) {
+        float px = deslocamentoX + coluna * larguraCelula + (larguraCelula / 2f);
+        float py = deslocamentoY + linha * alturaCelula + (alturaCelula / 2f);
         
-        // Visual
-        model.Projetil.Projetil visual = spawnProjetil(px, py, tamanhoQuadrado, tamanhoQuadrado, 0, 0, 0, 0, 0f, 99f, "quadrado.png");
-        malha[l][c] = visual;
-        
-        // Hitbox invisível (dobro do tamanho do visual para refletir o sprite dobrado pela engine)
-        model.Projetil.Projetil hitbox = spawnProjetil(px, py, tamanhoQuadrado * 2f, tamanhoQuadrado * 2f, 0, 0, 0, 1, 0.5f, 99f, "");
-        malhaHitboxes[l][c] = hitbox;
+        Projetil quadrado = spawnProjetil(px, py, tamanhoQuadrado * 2f, tamanhoQuadrado * 2f, 0, 0, 0, 1, 1f, 99f, "quadrado.png");
+        if (quadrado != null) {
+            quadrado.setMultiplicadorSprite(1f);
+        }
+        malha[linha][coluna] = quadrado;
     }
     
-    private void removerQuadrado(int l, int c) {
-        if (malha[l][c] != null) {
-            malha[l][c].desativar();
-            malha[l][c] = null;
-        }
-        if (malhaHitboxes[l][c] != null) {
-            malhaHitboxes[l][c].desativar();
-            malhaHitboxes[l][c] = null;
+    private void removerQuadrado(int linha, int coluna) {
+        if (malha[linha][coluna] != null) {
+            malha[linha][coluna].desativar();
+            malha[linha][coluna] = null;
         }
     }
     
@@ -183,29 +209,26 @@ public class AtaqueAlgoritimo extends Ataque {
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
         timer = 0;
-        instrucaoIndex = 0;
+        indiceInstrucao = 0;
         instrucaoY = 0;
-        cellWidth = 0;
+        larguraCelula = 0;
         gerarAlgoritmo();
-        for (int l = 0; l < 3; l++) {
-            for (int c = 0; c < 3; c++) {
-                ativos[l][c] = false;
-                if (malha[l][c] != null) malha[l][c].desativar();
-                if (malhaHitboxes[l][c] != null) malhaHitboxes[l][c].desativar();
-                if (previas[l][c] != null) previas[l][c].desativar();
-                malha[l][c] = null;
-                malhaHitboxes[l][c] = null;
-                previas[l][c] = null;
+        for (int linha = 0; linha < 3; linha++) {
+            for (int coluna = 0; coluna < 3; coluna++) {
+                ativos[linha][coluna] = false;
+                if (malha[linha][coluna] != null) malha[linha][coluna].desativar();
+                if (previas[linha][coluna] != null) previas[linha][coluna].desativar();
+                malha[linha][coluna] = null;
+                previas[linha][coluna] = null;
             }
         }
-        if (highlight != null) {
-            highlight.desativar();
-            highlight = null;
+        if (destaque != null) {
+            destaque.desativar();
+            destaque = null;
         }
     }
 
-    @Override
-    public String toString() {
-        return "Ataque Algoritimo";
-    }
+
 }
+
+//ataque da capa do jogo basicemnte

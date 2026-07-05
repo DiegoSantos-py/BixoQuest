@@ -62,6 +62,8 @@ public class BatalhaLoopService {
             }
             estado.getAtaqueAtual().atualizar(dt);
             estado.getPlayerProva().atualizarPosicao(dt);
+            // Injeta a factory do ataque atual no player (usado pelo Yellow Soul para atirar)
+            estado.getPlayerProva().setFactoryAtual(estado.getAtaqueAtual().getFactory());
             //garante q o plyayer n saia dos limites do ataque
             playerProvaService.aplicarLimitesDeMovimento(player, estado.getAtaqueAtual());
 
