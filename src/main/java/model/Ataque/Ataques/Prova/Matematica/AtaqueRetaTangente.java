@@ -10,14 +10,14 @@ import model.Projetil.Comportamentos.ProjetilSpawnAoMorrer;
 public class AtaqueRetaTangente extends Ataque {
 
     private float timer = 0;
-    private int projeteisSpawnados = 0;
-    private boolean pontoSpawnado = false;
-    private Projetil pontoHoming = null;
+    private int projeteisLancados = 0;
+    private boolean pontoGerado = false;
+    private Projetil pontoTeleguiado = null;
 
-    private final ProjetilQuePreve preditivo = new ProjetilQuePreve(125f, 6.0f, 1.2f);
+    private final ProjetilQuePreve preditivo = new ProjetilQuePreve(125f, 6.0f, 0.8f);
     private final ProjetilSpawnAoMorrer spawnArranhao = new ProjetilSpawnAoMorrer("arranhao.png", 6, 650, 1, 0.75f, 0.2f, 1f);
 
-    private float attackDuration = 10f;
+    private float duracaoAtaque = 10f;
 
     public AtaqueRetaTangente(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -26,41 +26,41 @@ public class AtaqueRetaTangente extends Ataque {
     @Override
     protected void logicaAtaque(float dt) {
 
-        if (!pontoSpawnado) {
-            float startX = owner.getCentro().getX();
-            float startY = owner.getCentro().getY();
+        if (!pontoGerado) {
+            float inicioX = owner.getCentro().getX();
+            float inicioY = owner.getCentro().getY();
 
             // Spawna o projétil "ponto" que vai seguir o player
-            pontoHoming = spawnProjetil(
-                    startX, startY,
+            pontoTeleguiado = spawnProjetil(
+                    inicioX, inicioY,
                     32f, 32f,
                     100f, // Velocidade inicial
                     0f, 0f,
                     1, 1f, // Dano
-                    attackDuration, 
+                    duracaoAtaque, 
                     "ponto.png"); // Placeholder para o projétil ponto
 
-            if (pontoHoming != null) {
-                pontoHoming.addComportamento(preditivo);
+            if (pontoTeleguiado != null) {
+                pontoTeleguiado.addComportamento(preditivo);
             }
-            pontoSpawnado = true;
+            pontoGerado = true;
         }
 
         timer += dt;
 
-        float interval = 0.35f / (dificuldade / 10f); // Quanto maior a dificuldade, menor o intervalo
-        int maxProjeteis = (int) (attackDuration / interval);
+        float intervalo = 0.35f / (dificuldade / 30f); // Quanto maior a dificuldade, menor o intervalo
+        int maxProjeteis = (int) (duracaoAtaque / intervalo);
 
-        if (pontoHoming != null && !pontoHoming.isAtivo()) {
-            pontoHoming = null;
+        if (pontoTeleguiado != null && !pontoTeleguiado.isAtivo()) {
+            pontoTeleguiado = null;
         }
 
-        if (pontoHoming != null && timer >= interval && projeteisSpawnados < maxProjeteis) {
-            float posX = pontoHoming.getCentro().getX();
-            float posY = pontoHoming.getCentro().getY();
+        if (pontoTeleguiado != null && timer >= intervalo && projeteisLancados < maxProjeteis) {
+            float posX = pontoTeleguiado.getCentro().getX();
+            float posY = pontoTeleguiado.getCentro().getY();
 
             // Reta tangente ao movimento: o ângulo do vetor velocidade atual do ponto + 90 graus
-            float anguloTangente = (float) Math.atan2(pontoHoming.getVelocidade().getY(), pontoHoming.getVelocidade().getX()) + (float) (Math.PI / 2);
+            float anguloTangente = (float) Math.atan2(pontoTeleguiado.getVelocidade().getY(), pontoTeleguiado.getVelocidade().getX()) + (float) (Math.PI / 2);
 
             Projetil previa = spawnProjetil(
                     posX, posY,
@@ -74,15 +74,15 @@ public class AtaqueRetaTangente extends Ataque {
             if (previa != null) {
                 previa.addComportamentoDespawn(spawnArranhao);
                 
-                projeteisSpawnados++;
+                projeteisLancados++;
                 timer = 0;
             }
         }
 
         // Encerra o ataque quando o tempo acabar e todos os arranhões (e o ponto) tiverem sumido
-        if (tempoDecorrido >= attackDuration && getProjeteis().isEmpty()) {
+        if (tempoDecorrido >= duracaoAtaque && getProjeteis().isEmpty()) {
             encerrarAtaque();
-        } else if (pontoHoming == null && getProjeteis().isEmpty()) {
+        } else if (pontoTeleguiado == null && getProjeteis().isEmpty()) {
             // Caso o ponto seja destruído cedo e as prévias/arranhões também tenham sumido
             encerrarAtaque();
         }
@@ -92,9 +92,9 @@ public class AtaqueRetaTangente extends Ataque {
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
         this.timer = 0;
-        this.projeteisSpawnados = 0;
-        this.pontoSpawnado = false;
-        this.pontoHoming = null;
+        this.projeteisLancados = 0;
+        this.pontoGerado = false;
+        this.pontoTeleguiado = null;
     }
 
 

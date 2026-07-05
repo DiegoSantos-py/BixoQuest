@@ -3,6 +3,8 @@ package model.Ataque.Ataques.Prova.Naturezas;
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
 import model.Player.PlayerProva;
+import model.Projetil.ComportamentoProjetil;
+import model.Projetil.Comportamentos.ProjetilAceleracao;
 import model.Projetil.Projetil;
 import model.util.MathUtils;
 import model.util.Vector2D;
@@ -15,15 +17,16 @@ public class AtaqueAtomosGravidade extends Ataque {
     private float timer = 0;
     private int fase = 0; 
     private List<Projetil> atomos = new ArrayList<>();
-    private float burstTimer = 0;
-    private float burstTime = 0;
-    private float burstTimeMax = 7.5f;
-    private float anguloBurst = 0;
+    private float timerExplosao = 0;
+    private float tempoExplosao = 0;
+    private float tempoMaximoExplosao = 7.5f;
+    private float anguloExplosao = 0;
 
     private float timerCarro = 0;
-    private final float SPAWN_DELAY_CARRO = 1.0f;
-    private boolean started = false;
+    private final float ATRASO_GERACAO_CARRO = 1.0f;
+    private boolean iniciado = false;
 
+    private ComportamentoProjetil desacelaracao = new ProjetilAceleracao(-1400f);
     public AtaqueAtomosGravidade(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 150);
         this.minX = 760f;
@@ -34,56 +37,67 @@ public class AtaqueAtomosGravidade extends Ataque {
 
     @Override
     protected void logicaAtaque(float dt) {
-        if (!started) {
+        if (!iniciado) {
             if (target != null) {
                 target.setSoulMode(PlayerProva.SoulMode.BLUE);
             }
-            started = true;
+            iniciado = true;
         }
 
-        // Car spawn logic
         timerCarro += dt;
-        if (timerCarro >= SPAWN_DELAY_CARRO) {
+        if (timerCarro >= ATRASO_GERACAO_CARRO) {
             timerCarro = 0;
             spawnCarro();
         }
 
         if (fase == 0) {
-            float startX = owner.getX();
-            float startY = owner.getY() - 50f;
+            float inicioX = owner.getX();
+            float inicioY = owner.getY() - 50f;
             
-            float[] angles = {(float) Math.PI / 4f, (float) (3 * Math.PI / 4f)};
-            for (float angle : angles) {
-                Projetil p = spawnProjetil(
-                        startX, startY, 
-                        45, 45, 
-                        900f, 
-                        angle, 
-                        angle - (float) Math.PI / 2f,
-                        1, 0f, 
-                        8.5f, 
-                        "atomo.png" 
-                );
-                if (p != null) {
-                    p.setPersistente(true);
-                    p.setDanoShield(0);
-                    p.setDanoNota(0f);
-                    atomos.add(p);
-                }
+            float angulo1 = (float) Math.PI / 4f;
+            Projetil p1 = spawnProjetil(
+                    inicioX, inicioY, 
+                    45, 45, 
+                    900f, 
+                    angulo1, 
+                    angulo1 - (float) Math.PI / 2f,
+                    1, 0f, 
+                    8.5f, 
+                    "atomo.png" 
+            );
+            if (p1 != null) {
+
+                p1.addComportamento(desacelaracao);
+                p1.setPersistente(true);
+                p1.setDanoShield(0);
+                p1.setDanoNota(0f);
+                atomos.add(p1);
+            }
+
+            float angulo2 = (float) (3 * Math.PI / 4f);
+            Projetil p2 = spawnProjetil(
+                    inicioX, inicioY, 
+                    45, 45, 
+                    900f, 
+                    angulo2, 
+                    angulo2 - (float) Math.PI / 2f,
+                    1, 0f, 
+                    8.5f, 
+                    "atomo.png" 
+            );
+            if (p2 != null) {
+
+                p2.addComportamento(desacelaracao);
+                p2.setPersistente(true);
+                p2.setDanoShield(0);
+                p2.setDanoNota(0f);
+                atomos.add(p2);
             }
             fase = 1;
         } 
         else if (fase == 1) {
             timer += dt;
-            
-            for (Projetil atomo : atomos) {
-                if (atomo != null) {
-                    float factor = 0.976f;
-                    Vector2D vel = atomo.getVelocidade();
-                    vel.set(vel.getX() * factor, vel.getY() * factor);
-                }
-            }
-            
+            //ai ativa os atomos faz eles fazerem algo
             if (timer >= 1.5f) {
                 for (Projetil atomo : atomos) {
                     if (atomo != null) {
@@ -97,33 +111,29 @@ public class AtaqueAtomosGravidade extends Ataque {
             }
         } 
         else if (fase == 2) {
-            boolean anyActive = false;
             for (Projetil atomo : atomos) {
                 if (atomo != null && atomo.isAtivo()) {
-                    anyActive = true;
                     break;
                 }
             }
-            if (!anyActive) {
-                this.encerrarAtaque();
-                return;
-            }
-            
-            burstTimer += dt;
-            burstTime += dt;
-            float burstInterval = 0.25f - (dificuldade / 100f);
 
-            if(burstTime < burstTimeMax) {
-                if (burstTimer >= burstInterval) {
+            
+            timerExplosao += dt;
+            tempoExplosao += dt;
+            float intervaloExplosao = 0.7f - (dificuldade / 100f);
+
+            if(tempoExplosao < tempoMaximoExplosao) {
+                //pra cad atomo faz a logica do bullet hell de spawnar 4 projeteis girar um pouco atirar mais
+                if (timerExplosao >= intervaloExplosao) {
                     for (Projetil atomo : atomos) {
                         if (atomo == null || !atomo.isAtivo()) continue;
-                        float atomX = atomo.getX();
-                        float atomY = atomo.getY();
+                        float atomoX = atomo.getX();
+                        float atomoY = atomo.getY();
 
                         for (int i = 0; i < 4; i++) {
-                            float angulo = anguloBurst + (i * (float) (Math.PI / 2f));
+                            float angulo = anguloExplosao + (i * (float) (Math.PI / 2f));
                             spawnProjetil(
-                                    atomX, atomY,
+                                    atomoX, atomoY,
                                     15, 15, 
                                     225f + (dificuldade * 10), 
                                     angulo,
@@ -134,12 +144,12 @@ public class AtaqueAtomosGravidade extends Ataque {
                             );
                         }
                     }
-                    anguloBurst += 0.367f;
-                    burstTimer = 0;
+                    anguloExplosao += 0.367f;
+                    timerExplosao = 0;
                 }
             }
             
-            if (burstTime >= burstTimeMax) {
+            if (tempoExplosao >= tempoMaximoExplosao) {
                 timer += dt;
                 if (timer > 1.5f) {
                     this.encerrarAtaque();
@@ -150,13 +160,13 @@ public class AtaqueAtomosGravidade extends Ataque {
 
     private void spawnCarro() {
         boolean vemDaEsquerda = MathUtils.randomFloatInRange(0, 1) > 0.5f;
-        float startY = maxY - 20; // Apenas no chão
-        float startX = vemDaEsquerda ? minX - 100 : maxX + 100;
+        float inicioY = maxY - 20; // Apenas no chão
+        float inicioX = vemDaEsquerda ? minX - 100 : maxX + 100;
         float angulo = vemDaEsquerda ? 0 : (float) Math.PI;
         String sprite = vemDaEsquerda ? "carro.png" : "carroEsq.png";
 
         spawnProjetil(
-            startX, startY,
+            inicioX, inicioY,
             80, 40,
             250f, angulo, 0f,
             1, 0.5f,
@@ -165,15 +175,22 @@ public class AtaqueAtomosGravidade extends Ataque {
     }
 
     @Override
+    public void encerrarAtaque() {
+        super.encerrarAtaque();
+        if (target != null) target.setSoulMode(PlayerProva.SoulMode.RED);
+    }
+
+    @Override
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
+        if (target != null) target.setSoulMode(PlayerProva.SoulMode.RED);
         this.timer = 0;
         this.fase = 0;
-        this.burstTimer = 0;
-        this.burstTime = 0;
-        this.anguloBurst = 0;
+        this.timerExplosao = 0;
+        this.tempoExplosao = 0;
+        this.anguloExplosao = 0;
         this.timerCarro = 0;
-        this.started = false;
+        this.iniciado = false;
         for (Projetil atomo : atomos) {
             if (atomo != null) atomo.desativar();
         }

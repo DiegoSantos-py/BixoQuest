@@ -11,14 +11,14 @@ import java.util.Vector;
 public class AtaqueVetores extends Ataque {
 
     private float timer = 0;
-    private int projeteisSpawnados = 0;
+    private int projeteisLancados = 0;
 
-    // Configurações do Spread
-    private int quantidadeProjeteisSpread = 5;
-    private float anguloSpreadTotal = (float) Math.toRadians(50);
-    private float originalPosX = 0;
-    private float originalPosY = 0;
-    private boolean originSaved = false;
+    // Configurações da Dispersão (Spread)
+    private int quantidadeProjeteisDispersao = 5;
+    private float anguloDispersaoTotal = (float) Math.toRadians(50);
+    private float posicaoXOriginal = 0;
+    private float posicaoYOriginal = 0;
+    private boolean origemSalva = false;
 
     public AtaqueVetores(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
 
@@ -33,37 +33,40 @@ public class AtaqueVetores extends Ataque {
 
         int limiteProjeteis = 9 + (int) (dificuldade / 10);
 
-        if (timer >= (10 / dificuldade) && !this.isFinalizado() && projeteisSpawnados < limiteProjeteis) {
-            
-            if (!originSaved && owner != null) {
-                originalPosX = owner.getX();
-                originalPosY = owner.getY();
-                originSaved = true;
+        if (timer >= (10 /(dificuldade/2)) && !this.isFinalizado() && projeteisLancados < limiteProjeteis) {
+            //salva a posicao original da prova pra mandar ela pra la dps q o ataqueAcaba
+            if (!origemSalva && owner != null) {
+                posicaoXOriginal = owner.getX();
+                posicaoYOriginal = owner.getY();
+                origemSalva = true;
             }
 
-            float maxDistance = ((this.getMaxX() - this.getMinX()) + 200f) / 3f;
+            float distanciaMinima = 200f;
+            //intervalo de disntacica X no qual a prova pode se teleportar
+            float distanciaMaxima = 450f;
 
-            float distanceDir = MathUtils.randomFloatInRange(0, maxDistance);
-            float distanceEsq = MathUtils.randomFloatInRange(0, maxDistance);
-            float posXDir = this.getMaxX() + distanceDir;
-            float posXEsq = this.getMinX() - distanceEsq;
+            float distanciaDir = MathUtils.randomFloatInRange(distanciaMinima, distanciaMaxima);
+            float distanciaEsq = MathUtils.randomFloatInRange(distanciaMinima, distanciaMaxima);
+            float posXDir = this.getMaxX() + distanciaDir;
+            float posXEsq = this.getMinX() - distanciaEsq;
             float posX = MathUtils.randomBoolean() ? posXDir : posXEsq;
 
-            float posY = MathUtils.randomFloatInRange(this.getMinY()* 0.9f, this.getMaxX() * 1.1f);
+            float posY = MathUtils.randomFloatInRange(this.getMinY() * 0.8f, this.getMaxY() * 1.1f);
 
             owner.setX(posX);
             owner.setY(posY);
-            int framesNoFuturo = (int) (3 + (dificuldade/10) * 2);
+            int framesNoFuturo = (int) (3 + (dificuldade/10) * 2); // a prova preve onde vc estará e atira nessa direcao
             float anguloParaPlayer = (float) Math.atan2(
                     (target.getHitbox().getCentro().getY() + target.getVelocidade().getY() * dt * framesNoFuturo) - owner.getHitbox().getCentro().getY(),
                     (target.getHitbox().getCentro().getX() + target.getVelocidade().getX() * dt * framesNoFuturo) - owner.getHitbox().getCentro().getX()
             );
 
-            float anguloInicial = anguloParaPlayer - (anguloSpreadTotal / 2f);
-            float step = quantidadeProjeteisSpread > 1 ? anguloSpreadTotal / (quantidadeProjeteisSpread - 1) : 0f;
+            float anguloInicial = anguloParaPlayer - (anguloDispersaoTotal / 2f);//pega o angulo inicial pra atirar em voce
+            float passo = quantidadeProjeteisDispersao > 1 ? anguloDispersaoTotal / (quantidadeProjeteisDispersao - 1) : 0f; //calcula o angulo entre cada projetil
 
-            for (int i = 0; i < quantidadeProjeteisSpread; i++) {
-                float anguloAtual = quantidadeProjeteisSpread == 1 ? anguloParaPlayer : anguloInicial + (i * step);
+
+            for (int i = 0; i < quantidadeProjeteisDispersao; i++) {
+                float anguloAtual = quantidadeProjeteisDispersao == 1 ? anguloParaPlayer : anguloInicial + (i * passo);
 
                 spawnProjetil(owner.getHitbox().getCentro().getX(),
                         owner.getHitbox().getCentro().getY(),
@@ -78,12 +81,12 @@ public class AtaqueVetores extends Ataque {
                         "vetor.png"); // Changed to vetor.png
             }
 
-            projeteisSpawnados++;
+            projeteisLancados++;
             timer = 0;
         }
 
         // lanca 5 + (tiros adicionais baseado na dificuldade) e
-        if (projeteisSpawnados >= limiteProjeteis) {
+        if (projeteisLancados >= limiteProjeteis) {
             if (timer >= 1f) {
                 this.encerrarAtaque();
             }
@@ -94,9 +97,9 @@ public class AtaqueVetores extends Ataque {
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
         this.timer = 0;
-        this.projeteisSpawnados = 0;
-        this.owner.setX(originalPosX);
-        this.owner.setY(originalPosY);
+        this.projeteisLancados = 0;
+        this.owner.setX(posicaoXOriginal);
+        this.owner.setY(posicaoYOriginal);
     }
 
 

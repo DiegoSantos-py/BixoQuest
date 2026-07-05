@@ -64,14 +64,11 @@ public class MenuSeletorBatalha extends StackPane {
         tabs.getChildren().addAll(btnAnimais, btnProvas);
 
         inputConhecimento = new TextField("0");
-        inputConhecimento.setPromptText("Bônus Global de Conhecimento");
+        inputConhecimento.setPromptText("Bônus de Conhecimento(10 + isso)");
         inputConhecimento.setMaxWidth(300);
         inputConhecimento.setFont(FonteUtil.pixel(16));
-        inputConhecimento.setStyle("-fx-alignment: center;");
-
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         scrollPane.setPrefViewportHeight(600);
         scrollPane.setMaxWidth(600);
         scrollPane.setPadding(new Insets(20));
@@ -93,7 +90,7 @@ public class MenuSeletorBatalha extends StackPane {
 
     private float lerBonus() {
         try {
-            String texto = inputConhecimento.getText().replace(",", ".").trim();
+            String texto = inputConhecimento.getText();
             if (!texto.isEmpty()) return Float.parseFloat(texto);
         } catch (NumberFormatException ex) {
             System.out.println("Valor inválido de conhecimento. Assumindo 0.");

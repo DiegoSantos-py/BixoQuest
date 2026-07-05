@@ -15,8 +15,9 @@ public class AtaqueCarroAviao extends Ataque {
     private float timerCarro = 0;
     private float timerAviao = 0;
     
-    private final float SPAWN_DELAY_CARRO = 1.3f - (dificuldade/100);
-    private final float SPAWN_DELAY_AVIAO = 1f - (dificuldade/100);
+    private final float ATRASO_GERACAO_CARRO = 1.3f - (dificuldade/100);
+    private final float ATRASO_GERACAO_AVIAO = 1f - (dificuldade/100);
+    //os delays pra apsawnr aviao e carro
     
     private final float FASE_1_DURACAO = 20f;
     private final float FASE_2_DURACAO = 30f;
@@ -26,15 +27,16 @@ public class AtaqueCarroAviao extends Ataque {
     private final ProjetilExplosaoNuclear explosaoNuclear = new ProjetilExplosaoNuclear(
             "fogo.png", 34, 24, 1, 0.5f, 7f, 50,
             new ProjetilGravidade(-100f), new ProjetilApontaParaVetor());
+    //passa os comportamentos por referencia ja q os projeteis dessa explosam tbm usam comportamentos
 
-    private boolean bombardeiroSpawnado = false;
+    private boolean bombardeiroGerado = false;
     private Projetil bombardeiro = null;
-    private boolean bombaDropada = false;
+    private boolean bombaLancada = false;
 
     public AtaqueCarroAviao(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 100);
         
-        // Caixa mais larga!
+        // Caixa mais larga
         this.minX = 500f;
         this.maxX = 1420f;
         this.minY = 600f;
@@ -51,45 +53,45 @@ public class AtaqueCarroAviao extends Ataque {
             timerCarro += dt;
             timerAviao += dt;
             
-            if (timerCarro >= SPAWN_DELAY_CARRO) {
+            if (timerCarro >= ATRASO_GERACAO_CARRO) {
                 timerCarro = 0;
                 spawnCarro();
             }
             
-            if (timerAviao >= SPAWN_DELAY_AVIAO) {
+            if (timerAviao >= ATRASO_GERACAO_AVIAO) {
                 timerAviao = 0;
                 spawnAviaoNormal();
             }
         } 
         else if (tempoDecorrido >= FASE_1_DURACAO && tempoDecorrido < FASE_2_DURACAO) {
-            // Fase 2: O bombardeiro final
-            if (!bombardeiroSpawnado & tempoDecorrido >= FASE_1_DURACAO + 2f){
+            // Fase 2: O bombardeiro
+            if (!bombardeiroGerado & tempoDecorrido >= FASE_1_DURACAO + 2f){
 
                 spawnBombardeiro();
-                bombardeiroSpawnado = true;
+                bombardeiroGerado = true;
             }
             
-            // Checa se o bombardeiro chegou no ponto ideal de drop usando Cinemática
-            if (bombardeiro != null && bombardeiro.isAtivo() && !bombaDropada) {
+            // Checa se o bombardeiro chegou no ponto ideal
+            if (bombardeiro != null && bombardeiro.isAtivo() && !bombaLancada) {
                 float centroX = (minX + maxX) / 2f;
                 
                 // Distância que a bomba vai percorrer no eixo Y
-                float distanceY = maxY - bombardeiro.getY();
+                float distanciaY = maxY - bombardeiro.getY();
                 
                 // Tempo de queda: t = sqrt(2 * h / g)
-                float tQueda = (float) Math.sqrt((2 * distanceY) / 800f);
-                
+                float tQueda = (float) Math.sqrt((2 * distanciaY) / 800f);
+
                 // Distância horizontal percorrida durante a queda: d = vx * t
-                float vxAvião = bombardeiro.getVelocidade().getX();
-                float distanceX = vxAvião * tQueda;
+                float vxAviao = bombardeiro.getVelocidade().getX();
+                float distanciaX = vxAviao * tQueda;
                 
                 // Ponto exato de drop (centro subtraindo a distância que ela vai andar pra frente)
-                float pontoDeDrop = centroX - distanceX;
+                float pontoLancamento = centroX - distanciaX;
 
                 // Se passou ou chegou no ponto de drop
-                if (bombardeiro.getX() >= pontoDeDrop) {
-                    droparBomba(bombardeiro.getX(), bombardeiro.getY(), vxAvião, tQueda);
-                    bombaDropada = true;
+                if (bombardeiro.getX() >= pontoLancamento) {
+                    droparBomba(bombardeiro.getX(), bombardeiro.getY(), vxAviao, tQueda);
+                    bombaLancada = true;
                 }
             }
         }
@@ -102,15 +104,15 @@ public class AtaqueCarroAviao extends Ataque {
         boolean vaiParaDireita = MathUtils.randomFloatInRange(0, 1) > 0.5f;
         float velocidade = 200f + MathUtils.randomFloatInRange(0, 100f);
         
-        float startX = vaiParaDireita ? minX - 50 : maxX + 50;
-        float startY = maxY - 30; // No chão
-        float anguloStr = vaiParaDireita ? 0 : (float) Math.PI;
+        float inicioX = vaiParaDireita ? minX - 50 : maxX + 50;
+        float inicioY = maxY - 30; // No chão
+        float angulo = vaiParaDireita ? 0 : (float) Math.PI;
         String sprite = vaiParaDireita ? "carro.png" : "carroEsq.png";
         
         spawnProjetil(
-            startX, startY, 
+            inicioX, inicioY, 
             80, 40, 
-            velocidade, anguloStr, 0f, 
+            velocidade, angulo, 0f, 
             1, 0.5f, 
             10f, sprite
         );
@@ -120,15 +122,15 @@ public class AtaqueCarroAviao extends Ataque {
         boolean vaiParaDireita = MathUtils.randomFloatInRange(0, 1) > 0.5f;
         float velocidade = 200f + MathUtils.randomFloatInRange(0, 100f);
         
-        float startX = vaiParaDireita ? minX - 50 : maxX + 50;
-        float startY = maxY - 80 + MathUtils.randomFloatInRange(-200,0); // Acima dos carros
-        float anguloStr = vaiParaDireita ? 0 : (float) Math.PI;
+        float inicioX = vaiParaDireita ? minX - 50 : maxX + 50;
+        float inicioY = maxY - 80 + MathUtils.randomFloatInRange(-200,0); // Acima dos carros
+        float angulo = vaiParaDireita ? 0 : (float) Math.PI;
         String sprite = vaiParaDireita ? "aviao.png" : "aviaoEsq.png";
         
         spawnProjetil(
-            startX, startY, 
+            inicioX, inicioY, 
             60, 40, 
-            velocidade, anguloStr, 0f, 
+            velocidade, angulo, 0f, 
             1, 0.5f, 
             10f, sprite
         );
@@ -136,26 +138,26 @@ public class AtaqueCarroAviao extends Ataque {
     
     private void spawnBombardeiro() {
         // Vem da esquerda pra direita, bem no topo (fora da arena)
-        float startX = minX - 100;
-        float startY = minY - 50; // Acima da caixa
+        float inicioX = minX - 100;
+        float inicioY = minY - 50; // Acima da caixa
         float velocidade = 250f;
         
         bombardeiro = spawnProjetil(
-            startX, startY, 
+            inicioX, inicioY, 
             100, 50, 
             velocidade, 0f, 0f, 
             1, 0.5f, 
-            10f, "aviao.png" // Usando aviao.png como bombardeiro
+            10f, "aviao.png"
         );
     }
     
-    private void droparBomba(float x, float y, float vxAvião, float tempoQueda) {
-        // A bomba cai herdando a velocidade horizontal do avião e sofre gravidade!
+    private void droparBomba(float x, float y, float vxAviao, float tempoQueda) {
+        // A bomba cai herdando a velocidade horizontal do avião
         
         Projetil bomba = spawnProjetil(
             x, y, 
             60, 32,
-            Math.abs(vxAvião), (vxAvião > 0 ? 0f : (float)Math.PI), 0f, 
+            Math.abs(vxAviao), (vxAviao > 0 ? 0f : (float)Math.PI), 0f, 
             1, 1.0f, 
             tempoQueda, "bomba.png" 
         );
@@ -170,13 +172,20 @@ public class AtaqueCarroAviao extends Ataque {
 
 
     @Override
+    public void encerrarAtaque() {
+        super.encerrarAtaque();
+        if (target != null) target.setSoulMode(PlayerProva.SoulMode.RED);
+    }
+
+    @Override
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
+        if (target != null) target.setSoulMode(PlayerProva.SoulMode.RED);
         this.timerCarro = 0;
         this.timerAviao = 0;
-        this.bombardeiroSpawnado = false;
+        this.bombardeiroGerado = false;
         this.bombardeiro = null;
-        this.bombaDropada = false;
+        this.bombaLancada = false;
         
         this.minX = 500f;
         this.maxX = 1420f;

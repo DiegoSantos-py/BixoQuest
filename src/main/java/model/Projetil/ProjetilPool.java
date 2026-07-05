@@ -48,7 +48,7 @@ public class ProjetilPool {
 
         int attempts = 0;
         //percorre o pool tentando achar um projetil que não está ativo ou não é persistente
-        //essse attempts é pra minuscula possiilidiade de todos os projeteis serem persistentes
+        //essse attempts é pra possiilidiade de todos os projeteis serem persistentes
         //e caso isso aconteça, ele retorna null
         while (attempts < pool.length) {
             Projetil p = pool[index];

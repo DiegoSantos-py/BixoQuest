@@ -10,9 +10,9 @@ import model.Projetil.Comportamentos.ProjetilAtivaDanoAposTempo;
 
 public class AtaqueAtomo extends Ataque {
 
-    private boolean started = false;
+    private boolean iniciado = false;
     private Projetil atomo;
-    private float burstTimeMax = 7.5f;
+    private float tempoMaximoOnda = 7.5f;
 
     private ProjetilAceleracao compAceleracao = new ProjetilAceleracao(-600f);
     private ProjetilAtivaDanoAposTempo compDano = new ProjetilAtivaDanoAposTempo(1.5f, 1, 1f);
@@ -35,18 +35,18 @@ public class AtaqueAtomo extends Ataque {
 
     @Override
     protected void logicaAtaque(float dt) {
-        if (!started) {
-            float startX = owner.getX();
-            float startY = owner.getY() - 50f;
+        if (!iniciado) {
+            float inicioX = owner.getX();
+            float inicioY = owner.getY() - 50f;
             
             atomo = spawnProjetil(
-                    startX, startY, 
+                    inicioX, inicioY, 
                     45, 45,
                     900f,
                     (float) Math.PI / 2f,
                     (float) -Math.PI / 2f, 
                     1, 0f, 
-                    burstTimeMax + 1.5f,
+                    tempoMaximoOnda + 1.5f,
                     "atomo.png"
             );
             
@@ -59,10 +59,10 @@ public class AtaqueAtomo extends Ataque {
                 atomo.addComportamento(compDano);
                 atomo.addComportamento(compEmissor);
             }
-            started = true;
+            iniciado = true;
         } 
         
-        if (tempoDecorrido >= burstTimeMax + 3.0f) {
+        if (tempoDecorrido >= tempoMaximoOnda + 3.0f) {
             encerrarAtaque();
         }
     }
@@ -70,7 +70,7 @@ public class AtaqueAtomo extends Ataque {
     @Override
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
-        this.started = false;
+        this.iniciado = false;
         if (this.atomo != null) {
             this.atomo.desativar();
             this.atomo = null;

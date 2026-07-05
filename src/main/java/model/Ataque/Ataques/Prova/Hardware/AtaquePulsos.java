@@ -38,25 +38,25 @@ public class AtaquePulsos extends Ataque {
     @Override
     protected void logicaAtaque(float dt) {
         timer += dt;
-        float attackDuration = 15f;
+        float duracaoAtaque = 15f;
 
         if (!gridCriado) {
-            float width = (maxX - minX);
-            float height = (maxY - minY);
-            int NumLinhas = 12 + (int) dificuldade / 10;
-            float espacamentoX = width / (NumLinhas + 1f);
-            float espacamentoY = height / (NumLinhas + 1f);
-            float boxCentroX = (minX + maxX) / 2;
-            float boxCentroY = (minY + maxY) / 2;
-            for (int i = 1; i <= NumLinhas; i++) {
+            float largura = (maxX - minX);
+            float altura = (maxY - minY);
+            int numLinhas = 12 + (int) dificuldade / 10;
+            float espacamentoX = largura / (numLinhas + 1f);
+            float espacamentoY = altura / (numLinhas + 1f);
+            float centroCaixaX = (minX + maxX) / 2;
+            float centroCaixaY = (minY + maxY) / 2;
+            for (int i = 1; i <= numLinhas; i++) {
                 // Linha Vertical i
                 float posX = minX + (espacamentoX * i);
                 Projetil linhaV = spawnProjetil(
-                        posX, boxCentroY,
-                        3, height / 2,
+                        posX, centroCaixaY,
+                        3, altura / 2,
                         0, 0, 0, // ângulo 0
                         0, 0f,
-                        attackDuration,
+                        duracaoAtaque,
                         "arranhaoPrevia.png");
                 if (linhaV != null)
                     linhaV.setPersistente(true);
@@ -69,11 +69,11 @@ public class AtaquePulsos extends Ataque {
                 // Linha Horizontal i
                 float posY = minY + (espacamentoY * i);
                 Projetil linhaH = spawnProjetil(
-                        boxCentroX, posY,
-                        3, width / 2,
+                        centroCaixaX, posY,
+                        3, largura / 2,
                         0, 0, (float) (Math.PI / 2), // rotação de 90 graus
                         0, 0f,
-                        attackDuration,
+                        duracaoAtaque,
                         "arranhaoPrevia.png");
                 if (linhaH != null)
                     linhaH.setPersistente(true);
@@ -86,28 +86,27 @@ public class AtaquePulsos extends Ataque {
             gridCriado = true;
         }
 
-        float interval = 0.2f / (dificuldade / 10f);
-        float speed = 250f + (dificuldade * 5f);
+        float intervalo = 0.2f / (dificuldade / 20f);
+        float velocidade = 250f + (dificuldade * 5f);
 
-        if (timer >= interval && tempoDecorrido < attackDuration - 1.5f) {
+        if (timer >= intervalo && tempoDecorrido < duracaoAtaque - 1.5f) {
             SpawnPoint sp = spawnPoints.get(random.nextInt(spawnPoints.size()));
-            float despawnTime =  this.getMaxX()/(3 * speed) + 0.1f;
-            System.out.println(despawnTime);
+            float tempoDespawn =  this.getMaxX()/(3 * velocidade) + 0.1f;
             spawnProjetil(
                     sp.x, sp.y,
                     16, 16, // Tamanho do raio
-                    speed, // velocidade (magnitude)
+                    velocidade, // velocidade (magnitude)
                     (float) Math.atan2(sp.vy, sp.vx), // anguloSpawn (direcao do movimento)
                     sp.angle, // anguloHitbox (rotacao do sprite)
                     1, 0.75f, // Dano e knockback
-                    despawnTime, // Tempo de vida garantido pra atravessar a arena
+                    tempoDespawn, // Tempo de vida garantido pra atravessar a arena
                     "raio.png");
 
             timer = 0;
         }
 
         // Aguarda os projéteis saírem antes de encerrar
-        if (tempoDecorrido >= attackDuration) {
+        if (tempoDecorrido >= duracaoAtaque) {
             encerrarAtaque();
         }
     }

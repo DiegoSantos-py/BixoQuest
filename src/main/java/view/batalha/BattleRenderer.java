@@ -1,5 +1,6 @@
 package view.batalha;
 
+import javafx.scene.Node;
 import model.Batalha.EstadoBatalha;
 import model.Ataque.Ataque;
 import model.Batalha.EntidadeBatalha;
@@ -52,12 +53,12 @@ public class BattleRenderer {
         float minX = atk.getMinX();
         float minY = atk.getMinY();
 
-        // Remove apenas os nós dinâmicos (fundo + 4 bordas = 5 filhos fixos)
+        // Remove apenas as entidades dinamicas do painel(player projeteis as hitboxes
         while (arenaPane.getChildren().size() > 5) {
             arenaPane.getChildren().remove(5);
         }
 
-        // --- Player ---
+        // player
         model.Player.PlayerProva p = estado.getPlayerProva();
         float pW = p.getHitbox().getTamanho().getX();
         float pH = p.getHitbox().getTamanho().getY();
@@ -68,10 +69,11 @@ public class BattleRenderer {
         float spriteLY = p.getY() - minY - visualH / 2;
 
         ImageView pSprite = criarSprite(p, visualW, visualH, spriteLX, spriteLY);
-        javafx.scene.Node playerNode = pSprite != null ? pSprite : buildRect(spriteLX, spriteLY, visualW, visualH, Color.RED);
+        Node playerNode = pSprite != null ? pSprite : buildRect(spriteLX, spriteLY, visualW, visualH, Color.RED); //se  n tiver sprite spawna um qudrado vermelh
+        //geralmetne aconteceu enquanto eu testava os soul modes
 
         if (this.playerInvulneravel) {
-            // Blink effect: toggle visibility every 100ms
+            //se o player tomar hit vai ficcar invulrneravel, e se ele estiver, deixa ele piscando
             if ((System.currentTimeMillis() / 50) % 2 == 0) {
                 playerNode.setVisible(false);
             }

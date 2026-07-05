@@ -7,6 +7,7 @@ import model.Evento.Prova.Provas.ProvasMatematica;
 import model.Evento.Prova.Provas.ProvasSoftware;
 import model.Evento.Prova.Provas.ProvasHardware;
 import model.Evento.Prova.Provas.ProvasEstagio;
+import model.Evento.Prova.Provas.ProvasTCC;
 import java.util.ArrayList;
 
 public class ProvaFactory {
@@ -46,6 +47,8 @@ public class ProvaFactory {
                 return criarHardware(3);
             case ESTAGIO:
                 return criarEstagio();
+            case TCC:
+                return criarTCC();
             default:
                 throw new IllegalArgumentException("ProvaIDs sem implementacao na factory: " + id);
         }
@@ -82,9 +85,9 @@ public class ProvaFactory {
             case 1:
                 return ProvasSoftware.criarSoftwareNivel1();
             case 2:
-                throw new IllegalArgumentException("Nivel 2 de software em construcao.");
+                return ProvasSoftware.criarSoftwareNivel2();
             case 3:
-                throw new IllegalArgumentException("Nivel 3 de software em construcao.");
+                return ProvasSoftware.criarSoftwareNivel3();
             default:
                 throw new IllegalArgumentException("Niveis so vao de 1 a 3.");
         }
@@ -95,16 +98,16 @@ public class ProvaFactory {
             case 1:
                 return ProvasHardware.criarHardwareNivel1();
             case 2:
-                throw new IllegalArgumentException("Nivel 2 de hardware em construcao.");
+                return ProvasHardware.criarHardwareNivel2();
             case 3:
-                throw new IllegalArgumentException("Nivel 3 de hardware em construcao.");
+                return ProvasHardware.criarHardwareNivel3();
             default:
                 throw new IllegalArgumentException("Niveis so vao de 1 a 3.");
         }
     }
 
     public static ProvaBatalha criarTCC() {
-        throw new IllegalArgumentException("TCC em construcao.");
+        return ProvasTCC.criarTCC();
     }
 
     public static ProvaBatalha criarEstagio() {

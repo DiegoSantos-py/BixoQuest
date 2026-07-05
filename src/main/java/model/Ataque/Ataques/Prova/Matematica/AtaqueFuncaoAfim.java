@@ -10,11 +10,11 @@ import java.util.Random;
 public class AtaqueFuncaoAfim extends Ataque {
 
     private float timer = 0;
-    private int projeteisSpawnados = 0;
-    private boolean eixosSpawnados = false;
+    private int projeteisGerados = 0;
+    private boolean eixosGerados = false;
     private Random random;
 
-    private final ProjetilSpawnAoMorrer spawnFuncao = new ProjetilSpawnAoMorrer("arranhao.png", 3, 650, 1, 0.75f, 0.2f,1f);
+    private final ProjetilSpawnAoMorrer spawnFuncao = new ProjetilSpawnAoMorrer("arranhao.png", 6, 1200, 1, 0.75f, 0.2f,1f);
 
     public AtaqueFuncaoAfim(PlayerProva target, EntidadeBatalha owner, float dificuldade) {
         super(target, owner, dificuldade, 60);
@@ -24,29 +24,29 @@ public class AtaqueFuncaoAfim extends Ataque {
     @Override
     protected void logicaAtaque(float dt) {
         timer += dt;
-        float boxCentroX = (minX + maxX) / 2;
-        float boxCentroY = (minY + maxY) / 2;
-        float attackDuration = 10f;
-        float interval = 0.15f / (dificuldade / 10f); // Ex: Dificuldade 10 spawna a cada 1 segundo
-        int maxProjeteis = (int) (attackDuration / interval);
-        if (!eixosSpawnados) {
-            Projetil eixos = spawnProjetil(boxCentroX, boxCentroY, 200, 200, 0, 0, 0, 0,
+        float centroCaixaX = (minX + maxX) / 2;
+        float centroCaixaY = (minY + maxY) / 2;
+        float duracaoAtaque = 10f;
+        float intervalo = 0.15f / (dificuldade / 10f); // Ex: Dificuldade 10 spawna a cada 1 segundo
+        int maxProjeteis = (int) (duracaoAtaque / intervalo);
+        if (!eixosGerados) {
+            Projetil eixos = spawnProjetil(centroCaixaX, centroCaixaY, 200, 200, 0, 0, 0, 0,
                     0, 12.5f, "eixos.png");
             if (eixos != null) {
                 eixos.setPersistente(true);
             }
-            eixosSpawnados = true;
+            eixosGerados = true;
         }
-        if (timer >= interval && projeteisSpawnados < maxProjeteis) {
+        if (timer >= intervalo && projeteisGerados < maxProjeteis) {
 
             // Spawna aleatoriamente na area de ataque do inimigo
-            float posX = boxCentroX - 200 + (random.nextFloat() * 400);
-            float posY = boxCentroY - 200 + (random.nextFloat() * 400);
+            float posX = centroCaixaX - 200 + (random.nextFloat() * 400);
+            float posY = centroCaixaY - 200 + (random.nextFloat() * 400);
 
             // Ângulo aleatório para o arranhão
             float anguloAleatorio = random.nextFloat() * (float) (Math.PI * 2);
 
-            // Spawna a PRÉVIA (3 pixels de largura, 600 de comprimento, sem dano)
+            // Spawna a PRÉVIA
             Projetil previa = spawnProjetil(
                     posX, posY,
                     3, 600,
@@ -59,12 +59,12 @@ public class AtaqueFuncaoAfim extends Ataque {
             if (previa != null) {
                 previa.addComportamentoDespawn(spawnFuncao);
 
-                projeteisSpawnados++;
+                projeteisGerados++;
                 timer = 0;
             }
         }
 
-        if (tempoDecorrido >= attackDuration && getProjeteis().isEmpty()) {
+        if (tempoDecorrido >= duracaoAtaque && getProjeteis().isEmpty()) {
             encerrarAtaque();
         }
     }
@@ -75,7 +75,7 @@ public class AtaqueFuncaoAfim extends Ataque {
     public void reiniciarAtaque() {
         super.reiniciarAtaque();
         this.timer = 0;
-        this.projeteisSpawnados = 0;
-        this.eixosSpawnados = false;
+        this.projeteisGerados = 0;
+        this.eixosGerados = false;
     }
 }
