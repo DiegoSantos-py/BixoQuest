@@ -98,20 +98,16 @@ public class MenuInicial extends StackPane {
         botoes.setAlignment(Pos.CENTER);
 
         Button btnStart = new Button("Iniciar Jogo");
-        Button btnConfig = new Button("Configurações");
         Button btnExit = new Button("Sair");
 
         estilizarBotao(btnStart);
-        estilizarBotao(btnConfig);
         estilizarBotao(btnExit);
 
         btnStart.setOnAction(event -> aoIniciarJogo.run());
-        btnConfig.setOnAction(event -> aoAbrirConfiguracoes.run());
         btnExit.setOnAction(event -> aoSair.run());
 
         botoes.getChildren().addAll(
                 btnStart,
-                btnConfig,
                 btnExit
         );
 

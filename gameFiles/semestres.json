@@ -1,1 +1,177 @@
-{ }
+{
+  "1" : [ {
+    "dias" : [ ],
+    "disciplinas" : [ {
+      "nome" : "Matemática",
+      "codigo" : 1.0,
+      "provaId" : "MAT_01",
+      "area" : "MAT"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ],
+  "2" : [ {
+    "dias" : [ {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Naturezas",
+      "codigo" : 1.0,
+      "provaId" : "NAT_01",
+      "area" : "NAT"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 12,
+    "resultadosNomes" : {
+      "Naturezas:1.0" : true
+    }
+  }, {
+    "dias" : [ {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    }, {
+      "duracao" : 1200.000000000,
+      "eventosObrigatoriosNomes" : [ ],
+      "eventosAleatoriosNomes" : [ ],
+      "saiuDoPonto" : false
+    } ],
+    "disciplinas" : [ {
+      "nome" : "Naturezas",
+      "codigo" : 1.0,
+      "provaId" : "NAT_01",
+      "area" : "NAT"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 12,
+    "resultadosNomes" : {
+      "Naturezas:1.0" : true
+    }
+  }, {
+    "dias" : [ ],
+    "disciplinas" : [ {
+      "nome" : "Software",
+      "codigo" : 1.0,
+      "provaId" : "SOFT_01",
+      "area" : "SOF"
+    }, {
+      "nome" : "Naturezas",
+      "codigo" : 2.0,
+      "provaId" : "NAT_02",
+      "area" : "NAT"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ]
+}

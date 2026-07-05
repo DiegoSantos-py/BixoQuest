@@ -168,7 +168,7 @@
     },
     "tipo" : "CANTINA",
     "elementos" : [ ],
-    "nomesNpcs" : [ ],
+    "nomesNpcs" : ["Azetona" ],
     "zonaInterativasDisponiveis" : [
       {
         "nome": "Cantina zona",
@@ -233,7 +233,7 @@
     },
     "tipo" : "LABORATORIO",
     "elementos" : [ ],
-    "nomesNpcs" : ["Colega 8", "Azetona" ],
+    "nomesNpcs" : ["Colega 8" ],
     "zonaInterativasDisponiveis" : [{
       "nome": "Laboratório zona",
       "sprite": null,

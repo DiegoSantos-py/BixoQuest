@@ -1,1 +1,48 @@
-{ }
+{
+  "1" : {
+    "personagemId" : 1,
+    "nome" : "teste1",
+    "energia" : 100.0,
+    "motivacao" : 40.0,
+    "saude" : 40.0,
+    "dinheiro" : 50.0,
+    "jogoConcluido" : false,
+    "localAtualNome" : null,
+    "conhecimentosNomes" : {
+      "NAT" : 10.0,
+      "MAT" : 10.0,
+      "TCC" : 10.0,
+      "EST" : 10.0,
+      "HAR" : 10.0,
+      "SOF" : 10.0,
+      "ANI" : 10.0
+    },
+    "spriteDir" : "/Jogador/Jogador2/",
+    "cX" : 0,
+    "cY" : 0,
+    "animaisDomados" : [ ]
+  },
+  "2" : {
+    "personagemId" : 2,
+    "nome" : "camile",
+    "energia" : 100.0,
+    "motivacao" : 0.0,
+    "saude" : 0.0,
+    "dinheiro" : 75.0,
+    "jogoConcluido" : false,
+    "localAtualNome" : null,
+    "conhecimentosNomes" : {
+      "NAT" : 11.02711433715616,
+      "MAT" : 10.0,
+      "TCC" : 10.0,
+      "EST" : 10.0,
+      "HAR" : 10.0,
+      "SOF" : 10.0,
+      "ANI" : 10.0
+    },
+    "spriteDir" : "/Jogador/Jogador2/",
+    "cX" : 0,
+    "cY" : 0,
+    "animaisDomados" : [ ]
+  }
+}

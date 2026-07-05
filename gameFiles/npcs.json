@@ -358,7 +358,7 @@
     "falas" : [ "Observe os fenômenos antes de tirar conclusões.", "A ciência começa com uma boa pergunta.", "Experimentos ajudam a entender a teoria.", "Curiosidade é uma grande aliada." ],
     "spriteDir" : "/npcs/Professores/Professor 4/rotations/south.png",
     "areaConhecimento" : "NAT",
-    "interagido" : false
+    "interagido" : true
   },
   "Colega 3" : {
     "tipo" : "colega",
