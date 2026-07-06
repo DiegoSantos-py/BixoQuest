@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import view.util.FonteUtil;
+import view.util.ImagemCache;
 
 import java.util.Objects;
 
@@ -28,11 +29,7 @@ public class MenuPause extends StackPane {
         formContainer.setAlignment(Pos.CENTER);
 
         ImageView backgroundView = new ImageView(
-                new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream("/menuPersonagens/BackgroundMenu.png")
-                        )
-                )
+                ImagemCache.get("/menuPersonagens/BackgroundMenu.png")
         );
         // acompanha o tamanho real do StackPane pai, em vez de valor fixo
         backgroundView.fitWidthProperty().bind(widthProperty());
@@ -48,13 +45,7 @@ public class MenuPause extends StackPane {
 
     private Button criarBotao(String caminhoMoldura, String texto, Runnable acao) {
 
-        ImageView moldura = new ImageView(
-                new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream(caminhoMoldura)
-                        )
-                )
-        );
+        ImageView moldura = new ImageView(ImagemCache.get(caminhoMoldura));
 
         moldura.setFitWidth(300);
         moldura.setPreserveRatio(true);

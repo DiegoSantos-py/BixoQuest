@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import view.util.ImagemCache;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,16 +20,9 @@ public final class AnimacaoFramesUtil {
 
 
     public static ImageView criarImagem(String sprite) {
-        Image backgroundImage = new Image(
-                Objects.requireNonNull(
-                        AnimacaoFramesUtil.class.getResourceAsStream(sprite)
-                )
-        );
-
-        ImageView backgroundView = new ImageView(backgroundImage);
+        ImageView backgroundView = new ImageView(ImagemCache.get(sprite));
         backgroundView.setFitWidth(1920);
         backgroundView.setFitHeight(1080);
-
         return backgroundView;
     }
 

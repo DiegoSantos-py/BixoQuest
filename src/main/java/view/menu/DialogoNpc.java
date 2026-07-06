@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.Npc.Npc;
 import view.util.FonteUtil;
+import view.util.ImagemCache;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,9 +42,7 @@ public class DialogoNpc extends StackPane {
 
     private void montarTela() {
         ImageView caixaFundo = new ImageView(
-                new Image(Objects.requireNonNull(
-                        getClass().getResourceAsStream("/menuPersonagens/background_interacao_npcs.png")
-                ))
+                ImagemCache.get("/menuPersonagens/background_interacao_npcs.png", 1200, 500)
         );
         caixaFundo.setFitWidth(CAIXA_LARGURA);
         caixaFundo.setFitHeight(CAIXA_ALTURA);

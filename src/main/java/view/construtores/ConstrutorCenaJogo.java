@@ -8,6 +8,7 @@ import javafx.scene.shape.Rectangle;
 import model.Npc.Npc;
 import view.cena.CenaJogo;
 import view.util.Borda;
+import view.util.ImagemCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,12 +170,8 @@ public class ConstrutorCenaJogo implements Construtor {
     // ── Utilitários ───────────────────────────────────────────────────────────
 
     private ImageView carregarBackground(String caminho, double largura, double altura) {
-        var stream = getClass().getResourceAsStream(caminho);
-
-        if (stream == null)
-            throw new IllegalArgumentException("Imagem não encontrada: " + caminho);
-
-        ImageView iv = new ImageView(new Image(stream));
+        Image imagem = ImagemCache.get(caminho, largura, altura);
+        ImageView iv = new ImageView(imagem);
         iv.setFitWidth(largura);
         iv.setFitHeight(altura);
         iv.setPreserveRatio(false);
@@ -182,12 +179,8 @@ public class ConstrutorCenaJogo implements Construtor {
     }
 
     private ImageView carregarImagem(String caminho, double largura, double x, double y) {
-        var stream = getClass().getResourceAsStream(caminho);
-
-        if (stream == null)
-            throw new IllegalArgumentException("Imagem não encontrada: " + caminho);
-
-        ImageView iv = new ImageView(new Image(stream));
+        Image imagem = ImagemCache.get(caminho);
+        ImageView iv = new ImageView(imagem);
         iv.setPreserveRatio(true);
         iv.setFitWidth(largura);
         iv.setLayoutX(x);

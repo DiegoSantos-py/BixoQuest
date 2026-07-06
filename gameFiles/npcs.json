@@ -12,7 +12,7 @@
     "falas" : [ "Um bom código é escrito para pessoas, não apenas para computadores.", "Antes de programar, pense na solução.", "Você já testou seu algoritmo hoje?", "Depurar faz parte do aprendizado." ],
     "spriteDir" : "/npcs/Professores/Professor 6/rotations/south.png",
     "areaConhecimento" : "SOF",
-    "interagido" : false
+    "interagido" : true
   },
   "Maeli" : {
     "tipo" : "colega",

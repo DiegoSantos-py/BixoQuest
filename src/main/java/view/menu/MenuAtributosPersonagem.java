@@ -19,6 +19,7 @@ import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
 import model.Tempo.Semestre;
 import view.util.FonteUtil;
+import view.util.ImagemCache;
 
 import java.util.List;
 import java.util.Map;
@@ -52,13 +53,7 @@ public class MenuAtributosPersonagem extends StackPane {
 
     private void montarTela() {
 
-        ImageView background = new ImageView(
-                new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream("/menuPersonagens/BackgroundMenu.png")
-                        )
-                )
-        );
+        ImageView background = new ImageView(ImagemCache.get("/menuPersonagens/BackgroundMenu.png"));
         background.fitWidthProperty().bind(widthProperty());
         background.fitHeightProperty().bind(heightProperty());
         background.setPreserveRatio(false);
@@ -168,13 +163,7 @@ public class MenuAtributosPersonagem extends StackPane {
     }
 
     private ImageView criarIcone(String caminho) {
-        ImageView view = new ImageView(
-                new Image(
-                        Objects.requireNonNull(
-                                getClass().getResourceAsStream(caminho)
-                        )
-                )
-        );
+        ImageView view = new ImageView(ImagemCache.get(caminho));
         view.setFitWidth(32);
         view.setFitHeight(32);
         return view;

@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import model.Disciplina.Disciplina;
 import view.animacao.AnimacaoFramesUtil;
 import view.util.FonteUtil;
+import view.util.ImagemCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +113,10 @@ public class MenuEscolhaDisciplina extends StackPane {
 
     private void montarTela() {
 
-        ImageView backgroundView =
-                AnimacaoFramesUtil.criarImagem("/assets/background/backgroud_matricula.png");
+        ImageView backgroundView = new ImageView(ImagemCache.get("/assets/background/backgroud_matricula.png"));
+        backgroundView.setFitWidth(1920);
+        backgroundView.setFitHeight(1080);
+        backgroundView.setPreserveRatio(false);
 
         VBox conteudo = new VBox(20);
         conteudo.setAlignment(Pos.CENTER);
