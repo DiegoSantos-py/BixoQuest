@@ -1,49 +1,49 @@
 {
   "atim": {
-    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
+    "spriteDir": "/assets/batalha/oponentes/animais/atim.png",
     "descricao": "Ele parece desconfiado.",
     "textoCaixa": "Ele lambeu seu sapato."
   },
 
 
   "azetona": {
-    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "spriteDir": "/assets/batalha/oponentes/animais/azetona.png",
     "descricao": "ela nao sabe...",
     "textoCaixa": "ela esta com mta raiva"
   },
 
   "Thor": {
-    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
-    "descricao": "ela nao sabe...",
-    "textoCaixa": "ela esta com mta raiva"
+    "spriteDir": "/assets/batalha/oponentes/animais/atim.png",
+    "descricao": "peludissimo",
+    "textoCaixa": "nao olhe nos olhos dele diretamente"
   },
 
   "Max": {
-    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
-    "descricao": "ela nao sabe...",
-    "textoCaixa": "ela esta com mta raiva"
+    "spriteDir": "/assets/batalha/oponentes/animais/atim.png",
+    "descricao": "sempre marcando presenca",
+    "textoCaixa": "um anjo"
   },
 
   "Toby": {
-    "spriteDir": "assets/batalha/oponentes/animais/atim.png",
-    "descricao": "ela nao sabe...",
-    "textoCaixa": "ela esta com mta raiva"
+    "spriteDir": "/assets/batalha/oponentes/animais/atim.png",
+    "descricao": "ele parece confuso",
+    "textoCaixa": "tao fofo"
   },
 
   "Mingau": {
-    "spriteDir": "assets/batalha/oponentes/animais/gato_estupidamente_gordo.png",
+    "spriteDir": "/assets/batalha/oponentes/animais/gato_estupidamente_gordo.png",
     "descricao": "gato estupidamente, anormalmente, incrivelmente gordo",
     "textoCaixa": "ela esta com mta raiva"
   },
 
   "Simba": {
-    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "spriteDir": "/assets/batalha/oponentes/animais/azetona.png",
     "descricao": "ela nao sabe...",
     "textoCaixa": "ela esta com mta raiva"
   },
 
   "Luna": {
-    "spriteDir": "assets/batalha/oponentes/animais/azetona.png",
+    "spriteDir": "/assets/batalha/oponentes/animais/azetona.png",
     "descricao": "ela nao sabe...",
     "textoCaixa": "ela esta com mta raiva"
   }
