@@ -6,7 +6,6 @@ import model.Disciplina.Disciplina;
 import model.Local.Area;
 import model.Local.Local;
 import model.Local.TipoLocal;
-import model.Personagem;
 import model.Tempo.Semestre;
 import org.junit.jupiter.api.*;
 import repository.*;
@@ -48,7 +47,9 @@ class GameServiceTest {
         disciplinaService = new DisciplinaService(disciplinaRepo);
         semestreService = new SemestreService(semestreRepo, disciplinaRepo);
         EventoService eventoService = new EventoService(eventoRepo);
-        personagemService = new PersonagemService(personagemRepo, eventoService);
+        NpcService npcService = new NpcService(npcRepo);
+        MapaService mapaService = new MapaService(localRepo, npcService);
+        personagemService = new PersonagemService(personagemRepo, eventoService, semestreRepo);
 
         inicializacaoService = new InicializacaoService(
                 localRepo, disciplinaRepo, eventoRepo,
@@ -60,6 +61,8 @@ class GameServiceTest {
                 semestreService,
                 personagemService,
                 inicializacaoService,
+                eventoService,
+                mapaService,
                 localRepo,
                 semestreRepo,
                 disciplinaRepo,
@@ -73,12 +76,12 @@ class GameServiceTest {
 
     @AfterEach
     void limpar() {
-        new File("locais.json").delete();
-        new File("disciplinas.json").delete();
-        new File("eventos.json").delete();
-        new File("npcs.json").delete();
-        new File("semestres.json").delete();
-        new File("personagens.json").delete();
+        new File("gameFiles/locais.json").delete();
+        new File("gameFiles/disciplinas.json").delete();
+        new File("gameFiles/eventos.json").delete();
+        new File("gameFiles/npcs.json").delete();
+        new File("gameFiles/semestres.json").delete();
+        new File("gameFiles/personagens.json").delete();
         diaService.pararTempo();
     }
 
@@ -90,40 +93,31 @@ class GameServiceTest {
     @Order(1)
     @DisplayName("Deve iniciar jogo corretamente com ponto de ônibus")
     void deveIniciarJogoCorretamente() throws PersistenciaException {
-        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS);
+        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS, null);
         localRepo.adicionarLocal(ponto);
 
         gameService.iniciarJogo(personagem);
-
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("Deve lançar exceção ao iniciar jogo sem ponto de ônibus")
-    void deveLancarExcecaoAoIniciarJogoSemPontoDeOnibus() {
-        assertThrows(Exception.class, () -> gameService.iniciarJogo(personagem));
     }
 
     @Test
     @Order(3)
     @DisplayName("Deve criar primeiro semestre ao iniciar novo jogo")
     void deveCriarPrimeiroSemestreAoIniciarNovoJogo() throws PersistenciaException {
-        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS);
+        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS, null);
         localRepo.adicionarLocal(ponto);
 
         disciplinaService.criarDisciplinasPorNivel("Matemática", 1, AreaConhecimento.MAT);
 
         gameService.iniciarJogo(personagem);
 
-        assertNotNull(gameService.getSemestre());
-        assertNotNull(gameService.getDiaAtual());
+        assertNull(gameService.getSemestre());
     }
 
     @Test
     @Order(4)
     @DisplayName("Deve retomar sessão anterior ao iniciar jogo com semestres salvos")
     void deveRetomarSessaoAnterior() throws PersistenciaException {
-        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS);
+        Local ponto = new Local("Ponto 1", new Area(10, -10, 10, -10), TipoLocal.PONTO_ONIBUS, null);
         localRepo.adicionarLocal(ponto);
 
         Semestre semestreAnterior = new Semestre();

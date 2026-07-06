@@ -11,6 +11,7 @@ import model.Local.ZonaInterativa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.LocalRepository;
+import repository.NpcRepository;
 
 import java.util.Map;
 
@@ -22,7 +23,7 @@ class MapaServiceTest {
 
     @BeforeEach
     void setUp() {
-        mapaService = new MapaService(new LocalRepository());
+        mapaService = new MapaService(new LocalRepository(), new NpcService(new NpcRepository()));
     }
 
     // criarMapa
@@ -87,8 +88,8 @@ class MapaServiceTest {
 
     @Test
     void deveConectarLocaisNosDoisSentidos() {
-        Local origem  = new Local("Origem",  new Area(100, -100, 100, -100), TipoLocal.SALA);
-        Local destino = new Local("Destino", new Area(100, -100, 100, -100), TipoLocal.CANTINA);
+        Local origem  = new Local("Origem",  new Area(100, -100, 100, -100), TipoLocal.SALA, null);
+        Local destino = new Local("Destino", new Area(100, -100, 100, -100), TipoLocal.CANTINA, null);
 
         mapaService.conectarLocais(origem, destino, Direcao.CIMA);
 
@@ -98,8 +99,8 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoAoConectarComParametroNulo() {
-        Local origem  = new Local("Origem",  new Area(100, -100, 100, -100), TipoLocal.SALA);
-        Local destino = new Local("Destino", new Area(100, -100, 100, -100), TipoLocal.CANTINA);
+        Local origem  = new Local("Origem",  new Area(100, -100, 100, -100), TipoLocal.SALA, null);
+        Local destino = new Local("Destino", new Area(100, -100, 100, -100), TipoLocal.CANTINA, null);
 
         assertThrows(LocalInvalidoException.class, () ->
                 mapaService.conectarLocais(null, destino, Direcao.CIMA));
@@ -113,7 +114,7 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoAoConectarLocalConsigoMesmo() {
-        Local local = new Local("Local", new Area(100, -100, 100, -100), TipoLocal.SALA);
+        Local local = new Local("Local", new Area(100, -100, 100, -100), TipoLocal.SALA, null);
 
         assertThrows(LocalInvalidoException.class, () ->
                 mapaService.conectarLocais(local, local, Direcao.CIMA));
@@ -121,9 +122,9 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoJaExisteVizinhoNaDirecao() {
-        Local origem   = new Local("Origem",   new Area(100, -100, 100, -100), TipoLocal.SALA);
-        Local destino1 = new Local("Destino1", new Area(100, -100, 100, -100), TipoLocal.CANTINA);
-        Local destino2 = new Local("Destino2", new Area(100, -100, 100, -100), TipoLocal.ENTRADA);
+        Local origem   = new Local("Origem",   new Area(100, -100, 100, -100), TipoLocal.SALA, null);
+        Local destino1 = new Local("Destino1", new Area(100, -100, 100, -100), TipoLocal.CANTINA, null);
+        Local destino2 = new Local("Destino2", new Area(100, -100, 100, -100), TipoLocal.ENTRADA, null);
 
         mapaService.conectarLocais(origem, destino1, Direcao.CIMA);
 
@@ -135,7 +136,7 @@ class MapaServiceTest {
 
     @Test
     void deveAdicionarZonaAoLocal() {
-        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA);
+        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA, null);
         ZonaInterativa zona = new ZonaInterativa(new Area(20, -20, 20, -20), "Mesa de estudos");
 
         mapaService.adicionarZona(zona, local);
@@ -146,7 +147,7 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoAoAdicionarZonaSemArea() {
-        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA);
+        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA, null);
         ZonaInterativa zona = new ZonaInterativa(null, "Mesa de estudos");
 
         assertThrows(LocalInvalidoException.class, () ->
@@ -155,7 +156,7 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoZonaNaoEstiverDentroDoLocal() {
-        Local local = new Local("Biblioteca", new Area(50, -50, 50, -50), TipoLocal.SALA);
+        Local local = new Local("Biblioteca", new Area(50, -50, 50, -50), TipoLocal.SALA, null);
         ZonaInterativa zona = new ZonaInterativa(new Area(100, -100, 100, -100), "Zona grande");
 
         assertThrows(LocalInvalidoException.class, () ->
@@ -164,7 +165,7 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoAoAdicionarZonaDuplicada() {
-        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA);
+        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA, null);
         ZonaInterativa zona = new ZonaInterativa(new Area(20, -20, 20, -20), "Mesa de estudos");
 
         mapaService.adicionarZona(zona, local);
@@ -175,7 +176,7 @@ class MapaServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoZonaSobrepoeOutra() {
-        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA);
+        Local local = new Local("Biblioteca", new Area(100, -100, 100, -100), TipoLocal.SALA, null);
 
         ZonaInterativa zona1 = new ZonaInterativa(new Area(20, -20, 20, -20), "Mesa 1");
         ZonaInterativa zona2 = new ZonaInterativa(new Area(15, -15, 15, -15), "Mesa 2");

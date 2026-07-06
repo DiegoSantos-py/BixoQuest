@@ -3,9 +3,11 @@ package service;
 import exception.Evento.EventoInvalidoException;
 import model.Disciplina.AreaConhecimento;
 import model.Evento.Evento;
+import model.Evento.ResultadoZona;
 import model.Local.ZonaInterativa;
 import model.Personagem;
 import model.Tempo.Dia;
+import model.Tempo.Semestre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.EventoRepository;
@@ -22,6 +24,7 @@ class EventoServiceTest {
     private EventoService eventoService;
     private DiaService diaService;
     private Personagem personagem;
+    private Semestre semestre;
     private Dia dia;
     private ZonaInterativa zona;
 
@@ -36,6 +39,8 @@ class EventoServiceTest {
         personagem.setSaude(50);
         personagem.setDinheiro(100);
 
+        semestre = new Semestre();
+
         dia = new Dia();
         dia.setInicio(Instant.now());
         dia.setDuracao(Duration.ofMinutes(22));
@@ -43,6 +48,12 @@ class EventoServiceTest {
 
         zona = new ZonaInterativa();
         zona.setNome("Biblioteca");
+    }
+
+    private Map<String, Double> requisito(String atributo, double valor) {
+        Map<String, Double> requisitos = new HashMap<>();
+        requisitos.put(atributo, valor);
+        return requisitos;
     }
 
     // criarEvento
@@ -54,7 +65,7 @@ class EventoServiceTest {
 
         Evento evento = eventoService.criarEvento(
                 "Estudar", "Sessão de estudos",
-                -10, efeitosConhecimento, 5, 0, -20, 5, 0, null, 20, 20, false, zona);
+                -10, efeitosConhecimento, 5, 0, -20, 5, 0, null, 20, false, zona);
 
         assertNotNull(evento);
         assertEquals(20, evento.getCustaDinheiro());
@@ -67,35 +78,34 @@ class EventoServiceTest {
     void deveLancarExcecaoAoCriarEventoComNomeNulo() {
         assertThrows(EventoInvalidoException.class, () ->
                 eventoService.criarEvento(
-                        null, "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, zona));
+                        null, "desc", 0, null, 0, 0, 0, 5, 0, null, 0, false, zona));
     }
 
     @Test
     void deveLancarExcecaoAoCriarEventoComNomeEmBranco() {
         assertThrows(EventoInvalidoException.class, () ->
                 eventoService.criarEvento(
-                        "   ", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, zona));
+                        "   ", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, false, zona));
     }
 
     @Test
     void deveLancarExcecaoAoCriarEventoComZonaNula() {
         assertThrows(EventoInvalidoException.class, () ->
                 eventoService.criarEvento(
-                        "Estudar", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, 0, false, null));
+                        "Estudar", "desc", 0, null, 0, 0, 0, 5, 0, null, 0, false, null));
     }
 
     // podeExecutar
 
     @Test
-    void podeExecutarDeveRetornarTrueQuandoTodasAsCondicoesForemAtendidas() {
+    void podeExecutarDeveRetornarNuloQuandoTodasAsCondicoesForemAtendidas() {
         Evento evento = new Evento();
         evento.setStatus(false);
         evento.setRepetivel(false);
-        evento.setEnergiaMinima(20);
         evento.setCustaDinheiro(10);
         evento.setEfeitoTempo(5);
 
-        assertTrue(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        assertNull(eventoService.podeExecutar(evento, personagem, semestre, dia, diaService));
     }
 
     @Test
@@ -103,23 +113,28 @@ class EventoServiceTest {
         Evento evento = new Evento();
         evento.setStatus(true);
         evento.setRepetivel(false);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
 
-        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
     }
 
     @Test
-    void naoPodeExecutarQuandoEnergiaForInsuficiente() {
+    void naoPodeExecutarQuandoRequisitoDeAtributoNaoForAtendido() {
         Evento evento = new Evento();
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(150);
+        evento.setRequisitosAtributo(requisito("ENERGIA", 150.0));
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
 
-        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
     }
 
     @Test
@@ -127,11 +142,13 @@ class EventoServiceTest {
         Evento evento = new Evento();
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(150);
         evento.setEfeitoTempo(1);
 
-        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
     }
 
     @Test
@@ -142,12 +159,29 @@ class EventoServiceTest {
         Evento evento = new Evento();
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
         evento.setEventoRequisito(requisito);
 
-        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
+    }
+
+    @Test
+    void naoPodeExecutarQuandoDisciplinaRequisitoNaoForCursada() {
+        Evento evento = new Evento();
+        evento.setStatus(false);
+        evento.setRepetivel(true);
+        evento.setCustaDinheiro(0);
+        evento.setEfeitoTempo(1);
+        evento.setDisciplinaRequisitoNome("Matematica");
+
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
     }
 
     @Test
@@ -155,14 +189,16 @@ class EventoServiceTest {
         Evento evento = new Evento();
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(10);
 
         dia.setDuracao(Duration.ofMinutes(5));
         dia.setInicio(Instant.now());
 
-        assertFalse(eventoService.podeExecutar(evento, personagem, dia, diaService));
+        ResultadoZona resultado = eventoService.podeExecutar(evento, personagem, semestre, dia, diaService);
+
+        assertNotNull(resultado);
+        assertEquals(ResultadoZona.Status.REQUISITO_NAO_ATENDIDO, resultado.getStatus());
     }
 
     // executarEvento
@@ -173,7 +209,6 @@ class EventoServiceTest {
         evento.setZona(zona);
         evento.setStatus(false);
         evento.setRepetivel(false);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(5);
         evento.setEfeitoEnergia(-10);
@@ -206,7 +241,6 @@ class EventoServiceTest {
         evento.setZona(zona);
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(2);
         evento.setEfeitosConhecimento(efeitosConhecimento);
@@ -225,7 +259,6 @@ class EventoServiceTest {
         evento.setZona(zona);
         evento.setStatus(false);
         evento.setRepetivel(true);
-        evento.setEnergiaMinima(0);
         evento.setCustaDinheiro(0);
         evento.setEfeitoTempo(1);
         evento.setEfeitoEnergia(-500);

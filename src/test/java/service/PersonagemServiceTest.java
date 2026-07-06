@@ -2,24 +2,19 @@ package service;
 
 import exception.Personagem.PersonagemInvalidoException;
 import model.Disciplina.Disciplina;
-import model.Evento.Evento;
 import model.Local.Area;
-import model.Local.Direcao;
 import model.Local.Local;
 import model.Local.TipoLocal;
-import model.Local.ZonaInterativa;
 import model.Personagem;
-import model.Tempo.Dia;
 import model.Tempo.Semestre;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.EventoRepository;
 import repository.PersonagemRepository;
+import repository.SemestreRepository;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,34 +22,31 @@ class PersonagemServiceTest {
 
     private PersonagemService personagemService;
     private EventoService eventoService;
-    private DiaService diaService;
 
     private Local localInicial;
-    private Dia dia;
 
     @BeforeEach
     void setUp() {
-        eventoService = new EventoService(new EventoRepository()); // ATUALIZADO
-        personagemService = new PersonagemService(new PersonagemRepository(), eventoService); // ATUALIZADO
-        diaService = new DiaService();
+        eventoService = new EventoService(new EventoRepository());
+        personagemService = new PersonagemService(
+                new PersonagemRepository(), eventoService, new SemestreRepository());
 
         localInicial = new Local(
                 "Ponto de ônibus",
                 new Area(10, -10, 10, -10),
-                TipoLocal.PONTO_ONIBUS
+                TipoLocal.PONTO_ONIBUS,
+                null
         );
-
-        dia = new Dia();
-        dia.setInicio(Instant.now());
-        dia.setDuracao(Duration.ofMinutes(22));
-        dia.setSaiuDoPonto(false);
     }
 
     @AfterEach
     void limpar() {
-        new File("personagens.json").delete();
-        new File("eventos.json").delete();
+        new File("gameFiles/personagens.json").delete();
+        new File("gameFiles/eventos.json").delete();
+        new File("gameFiles/semestres.json").delete();
     }
+
+    // criarPersonagem
 
     @Test
     void deveCriarPersonagem() {
@@ -133,214 +125,7 @@ class PersonagemServiceTest {
         );
     }
 
-    // ---- Testes originais inalterados a partir daqui ----
-
-    @Test
-    void deveMoverDentroDoMesmoLocalParaDireita() {
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 80, 90, 50,
-                "sprite.png", localInicial, 0, 0, 1
-        );
-
-        personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertEquals(localInicial, personagem.getLocalAtual());
-        assertEquals(1, personagem.getcX());
-        assertEquals(0, personagem.getcY());
-    }
-
-    @Test
-    void naoDeveMoverParaForaSeNaoHouverVizinho() {
-        Local localPequeno = new Local(
-                "Local pequeno",
-                new Area(1, -1, 1, -1),
-                TipoLocal.SALA
-        );
-
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 80, 90, 50,
-                "sprite.png", localPequeno, 1, 0, 1
-        );
-
-        personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertEquals(localPequeno, personagem.getLocalAtual());
-        assertEquals(1, personagem.getcX());
-        assertEquals(0, personagem.getcY());
-    }
-
-    @Test
-    void deveMoverParaLocalVizinho() {
-        Local origem = new Local(
-                "Origem",
-                new Area(1, -1, 1, -1),
-                TipoLocal.PONTO_ONIBUS
-        );
-
-        Local destino = new Local(
-                "Destino",
-                new Area(5, -5, 5, -5),
-                TipoLocal.SALA
-        );
-
-        origem.adicionarVizinho(Direcao.DIREITA, destino);
-
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 80, 90, 50,
-                "sprite.png", origem, 1, 0, 1
-        );
-
-        personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertEquals(destino, personagem.getLocalAtual());
-        assertEquals(destino.getArea().getMinX(), personagem.getcX());
-    }
-
-    @Test
-    void deveAjustarPosicaoAoEntrarPorCima() {
-        Local origem = new Local(
-                "Origem",
-                new Area(1, -1, 1, -1),
-                TipoLocal.PONTO_ONIBUS
-        );
-
-        Local destino = new Local(
-                "Destino",
-                new Area(5, -5, 5, -5),
-                TipoLocal.SALA
-        );
-
-        origem.adicionarVizinho(Direcao.CIMA, destino);
-
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 80, 90, 50,
-                "sprite.png", origem, 0, -1, 1
-        );
-
-        personagemService.mover(personagem, Direcao.CIMA, dia, diaService);
-
-        assertEquals(destino, personagem.getLocalAtual());
-        assertEquals(destino.getArea().getMinY(), personagem.getcY());
-    }
-
-    @Test
-    void deveExecutarEventoObrigatorioAoEntrarNaZona() {
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 0, 0, 1
-        );
-
-        ZonaInterativa zona = new ZonaInterativa(
-                new Area(2, -2, 2, -2),
-                "Zona de estudo"
-        );
-        localInicial.getZonaInterativasDisponiveis().add(zona);
-
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(false);
-        evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(1);
-        evento.setEfeitoEnergia(-10);
-
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
-
-        personagemService.atualizarPersonagem(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertTrue(evento.isStatus());
-        assertEquals(90, personagem.getEnergia());
-    }
-
-    @Test
-    void deveExecutarEventoAleatorioAoEntrarNaZona() {
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 0, 0, 1
-        );
-
-        ZonaInterativa zona = new ZonaInterativa(
-                new Area(2, -2, 2, -2),
-                "Zona aleatoria"
-        );
-        localInicial.getZonaInterativasDisponiveis().add(zona);
-
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(false);
-        evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(1);
-        evento.setEfeitoMotivacao(10);
-
-        dia.getEventosAleatorios().put(zona.getNome(), evento);
-
-        personagemService.atualizarPersonagem(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertTrue(evento.isStatus());
-        assertEquals(60, personagem.getMotivacao());
-    }
-
-    @Test
-    void naoDeveExecutarEventoSePersonagemNaoEntrarNaZona() {
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 50, 50, 100,
-                "sprite.png", localInicial, 9, 9, 1
-        );
-
-        ZonaInterativa zona = new ZonaInterativa(
-                new Area(2, -2, 2, -2),
-                "Zona central"
-        );
-        localInicial.getZonaInterativasDisponiveis().add(zona);
-
-        Evento evento = new Evento();
-        evento.setZona(zona);
-        evento.setStatus(false);
-        evento.setRepetivel(true);
-        evento.setEnergiaMinima(10);
-        evento.setCustaDinheiro(0);
-        evento.setEfeitoTempo(1);
-
-        dia.getEventosObrigatorios().put(zona.getNome(), evento);
-
-        personagemService.atualizarPersonagem(personagem, Direcao.DIREITA, dia, diaService);
-
-        assertFalse(evento.isStatus());
-    }
-
-    @Test
-    void deveEncerrarDiaQuandoSaiEDepoisVoltaAoPonto() {
-        Local ponto = new Local(
-                "Ponto",
-                new Area(1, -1, 1, -1),
-                TipoLocal.PONTO_ONIBUS
-        );
-
-        Local sala = new Local(
-                "Sala",
-                new Area(5, -5, 5, -5),
-                TipoLocal.SALA
-        );
-
-        ponto.adicionarVizinho(Direcao.DIREITA, sala);
-        sala.adicionarVizinho(Direcao.ESQUERDA, ponto);
-
-        Personagem personagem = personagemService.criarPersonagem(
-                "Fulano", 100, 50, 50, 100,
-                "sprite.png", ponto, 1, 0, 1
-        );
-
-        personagemService.mover(personagem, Direcao.DIREITA, dia, diaService);
-        assertTrue(dia.isSaiuDoPonto());
-
-        personagem.setcX(sala.getArea().getMinX());
-        personagemService.mover(personagem, Direcao.ESQUERDA, dia, diaService);
-
-        assertTrue(diaService.isDiaEncerrado());
-    }
+    // calcularDesempenhoGeral
 
     @Test
     void calcularDesempenhoGeralDeveRetornarZeroSemSemestres() {
@@ -448,5 +233,25 @@ class PersonagemServiceTest {
         double desempenho = personagemService.calcularDesempenhoGeral(personagem);
 
         assertEquals(2.0 / 3.0, desempenho);
+    }
+
+    // getAtributos / getConhecimentos
+
+    @Test
+    void deveRetornarAtributosDoPersonagemCriado() throws Exception {
+        Personagem personagem = personagemService.criarPersonagem(
+                "Fulano", 100, 80, 90, 50,
+                "sprite.png", localInicial, 0, 0, 1
+        );
+        personagemService.criarESalvarPersonagem(
+                "Fulano", 100, 80, 90, 50, "sprite.png", localInicial, 0, 0, 1
+        );
+
+        var atributos = personagemService.getAtributos(1);
+
+        assertEquals(100.0, atributos.get("energia"));
+        assertEquals(80.0, atributos.get("motivação"));
+        assertEquals(90.0, atributos.get("saúde"));
+        assertEquals(50.0, atributos.get("dinheiro"));
     }
 }

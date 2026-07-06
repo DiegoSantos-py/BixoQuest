@@ -17,13 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EventoRepositoryTest {
 
-    private static final File ARQUIVO = new File("eventos.json");
+    private static final File ARQUIVO = new File("gameFiles/eventos.json");
     private EventoRepository repository;
 
     @BeforeEach
     void setUp() {
         repository = new EventoRepository();
         if (ARQUIVO.exists()) ARQUIVO.delete();
+        ARQUIVO.getParentFile().mkdirs();
     }
 
     @AfterAll

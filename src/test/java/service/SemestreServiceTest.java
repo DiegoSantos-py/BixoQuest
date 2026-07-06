@@ -1,5 +1,6 @@
 package service;
 
+import exception.Disciplina.DisciplinaInvalidaException;
 import exception.Semestre.SemestreInvalidoException;
 import model.Disciplina.AreaConhecimento;
 import model.Disciplina.Disciplina;
@@ -29,38 +30,107 @@ class SemestreServiceTest {
         service = new SemestreService(semestreRepo, disciplinaRepo);
     }
 
+    private Disciplina criarDisciplina(String nome, float codigo, AreaConhecimento area) {
+        Disciplina d = new Disciplina();
+        d.setNome(nome);
+        d.setCodigo(codigo);
+        d.setArea(area);
+        return d;
+    }
+
     // criarSemestre
 
     @Test
-    void deveCriarSemestre() {
-        Semestre semestre = service.criarSemestre();
+    void deveCriarSemestreComNumeroBaseadoNoHistoricoDoPersonagem() {
+        Personagem personagem = new Personagem();
+
+        Semestre semestre = service.criarSemestre(personagem);
 
         assertNotNull(semestre);
+        assertEquals(1, semestre.getNumeroSemestre());
     }
 
-    // iniciarPrimeiroSemestre
+    // iniciarSemestreComEscolha
 
     @Test
-    void deveIniciarPrimeiroSemestreComDisciplinasIniciais() {
-        Disciplina d1 = new Disciplina();
-        d1.setNome("Matematica");
-        d1.setCodigo(1);
-        d1.setArea(AreaConhecimento.MAT);
+    void naoDeveIniciarSemestreComListaVazia() {
+        Personagem personagem = new Personagem();
+        personagem.setPersonagemId(1);
 
-        Disciplina d2 = new Disciplina();
-        d2.setNome("Fisica");
-        d2.setCodigo(1);
-        d2.setArea(AreaConhecimento.MAT);
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.iniciarSemestreComEscolha(1, new ArrayList<>(), personagem));
+    }
+
+    @Test
+    void naoDeveIniciarSemestreComMaisDeTresDisciplinas() {
+        Disciplina d1 = criarDisciplina("Matematica", 1, AreaConhecimento.MAT);
+        Disciplina d2 = criarDisciplina("Naturezas", 1, AreaConhecimento.NAT);
+        Disciplina d3 = criarDisciplina("Software", 1, AreaConhecimento.SOF);
+        Disciplina d4 = criarDisciplina("Hardware", 1, AreaConhecimento.HAR);
 
         disciplinaRepo.adicionar(d1);
         disciplinaRepo.adicionar(d2);
+        disciplinaRepo.adicionar(d3);
+        disciplinaRepo.adicionar(d4);
 
-        Semestre semestre = service.iniciarPrimeiroSemestre(1);
+        Personagem personagem = new Personagem();
+        personagem.setPersonagemId(2);
+
+        List<Disciplina> escolhidas = List.of(d1, d2, d3, d4);
+
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.iniciarSemestreComEscolha(2, escolhidas, personagem));
+    }
+
+    @Test
+    void naoDeveIniciarSemestreComDisciplinaIndisponivel() {
+        Disciplina matematica2 = criarDisciplina("Matematica", 2, AreaConhecimento.MAT);
+        disciplinaRepo.adicionar(matematica2);
+
+        Personagem personagem = new Personagem();
+        personagem.setPersonagemId(3);
+
+        List<Disciplina> escolhidas = List.of(matematica2);
+
+        assertThrows(DisciplinaInvalidaException.class, () ->
+                service.iniciarSemestreComEscolha(3, escolhidas, personagem));
+    }
+
+    @Test
+    void deveIniciarSemestreComDisciplinasDisponiveis() {
+        Disciplina matematica1 = criarDisciplina("Matematica", 1, AreaConhecimento.MAT);
+        Disciplina software1 = criarDisciplina("Software", 1, AreaConhecimento.SOF);
+
+        disciplinaRepo.adicionar(matematica1);
+        disciplinaRepo.adicionar(software1);
+
+        Personagem personagem = new Personagem();
+        personagem.setPersonagemId(4);
+
+        List<Disciplina> escolhidas = List.of(matematica1, software1);
+
+        Semestre semestre = service.iniciarSemestreComEscolha(4, escolhidas, personagem);
 
         assertNotNull(semestre);
+        assertEquals(1, semestre.getNumeroSemestre());
         assertEquals(2, semestre.getDisciplinas().size());
-        assertTrue(semestre.getDisciplinas().contains(d1));
-        assertTrue(semestre.getDisciplinas().contains(d2));
+        assertTrue(semestre.getDisciplinas().containsAll(escolhidas));
+    }
+
+    // getDisciplinasDisponiveis
+
+    @Test
+    void deveOfertarPrimeiroNivelParaJogadorSemHistorico() {
+        Disciplina matematica1 = criarDisciplina("Matematica", 1, AreaConhecimento.MAT);
+        Disciplina matematica2 = criarDisciplina("Matematica", 2, AreaConhecimento.MAT);
+
+        disciplinaRepo.adicionar(matematica1);
+        disciplinaRepo.adicionar(matematica2);
+
+        List<Disciplina> disponiveis = service.getDisciplinasDisponiveis(5);
+
+        assertEquals(1, disponiveis.size());
+        assertEquals(matematica1, disponiveis.get(0));
     }
 
     // avancarDia
@@ -93,10 +163,7 @@ class SemestreServiceTest {
     void deveAdicionarDisciplinaAoSemestre() {
         Semestre semestre = new Semestre();
 
-        Disciplina disciplina = new Disciplina();
-        disciplina.setNome("Quimica");
-        disciplina.setCodigo(1);
-        disciplina.setArea(AreaConhecimento.MAT);
+        Disciplina disciplina = criarDisciplina("Quimica", 1, AreaConhecimento.MAT);
 
         service.adicionarDisciplina(semestre, disciplina);
 
@@ -108,10 +175,7 @@ class SemestreServiceTest {
     void naoDeveAdicionarDisciplinaDuplicadaAoSemestre() {
         Semestre semestre = new Semestre();
 
-        Disciplina disciplina = new Disciplina();
-        disciplina.setNome("Quimica");
-        disciplina.setCodigo(1);
-        disciplina.setArea(AreaConhecimento.MAT);
+        Disciplina disciplina = criarDisciplina("Quimica", 1, AreaConhecimento.MAT);
 
         semestre.adicionarDisciplinas(disciplina);
 
@@ -144,8 +208,9 @@ class SemestreServiceTest {
     }
 
     @Test
-    void deveRetornarMesmoSemestreSeAindaNaoTerminou() throws Exception {
+    void naoDeveFazerNadaSeSemestreAindaNaoTerminou() throws Exception {
         Personagem personagem = new Personagem();
+        personagem.setPersonagemId(6);
 
         Semestre semestre = new Semestre() {
             @Override
@@ -154,104 +219,56 @@ class SemestreServiceTest {
             }
         };
 
-        Semestre resultado = service.encerrarSemestre(personagem, semestre);
+        service.encerrarSemestre(personagem, semestre);
 
-        assertSame(semestre, resultado);
+        assertTrue(semestreRepo.getSemestresPorJogador(6).isEmpty());
     }
 
     @Test
-    void deveEncerrarSemestreEAprovarParaProximaDisciplina() throws Exception {
-        Disciplina matematica1 = new Disciplina();
-        matematica1.setNome("Matematica");
-        matematica1.setCodigo(1);
-        matematica1.setArea(AreaConhecimento.MAT);
-
-        Disciplina matematica2 = new Disciplina();
-        matematica2.setNome("Matematica");
-        matematica2.setCodigo(2);
-        matematica2.setArea(AreaConhecimento.MAT);
-
-        disciplinaRepo.adicionar(matematica1);
-        disciplinaRepo.adicionar(matematica2);
-
+    void deveEncerrarSemestreEPersistirNoHistorico() throws Exception {
         Semestre semestre = new Semestre() {
             @Override
-            public boolean terminou() { return true; }
-
-            @Override
-            public boolean foiAprovado(Disciplina d) { return true; }
+            public boolean terminou() {
+                return true;
+            }
         };
-        semestre.setDisciplinas(new ArrayList<>(List.of(matematica1)));
 
         Personagem personagem = new Personagem();
-        personagem.setPersonagemId(10);
+        personagem.setPersonagemId(7);
 
-        Semestre novoSemestre = service.encerrarSemestre(personagem, semestre);
+        service.encerrarSemestre(personagem, semestre);
 
-        assertNotNull(novoSemestre);
-        assertEquals(1, novoSemestre.getDisciplinas().size());
-        assertEquals(matematica2, novoSemestre.getDisciplinas().get(0));
-
-        List<Semestre> semestres = semestreRepo.getSemestresPorJogador(10);
-        assertEquals(2, semestres.size());
+        List<Semestre> semestres = semestreRepo.getSemestresPorJogador(7);
+        assertEquals(1, semestres.size());
         assertTrue(semestres.contains(semestre));
-        assertTrue(semestres.contains(novoSemestre));
+    }
+
+    // definirResultadoDisciplina
+
+    @Test
+    void deveLancarExcecaoAoDefinirResultadoComSemestreNulo() {
+        Disciplina disciplina = criarDisciplina("Historia", 1, AreaConhecimento.SOF);
+
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.definirResultadoDisciplina(null, disciplina, true));
     }
 
     @Test
-    void deveManterDisciplinaQuandoReprovado() throws Exception {
-        Disciplina fisica1 = new Disciplina();
-        fisica1.setNome("Fisica");
-        fisica1.setCodigo(1);
-        fisica1.setArea(AreaConhecimento.MAT);
+    void deveLancarExcecaoAoDefinirResultadoComDisciplinaNula() {
+        Semestre semestre = new Semestre();
 
-        disciplinaRepo.adicionar(fisica1);
-
-        Semestre semestre = new Semestre() {
-            @Override
-            public boolean terminou() { return true; }
-
-            @Override
-            public boolean foiAprovado(Disciplina d) { return false; }
-        };
-        semestre.setDisciplinas(new ArrayList<>(List.of(fisica1)));
-
-        Personagem personagem = new Personagem();
-        personagem.setPersonagemId(20);
-
-        Semestre novoSemestre = service.encerrarSemestre(personagem, semestre);
-
-        assertNotNull(novoSemestre);
-        assertEquals(1, novoSemestre.getDisciplinas().size());
-        assertEquals(fisica1, novoSemestre.getDisciplinas().get(0));
-        assertEquals(2, semestreRepo.getSemestresPorJogador(20).size());
+        assertThrows(SemestreInvalidoException.class, () ->
+                service.definirResultadoDisciplina(semestre, null, true));
     }
 
     @Test
-    void naoDeveAdicionarProximaDisciplinaQuandoElaNaoExiste() throws Exception {
-        Disciplina historia1 = new Disciplina();
-        historia1.setNome("Historia");
-        historia1.setCodigo(1);
-        historia1.setArea(AreaConhecimento.SOF); //alguem tem q ver isso ai
+    void deveRegistrarResultadoDaDisciplinaNoSemestre() {
+        Semestre semestre = new Semestre();
+        Disciplina disciplina = criarDisciplina("Historia", 1, AreaConhecimento.SOF);
+        semestre.adicionarDisciplinas(disciplina);
 
-        disciplinaRepo.adicionar(historia1);
+        service.definirResultadoDisciplina(semestre, disciplina, true);
 
-        Semestre semestre = new Semestre() {
-            @Override
-            public boolean terminou() { return true; }
-
-            @Override
-            public boolean foiAprovado(Disciplina d) { return true; }
-        };
-        semestre.setDisciplinas(new ArrayList<>(List.of(historia1)));
-
-        Personagem personagem = new Personagem();
-        personagem.setPersonagemId(30);
-
-        Semestre novoSemestre = service.encerrarSemestre(personagem, semestre);
-
-        assertNotNull(novoSemestre);
-        assertTrue(novoSemestre.getDisciplinas().isEmpty());
-        assertEquals(2, semestreRepo.getSemestresPorJogador(30).size());
+        assertTrue(semestre.foiAprovado(disciplina));
     }
 }

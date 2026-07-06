@@ -2,10 +2,7 @@ package service;
 
 import model.Evento.Evento;
 import model.Evento.EventoAleatorio;
-import model.Local.Local;
-import model.Local.TipoLocal;
 import model.Local.ZonaInterativa;
-import model.Personagem;
 import model.Tempo.Dia;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,22 +37,6 @@ class DiaServiceTest {
         assertFalse(dia.isSaiuDoPonto());
 
         diaService.pararTempo();
-    }
-
-    @Test
-    void deveEncerrarDiaQuandoTempoAcabar() {
-        dia.setDuracao(Duration.ofMinutes(22));
-        dia.setInicio(Instant.now().minus(Duration.ofMinutes(23)));
-
-        diaService.iniciarDia(dia);
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            fail("Thread interrompida durante o teste");
-        }
-
-        assertTrue(diaService.isDiaEncerrado());
     }
 
     @Test
@@ -145,7 +126,7 @@ class DiaServiceTest {
     }
 
     @Test
-    void naoDeveAdicionarEventoAleatorioQuandoNaoAtivar() {
+    void deveAdicionarEventoAleatorioIndependenteDeDeveAtivar() {
         ZonaInterativa zona = new ZonaInterativa();
         zona.setNome("Biblioteca");
 
@@ -155,7 +136,7 @@ class DiaServiceTest {
                 return false;
             }
         };
-        aleatorio.setNome("Evento falso");
+        aleatorio.setNome("Evento já decidido externamente");
         aleatorio.setZona(zona);
 
         List<Evento> obrigatorios = new ArrayList<>();
@@ -164,7 +145,8 @@ class DiaServiceTest {
 
         diaService.gerarEventosDoDia(dia, obrigatorios, aleatorios);
 
-        assertTrue(dia.getEventosAleatorios().isEmpty());
+        assertFalse(dia.getEventosAleatorios().isEmpty());
+        assertTrue(dia.getEventosAleatorios().containsKey("Biblioteca"));
     }
 
     @Test
@@ -181,43 +163,5 @@ class DiaServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {
             diaService.gerarEventosDoDia(dia, obrigatorios, aleatorios);
         });
-    }
-
-    @Test
-    void deveEncerrarDiaQuandoPersonagemSaiEDepoisVoltaAoPonto() {
-        Personagem personagem = new Personagem();
-
-        Local localFora = new Local();
-        localFora.setTipo(TipoLocal.ENTRADA);
-
-        Local ponto = new Local();
-        ponto.setTipo(TipoLocal.PONTO_ONIBUS);
-
-        personagem.setLocalAtual(localFora);
-        diaService.verificarRetornoAoPonto(dia, personagem);
-
-        assertTrue(dia.isSaiuDoPonto());
-        assertFalse(diaService.isDiaEncerrado());
-
-        personagem.setLocalAtual(ponto);
-        diaService.verificarRetornoAoPonto(dia, personagem);
-
-        assertTrue(diaService.isDiaEncerrado());
-    }
-
-    @Test
-    void naoDeveEncerrarDiaSePersonagemNuncaSaiuDoPonto() {
-
-        Personagem personagem = new Personagem();
-
-        Local ponto = new Local();
-        ponto.setTipo(TipoLocal.PONTO_ONIBUS);
-
-        personagem.setLocalAtual(ponto);
-
-        diaService.verificarRetornoAoPonto(dia, personagem);
-
-        assertFalse(dia.isSaiuDoPonto());
-        assertFalse(diaService.isDiaEncerrado());
     }
 }

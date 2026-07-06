@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DisciplinaRepositoryTest {
 
-    private static final File ARQUIVO = new File("disciplinas.json");
+    private static final File ARQUIVO = new File("gameFiles/disciplinas.json");
     private DisciplinaRepository repository;
 
     private Disciplina criarDisciplina(String nome, float codigo, AreaConhecimento area) {
@@ -30,6 +30,7 @@ class DisciplinaRepositoryTest {
     void setUp() {
         repository = new DisciplinaRepository();
         if (ARQUIVO.exists()) ARQUIVO.delete();
+        ARQUIVO.getParentFile().mkdirs();
     }
 
     @AfterAll

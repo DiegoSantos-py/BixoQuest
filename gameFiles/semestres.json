@@ -1,1 +1,14 @@
-{ }
+{
+  "2" : [ {
+    "dias" : [ ],
+    "disciplinas" : [ {
+      "nome" : "Hardware",
+      "codigo" : 1.0,
+      "provaId" : "HARD_01",
+      "area" : "HAR"
+    } ],
+    "numeroSemestre" : 1,
+    "diaAtual" : 0,
+    "resultadosNomes" : { }
+  } ]
+}

@@ -18,18 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LocalRepositoryTest {
 
-    private static final File ARQUIVO = new File("locais.json");
+    private static final File ARQUIVO = new File("gameFiles/locais.json");
     private LocalRepository repository;
 
     private Local criarLocal(String nome, TipoLocal tipo) {
         Area area = new Area(100, 0, 100, 0);
-        return new Local(nome, area, tipo);
+        return new Local(nome, area, tipo, null);
     }
 
     @BeforeEach
     void setUp() {
         repository = new LocalRepository();
         if (ARQUIVO.exists()) ARQUIVO.delete();
+        ARQUIVO.getParentFile().mkdirs();
     }
 
     @AfterAll
@@ -127,7 +128,7 @@ class LocalRepositoryTest {
     @Order(8)
     @DisplayName("Deve salvar e carregar local com ZonaInterativa")
     void deveSalvarLocalComZonaInterativa() throws Exception {
-        Local cantina = new Local("Cantina", new Area(200, 0, 200, 0), TipoLocal.CANTINA);
+        Local cantina = new Local("Cantina", new Area(200, 0, 200, 0), TipoLocal.CANTINA, null);
         cantina.getZonaInterativasDisponiveis().add(
                 new ZonaInterativa(new Area(50, 10, 50, 10), "Mercado"));
 

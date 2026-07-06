@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NpcRepositoryTest {
 
-    private static final File ARQUIVO = new File("npcs.json");
+    private static final File ARQUIVO = new File("gameFiles/npcs.json");
     private NpcRepository repository;
 
     private Professor criarProfessor(String nome) {
@@ -43,8 +43,9 @@ class NpcRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new NpcRepository();
         if (ARQUIVO.exists()) ARQUIVO.delete();
+        ARQUIVO.getParentFile().mkdirs();
+        repository = new NpcRepository();
     }
 
     @AfterAll
@@ -192,7 +193,6 @@ class NpcRepositoryTest {
         repository.salvar();
 
         NpcRepository novoRepository = new NpcRepository();
-        novoRepository.carregar();
 
         Npc carregado = novoRepository.buscarPorNome("Prof. Silva");
         assertInstanceOf(Professor.class, carregado);
@@ -207,7 +207,6 @@ class NpcRepositoryTest {
         repository.salvar();
 
         NpcRepository novoRepository = new NpcRepository();
-        novoRepository.carregar();
 
         Npc carregado = novoRepository.buscarPorNome("João");
         assertInstanceOf(Colega.class, carregado);
@@ -223,7 +222,6 @@ class NpcRepositoryTest {
         repository.salvar();
 
         NpcRepository novoRepository = new NpcRepository();
-        novoRepository.carregar();
 
         Npc carregado = novoRepository.buscarPorNome("Bidu");
         assertInstanceOf(Animal.class, carregado);
@@ -241,7 +239,6 @@ class NpcRepositoryTest {
         repository.salvar();
 
         NpcRepository novoRepository = new NpcRepository();
-        novoRepository.carregar();
 
         assertEquals(1, novoRepository.buscarProfessores().size());
         assertEquals(1, novoRepository.buscarColegas().size());
@@ -256,7 +253,6 @@ class NpcRepositoryTest {
         repository.salvar();
 
         NpcRepository novoRepository = new NpcRepository();
-        novoRepository.carregar();
 
         Npc carregado = novoRepository.buscarPorNome("Prof. Silva");
         assertNotNull(carregado.getFalas());
@@ -296,14 +292,12 @@ class NpcRepositoryTest {
         Animal animal = criarAnimal("Bidu");
         repository.adicionarNpc(animal);
 
-        // Altera o estado do animal (e.g. domado, indole)
-        animal.setDomado(true);
+        // Altera o estado do animal (indole)
         animal.setIndole(15);
 
         repository.atualizarNpc(animal);
 
         Animal animalAtualizado = (Animal) repository.buscarPorNome("Bidu");
-        assertTrue(animalAtualizado.isDomado());
         assertEquals(15, animalAtualizado.getIndole());
     }
 

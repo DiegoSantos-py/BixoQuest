@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PersonagemRepositoryTest {
 
-    private static final File ARQUIVO = new File("personagens.json");
+    private static final File ARQUIVO = new File("gameFiles/personagens.json");
     private PersonagemRepository repository;
 
     private Personagem criarPersonagem(String nome) {
@@ -28,6 +28,7 @@ class PersonagemRepositoryTest {
     void setUp() {
         repository = new PersonagemRepository();
         if (ARQUIVO.exists()) ARQUIVO.delete();
+        ARQUIVO.getParentFile().mkdirs();
     }
 
     @AfterAll
@@ -141,7 +142,7 @@ class PersonagemRepositoryTest {
     @DisplayName("Deve salvar e carregar localAtualNome do personagem")
     void deveSalvarECarregarLocalAtualNome() throws Exception {
         Personagem p = criarPersonagem("Ana");
-        p.setLocalAtual(new Local("Vila", new Area(100, 0, 100, 0), TipoLocal.CANTINA));
+        p.setLocalAtual(new Local("Vila", new Area(100, 0, 100, 0), TipoLocal.CANTINA, null));
 
         repository.adicionarPersonagem(p);
         repository.salvar();
