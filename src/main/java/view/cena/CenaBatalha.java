@@ -26,7 +26,7 @@ public class CenaBatalha extends StackPane {
     private final MinigameBatalha minigame;
     private final MenuPrincipalBatalha menuPrincipal;
     private final MenuAcoesBatalha menuAcoes;
-    private final TelaFinalBatalha telaFinal;
+    private final TelaFinalBatalha telaFinal;   
 
     // Container dinâmico: único nó que troca de conteúdo a cada estado
     private final StackPane dynamicBox;
@@ -44,9 +44,6 @@ public class CenaBatalha extends StackPane {
     // Rastreamento de mudanças
     private boolean eraTurnoPlayer = true;
     private Object oponenteAnterior = null;
-    private float baseOpX = -1;
-    private float baseOpY = -1;
-
     // Cache dos máximos (para quando o oponente some após derrota)
     private float maxHpOponente;
     private int maxTurnosOponente;
@@ -189,12 +186,6 @@ public class CenaBatalha extends StackPane {
 
         if (estadoUI == EstadoUI.MINIGAME_ATAQUE) minigame.atualizar(dt);
 
-        // Sincroniza posição do sprite do oponente com a posição física
-        if (oponenteAtual != null && baseOpX != -1) {
-            hud.getSpriteInimigo().setTranslateX(batalhaController.getEstadoController().getInimigoX() - baseOpX);
-            hud.getSpriteInimigo().setTranslateY(batalhaController.getEstadoController().getInimigoY() - baseOpY);
-        }
-
         hud.atualizarHUDShields();
         hud.atualizarTextosHUD(maxHpOponente, maxTurnosOponente);
 
@@ -205,8 +196,7 @@ public class CenaBatalha extends StackPane {
     }
 
     private void atualizarDadosIniciais() {
-        float[] base = hud.atualizarDadosIniciais();
-        if (base != null) { baseOpX = base[0]; baseOpY = base[1]; }
+        hud.atualizarDadosIniciais();
 
         if (batalhaController.getEstadoController() != null
                 && batalhaController.getEstadoController().getInimigoNome() != null && !batalhaController.getEstadoController().getInimigoNome().isEmpty()) {

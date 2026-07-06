@@ -28,24 +28,27 @@ public class MenuAcoesBatalha {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(40);
         grid.setVgap(20);
-
-        List<AcaoBatalha> acoes = controller.getEstadoController().getAcoesBatalha();
+        List<AcaoBatalha> acoes = controller.getEstadoController().getAcoesBatalha();//pega as acoes
         int col = 0, row = 0;
-
+        //monta o grid
         for (int i = 0; i < acoes.size(); i++) {
             AcaoBatalha acao = acoes.get(i);
             Button btn = criarBotaoTextoSimples(acao);
             int indexFinal = i;
 
-            btn.setOnAction(e -> {
+            btn.setOnAction(e ->
+            //atribui a acao em si via via lambda
+            {
                 float danoOld = acao.getBonusDano();
                 int shieldOld = acao.getBonusShield();
                 float conhecimentoOld = acao.getBonusConhecimento();
                 float notaOld = acao.getBonusNota();
+                //^^  pro texto do feedback n usar os dados DEPOIS da acao se atualizar(reduzir cahcen de acerto e bonus)
                 
-                boolean sucesso = controller.executarAcao(indexFinal);
-                
-                onFeedbackPronto.accept(montarTextoFeedback(acao.getNome(), danoOld, shieldOld, conhecimentoOld, notaOld, sucesso));
+                boolean sucesso = controller.executarAcao(indexFinal); //tenta executar a acao
+
+                onFeedbackPronto.accept(montarTextoFeedback(acao.getNome(), danoOld, shieldOld, conhecimentoOld, notaOld, sucesso)); //inia a geracao do texto de feedback
+                //com os dados
             });
 
             grid.add(btn, col, row);
@@ -59,6 +62,7 @@ public class MenuAcoesBatalha {
         return grid;
     }
 
+    //funcao pra montar o texto em caso ed sucesso
     public Node buildFeedback(String textoFeedback) {
         VBox container = new VBox(20);
         container.setAlignment(Pos.CENTER);

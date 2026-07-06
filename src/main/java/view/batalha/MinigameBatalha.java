@@ -25,7 +25,7 @@ public class MinigameBatalha {
     private final BatalhaController controller;
 
     private Rectangle cursor;
-    private double cursorX = -CURSOR_MAX;
+    private double cursorX = -CURSOR_MAX;//move o cursor pro outro canto do minigame
     private double cursorDir = 1;
     private Text feedbackText;
 
@@ -54,12 +54,12 @@ public class MinigameBatalha {
             bgImage.setFitWidth(790);
             bgImage.setFitHeight(140);
         } catch (Exception e) {
-            System.err.println("Sprite da barra de ataque não encontrado.");
+            System.err.println("sprite nao encontrado por algum motivo");
         }
 
-        cursor = new Rectangle(8, 140, Color.WHITE);
-        cursorX = -CURSOR_MAX;
-        cursorDir = 1;
+        cursor = new Rectangle(8, 140, Color.WHITE); //gera o cursor
+        cursorX = -CURSOR_MAX; //move ele pro utro canto
+        cursorDir = 1; //faz ele ir pra DIREITA
         cursor.setTranslateX(cursorX);
 
         if (bgImage != null) {
@@ -75,7 +75,7 @@ public class MinigameBatalha {
         feedbackText = new Text();
         feedbackText.setVisible(false);
 
-        minigameBox.setOnMousePressed(e -> finalizar());
+        minigameBox.setOnMousePressed(e -> finalizar()); //qndo vc clica ele finaliza
 
         container.getChildren().addAll(titulo, minigameBox, instrucao, feedbackText);
         return container;
@@ -84,13 +84,13 @@ public class MinigameBatalha {
     public void atualizar(float dt) {
         if (cursor == null || cursorDir == 0)
             return;
-        cursorX += cursorDir * CURSOR_VELOCIDADE * dt;
+        cursorX += cursorDir * CURSOR_VELOCIDADE * dt; //atualiza a pos do cursor
         if (cursorX >= CURSOR_MAX) {
             cursorX = CURSOR_MAX;
-            cursorDir = -1;
+            cursorDir = -1; // se bate no canto
         } else if (cursorX <= -CURSOR_MAX) {
             cursorX = -CURSOR_MAX;
-            cursorDir = 1;
+            cursorDir = 1; //inverte a direcao
         }
         cursor.setTranslateX(cursorX);
     }
@@ -98,9 +98,9 @@ public class MinigameBatalha {
     private void finalizar() {
         if (cursorDir == 0)
             return; // evita duplo clique
-        cursorDir = 0; // congela cursor visualmente
+        cursorDir = 0; // congela cursor
 
-        final float precisao = controller.calcularPrecisao(Math.abs(cursorX));
+        final float precisao = controller.calcularPrecisao(Math.abs(cursorX)); //clacula a distancia pro centro pra verificar a colisao
         final float danoTexto = controller.getEstadoController().getPlayerDano() * precisao;
         feedbackText.setText(String.format("×(%.2f)" + "(%.2f) DE DANO!", precisao, danoTexto).replace(",", "."));
         feedbackText.setFont(FonteUtil.pixel(16));
@@ -118,7 +118,7 @@ public class MinigameBatalha {
 
         feedbackText.setVisible(true);
 
-        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1));
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1)); //pausa por 1s pro jogador saber como foi o ataque dele
         pause.setOnFinished(e -> {
             controller.registrarAtaquePlayer(precisao);
         });

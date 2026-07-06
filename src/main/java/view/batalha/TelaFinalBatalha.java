@@ -22,6 +22,7 @@ public class TelaFinalBatalha {
         this.controller = controller;
     }
 
+    //gera a tela pronta com o runnable pra eu usar ou no menu seletor de batalha ou no jogo em si
     public Node buildAnimal(Runnable aoVoltar) {
         VBox box = new VBox(20);
         box.setAlignment(Pos.CENTER);
@@ -49,12 +50,12 @@ public class TelaFinalBatalha {
 
         BorderPane layout = new BorderPane();
 
-        // --- TOP ---
+
         VBox topLeft = new VBox(10);
-        Text t1 = new Text(vitoria ? "PROVA CONCLUÍDA" : "PROVA FALHOU");
+        Text t1 = new Text(vitoria ? "PROVA CONCLUÍDA" : "PROVA FALHOU!");
         t1.setFont(FonteUtil.pixel(32));
         t1.setFill(Color.WHITE);
-        Text t2 = new Text(vitoria ? "\"FOI UM SUCESSO!\"" : "\"VOCÊ FALHOU!\"");
+        Text t2 = new Text(vitoria ? "\"FOI UM SUCESSO!\"" : "\"É... VOCE PERDEU!\"");
         t2.setFont(FonteUtil.pixel(20));
         t2.setFill(Color.WHITE);
         topLeft.getChildren().addAll(t1, t2);
@@ -76,7 +77,6 @@ public class TelaFinalBatalha {
         top.setRight(topRight);
         layout.setTop(top);
 
-        // --- CENTER ---
         HBox center = new HBox(50);
         center.setAlignment(Pos.CENTER);
         center.setPadding(new Insets(20, 0, 20, 0));
@@ -106,7 +106,7 @@ public class TelaFinalBatalha {
         boolean nPNota    = !pp.getPerdeuNota();
         boolean nLDano    = !pp.getLevouAlgumDano();
         boolean m10       = turnos <= 10;
-
+        //monta os textos dos bonuses
         for (String[] par : new String[][]{
                 {"TODOS OS ATAQUES\nPERFEITOS:", perfeitos ? "+25%" : "0%"},
                 {"NÃO PERDEU NOTA:",             nPNota   ? "+25%" : "0%"},
@@ -122,7 +122,7 @@ public class TelaFinalBatalha {
         center.getChildren().addAll(col1, col2);
         layout.setCenter(center);
 
-        // --- BOTTOM ---
+
         float nf = service.batalha.BatalhaFinalizacaoService.calcularNotaFinal(desempenhos, pp);
         Text notaText = new Text(String.format("NOTA FINAL: %.2f", nf));
         notaText.setFont(FonteUtil.pixel(24));

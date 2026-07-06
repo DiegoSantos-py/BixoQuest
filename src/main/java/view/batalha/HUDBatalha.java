@@ -16,22 +16,17 @@ import java.util.Objects;
 
 import org.w3c.dom.css.RGBColor;
 
-/**
- * Componente com estado: gerencia todos os elementos fixos do HUD
- * (cabeçalho, barra de HP, escudos, texto de debug).
- * Deve ser instanciado uma vez e mantido vivo.
- * Chame atualizarTextosHUD() e atualizarHUDShields() a cada frame.
- */
+
 public class HUDBatalha {
 
     private final BatalhaController controller;
 
-    // Textos do cabeçalho
+    // Textos do oponente(nome do inimigo, texto q aparece debaixo do nome, o texto da caixinha)
     private Text textNomeInimigo;
     private Text textDescricaoInimigo;
     private Text textTurno;
 
-    // Sprite do oponente (overlay flutuante)
+    // Sprite do oponente
     private ImageView spriteInimigo;
 
     // Barra de progresso
@@ -39,7 +34,7 @@ public class HUDBatalha {
     private Text textProgresso;
     private Text textHpInimigo;
 
-    // Overlays
+    // DADOS DO JOGADOR
     private VBox playerHud;
     private HBox hudShields;
     private Rectangle barraNotaFill;
@@ -47,9 +42,10 @@ public class HUDBatalha {
     private Text textPlayerCon;
     private Text textPlayerDano;
     private Text textNotaValor;
+    //texto pra saber se o debug ta ativo
     private Text textDebugHitbox;
 
-    // Seção retornada ao CenaBatalha
+    // seção retornada ao CenaBatalha
     private VBox layoutSection;
 
     private int escudosAnteriores = -1;
@@ -60,14 +56,14 @@ public class HUDBatalha {
     }
 
     private void construir() {
-        // --- Cabeçalho ---
+
         BorderPane cabecalho = new BorderPane();
 
         VBox infoInimigo = new VBox(10);
         infoInimigo.setPrefWidth(400);
         infoInimigo.setMaxWidth(400);
 
-        textNomeInimigo = new Text("NOME");
+        textNomeInimigo = new Text("NOME PADRÃO AQUI");
         textNomeInimigo.setFont(FonteUtil.pixel(40));
         textNomeInimigo.setFill(Color.WHITE);
 
@@ -79,18 +75,16 @@ public class HUDBatalha {
         infoInimigo.getChildren().addAll(textNomeInimigo, textDescricaoInimigo);
         cabecalho.setLeft(infoInimigo);
 
-        // Placeholder central (mantém o BorderPane com altura para o sprite flutuante)
         Pane placeholder = new Pane();
         placeholder.setPrefSize(300, 300);
         cabecalho.setCenter(placeholder);
 
-        // Sprite flutuante (overlay gerenciado por CenaBatalha)
+
         spriteInimigo = new ImageView();
         spriteInimigo.setFitWidth(300);
         spriteInimigo.setFitHeight(300);
         spriteInimigo.setPreserveRatio(true);
 
-        // Turnos / Nota
         VBox infoTurnoBox = new VBox();
         infoTurnoBox.setPrefWidth(400);
         infoTurnoBox.setMaxWidth(400);
@@ -103,7 +97,7 @@ public class HUDBatalha {
         infoTurnoBox.getChildren().add(textTurno);
         cabecalho.setRight(infoTurnoBox);
 
-        // --- Barra de progresso ---
+
         StackPane barraBackground = new StackPane();
         barraBackground.setMaxWidth(800);
         barraBackground.setPrefHeight(40);
@@ -127,7 +121,7 @@ public class HUDBatalha {
         barraContainer.setAlignment(Pos.CENTER);
         barraContainer.getChildren().addAll(textHpInimigo, barraBackground);
 
-        // --- Overlays ---
+
         playerHud = new VBox(5);
         playerHud.setAlignment(Pos.BOTTOM_CENTER);
         playerHud.setPickOnBounds(false);
@@ -192,21 +186,14 @@ public class HUDBatalha {
         layoutSection.getChildren().addAll(cabecalho, barraContainer);
     }
 
-    // ─── Getters para CenaBatalha montar o StackPane ──────────────────────────
-
     public VBox getLayoutSection()       { return layoutSection; }
     public VBox getPlayerHud()           { return playerHud; }
     public Text getDebugText()           { return textDebugHitbox; }
     public ImageView getSpriteInimigo()  { return spriteInimigo; }
 
-    // ─── Inicialização de dados do oponente ───────────────────────────────────
 
-    /**
-     * Atualiza nome, descrição e sprite com o oponente atual.
-     * @return float[]{baseX, baseY} para rastreamento do delta de posição, ou null se sem oponente.
-     */
-    public float[] atualizarDadosIniciais() {
-        if (controller.getEstadoController() == null) return null;
+    public void atualizarDadosIniciais() {
+        if (controller.getEstadoController() == null) return;
 
         textPlayerName.setText(controller.getEstadoController().getPlayerNome().toUpperCase());
         
@@ -216,7 +203,7 @@ public class HUDBatalha {
         textPlayerDano.setText(String.format("DANO: %.1f", dano).replace(",", "."));
 
         String inimigoNome = controller.getEstadoController().getInimigoNome();
-        if (inimigoNome == null || inimigoNome.isEmpty()) return null;
+        if (inimigoNome == null || inimigoNome.isEmpty())  inimigoNome = "";
 
         textNomeInimigo.setText(inimigoNome.toUpperCase());
         
@@ -226,7 +213,6 @@ public class HUDBatalha {
         try {
             String dir = controller.getEstadoController().getInimigoSprite();
             if (dir != null && !dir.isEmpty()) {
-                if (!dir.startsWith("/")) dir = "/" + dir;
                 spriteInimigo.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(dir))));
             }
         } catch (Exception e) {
@@ -236,11 +222,8 @@ public class HUDBatalha {
 
             } catch (Exception ignored) {}
         }
-
-        return new float[]{controller.getEstadoController().getInimigoX(), controller.getEstadoController().getInimigoY()};
     }
 
-    // ─── Atualizações por frame ────────────────────────────────────────────────
 
     public void atualizarTextosHUD(float maxHpOponente, int maxTurnosOponente) {
         if (controller.getEstadoController() == null) return;
@@ -264,7 +247,9 @@ public class HUDBatalha {
         barraNotaFill.setWidth(pctNota * 250f);
         textNotaValor.setText(String.format("%.2f", nota).replace(",", "."));
 
-        Color cor = Color.rgb((int)(255 * (1 - pctNota)), (int)(255 * pctNota), 0);
+        Color cor = Color.rgb((int)(255 * (1 - pctNota)), (int)(255 * pctNota), 0); //verde em 100% vermelho em 0% pra ficar tipo um grdaiente
+        //conforme vc perde nota
+
         barraNotaFill.setFill(cor);
 
         if (controller.getEstadoController().getInimigoNome() != null && !controller.getEstadoController().getInimigoNome().isEmpty()) {
@@ -282,7 +267,7 @@ public class HUDBatalha {
             String label = controller.isBatalhaAnimal() ? "% DOMADO" : "% CONCLUÍDO";
             textProgresso.setText("100" + label);
             barraProgressoFill.setWidth(800f);
-        }
+        }//pra evitar qualquer chance de dados negativos ou >100
     }
 
     public void atualizarHUDShields() {
@@ -290,22 +275,23 @@ public class HUDBatalha {
 
         int atual = controller.getEstadoController().getPlayerShieldAtual();
         int max   = controller.getEstadoController().getPlayerShieldMaximo();
-        if (atual == escudosAnteriores) return;
+        if (atual == escudosAnteriores) return; //pra evitar q ele reatualize frames em q  nada aconteceu
         escudosAnteriores = atual;
 
         hudShields.getChildren().clear();
         for (int i = 0; i < max; i++) {
-            ImageView iv = new ImageView();
+            ImageView imagemShield = new ImageView();
             try {
                 String path = (i < atual)
                         ? "/assets/batalha/player/PlayerProvaShield.png"
                         : "/assets/batalha/player/PlayerProvaShieldQuebrado.png";
-                iv.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(path))));
-                iv.setFitWidth(40);
-                iv.setFitHeight(40);
-                hudShields.getChildren().add(iv);
+                imagemShield.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(path))));
+                imagemShield.setFitWidth(40);
+                imagemShield.setFitHeight(40);
+                hudShields.getChildren().add(imagemShield);
             } catch (Exception e) {
-                hudShields.getChildren().add(new Rectangle(40, 40, i < atual ? Color.GOLD : Color.GRAY));
+                hudShields.getChildren().add(new Rectangle(40, 40, i < atual ? Color.GOLD : Color.GRAY)); //antiga logica pra desenhar os escudos
+                //q reutilizei como fallback
             }
         }
     }

@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import model.Projetil.Projetil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class BattleRenderer {
         }
 
         // --- Projéteis ---
-        for (model.Projetil.Projetil proj : estado.getAtaqueAtual().getProjeteis()) {
+        for (Projetil proj : estado.getAtaqueAtual().getProjeteis()) {
             float prW = proj.getHitbox().getTamanho().getX();
             float prH = proj.getHitbox().getTamanho().getY();
             float prLX = proj.getX() - minX - prW / 2;
@@ -113,16 +114,13 @@ public class BattleRenderer {
         }
     }
 
-    /**
-     * Constrói e devolve uma Pane representando a arena de combate.
-     * Adiciona fundo preto e 4 bordas brancas.
-     */
+
     public Pane criarArena(Ataque atk) {
         float minX = atk.getMinX();
         float minY = atk.getMinY();
         float boxW = atk.getMaxX() - minX;
         float boxH = atk.getMaxY() - minY;
-        float border = 6f;
+        float borda = 6f;
 
         Pane arenaPane = new Pane();
         arenaPane.setPrefSize(boxW, boxH);
@@ -132,12 +130,12 @@ public class BattleRenderer {
         Rectangle fundo = new Rectangle(0, 0, boxW, boxH);
         fundo.setFill(Color.BLACK);
         arenaPane.getChildren().add(fundo);
-
+        //o rentagulo em q o player vive
         for (Rectangle b : new Rectangle[]{
-                new Rectangle(0, 0, boxW, border),
-                new Rectangle(0, boxH - border, boxW, border),
-                new Rectangle(0, 0, border, boxH),
-                new Rectangle(boxW - border, 0, border, boxH)}) {
+                new Rectangle(0, 0, boxW, borda),
+                new Rectangle(0, boxH - borda, boxW, borda),
+                new Rectangle(0, 0, borda, boxH),
+                new Rectangle(boxW - borda, 0, borda, boxH)}) {
             b.setFill(Color.WHITE);
             arenaPane.getChildren().add(b);
         }
@@ -145,13 +143,11 @@ public class BattleRenderer {
         return arenaPane;
     }
 
-    // --- Utilitários privados ---
 
     private ImageView criarSprite(EntidadeBatalha entidade, float largura, float altura, float localX, float localY) {
         try {
             String sDir = entidade.getSpriteUrl();
-            if (sDir == null || sDir.isEmpty()) return null;
-            if (!sDir.startsWith("/")) sDir = "/" + sDir;
+            if (sDir == null || sDir.isEmpty()) return null; //ele n faz o sprite se ele n existir(util pra hitboxes(projeteis sem sprite q servem pra checar colisão)
 
             Image img = imageCache.get(sDir);
             if (img == null) {
@@ -175,7 +171,7 @@ public class BattleRenderer {
         } catch (Exception e) {
             try {
                 Image fallback = new Image(Objects.requireNonNull(
-                        getClass().getResourceAsStream("/assets/batalha/oponentes/animais/default.png")));
+                        getClass().getResourceAsStream("/assets/batalha/oponentes/animais/default.png"))); //fallback pra eu saber q o sprite n foi gencontrado
                 ImageView iv = new ImageView(fallback);
                 iv.setFitWidth(largura);
                 iv.setFitHeight(altura);
